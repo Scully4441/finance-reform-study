@@ -118,4 +118,7 @@ source("tests/test_primary.R")
 
 # secondary estimators and the step 6 outputs
 source("tests/test_secondary.R")
+
+# inference and the step 7 outputs
+source("tests/test_inference.R")
 cat("All tests passed.\n")

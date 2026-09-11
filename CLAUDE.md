@@ -50,7 +50,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set |
-| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | |
+| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11); run so far only at the reduced `--quick` counts |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
@@ -200,5 +200,21 @@ Update the Status column as steps finish.
   built in `sa_terms()`: fixest 0.14.2's `sunab()` drops a cohort whose treated
   units supply one pre-treatment observation, which is gap (a) — awaiting the
   author's confirmation.
+- Inference as implemented (author, 2026-09-11; docs/decision_log.md): all four
+  procedures of Section 8 run on the 15 step 5 models. The Webb wild cluster bootstrap
+  and the Romano–Wolf step-down run on did's influence function summed within state,
+  not through `fwildclusterboot` and `wildrwolf`, which take an lm or fixest object and
+  cannot test an average of group-time effects. One set of state-level Webb draws per
+  event set serves every model in it, so Romano–Wolf's unadjusted p-value is by
+  construction the bootstrap's. Romano–Wolf family: the three gaps within an event set,
+  once unweighted and once with the weighted (b) and (c). RI reassigns the observed
+  cohort years among every state in the panel, keeping the states per cohort year, and
+  refits; the reassignments are drawn in the parent process, so the result does not
+  depend on the worker count. HonestDiD relative magnitudes on the overall post average
+  with `l_vec` equal over the estimated post event times; a model with no estimated
+  pre-reform event time gets a status, not a bound (in stage 1, every r2 model), and an
+  M̄ whose grid search accepts nothing is recorded as an empty bound set.
+  `Rscript R/07_inference.R --quick` is a test run at reduced counts; the counts of a
+  run are recorded in `outputs/07_inference/inference_settings.csv`.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.
