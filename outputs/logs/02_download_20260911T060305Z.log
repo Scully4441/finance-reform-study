@@ -1,0 +1,7 @@
+downloading edfacts_math_lea 2010
+Error in utils::download.file(man$url[i], dest, mode = "wb", quiet = TRUE) : 
+  cannot open URL 'https://www.ed.gov/sites/ed/files/about/inits/ed/edfacts/data-files/math-achievement-lea-sy2009-10.csv'
+In addition: Warning message:
+In utils::download.file(man$url[i], dest, mode = "wb", quiet = TRUE) :
+  cannot open URL 'https://www.ed.gov/sites/ed/files/about/inits/ed/edfacts/data-files/math-achievement-lea-sy2009-10.csv': HTTP status was '403 Forbidden'
+Execution halted
