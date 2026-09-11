@@ -47,7 +47,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
 | 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
-| 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | |
+| 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | |
@@ -156,5 +156,23 @@ Update the Status column as steps finish.
   children 5–17) are dropped for all gaps.
 - CCD BOUND 8 (reopened) is a change code like 5 (author, 2026-09-11): a code
   8 in any window year excludes the district.
+- Gap (a) weight (author, 2026-09-11; docs/decision_log.md): each district's
+  total membership in the 2009–10 CCD LEA file (`MEMBER`), fixed across
+  years. Pre-treatment; matches the 2009 enrollment covariate (Section 7).
+  A district without a valid 2009–10 membership (−1, −2, −9, or 0) is left
+  out of gap (a) and stays in (b) and (c): four CA quintile-5 districts
+  coded −9 in stage 1.
+- Gap sign (author, 2026-09-11; docs/decision_log.md): V is Black − White and
+  Hispanic − White, the same orientation as gap (a) (top-poverty minus
+  bottom-poverty quintile). Gaps are usually negative; a positive effect means
+  the gap narrowed. Reardon's convention is the reverse.
+- Outcomes as implemented (author, 2026-09-11; data acquisition 4.2): step 4
+  takes counts and `p_*`/`w_*` from `sample_district_year.csv`, divides
+  percentages by 100, and calls `v_gap()`/`v_gap_se()`; all three
+  suppression samples, named in a `sample` column. A gap uses a
+  district-year-subject only when both subgroups pass rule 3 and, from
+  2012–13, rule 4. Rows carry `retained`, `retained_r1`, `retained_r2`. A
+  gap (a) state-year without a usable district in quintile 1 or 5 gets no
+  row (DC and HI never do). Standard errors cover binomial sampling only.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.

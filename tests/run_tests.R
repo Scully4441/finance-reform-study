@@ -109,4 +109,7 @@ setwd(old)
 
 # sample rules and the step 3 output
 source("tests/test_sample.R")
+
+# outcome construction and the step 4 outputs
+source("tests/test_outcomes.R")
 cat("All tests passed.\n")

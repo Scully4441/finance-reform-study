@@ -35,14 +35,16 @@ edfacts_year_tag <- function(sy_end) sprintf("%02d%02d", (sy_end - 1L) %% 100L, 
 # CCD LEA universe flat file (tab-delimited). Quoted names can hold a tab, so the
 # file is read with standard quoting, and the row count is checked against the
 # number of physical lines so that no row is silently dropped or split.
-read_ccd_lea <- function(path, sy_end) {
+# extra: further CCD fields to return as reported (character), named in lower case,
+# e.g. extra = "MEMBER" for the gap (a) weights in R/04_outcomes.R.
+read_ccd_lea <- function(path, sy_end, extra = character()) {
   n_lines <- length(readLines(path, warn = FALSE)) - 1L
   d <- utils::read.delim(path, colClasses = "character", quote = "\"",
                          na.strings = character(), comment.char = "")
   if (!"TYPE" %in% names(d))                        # 2009-10 suffixes names with the year: TYPE09
     names(d) <- sub(sprintf("%02d$", (sy_end - 1L) %% 100L), "", names(d))
   if (nrow(d) != n_lines) stop(basename(path), ": read ", nrow(d), " rows from ", n_lines, " data lines")
-  need <- c("LEAID", "FIPST", "TYPE", "BOUND", "GSHI")
+  need <- c("LEAID", "FIPST", "TYPE", "BOUND", "GSHI", extra)
   miss <- setdiff(need, names(d))
   if (length(miss)) stop(basename(path), " lacks columns: ", paste(miss, collapse = ", "))
   d <- d[need]
@@ -51,9 +53,11 @@ read_ccd_lea <- function(path, sy_end) {
   if (anyDuplicated(d$LEAID)) stop(basename(path), ": duplicate LEAID")
   if (!all(d$TYPE %in% as.character(1:8)) || !all(d$BOUND %in% as.character(1:8)))
     stop(basename(path), ": TYPE or BOUND outside 1-8")
-  data.frame(leaid = d$LEAID, fipst = substr(d$LEAID, 1, 2), sy_end = as.integer(sy_end),
-             agency_type = as.integer(d$TYPE), ccd_bound = as.integer(d$BOUND),
-             gshi = trimws(d$GSHI), stringsAsFactors = FALSE)
+  out <- data.frame(leaid = d$LEAID, fipst = substr(d$LEAID, 1, 2), sy_end = as.integer(sy_end),
+                    agency_type = as.integer(d$TYPE), ccd_bound = as.integer(d$BOUND),
+                    gshi = trimws(d$GSHI), stringsAsFactors = FALSE)
+  for (v in extra) out[[tolower(v)]] <- trimws(d[[v]])
+  out
 }
 
 # EDFacts LEA file, high school band only (grade "HS", never "00").

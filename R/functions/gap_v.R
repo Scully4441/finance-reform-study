@@ -15,6 +15,11 @@ v_gap <- function(p_a, p_b, n_a = NULL, n_b = NULL) {
   qnorm(clamp_share(p_a, n_a)) - qnorm(clamp_share(p_b, n_b))
 }
 
+# One group's probit score, Phi^-1(p), with the same clamping as v_gap(), so that
+# v_gap(p_a, p_b, n_a, n_b) == probit_score(p_a, n_a) - probit_score(p_b, n_b).
+# Gap (a) averages these district scores within poverty quintiles (Section 6).
+probit_score <- function(p, n = NULL) qnorm(clamp_share(p, n))
+
 # Delta-method standard error of V from binomial sampling error in each share.
 # Used for descriptive precision and for the tested-count robustness weights.
 v_gap_se <- function(p_a, p_b, n_a, n_b) {

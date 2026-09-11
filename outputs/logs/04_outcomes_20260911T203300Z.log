@@ -1,0 +1,114 @@
+Step 4 outcomes, run 20260911T203300Z; stage 1; blinding PERMUTED
+District-years retained under at least one event set: 45768 (11442 districts, 45 states)
+Quintile 1 and 5 districts without a valid 2009-10 membership, left out of gap (a): 4 (CA 0609810 q5; CA 0623160 q5; CA 0626760 q5; CA 0691134 q5)
+Wrote data/derived/gaps_race_district_year.csv: 33401 rows.
+Wrote data/derived/gap_poverty_state_year.csv: 970 rows.
+
+== Gap counts by suppression sample and event set (end years 2010-2013)
+Samples: primary = exact or range <= 10 points; r5 = <= 5 points; exact = exact values only. Event set = districts retained under rules 1, 2 and 6 with that table.
+
+Gap (b) Black-White: district-year-subject gaps
+  sample event_set math  rla total
+ primary   primary 5061 4980 10041
+ primary        r1 5061 4980 10041
+ primary        r2 6091 5998 12089
+      r5   primary 3307 3227  6534
+      r5        r1 3307 3227  6534
+      r5        r2 3929 3838  7767
+   exact   primary  787  741  1528
+   exact        r1  787  741  1528
+   exact        r2  858  811  1669
+
+Gap (c) Hispanic-White: district-year-subject gaps
+  sample event_set math  rla total
+ primary   primary 4994 4875  9869
+ primary        r1 4994 4875  9869
+ primary        r2 6654 6516 13170
+      r5   primary 3130 3080  6210
+      r5        r1 3130 3080  6210
+      r5        r2 4264 4196  8460
+   exact   primary  798  792  1590
+   exact        r1  798  792  1590
+   exact        r2 1116 1110  2226
+
+Gap (a) poverty quintile 5 minus 1: state-year-subject gaps
+  sample event_set math rla total
+ primary   primary  150 150   300
+ primary        r1  150 150   300
+ primary        r2  170 170   340
+      r5   primary  150 150   300
+      r5        r1  150 150   300
+      r5        r2  170 170   340
+   exact   primary  129 129   258
+   exact        r1  129 129   258
+   exact        r2  145 145   290
+
+== Gaps by end year, primary event set
+              gap  sample subject sy2010 sy2011 sy2012 sy2013
+        a_poverty primary    math     36     38     38     38
+        a_poverty primary     rla     36     38     38     38
+        a_poverty      r5    math     36     38     38     38
+        a_poverty      r5     rla     36     38     38     38
+        a_poverty   exact    math     32     34     33     30
+        a_poverty   exact     rla     32     34     33     30
+    b_black_white primary    math   1263   1303   1287   1208
+    b_black_white primary     rla   1229   1298   1264   1189
+    b_black_white      r5    math    837    848    833    789
+    b_black_white      r5     rla    799    836    823    769
+    b_black_white   exact    math    204    195    198    190
+    b_black_white   exact     rla    186    184    180    191
+ c_hispanic_white primary    math   1143   1222   1263   1366
+ c_hispanic_white primary     rla   1111   1201   1228   1335
+ c_hispanic_white      r5    math    724    757    782    867
+ c_hispanic_white      r5     rla    691    748    772    869
+ c_hispanic_white   exact    math    181    185    188    244
+ c_hispanic_white   exact     rla    166    185    183    258
+
+== Gap (a) coverage, primary event set, primary sample
+States with quintile districts: 40
+State-year-subjects with no gap (a) row (no usable district in quintile 1 or 5):
+ subject state sy_end usable_q1 usable_q5
+    math    AL   2010         0         0
+    math    DC   2010         0         1
+    math    DC   2011         0         1
+    math    DC   2012         0         1
+    math    DC   2013         0         1
+    math    HI   2010         0         1
+    math    HI   2011         0         1
+    math    HI   2012         0         1
+    math    HI   2013         0         1
+    math    WY   2010         0         0
+     rla    AL   2010         0         0
+     rla    DC   2010         0         1
+     rla    DC   2011         0         1
+     rla    DC   2012         0         1
+     rla    DC   2013         0         1
+     rla    HI   2010         0         1
+     rla    HI   2011         0         1
+     rla    HI   2012         0         1
+     rla    HI   2013         0         1
+     rla    WY   2010         0         0
+Districts per quintile-5 and quintile-1 mean (primary sample, primary set): median 23 and 25; minimum 3 and 1.
+
+== Distribution of V, primary event set, pooled over end years (SD units; negative = disadvantaged group lower)
+              gap  sample subject    n   mean    sd    p10 median    p90
+    b_black_white primary    math 5061 -0.687 0.341 -1.114 -0.666 -0.279
+    b_black_white primary     rla 4980 -0.656 0.332 -1.054 -0.649 -0.259
+    b_black_white      r5    math 3307 -0.696 0.314 -1.102 -0.666 -0.333
+    b_black_white      r5     rla 3227 -0.671 0.312 -1.052 -0.663 -0.279
+    b_black_white   exact    math  787 -0.718 0.262 -1.039 -0.699 -0.407
+    b_black_white   exact     rla  741 -0.704 0.255 -1.029 -0.692 -0.385
+ c_hispanic_white primary    math 4994 -0.486 0.331 -0.904 -0.475 -0.080
+ c_hispanic_white primary     rla 4875 -0.523 0.335 -0.945 -0.516 -0.111
+ c_hispanic_white      r5    math 3130 -0.505 0.294 -0.881 -0.490 -0.150
+ c_hispanic_white      r5     rla 3080 -0.532 0.300 -0.908 -0.527 -0.170
+ c_hispanic_white   exact    math  798 -0.546 0.227 -0.860 -0.527 -0.263
+ c_hispanic_white   exact     rla  792 -0.557 0.235 -0.854 -0.542 -0.261
+        a_poverty primary    math  150 -0.656 0.350 -1.119 -0.628 -0.254
+        a_poverty primary     rla  150 -0.617 0.318 -1.049 -0.600 -0.253
+        a_poverty      r5    math  150 -0.675 0.370 -1.170 -0.642 -0.256
+        a_poverty      r5     rla  150 -0.631 0.326 -1.083 -0.618 -0.229
+        a_poverty   exact    math  129 -0.705 0.425 -1.278 -0.694 -0.174
+        a_poverty   exact     rla  129 -0.644 0.356 -1.070 -0.660 -0.199
+Median binomial standard error, primary sample: Black-White 0.18, Hispanic-White 0.176 (excludes range-midpoint error).
+Log: outputs/logs/04_outcomes_20260911T203300Z.log

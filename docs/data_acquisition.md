@@ -371,6 +371,41 @@ rules are in `R/functions/sample_rules.R`.
   `event_table_r2.csv`. Only each state's group is read; treatment years stay
   out of the sample file.
 
+### 4.2 Outcomes as implemented (author decisions, 2026-09-11)
+
+`R/04_outcomes.R` writes `data/derived/gaps_race_district_year.csv` (gaps (b)
+and (c)) and `data/derived/gap_poverty_state_year.csv` (gap (a)); the shared
+functions are in `R/functions/outcomes.R`. Decisions are logged in
+`docs/decision_log.md`.
+
+- Inputs. Valid-test counts, `p_<subj>_<sg>` and `w_<subj>_<sg>` come from
+  `data/derived/sample_district_year.csv`. Percentages are divided by 100 and
+  passed to `v_gap()` and `v_gap_se()`. Gap (a) district scores use
+  `probit_score()`, which applies the same clamp as `v_gap()`.
+- Samples. All three suppression samples (`primary`, `r5`, `exact`), named in
+  a `sample` column. They are nested, and a gap has the same value in every
+  sample that holds it.
+- Cells. A gap uses a district-year-subject only when every subgroup in it
+  passes rule 3 in that sample and, from 2012-13, rule 4.
+- Sign. Black minus White and Hispanic minus White; gap (a) is the
+  highest-poverty quintile minus the lowest. Reardon's convention is the
+  reverse.
+- Gap (a). The mean district probit score in quintile 5 minus quintile 1,
+  weighted by 2009-10 CCD total membership (`MEMBER`), fixed across years,
+  over districts with a usable all-students cell that year. A district
+  without a valid 2009-10 membership is left out of gap (a) and stays in
+  (b) and (c); in stage 1 that is four California quintile-5 districts.
+  A state-year without a usable district in quintile 1 or 5 gets no row, so
+  DC and HI (one quintile district each) never do.
+- Rows. Both files cover districts retained under at least one event set and
+  carry `retained`, `retained_r1` and `retained_r2`. In gap (a) these are
+  state-level.
+- Standard errors. Delta method, binomial sampling in each share only. They
+  do not include the error from entering a range at its midpoint.
+- Math and RLA are separate rows; averaging within district-year is left to
+  the estimation steps. Cohorts per event time are reported by
+  `R/05_primary.R`, since step 4 reads no treatment years.
+
 ## 5. Stage 2 additions
 
 - Add manifest rows for every dataset for end years 2014 through the end year
