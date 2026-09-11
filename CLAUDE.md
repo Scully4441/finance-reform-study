@@ -45,7 +45,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
 | 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
-| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11) |
+| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | |
@@ -73,7 +73,8 @@ Update the Status column as steps finish.
   full set is primary and r1/r2 are reported as robustness (design Section 3).
 - Window: end years 2010 through the newest EDFacts release on the
   registration date; 2020 excluded; 2021 kept only where participation ≥ 95%.
-- Sample: regular districts (CCD types 1–2); stable ID; exact counts only;
+- Sample: regular districts (CCD types 1–2); stable ID; exact counts;
+  percent proficient exact or a range midpoint (suppression rule below);
   tested count ≥ 30 per cell; 95% participation; treatment at state level;
   reforms in 2005–2009 exclude the state; early cohorts kept, with cohort
   counts reported per event time and a robustness check dropping cohorts
@@ -116,6 +117,22 @@ Update the Status column as steps finish.
   passes, GE90 fails, nothing reported fails); poverty quintiles fixed per
   state among districts passing rules 1–2 with a 2009–10 grade span to 12 and
   a SAIPE 2009 rate; stability = CCD BOUND not 2, 6, or 7 in every window year
-  and never 5, agency type 1–2 in every year.
+  and never 5 or 8, agency type 1–2 in every year.
+- Suppression rule (author, 2026-09-11; replaces exact-only; data acquisition
+  4.1; logged in docs/deviations.md): the valid-test count must be exact and
+  ≥ 30. Percent proficient enters as the exact value or, when reported as a
+  range no wider than 10 percentage points, at the range midpoint; wider
+  ranges and suppressed values (PS, N/A, blank) are missing. Width and
+  midpoint come from the printed endpoints, with GE/GT closed at 100 and
+  LE/LT at 0 (20-29: width 9, midpoint 24.5; GE95: width 5, midpoint 97.5;
+  an exact value: width 0). Two robustness samples: exact values only, and
+  ranges of 5 points or less (`MAX_WIDTH`, `cell_in_sample()`). The sample
+  file carries each cell's width (`w_*`) and entering percent (`p_*`) for
+  step 4.
+- SAIPE (author, 2026-09-11; logged in docs/deviations.md): districts passing
+  rules 1–2 with no SAIPE 2009 child-poverty rate (absent from the file, or no
+  children 5–17) are dropped for all gaps.
+- CCD BOUND 8 (reopened) is a change code like 5 (author, 2026-09-11): a code
+  8 in any window year excludes the district.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.

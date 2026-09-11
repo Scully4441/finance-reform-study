@@ -4,6 +4,8 @@
 #   participation passes only when the reported value's lower bound is >= 95;
 #   poverty quintiles are fixed per state among high school districts;
 #   stability = operational (BOUND not 2, 6, 7) every window year and never BOUND 5.
+# Later the same day: percent proficient may enter as the midpoint of a range no
+# wider than 10 points (replacing exact-only), and BOUND 8 counts as a change.
 
 # Two-digit state FIPS codes for the 50 states and DC (the study universe).
 STATE_FIPS <- c(AL = "01", AK = "02", AZ = "04", AR = "05", CA = "06", CO = "08", CT = "09", DE = "10",
@@ -102,17 +104,34 @@ read_saipe <- function(path) {
 
 # ---- rules ---------------------------------------------------------------------
 
-# Rule 3 (suppression). One status per district-year-subject-subgroup cell:
-#   not_reported  no valid-test count in the file
+# Widest percent-proficient range, in percentage points, that each sample admits
+# (author decision 2026-09-11, replacing the exact-only rule): the primary sample
+# and two robustness samples, ranges of 5 points or less and exact values only.
+MAX_WIDTH <- c(primary = 10, r5 = 5, exact = 0)
+
+# Rule 3 (suppression). The valid-test count must be exact and at least 30. The
+# percent proficient enters as the exact value or, when reported as a range no
+# wider than max_width points, at the range midpoint (edfacts_range()).
+# One status per district-year-subject-subgroup cell:
+#   not_reported  no exact valid-test count in the file
 #   below_30      exact count under 30
-#   not_exact     count of 30 or more but percent proficient given as a range or symbol
-#   usable        exact count >= 30 and exact percent proficient
-cell_status <- function(n_raw, p_raw, floor = 30) {
+#   suppressed    count of 30 or more, percent proficient not reported (PS, N/A, blank)
+#   wide_range    count of 30 or more, percent proficient a range wider than max_width
+#   usable        count of 30 or more, percent proficient exact or a range of max_width or less
+cell_status <- function(n_raw, p_raw, floor = 30, max_width = MAX_WIDTH[["primary"]]) {
   n <- edfacts_exact(n_raw)
-  p <- edfacts_exact(p_raw)
+  w <- edfacts_range(p_raw)$width
   ifelse(is.na(n), "not_reported",
          ifelse(n < floor, "below_30",
-                ifelse(is.na(p), "not_exact", "usable")))
+                ifelse(is.na(w), "suppressed",
+                       ifelse(w > max_width, "wide_range", "usable"))))
+}
+
+# TRUE where a cell enters the named sample: usable under the primary rule and
+# a range width within that sample's limit (width 0 = exact value).
+cell_in_sample <- function(status, width, sample = names(MAX_WIDTH)) {
+  sample <- match.arg(sample)
+  status == "usable" & !is.na(width) & width <= MAX_WIDTH[[sample]]
 }
 
 # Rule 4 (participation). The lowest participation rate consistent with the
@@ -144,7 +163,9 @@ part_pass <- function(x, threshold = 95) {
 # listed district-year). Returns one row per district with the first rule failed.
 #   rule 1: agency type 1 or 2 in every listed window year
 #   rule 2: listed and operational (BOUND not 2, 6, 7) in every window year,
-#           and never BOUND 5 (significant boundary change) in any window year
+#           and never BOUND 5 (significant boundary change) or 8 (reopened;
+#           author decision 2026-09-11) in any window year
+BOUND_CHANGE <- c(5L, 8L)
 district_rules <- function(lea, window) {
   ids <- sort(unique(lea$leaid))
   sp <- split(lea, factor(lea$leaid, levels = ids))
@@ -153,7 +174,7 @@ district_rules <- function(lea, window) {
     if (any(!g$agency_type %in% 1:2)) return("rule 1: agency type not 1 or 2")
     op <- g$sy_end[!g$ccd_bound %in% c(2L, 6L, 7L)]
     if (!all(window %in% op)) return("rule 2: not operational in every window year")
-    if (any(g$ccd_bound == 5L)) return("rule 2: boundary change")
+    if (any(g$ccd_bound %in% BOUND_CHANGE)) return("rule 2: boundary change (BOUND 5 or 8)")
     "pass"
   }, character(1))
   data.frame(leaid = ids, rule12 = unname(res), stringsAsFactors = FALSE)

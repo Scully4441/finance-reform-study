@@ -23,6 +23,13 @@ stopifnot(v_gap_se(0.6, 0.5, 30, 30) > v_gap_se(0.6, 0.5, 300, 300))
 x <- c("45", "45.5", "GE50", "20-29", "PS", "", NA, " 12 ")
 stopifnot(identical(edfacts_exact(x), c(45, 45.5, NA, NA, NA, NA, NA, 12)))
 stopifnot(identical(edfacts_suppressed(x), c(FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)))
+# ranges from printed endpoints; one-sided labels close at 0 and 100 (author decision 2026-09-11)
+r <- edfacts_range(c("45", "20-29", "GE95", "LE5", "LT50", "GE99", "PS", "", NA, " ge90 ", "12.5", "N/A"))
+stopifnot(identical(r$width, c(0, 9, 5, 5, 50, 1, NA, NA, NA, 10, 0, NA)),
+          identical(r$mid, c(45, 24.5, 97.5, 2.5, 25, 99.5, NA, NA, NA, 95, 12.5, NA)),
+          identical(r$lo[1:6], c(45, 20, 95, 0, 0, 99)), identical(r$hi[1:6], c(45, 29, 100, 5, 50, 100)))
+stopifnot(inherits(try(edfacts_range("60-40"), silent = TRUE), "try-error"),
+          inherits(try(edfacts_range("GE101"), silent = TRUE), "try-error"))
 
 # CPI
 m <- expand.grid(month = 1:12, year = 2009:2011)

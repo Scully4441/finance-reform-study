@@ -1,0 +1,181 @@
+Step 3 sample, run 20260911T195504Z; stage 1; blinding PERMUTED
+Wrote data/derived/sample_district_year.csv: 73223 district-years, 19061 districts, 77 columns.
+
+== Districts retained by each rule (end years 2010-2013)
+CCD agencies outside the 50 states and DC, dropped before the rules: 236
+                                      rule districts removed
+      CCD agencies in the 50 states and DC     19061      NA
+  rule 1: agency type 1 or 2 in every year     13923    5138
+  rule 2: operational in every window year     13490     433
+ rule 2: no boundary change (BOUND 5 or 8)     13463      27
+           SAIPE 2009 poverty rate present     13264     199
+                 rule 6: primary event set      9084    4180
+                 rule 6: robustness set r1      9084    4180
+                 rule 6: robustness set r2     11442    1822
+Boundary-change exclusions: 27 (BOUND 5 in a window year: 27; BOUND 8 and never 5: 0)
+Districts passing rules 1 and 2 with no SAIPE 2009 poverty rate, dropped: 199 (absent from the SAIPE file: 192; no children 5-17: 7)
+  of which in states that rule 6 keeps: primary 73, r1 73, r2 124
+States with retained districts (primary set): 40
+Retained districts in the poverty-quintile set (grade span to 12 in 2009-10, SAIPE 2009 rate): 7935
+States with fewer than five quintile districts (no bottom quintile can form): DC (1), HI (1)
+EDFacts LEAIDs with HS counts but no CCD row in the 50 states and DC that year: 68
+
+== Width in points of the reported HS percent proficient, by tested-count bracket, 2010-2013
+Every LEA in the EDFacts files in the 50 states and DC with an exact valid-test count; subgroups all wh bl hi ecd; math and RLA. Width 0 = exact value; none = PS, N/A or blank.
+End year 2010:
+        width
+bracket      0     1     3     4     5     8     9    10    18    19    20
+  0          0     0     0     0     0     0     0     0     0     0     0
+  1-5        0     0     0     0     0     0     0     0     0     0     0
+  6-15       0     0     0     0     0     0     0     0     0     0     0
+  16-30      0     0     0     0     0     0     0     0  1564  7018  4784
+  31-60      0     0     0     0     0   348 12436  2316     0     0     0
+  61-300     0     0    68 28112  1950     0     0     0     0     0     0
+  301+   11391    88     0     0     0     0     0     0     0     0     0
+        width
+bracket     50  none
+  0          0  4801
+  1-5        0 18828
+  6-15   14478     0
+  16-30      0     0
+  31-60      0     0
+  61-300     0     0
+  301+       0     0
+End year 2011:
+        width
+bracket      0     1     3     4     5     8     9    10    18    19    20
+  0          0     0     0     0     0     0     0     0     0     0     0
+  1-5        0     0     0     0     0     0     0     0     0     0     0
+  6-15       0     0     0     0     0     0     0     0     0     0     0
+  16-30      0     0     0     0     0     0     0     0  1392  6995  5055
+  31-60      0     0     0     0     0   295 12925  2459     0     0     0
+  61-300     0     0    59 28580  2476     0     0     0     0     0     0
+  301+   11508   102     0     0     0     0     0     0     0     0     0
+        width
+bracket     50  none
+  0          0  4614
+  1-5        0 19247
+  6-15   14839     0
+  16-30      0     0
+  31-60      0     0
+  61-300     0     0
+  301+       0     0
+End year 2012:
+        width
+bracket      0     1     3     4     5     8     9    10    18    19    20
+  0          0     0     0     0     0     0     0     0     0     0     0
+  1-5        0     0     0     0     0     0     0     0     0     0     0
+  6-15       0     0     0     0     0     0     0     0     0     0     0
+  16-30      0     0     0     0     0     0     0     0  1888  6516  5341
+  31-60      0     0     0     0     0   496 12548  2766     0     0     0
+  61-300     0     0   143 28528  2667     0     0     0     0     0     0
+  301+   11560   119     0     0     0     0     0     0     0     0     0
+        width
+bracket     50  none
+  0          0  2177
+  1-5        0 19283
+  6-15   14986     0
+  16-30      0     0
+  31-60      0     0
+  61-300     0     0
+  301+       0     0
+End year 2013:
+        width
+bracket      0     1     3     4     5     8     9    10    18    19    20
+  0          0     0     0     0     0     0     0     0     0     0     0
+  1-5        0     0     0     0     0     0     0     0     0     0     0
+  6-15       0     0     0     0     0     0     0     0     0     0     0
+  16-30      0     0     0     0     0     0     0     0  1665  6503  5312
+  31-60      0     0     0     0     0   447 12582  2729     0     0     0
+  61-300     0     0   145 29915  2540     0     0     0     0     0     0
+  301+   13042   115     0     0     0     0     0     0     0     0     0
+        width
+bracket     50  none
+  0          0  1654
+  1-5        0 18745
+  6-15   14154     0
+  16-30      0     0
+  31-60      0     0
+  61-300     0     0
+  301+       0     0
+
+== HS cells lost to suppression, retained districts (primary set), 2010-2013
+Each cell is one district-year-subject-subgroup. not_reported: no count in EDFacts (includes districts without high school grades); below_30: exact count under 30; suppressed: count >= 30, percent proficient not reported; wide_range: count >= 30, percent proficient a range wider than 10 points; usable: exact or a range of 10 points or less (primary). usable_r5 and usable_exact: the robustness samples.
+ subject subgroup cells not_reported below_30 suppressed wide_range usable
+    math      all 36336         5027     4473          0        182  26654
+    math       wh 36336         5309     6714          0        201  24112
+    math       bl 36336        14258    16110          0         79   5889
+    math       hi 36336        10819    19574          0        107   5836
+    math      ecd 36336         5367    12647          0        306  18016
+     rla      all 36336         5039     4470          0        168  26659
+     rla       wh 36336         5337     6715          0        184  24100
+     rla       bl 36336        14258    16187          0         79   5812
+     rla       hi 36336        10798    19733          0         99   5706
+     rla      ecd 36336         5382    12605          0        334  18015
+ usable_r5 usable_exact
+     21753         6965
+     18904         4735
+      4106         1096
+      3877         1197
+     11657         2730
+     21796         6801
+     18903         4485
+      4016         1039
+      3822         1189
+     11563         2545
+
+Usable district-years, retained districts (primary set): every subgroup of the gap in the sample under rule 3. sy2013_part also applies the participation rule.
+Samples: primary = exact or range <= 10 points; r5 = exact or range <= 5 points; exact = exact values only.
+  sample              gap subject sy2010 sy2011 sy2012 sy2013 sy2013_part
+ primary            a_all    math   6537   6683   6651   6783        5167
+ primary            a_all     rla   6514   6691   6667   6787        5127
+ primary    b_black_white    math   1263   1303   1287   1416         789
+ primary    b_black_white     rla   1229   1298   1264   1381         769
+ primary c_hispanic_white    math   1143   1222   1263   1573         869
+ primary c_hispanic_white     rla   1111   1201   1228   1530         873
+      r5            a_all    math   5327   5434   5368   5624        5164
+      r5            a_all     rla   5313   5435   5406   5642        5119
+      r5    b_black_white    math    837    848    833    943         789
+      r5    b_black_white     rla    799    836    823    911         769
+      r5 c_hispanic_white    math    724    757    782   1024         867
+      r5 c_hispanic_white     rla    691    748    772   1008         869
+   exact            a_all    math   1693   1681   1680   1911        1735
+   exact            a_all     rla   1610   1661   1654   1876        1712
+   exact    b_black_white    math    204    195    198    237         190
+   exact    b_black_white     rla    186    184    180    222         191
+   exact c_hispanic_white    math    181    185    188    279         244
+   exact c_hispanic_white     rla    166    185    183    280         258
+
+== Participation rule, retained districts (primary set)
+End years 2010-2012: no participation file; retained without the test.
+Cells usable under rule 3 in 2013, by participation outcome:
+ subject subgroup usable_cells pass fail_reported_below_95 fail_not_reported
+    math      all         6783 5167                   1616                 0
+    math       wh         6168 4556                   1612                 0
+    math       bl         1563  935                    628                 0
+    math       hi         1717 1037                    680                 0
+    math      ecd         4845 2796                   2049                 0
+     rla      all         6787 5127                   1660                 0
+     rla       wh         6170 4521                   1649                 0
+     rla       bl         1541  919                    622                 0
+     rla       hi         1677 1045                    632                 0
+     rla      ecd         4846 2756                   2090                 0
+
+State-years lost to participation in 2013 (state had at least one usable district cell for the gap before the rule and none after):
+              gap subject district_cells_before district_cells_after
+            a_all    math                  6783                 5167
+            a_all     rla                  6787                 5127
+    b_black_white    math                  1416                  789
+    b_black_white     rla                  1381                  769
+ c_hispanic_white    math                  1573                  869
+ c_hispanic_white     rla                  1530                  873
+ states_with_cells_before state_years_lost states_lost
+                       40                0            
+                       40                0            
+                       39                3    RI VT WA
+                       39                1          VT
+                       38                1          WV
+                       38                2       WV WY
+
+Robustness sample (end years 2013 on): 9084 retained district-years of 36336.
+Log: outputs/logs/03_sample_20260911T195504Z.log

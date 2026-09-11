@@ -4,21 +4,29 @@
 # Output: data/derived/sample_district_year.csv, one row per district-year for every
 # CCD-listed agency in the 50 states and DC, with
 #   leaid, state, sy_end
-#   retained, reason          rules 1, 2 and 6 with the primary event set (event_table.csv)
+#   retained, reason          rules 1 and 2, a SAIPE 2009 poverty rate, and rule 6 with the
+#                             primary event set (event_table.csv)
 #   retained_r1, retained_r2  the same with the robustness event sets (Section 3)
 #   robust_from_2013          1 for end years 2013 on: the participation robustness sample (v17)
-#   agency_type, ccd_bound, boundary_change   CCD TYPE, CCD BOUND code, BOUND == 5
+#   agency_type, ccd_bound, boundary_change   CCD TYPE, CCD BOUND code, BOUND 5 or 8
 #   saipe_pov_rate_2009, pov_quintile_2009    SAIPE 2009 child poverty; quintile 1 = lowest
 #   cep                       state CEP availability (data/reference/cep_phase_in.csv, stage 1)
 #   test_replaced, test_replaced_math, test_replaced_rla   data/reference/test_replacement.csv
 #   part_<subj>_<sg>, part_ok_<subj>_<sg>     reported HS participation and the 95% rule
 #                                             (NA before 2012-13: retained untested)
 #   n_<subj>_<sg>, cell_<subj>_<sg>           exact HS valid-test count and rule 3 status
+#   w_<subj>_<sg>                             width in points of the reported percent
+#                                             proficient (0 exact; NA when suppressed)
+#   p_<subj>_<sg>                             percent proficient entering the gap: the exact
+#                                             value or range midpoint; NA unless usable
 # with subj in math, rla and sg in all, wh, bl, hi, ecd.
 #
 # Rules 1, 2 and 6 act on districts (retained). Rules 3 and 4 act on
 # district-year-subject-subgroup cells (cell_*, part_ok_*); R/04_outcomes.R combines
 # them for the subgroups in each gap. Rule 5 is carried as the test_replaced_* flags.
+# Rule 3 (author decision 2026-09-11) admits ranges of 10 points or less at their
+# midpoint; the robustness samples (exact values only; ranges of 5 points or less)
+# are cell_in_sample() on cell_* and w_*.
 # Treatment years are never read into this script; only each state's group is used.
 
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
@@ -72,20 +80,26 @@ lea <- lea[!is.na(lea$state), ]
 
 dr <- district_rules(lea, WINDOW)
 dr$state <- fips_to_state(substr(dr$leaid, 1, 2))
-reason_for <- function(set) {
-  grp <- groups[[set]]$group[match(dr$state, groups[[set]]$state)]
-  ifelse(dr$rule12 != "pass", dr$rule12,
-         ifelse(grp == "excluded", "rule 6: state excluded (reform in 2005-2009)", "retained"))
-}
-for (set in names(groups)) dr[[paste0("reason_", set)]] <- reason_for(set)
 
 # ---- SAIPE 2009 poverty and quintiles --------------------------------------------
+# A district passing rules 1 and 2 with no SAIPE 2009 rate (absent from the file, or
+# no children 5-17) is dropped before rule 6 (author decision 2026-09-11).
+NO_SAIPE <- "no SAIPE 2009 poverty rate"
 saipe <- read_saipe("data/raw/saipe/saipe-district-2009.txt")
 hs_2009 <- lea$leaid[lea$sy_end == 2010L & lea$gshi == "12"]   # 2009-10 grade span reaches 12
 dr$saipe_pov_rate_2009 <- saipe$pov_rate[match(dr$leaid, saipe$leaid)]
+dr$in_saipe_file <- dr$leaid %in% saipe$leaid
 in_q <- dr$rule12 == "pass" & dr$leaid %in% hs_2009 & !is.na(dr$saipe_pov_rate_2009)
 dr$pov_quintile_2009 <- NA_integer_
 dr$pov_quintile_2009[in_q] <- poverty_quintile(dr$state[in_q], dr$saipe_pov_rate_2009[in_q], dr$leaid[in_q])
+
+reason_for <- function(set) {
+  grp <- groups[[set]]$group[match(dr$state, groups[[set]]$state)]
+  ifelse(dr$rule12 != "pass", dr$rule12,
+         ifelse(is.na(dr$saipe_pov_rate_2009), NO_SAIPE,
+                ifelse(grp == "excluded", "rule 6: state excluded (reform in 2005-2009)", "retained")))
+}
+for (set in names(groups)) dr[[paste0("reason_", set)]] <- reason_for(set)
 
 # ---- district-year frame -----------------------------------------------------------
 smp <- lea[c("leaid", "state", "sy_end", "agency_type", "ccd_bound")]
@@ -95,7 +109,7 @@ smp$reason      <- dr$reason_primary[k]
 smp$retained_r1 <- as.integer(dr$reason_r1[k] == "retained")
 smp$retained_r2 <- as.integer(dr$reason_r2[k] == "retained")
 smp$robust_from_2013 <- as.integer(smp$sy_end >= PART_FROM)
-smp$boundary_change  <- as.integer(smp$ccd_bound == 5L)
+smp$boundary_change  <- as.integer(smp$ccd_bound %in% BOUND_CHANGE)
 smp$saipe_pov_rate_2009 <- dr$saipe_pov_rate_2009[k]
 smp$pov_quintile_2009   <- dr$pov_quintile_2009[k]
 smp$cep <- as.integer(smp$sy_end >= cep$first_cep_sy_end[match(smp$state, cep$state)])
@@ -112,8 +126,14 @@ edf <- lapply(WINDOW, function(y) {
     a <- read_edfacts_hs(f, subj, y, "achievement")
     x <- data.frame(leaid = a$leaid, stringsAsFactors = FALSE)
     for (s in SUBGROUPS) {
-      x[[paste0("n_", subj, "_", s)]]    <- edfacts_exact(a[[paste0("n_", s)]])
-      x[[paste0("cell_", subj, "_", s)]] <- cell_status(a[[paste0("n_", s)]], a[[paste0("p_", s)]])
+      n_raw <- a[[paste0("n_", s)]]
+      p_raw <- a[[paste0("p_", s)]]
+      st <- cell_status(n_raw, p_raw)
+      r  <- edfacts_range(p_raw)
+      x[[paste0("n_", subj, "_", s)]]    <- edfacts_exact(n_raw)
+      x[[paste0("p_", subj, "_", s)]]    <- ifelse(st == "usable", r$mid, NA_real_)
+      x[[paste0("w_", subj, "_", s)]]    <- r$width
+      x[[paste0("cell_", subj, "_", s)]] <- st
     }
     if (y >= PART_FROM) {
       pf <- sprintf("data/raw/edfacts/%s-participation-lea-sy%d-%02d.csv", subj, y - 1L, y %% 100L)
@@ -148,7 +168,7 @@ cols <- c("leaid", "state", "sy_end", "retained", "reason", "retained_r1", "reta
           "saipe_pov_rate_2009", "pov_quintile_2009", "cep",
           "test_replaced", "test_replaced_math", "test_replaced_rla",
           as.vector(outer(c("part_", "part_ok_"), outer(names(SUBJECTS), SUBGROUPS, paste, sep = "_"), paste0)),
-          as.vector(outer(c("n_", "cell_"), outer(names(SUBJECTS), SUBGROUPS, paste, sep = "_"), paste0)))
+          as.vector(outer(c("n_", "p_", "w_", "cell_"), outer(names(SUBJECTS), SUBGROUPS, paste, sep = "_"), paste0)))
 smp <- smp[order(smp$state, smp$leaid, smp$sy_end), cols]
 stopifnot(!anyDuplicated(smp[c("leaid", "sy_end")]))
 out_file <- "data/derived/sample_district_year.csv"
@@ -163,15 +183,29 @@ n0 <- nrow(dr)
 n1 <- sum(dr$rule12 != "rule 1: agency type not 1 or 2")
 n2 <- sum(!dr$rule12 %in% c("rule 1: agency type not 1 or 2", "rule 2: not operational in every window year"))
 n3 <- sum(dr$rule12 == "pass")
+n4 <- sum(dr$rule12 == "pass" & !is.na(dr$saipe_pov_rate_2009))
 steps <- data.frame(
   rule = c("CCD agencies in the 50 states and DC", "rule 1: agency type 1 or 2 in every year",
-           "rule 2: operational in every window year", "rule 2: no boundary change",
+           "rule 2: operational in every window year", "rule 2: no boundary change (BOUND 5 or 8)",
+           "SAIPE 2009 poverty rate present",
            "rule 6: primary event set", "rule 6: robustness set r1", "rule 6: robustness set r2"),
-  districts = c(n0, n1, n2, n3, sum(dr$reason_primary == "retained"),
+  districts = c(n0, n1, n2, n3, n4, sum(dr$reason_primary == "retained"),
                 sum(dr$reason_r1 == "retained"), sum(dr$reason_r2 == "retained")))
-steps$removed <- c(NA, -diff(steps$districts[1:4]), n3 - steps$districts[5:7])
+steps$removed <- c(NA, -diff(steps$districts[1:5]), n4 - steps$districts[6:8])
 show(steps)
 utils::write.csv(steps, file.path(out_dir, "districts_by_rule.csv"), row.names = FALSE, na = "")
+
+bc <- dr$leaid[dr$rule12 == "rule 2: boundary change (BOUND 5 or 8)"]
+b5 <- unique(lea$leaid[lea$sy_end %in% WINDOW & lea$ccd_bound == 5L])
+say("Boundary-change exclusions: ", length(bc), " (BOUND 5 in a window year: ", sum(bc %in% b5),
+    "; BOUND 8 and never 5: ", sum(!bc %in% b5), ")")
+ns <- dr[dr$rule12 == "pass" & is.na(dr$saipe_pov_rate_2009), ]
+say("Districts passing rules 1 and 2 with no SAIPE 2009 poverty rate, dropped: ", nrow(ns),
+    " (absent from the SAIPE file: ", sum(!ns$in_saipe_file), "; no children 5-17: ", sum(ns$in_saipe_file), ")")
+kept_by <- vapply(names(groups), function(set)
+  sum(groups[[set]]$group[match(ns$state, groups[[set]]$state)] != "excluded"), integer(1))
+say("  of which in states that rule 6 keeps: ", paste(names(kept_by), kept_by, collapse = ", "))
+utils::write.csv(ns[c("leaid", "state", "in_saipe_file")], file.path(out_dir, "no_saipe_2009.csv"), row.names = FALSE)
 ret <- smp[smp$retained == 1L, ]
 say("States with retained districts (primary set): ", length(unique(ret$state)))
 say("Retained districts in the poverty-quintile set (grade span to 12 in 2009-10, SAIPE 2009 rate): ",
@@ -180,32 +214,57 @@ few <- tapply(in_q & dr$reason_primary == "retained", dr$state, sum)
 few <- few[names(few) %in% unique(ret$state) & few < 5]
 if (length(few)) say("States with fewer than five quintile districts (no bottom quintile can form): ",
                      paste(sprintf("%s (%d)", names(few), few), collapse = ", "))
-say("Retained districts missing a SAIPE 2009 rate: ",
-    sum(dr$reason_primary == "retained" & is.na(dr$saipe_pov_rate_2009)))
 say("EDFacts LEAIDs with HS counts but no CCD row in the 50 states and DC that year: ", length(edf_unmatched))
 
-# ---- report 2: cells lost to suppression (rule 3) --------------------------------
+# ---- report 2: EDFacts range widths by tested-count bracket ----------------------
+say("\n== Width in points of the reported HS percent proficient, by tested-count bracket, ", min(WINDOW), "-",
+    max(WINDOW))
+say("Every LEA in the EDFacts files in the 50 states and DC with an exact valid-test count; subgroups ",
+    paste(SUBGROUPS, collapse = " "), "; math and RLA. Width 0 = exact value; none = PS, N/A or blank.")
+in_us <- substr(edf$leaid, 1, 2) %in% STATE_FIPS
+cw <- do.call(rbind, lapply(names(SUBJECTS), function(subj) do.call(rbind, lapply(SUBGROUPS, function(s)
+  data.frame(sy_end = edf$sy_end[in_us], n = edf[[paste0("n_", subj, "_", s)]][in_us],
+             w = edf[[paste0("w_", subj, "_", s)]][in_us])))))
+cw <- cw[!is.na(cw$n), ]
+cw$bracket <- cut(cw$n, c(-Inf, 0, 5, 15, 30, 60, 300, Inf),
+                  labels = c("0", "1-5", "6-15", "16-30", "31-60", "61-300", "301+"))
+cw$width <- factor(ifelse(is.na(cw$w), "none", as.character(cw$w)),
+                   levels = c(as.character(sort(unique(cw$w))), "none"))
+for (y in WINDOW) {
+  say("End year ", y, ":")
+  say(paste(utils::capture.output(print(table(bracket = cw$bracket[cw$sy_end == y],
+                                              width = cw$width[cw$sy_end == y]))), collapse = "\n"))
+}
+rw <- as.data.frame(table(sy_end = cw$sy_end, bracket = cw$bracket, width = cw$width), responseName = "cells")
+utils::write.csv(rw[rw$cells > 0, ], file.path(out_dir, "range_widths_by_bracket.csv"), row.names = FALSE)
+
+# ---- report 3: cells lost to suppression (rule 3) --------------------------------
 say("\n== HS cells lost to suppression, retained districts (primary set), ", min(WINDOW), "-", max(WINDOW))
 say("Each cell is one district-year-subject-subgroup. not_reported: no count in EDFacts (includes districts",
-    " without high school grades); below_30: exact count under 30; not_exact: count >= 30 but percent",
-    " proficient given as a range or symbol.")
-status_levels <- c("not_reported", "below_30", "not_exact", "usable")
+    " without high school grades); below_30: exact count under 30; suppressed: count >= 30, percent",
+    " proficient not reported; wide_range: count >= 30, percent proficient a range wider than ",
+    MAX_WIDTH[["primary"]], " points; usable: exact or a range of ", MAX_WIDTH[["primary"]],
+    " points or less (primary). usable_r5 and usable_exact: the robustness samples.")
+status_levels <- c("not_reported", "below_30", "suppressed", "wide_range", "usable")
 supp <- do.call(rbind, lapply(names(SUBJECTS), function(subj) do.call(rbind, lapply(SUBGROUPS, function(s) {
   do.call(rbind, lapply(WINDOW, function(y) {
-    v <- ret[[paste0("cell_", subj, "_", s)]][ret$sy_end == y]
+    v  <- ret[[paste0("cell_", subj, "_", s)]][ret$sy_end == y]
+    wv <- ret[[paste0("w_", subj, "_", s)]][ret$sy_end == y]
     tb <- table(factor(v, levels = status_levels))
-    data.frame(subject = subj, subgroup = s, sy_end = y, cells = length(v), t(as.vector(tb)))
+    data.frame(subject = subj, subgroup = s, sy_end = y, cells = length(v), t(as.vector(tb)),
+               usable_r5 = sum(cell_in_sample(v, wv, "r5")), usable_exact = sum(cell_in_sample(v, wv, "exact")))
   }))
 }))))
-names(supp)[5:8] <- status_levels
+names(supp)[5:9] <- status_levels
 utils::write.csv(supp, file.path(out_dir, "cells_by_status.csv"), row.names = FALSE)
-tot <- aggregate(supp[c("cells", status_levels)], supp[c("subject", "subgroup")], sum)
+tot <- aggregate(supp[c("cells", status_levels, "usable_r5", "usable_exact")], supp[c("subject", "subgroup")], sum)
 tot$subgroup <- factor(tot$subgroup, levels = SUBGROUPS)
 show(tot[order(tot$subject, tot$subgroup), ])
 
 gap_pairs <- list(a_all = "all", b_black_white = c("wh", "bl"), c_hispanic_white = c("wh", "hi"))
-usable_gap <- function(d, subj, sgs, with_part) {
-  ok <- Reduce(`&`, lapply(sgs, function(s) d[[paste0("cell_", subj, "_", s)]] == "usable"))
+usable_gap <- function(d, subj, sgs, with_part, sample = "primary") {
+  ok <- Reduce(`&`, lapply(sgs, function(s)
+    cell_in_sample(d[[paste0("cell_", subj, "_", s)]], d[[paste0("w_", subj, "_", s)]], sample)))
   if (with_part) {
     pk <- Reduce(`&`, lapply(sgs, function(s) is.na(d[[paste0("part_ok_", subj, "_", s)]]) |
                                                d[[paste0("part_ok_", subj, "_", s)]] == 1L))
@@ -213,14 +272,22 @@ usable_gap <- function(d, subj, sgs, with_part) {
   }
   ok
 }
-say("\nDistrict-years with every subgroup of the gap usable under rule 3 (before participation):")
-gy <- do.call(rbind, lapply(names(gap_pairs), function(g) do.call(rbind, lapply(names(SUBJECTS), function(subj) {
-  data.frame(gap = g, subject = subj, t(sapply(WINDOW, function(y) sum(usable_gap(ret[ret$sy_end == y, ], subj, gap_pairs[[g]], FALSE)))))
-}))))
-names(gy)[-(1:2)] <- paste0("sy", WINDOW)
+say("\nUsable district-years, retained districts (primary set): every subgroup of the gap in the sample",
+    " under rule 3. sy", PART_FROM, "_part also applies the participation rule.")
+say("Samples: primary = exact or range <= ", MAX_WIDTH[["primary"]], " points; r5 = exact or range <= ",
+    MAX_WIDTH[["r5"]], " points; exact = exact values only.")
+gy <- do.call(rbind, lapply(names(MAX_WIDTH), function(smpl) do.call(rbind, lapply(names(gap_pairs), function(g)
+  do.call(rbind, lapply(names(SUBJECTS), function(subj) {
+    cnt <- vapply(WINDOW, function(y) sum(usable_gap(ret[ret$sy_end == y, ], subj, gap_pairs[[g]], FALSE, smpl)),
+                  integer(1))
+    data.frame(sample = smpl, gap = g, subject = subj, t(cnt),
+               part = sum(usable_gap(ret[ret$sy_end == PART_FROM, ], subj, gap_pairs[[g]], TRUE, smpl)))
+  }))))))
+names(gy) <- c("sample", "gap", "subject", paste0("sy", WINDOW), paste0("sy", PART_FROM, "_part"))
 show(gy)
+utils::write.csv(gy, file.path(out_dir, "usable_gap_district_years.csv"), row.names = FALSE)
 
-# ---- report 3: participation (rule 4) ----------------------------------------------
+# ---- report 4: participation (rule 4) ----------------------------------------------
 say("\n== Participation rule, retained districts (primary set)")
 say("End years ", min(WINDOW), "-", PART_FROM - 1L, ": no participation file; retained without the test.")
 r13 <- ret[ret$sy_end == PART_FROM, ]

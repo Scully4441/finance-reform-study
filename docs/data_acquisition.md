@@ -16,8 +16,10 @@ Read this before touching the manifest or writing `R/03_sample.R` and
   EDFacts release on the registration date. `data/stage.txt` gates this.
 - School years are indexed by end year: 2009-10 is 2010. Fiscal years in F-33
   and SAIPE income years are mapped to school years as stated per dataset.
-- Only exact values are used from EDFacts (Section 5). Ranges and symbols
-  become missing through `edfacts_exact()`.
+- EDFacts counts are used only when exact. Percent proficient enters as an
+  exact value or at the midpoint of a range no wider than 10 points (author
+  decision 2026-09-11, replacing the exact-only rule of Section 5; see 4.1).
+  Wider ranges and symbols become missing.
 - After each stage the author deposits the downloaded files and the manifest
   on OSF (Section 4). Federal files are public domain.
 
@@ -65,8 +67,9 @@ Fields that matter (names vary slightly by year; Claude Code maps them):
   same pattern with `RLA`.
 - Grade span `HS` is the high school band. Do not use `00` (all grades).
 
-Preparation: keep exact numeric values only; convert percent to share by
-dividing by 100; apply the 30-test floor per cell; compute V with
+Preparation: keep exact counts; take percent proficient as the exact value or
+the midpoint of a range no wider than 10 points (4.1); convert percent to
+share by dividing by 100; apply the 30-test floor per cell; compute V with
 `v_gap(p_a, p_b, n_a, n_b)`.
 
 Known quirks: some states report only `00`; some report high school under
@@ -287,8 +290,9 @@ CCD has no CEP field (see 2.5).
 
 `R/03_sample.R` produces one district-year file with: LEAID, state, sy_end,
 retained flag and reason, agency type, boundary flag, SAIPE 2009 quintile,
-CEP indicator, test-replacement flag, participation by subject, and valid-test
-counts by subgroup.
+CEP indicator, test-replacement flag, participation by subject, and, by
+subject and subgroup, the valid-test count, the percent proficient that
+enters the gap, and the width of its reported range.
 
 `R/04_outcomes.R` produces one row per district-year-subject with V for the
 Black-White and Hispanic-White gaps with counts and delta-method standard
@@ -309,11 +313,37 @@ rules are in `R/functions/sample_rules.R`.
   change, 2 closed, 3 new, 4 added, 5 significant change in boundaries or
   instructional responsibility, 6 temporarily closed, 7 future, 8 reopened.
   A district is present in a year when it is listed with a code other than 2,
-  6, or 7, and it must be present in every window year. A code 5 in any window
-  year, 2009-10 included, excludes it. Agency type must be 1 or 2 in every
-  window year.
-- Suppression (rule 3). A cell is usable when the valid-test count is exact
-  and at least 30 and the percent proficient is exact.
+  6, or 7, and it must be present in every window year. A code 5 or 8 in any
+  window year, 2009-10 included, excludes it (8, reopened, is treated like
+  the other change codes: author decision 2026-09-11). Agency type must be
+  1 or 2 in every window year.
+- Suppression (rule 3; author decision 2026-09-11, replacing the exact-only
+  rule; logged in `docs/deviations.md`). The valid-test count must be exact
+  and at least 30. Percent proficient enters as the exact value or, when
+  EDFacts reports it as a range no wider than 10 percentage points, at the
+  range midpoint. Wider ranges and suppressed values (`PS`, `N/A`, `.`,
+  blank) are missing. Width and midpoint come from the printed endpoints,
+  with one-sided labels closed at 0 and 100 (`edfacts_range()`): `20-29` has
+  width 9 and midpoint 24.5, `90-94` width 4 and midpoint 92, `GE90` width 10
+  and midpoint 95, `GE95` width 5 and midpoint 97.5, `LE5` width 5 and
+  midpoint 2.5, an exact value width 0. The stage-1 files band high school
+  percent proficient by tested count: 1-5 `PS`; 6-15 `GE50`/`LT50`; 16-30
+  20-point bands; 31-60 10-point bands; 61-300 5-point bands; above 300 whole
+  numbers with `GE99` and `LE1` at the ends
+  (`outputs/03_sample/range_widths_by_bracket.csv`). In those files the
+  primary rule admits every cell with 31 or more tested students. Statuses:
+  `not_reported`, `below_30`, `suppressed`, `wide_range`, `usable`.
+- Suppression robustness samples (author decision 2026-09-11): exact values
+  only (width 0, the registered rule) and ranges of 5 points or less.
+  `MAX_WIDTH` and `cell_in_sample()` in `R/functions/sample_rules.R` define
+  the three samples. The sample file carries `w_<subj>_<sg>` (width in
+  points; 0 exact; NA suppressed) and `p_<subj>_<sg>` (the exact value or
+  midpoint, usable cells only) for `R/04_outcomes.R`.
+- SAIPE (author decision 2026-09-11; logged in `docs/deviations.md`). A
+  district that passes rules 1 and 2 but has no SAIPE 2009 child-poverty rate
+  (absent from the file, or no children 5-17) is dropped before rule 6, for
+  all three gaps. The dropped LEAIDs are listed in
+  `outputs/03_sample/no_saipe_2009.csv`.
 - Participation (rule 4). EDFacts reports most high school participation
   rates as bounds or ranges (`GE95`, `GE90`, `90-94`). A cell passes when the
   lowest rate consistent with the reported value is at least 95: an exact

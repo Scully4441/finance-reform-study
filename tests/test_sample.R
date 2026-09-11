@@ -6,11 +6,20 @@ stopifnot(length(STATE_FIPS) == 51, setequal(names(STATE_FIPS), c(state.abb, "DC
 stopifnot(identical(fips_to_state(c("01", "11", "56", "72")), c("AL", "DC", "WY", NA)))
 stopifnot(identical(edfacts_year_tag(c(2010L, 2013L)), c("0910", "1213")))
 
-# rule 3: exact count >= 30 and exact percent proficient
-n <- c("45", "25", "100", "", ".", "30", "30", "29")
-p <- c("50.5", "GE50", "40-44", "", ".", "PS", "12", "12")
-stopifnot(identical(cell_status(n, p),
-                    c("usable", "below_30", "not_exact", "not_reported", "not_reported", "not_exact", "usable", "below_30")))
+# rule 3 (author decision 2026-09-11): exact count >= 30; percent proficient exact
+# or a range no wider than 10 points; robustness samples at 5 points and exact only
+stopifnot(identical(MAX_WIDTH, c(primary = 10, r5 = 5, exact = 0)))
+n <- c("45", "25", "100", "", ".", "30", "30", "29", "45", "45", "45", "45", "301", "40", "30")
+p <- c("50.5", "GE50", "40-44", "", ".", "PS", "12", "12", "21-39", "GE90", "LE10", "N/A", "GE99", "11-19", "GE80")
+st <- cell_status(n, p)
+stopifnot(identical(st, c("usable", "below_30", "usable", "not_reported", "not_reported", "suppressed", "usable",
+                          "below_30", "wide_range", "usable", "usable", "suppressed", "usable", "usable", "wide_range")))
+stopifnot(identical(cell_status(n, p, max_width = 5)[c(3, 10, 11, 14)], c("usable", "wide_range", "wide_range", "wide_range")))
+wd <- edfacts_range(p)$width
+stopifnot(identical(cell_in_sample(st, wd, "primary"), st == "usable"),
+          identical(which(cell_in_sample(st, wd, "r5")), c(1L, 3L, 7L, 13L)),
+          identical(which(cell_in_sample(st, wd, "exact")), c(1L, 7L)))
+stopifnot(inherits(try(cell_in_sample("usable", 0, "r3"), silent = TRUE), "try-error"))
 
 # rule 4: lower bound of the reported participation must reach 95
 x <- c("96", "GE95", "GE90", "90-94", "95-99", "LT50", "PS", "n/a", ".", "", "94.9", "GE99", NA, " ge95 ")
@@ -28,16 +37,18 @@ lea_t <- rbind(
   mk("E", 1L, c(5L, 1L, 1L, 1L)),                   # boundary change in the first window year
   mk("F", 2L, c(3L, 1L, 1L, 1L)),                   # new in 2010, then open: pass
   mk("G", 2L, c(1L, 6L, 1L, 1L)),                   # temporarily closed
-  mk("H", 1L, c(1L, 1L, 8L, 1L)),                   # reopened counts as operational
+  mk("H", 1L, c(1L, 1L, 8L, 1L)),                   # reopened: a change code, like 5
+  mk("L", 1L, c(8L, 1L, 1L, 1L)),                   # reopened in the first window year
   mk("I", 1L, c(1L, 1L, 1L, 7L)),                   # future
   mk("J", c(1L, 2L, 2L, 1L), 1L),                   # switches between types 1 and 2: pass
   mk("K", 1L, c(1L, 1L, 2L, 5L)))                   # closed and boundary change: presence reported first
 dr_t <- district_rules(lea_t, w)
 want <- c(A = "pass", B = "rule 1: agency type not 1 or 2", C = "rule 2: not operational in every window year",
-          D = "rule 2: not operational in every window year", E = "rule 2: boundary change", F = "pass",
-          G = "rule 2: not operational in every window year", H = "pass",
-          I = "rule 2: not operational in every window year", J = "pass",
-          K = "rule 2: not operational in every window year")
+          D = "rule 2: not operational in every window year", E = "rule 2: boundary change (BOUND 5 or 8)",
+          F = "pass", G = "rule 2: not operational in every window year",
+          H = "rule 2: boundary change (BOUND 5 or 8)", I = "rule 2: not operational in every window year",
+          J = "pass", K = "rule 2: not operational in every window year",
+          L = "rule 2: boundary change (BOUND 5 or 8)")
 stopifnot(identical(setNames(dr_t$rule12, dr_t$leaid), want))
 # rows outside the window are ignored
 stopifnot(district_rules(rbind(mk("A", 1L, 1L), mk("A", 7L, 5L, 2009L)), w)$rule12 == "pass")
@@ -108,19 +119,29 @@ if (file.exists(out)) {
   stopifnot(all(c("leaid", "state", "sy_end", "retained", "reason", "retained_r1", "retained_r2", "robust_from_2013",
                   "agency_type", "boundary_change", "pov_quintile_2009", "cep", "test_replaced",
                   "test_replaced_math", "test_replaced_rla", paste0("part_", sg), paste0("part_ok_", sg),
-                  paste0("n_", sg), paste0("cell_", sg)) %in% names(s)))
+                  paste0("n_", sg), paste0("p_", sg), paste0("w_", sg), paste0("cell_", sg),
+                  "ccd_bound", "saipe_pov_rate_2009") %in% names(s)))
   stopifnot(all(grepl("^[0-9]{7}$", s$leaid)), !anyDuplicated(s[c("leaid", "sy_end")]),
             all(s$state %in% names(STATE_FIPS)), all(substr(s$leaid, 1, 2) == STATE_FIPS[s$state]))
   stopifnot(all(s$retained == (s$reason == "retained")), all(s$agency_type[s$retained == 1] %in% 1:2),
+            all(s$boundary_change == as.integer(s$ccd_bound %in% c(5, 8))),
             all(s$boundary_change[s$retained == 1] == 0))
+  # districts with no SAIPE 2009 rate are dropped (author decision 2026-09-11)
+  stopifnot(!anyNA(s$saipe_pov_rate_2009[s$retained == 1 | s$retained_r1 == 1 | s$retained_r2 == 1]),
+            all(is.na(s$saipe_pov_rate_2009[s$reason == "no SAIPE 2009 poverty rate"])))
   stopifnot(all(tapply(s$reason, s$leaid, function(r) length(unique(r)) == 1)))       # district-level rules
   yrs <- sort(unique(s$sy_end))
   stopifnot(all(tapply(s$sy_end[s$retained == 1], s$leaid[s$retained == 1], function(v) identical(sort(v), yrs))))
   stopifnot(all(s$robust_from_2013 == as.integer(s$sy_end >= 2013)))
   stopifnot(all(is.na(unlist(s[s$sy_end < 2013, paste0("part_ok_", sg)]))),
             all(unlist(s[s$sy_end >= 2013, paste0("part_ok_", sg)]) %in% 0:1))
-  stopifnot(all(unlist(s[paste0("cell_", sg)]) %in% c("not_reported", "below_30", "not_exact", "usable")))
-  for (v in sg) stopifnot(all(s[[paste0("n_", v)]][s[[paste0("cell_", v)]] == "usable"] >= 30))
+  stopifnot(all(unlist(s[paste0("cell_", sg)]) %in% c("not_reported", "below_30", "suppressed", "wide_range", "usable")))
+  for (v in sg) {
+    cs <- s[[paste0("cell_", v)]]; u <- cs == "usable"
+    wv <- s[[paste0("w_", v)]]; pv <- s[[paste0("p_", v)]]
+    stopifnot(all(s[[paste0("n_", v)]][u] >= 30), all(wv[u] <= 10), !anyNA(pv[u]), all(pv[u] >= 0 & pv[u] <= 100),
+              all(is.na(pv[!u])), all(wv[cs == "wide_range"] > 10), all(is.na(wv[cs == "suppressed"])))
+  }
   q <- s$pov_quintile_2009[s$retained == 1 & !is.na(s$pov_quintile_2009)]
   stopifnot(all(q %in% 1:5))
   trr <- utils::read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
