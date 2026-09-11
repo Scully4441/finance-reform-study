@@ -261,7 +261,17 @@ Drafting conventions (Claude Code, 2026-09-11; author to confirm):
   `ESEA flexibility request: <url>`, `ESEA workbook: <url>`,
   `ESSA plan: <url>`.
 - A change in which instrument is reported counts as a replacement (author,
-  2026-09-11: Maine 2011 math, augmented SAT to SAT alone, is 1).
+  2026-09-11): Maine 2011 math (augmented SAT to SAT alone), Utah 2011 math
+  (Algebra I and Geometry CRTs to Algebra I alone), and Mississippi 2013
+  reading (English II loses its writing part; mixed year) are 1. North
+  Carolina 2012 reading is 1 only if North Carolina's documentation shows the
+  pre-2012 EDFacts reading result included the Grade 10 Writing component.
+- Row decisions from the author (2026-09-11) are recorded in `notes` as
+  "Author decision 2026-09-11: ...".
+- Interim, stage 1 draft: the MT, NE, NV, NH, NJ, NM, NY, NC rows were
+  researched without web search. Until they are re-run with search, rows
+  with a replacement stay `documented` and all other rows in those states
+  are `inferred`.
 
 The author checks every row before it is used.
 

@@ -90,7 +90,8 @@ Update the Status column as steps finish.
   separately; replaced = 1 if either is 1. A subject is 1 in the first school
   year in which its EDFacts high school result comes from the new test. A test
   rebuilt for new standards with a new scale is a replacement even if the name
-  is unchanged; a new cut score on an unchanged test is 0. A year that mixes
+  is unchanged; a new cut score on an unchanged test is 0. A change in which
+  instrument is reported (e.g. augmented SAT to SAT alone) is 1. A year that mixes
   old and new results is flagged. Every row is coded from the state education
   agency's assessment history page (Wayback Machine copies allowed, cited with
   the archived URL and capture date); the state's ESEA flexibility request
