@@ -2,11 +2,17 @@
 #   Rscript R/00_install_packages.R
 # Some packages are not always on CRAN; those fall back to GitHub.
 # Windows needs Rtools for the GitHub installs.
+# Rscript runs non-interactively, so the CRAN mirror must be set here.
+
+options(repos = c(CRAN = "https://cloud.r-project.org"), Ncpus = 4)
 
 cran <- c("data.table", "digest", "future", "furrr", "testthat", "remotes",
           "renv", "did", "fixest", "didimputation", "fwildclusterboot",
           "wildrwolf", "HonestDiD")
+# summclust is a dependency of fwildclusterboot that is not on CRAN for
+# current R releases, so it is installed from GitHub first.
 github <- c(synthdid = "synth-inference/synthdid",
+            summclust = "s3alfisc/summclust",
             fwildclusterboot = "s3alfisc/fwildclusterboot",
             wildrwolf = "s3alfisc/wildrwolf",
             HonestDiD = "asheshrambachan/HonestDiD")
@@ -15,7 +21,8 @@ for (p in cran) {
   if (!requireNamespace(p, quietly = TRUE)) try(install.packages(p))
 }
 for (p in names(github)) {
-  if (!requireNamespace(p, quietly = TRUE)) try(remotes::install_github(github[[p]]))
+  if (!requireNamespace(p, quietly = TRUE))
+    try(remotes::install_github(github[[p]], dependencies = TRUE, upgrade = "never"))
 }
 
 all_pkgs <- union(cran, names(github))
