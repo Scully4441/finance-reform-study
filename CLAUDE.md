@@ -18,8 +18,9 @@ decision the document does not make, stop and ask the author before coding it.
    this. Do not work around it. The author changes the file to `2` after registration.
 4. Master seed is 130 (`R/functions/seeds.R`). Every random step calls
    `seed_for("<step name>")`. Never call `set.seed()` with a literal anywhere else.
-5. Never edit `docs/design.md`. Record any departure in
-   `docs/deviations.md` with date and reason.
+5. Before registration, author decisions go in `docs/decision_log.md` with a
+   rationale; after registration, departures go in `docs/deviations.md`.
+   Never edit `docs/design.md`.
 6. All estimation in R. Reference packages: `did` (Callaway–Sant'Anna),
    `fixest` (Sun–Abraham `sunab`, stacked regression), `didimputation`,
    `synthdid`, `fwildclusterboot` (Webb weights), `wildrwolf`, `HonestDiD`.
@@ -128,7 +129,10 @@ Update the Status column as steps finish.
   The exact-only sample keeps exact participation values; its cells report
   participation exactly or as GE99, which passes, so one `part_ok_*` flag
   serves all three samples. Rationale: the same logic as the midpoint rule,
-  and it keeps sample composition stable across 2012 and 2013.
+  and it reduces the 2012-to-2013 discontinuity in sample composition rather
+  than removing it. The effective threshold depends on district size: 31–60
+  tested pass on GE90, 61–300 fail at 90-94, and only the largest districts
+  face the literal 95.
 - Suppression rule (author, 2026-09-11; replaces exact-only; data acquisition
   4.1; docs/decision_log.md): the valid-test count must be exact and
   ≥ 30. Percent proficient enters as the exact value or, when reported as a
