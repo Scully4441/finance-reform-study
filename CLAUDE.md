@@ -51,7 +51,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11); run so far only at the reduced `--quick` counts |
-| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | |
+| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11) |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
 | 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | |
@@ -217,4 +217,15 @@ Update the Status column as steps finish.
   `Rscript R/07_inference.R --quick` is a test run at reduced counts; the counts of a
   run are recorded in `outputs/07_inference/inference_settings.csv`.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
+- Power as implemented (author, 2026-09-11; docs/decision_log.md): the three primary
+  gaps of the primary event set, unweighted, each on its step 5 estimation panel;
+  treated states drawn at random from every state in the panel and given the observed
+  cohort years (the Section 8 reassignment); every draw from `seed_for("power")` in the
+  parent process, so the result does not depend on the worker count. MDE = the smallest
+  shift of the placebo distribution that a test at the 95th percentile of the absolute
+  placebo estimates rejects with probability 0.80; the normal-approximation figure
+  (2.8016 x sd) is reported beside it. Stage 1 result: 0.207, 0.260 and 0.167 SD for
+  gaps (a), (b) and (c), all above the 0.10 SD ceiling, so on a four-year window with
+  two estimable cohort states Section 10's criterion reads underpowered. `--quick` is a
+  test run at a reduced count, recorded in `outputs/08_power/power_settings.csv`.
 - License: MIT.

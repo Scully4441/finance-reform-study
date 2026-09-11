@@ -121,4 +121,7 @@ source("tests/test_secondary.R")
 
 # inference and the step 7 outputs
 source("tests/test_inference.R")
+
+# power simulation and the step 8 outputs
+source("tests/test_power.R")
 cat("All tests passed.\n")
