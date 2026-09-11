@@ -16,28 +16,37 @@
 # effect at 80 percent power and a 5 percent two-sided test for each primary gap. If the
 # MDE exceeds 0.10 SD for every primary gap the study is registered as underpowered and
 # proceeds only as a bounds analysis.
-# Models: the three primary gaps on the primary event set, unweighted and on the primary
-# suppression sample, which is what "primary gap" means everywhere else in the pipeline.
+# Models: the three primary gaps on the primary event set, unweighted, on the primary
+# suppression sample and on the primary (unbalanced) panel rule, which is what "primary
+# gap" means everywhere else in the pipeline.
 # Each runs on its own step 5 estimation panel (R/functions/inference.R, cs_panel()), so
 # the placebo runs use exactly the panel, covariates and estimator settings of step 5.
-# Two scenarios (author decisions 2026-09-11, docs/decision_log.md), both at 2,000 runs:
-#   observed   the reassignment Section 8 fixes for randomization inference: the treated
-#              states are drawn from every state in the panel and given the observed
-#              cohort years, keeping the number of states per cohort year. In the stage 1
-#              window that is two treated states, which is the pre-period's own cohort
-#              count and not the registered design's. Written to mde.csv.
-#              Draws from seed_for("power").
-#   ten_state  TEN_STATES placebo-treated states, their cohort years drawn uniformly from
-#              TEN_YEARS. This is the power calculation the 0.10 SD rule of Section 10 is
-#              applied against. Written to mde_10states.csv, with a supplementary
-#              projection column. Draws from seed_for("power_10").
-# Both draw in this process and hand the assignments to the workers (CLAUDE.md rule 4),
-# so neither result depends on how many workers run it.
+# Three scenarios (author decisions 2026-09-11, docs/decision_log.md), each at 2,000 runs:
+#   observed      the reassignment Section 8 fixes for randomization inference: the
+#                 treated states are drawn from every state in the panel and given the
+#                 observed cohort years, keeping the number of states per cohort year. In
+#                 the stage 1 window that is two treated states, which is the pre-period's
+#                 own cohort count and not the registered design's. Sensitivity only.
+#                 Written to mde.csv; draws from seed_for("power").
+#   ten_state     TEN_STATES placebo-treated states, cohort years drawn uniformly from
+#                 PLACEBO_YEARS. Sensitivity: it simulates two treated states fewer than
+#                 the registered design has. Written to mde_10states.csv, with the
+#                 projection columns; draws from seed_for("power_10").
+#   twelve_state  TWELVE_STATES placebo-treated states, cohort years drawn the same way.
+#                 TWELVE_STATES is the treated states the event table carries with
+#                 post-reform data by REG_END, so this is the registered power
+#                 calculation and the one the 0.10 SD rule of Section 10 is applied
+#                 against (REGISTERED). Written to mde_12states.csv, with the same
+#                 columns as mde_10states.csv; draws from seed_for("power_12").
+# All three draw in this process and hand the assignments to the workers (CLAUDE.md rule
+# 4), so no result depends on how many workers run it.
 # Outputs (outputs/08_power/)
 #   mde.csv                 observed-cohort scenario: MDE per gap and the placebo spread
 #   mde_10states.csv        ten-state scenario: the same, plus the projection columns
+#   mde_12states.csv        twelve-state scenario (the registered one): the same columns
 #   placebo_draws.csv       every placebo estimate of the observed scenario
 #   placebo_draws_10states.csv  every placebo estimate of the ten-state scenario
+#   placebo_draws_12states.csv  every placebo estimate of the twelve-state scenario
 #   power_curve.csv         power against effect size per scenario and gap
 #   model_status.csv        status and notes per scenario and gap
 #   power_settings.csv      counts, seeds and versions of this run
@@ -58,24 +67,34 @@ if (!identical(stage, 1L))
 GAPS       <- c("a_poverty", "b_black_white", "c_hispanic_white")
 EVENT_SET  <- "primary"     # the primary event set (design Section 3)
 WEIGHTING  <- "unweighted"  # the primary weighting for all three gaps (design Section 7)
+PANEL      <- "unbalanced"  # the primary panel rule of step 5 (author, 2026-09-11)
 WORKERS    <- 12L           # CLAUDE.md conventions: 14 cores, no forking
 QUICK_REPS <- 200L
-# The ten-state scenario (author, 2026-09-11). TEN_STATES is the count the author gives
-# for the treated states with post-reform data in the registered design; the projection
-# block below reports the count the event table actually carries beside it.
-TEN_STATES <- 10L
-TEN_YEARS  <- 2011:2013     # cohort years a stage 1 placebo can take: 2010 has no pre-period
+# Placebo-treated state counts (author, 2026-09-11). TWELVE_STATES is the treated states
+# the event table carries with post-reform data by REG_END and is the registered power
+# calculation; TEN_STATES is the earlier count, kept as a sensitivity run. The design
+# block below checks TWELVE_STATES against the event table.
+TEN_STATES    <- 10L
+TWELVE_STATES <- 12L
+REGISTERED    <- "twelve_state"   # the scenario Section 10's 0.10 SD rule is applied to
+PLACEBO_YEARS <- 2011:2013  # cohort years a stage 1 placebo can take: 2010 has no pre-period
 REG_END    <- 2025L         # placeholder registration end year, for the projection only
 REG_DROP   <- 2020L         # end years the design leaves out of the panel (no EDFacts file)
 
+drawn_label <- function(n) sprintf("%d placebo-treated states, cohort years drawn uniformly from %d-%d",
+                                   n, min(PLACEBO_YEARS), max(PLACEBO_YEARS))
 SCENARIOS <- list(
-  observed  = list(seed_step = "power",    mde_file = "mde",
-                   draws_file = "placebo_draws",
-                   label = "observed cohort count and observed cohort years"),
-  ten_state = list(seed_step = "power_10", mde_file = "mde_10states",
-                   draws_file = "placebo_draws_10states",
-                   label = sprintf("%d placebo-treated states, cohort years drawn uniformly from %d-%d",
-                                   TEN_STATES, min(TEN_YEARS), max(TEN_YEARS))))
+  observed     = list(seed_step = "power",    mde_file = "mde",
+                      draws_file = "placebo_draws", n_treated = NA_integer_, projection = FALSE,
+                      label = "observed cohort count and observed cohort years"),
+  ten_state    = list(seed_step = "power_10", mde_file = "mde_10states",
+                      draws_file = "placebo_draws_10states", n_treated = TEN_STATES,
+                      projection = TRUE, label = drawn_label(TEN_STATES)),
+  twelve_state = list(seed_step = "power_12", mde_file = "mde_12states",
+                      draws_file = "placebo_draws_12states", n_treated = TWELVE_STATES,
+                      projection = TRUE, label = drawn_label(TWELVE_STATES)))
+stopifnot(REGISTERED %in% names(SCENARIOS))
+MAX_TREATED <- max(vapply(SCENARIOS, function(x) as.numeric(x$n_treated), numeric(1)), na.rm = TRUE)
 
 quick <- "--quick" %in% commandArgs(trailingOnly = TRUE)
 reps  <- if (quick) QUICK_REPS else POWER_REPS
@@ -102,7 +121,8 @@ say("Minimum detectable effect at ", POWER_TARGET * 100, "% power, ", (1 - POWER
     "% two-sided test; Section 10 calls the study underpowered if every gap exceeds ",
     POWER_CEILING, " SD")
 for (s in names(SCENARIOS))
-  say(sprintf("  scenario %-9s %s -> %s.csv", s, SCENARIOS[[s]]$label, SCENARIOS[[s]]$mde_file))
+  say(sprintf("  scenario %-12s %s -> %s.csv%s", s, SCENARIOS[[s]]$label, SCENARIOS[[s]]$mde_file,
+              if (s == REGISTERED) "   (the registered power calculation)" else "   (sensitivity)"))
 
 # ---- inputs ------------------------------------------------------------------------------
 rds <- file.path("outputs", "05_primary", "cs_models.rds")
@@ -115,15 +135,16 @@ pc5 <- utils::read.csv(file.path("outputs", "05_primary", "panel_counts.csv"), s
 panels <- list(); cohorts <- list(); usable <- character()
 say("\n== Step 5 panels the placebo runs are built on")
 for (gap in GAPS) {
-  fit <- models[[paste(gap, EVENT_SET, WEIGHTING, sep = ".")]]
+  fit <- models[[paste(gap, EVENT_SET, WEIGHTING, PANEL, sep = ".")]]
   if (is.null(fit)) next
   cp <- cs_panel(fit)
   gs <- panel_cohort_years(cp$panel)
   states <- sort(unique(cp$panel$state))
-  if (!length(gs) || length(states) <= max(length(gs), TEN_STATES)) next
+  if (!length(gs) || length(states) <= max(length(gs), MAX_TREATED)) next
   # The panel must be the one step 5 estimated on, and the fit the one it reported.
-  k5 <- which(pc5$gap == gap & pc5$event_set == EVENT_SET)
-  o5 <- which(ov5$gap == gap & ov5$event_set == EVENT_SET & ov5$weighting == WEIGHTING)
+  k5 <- which(pc5$gap == gap & pc5$event_set == EVENT_SET & pc5$panel == PANEL)
+  o5 <- which(ov5$gap == gap & ov5$event_set == EVENT_SET & ov5$weighting == WEIGHTING &
+                ov5$panel == PANEL)
   stopifnot(length(k5) == 1L, length(o5) == 1L,
             length(unique(cp$panel$id)) == pc5$units_in_model[k5],
             length(states) == pc5$states_in_model[k5],
@@ -131,10 +152,10 @@ for (gap in GAPS) {
   panels[[gap]] <- cp
   cohorts[[gap]] <- gs
   usable <- c(usable, gap)
-  say(sprintf("%-16s %5d %s in %2d states; %d treated per observed draw, %d per ten-state draw",
+  say(sprintf("%-16s %5d %s in %2d states, %s panel; %d treated per observed draw, %d and %d in the drawn-year scenarios",
               gap, length(unique(cp$panel$id)),
-              if (gap == "a_poverty") "states   " else "districts", length(states),
-              length(gs), TEN_STATES))
+              if (gap == "a_poverty") "states   " else "districts", length(states), PANEL,
+              length(gs), TEN_STATES, TWELVE_STATES))
 }
 say("Panels and estimates agree with outputs/05_primary/panel_counts.csv and overall_estimates.csv")
 win <- sort(unique(panels[[usable[1]]]$panel$sy_end))
@@ -153,8 +174,12 @@ design <- list(states = length(g_full), mean_post = mean(full_post), state_years
 say("\n== Registered design, for the projection (end year ", REG_END, " placeholder, ", REG_DROP,
     " left out)")
 say("Treated states with post-reform data by ", REG_END, ": ", design$states,
-    "; the ten-state scenario simulates ", TEN_STATES,
-    if (design$states != TEN_STATES) "  <- these differ, see the log and the report" else "")
+    "; the registered scenario simulates ", SCENARIOS[[REGISTERED]]$n_treated,
+    if (design$states != SCENARIOS[[REGISTERED]]$n_treated)
+      "  <- these differ, see the log and the report" else "  (they agree)")
+if (design$states != TWELVE_STATES)
+  warning("TWELVE_STATES is ", TWELVE_STATES, " but the event table carries ", design$states,
+          " treated states with post-reform data by ", REG_END, call. = FALSE)
 note("Mean post-reform end years per treated state: ", round(design$mean_post, 4),
      "; design post-reform state-years: ", design$state_years)
 
@@ -166,12 +191,13 @@ for (s in names(SCENARIOS)) {
   picks[[s]] <- list(); years[[s]] <- list()
   for (gap in usable) {
     states <- sort(unique(panels[[gap]]$panel$state))
+    n_t <- SCENARIOS[[s]]$n_treated
     if (s == "observed") {
       picks[[s]][[gap]] <- placebo_state_draws(states, length(cohorts[[gap]]), reps)
       years[[s]][[gap]] <- cohorts[[gap]]           # one vector, reused by every draw
     } else {
-      picks[[s]][[gap]] <- placebo_state_draws(states, TEN_STATES, reps)
-      years[[s]][[gap]] <- placebo_year_draws(TEN_YEARS, TEN_STATES, reps)
+      picks[[s]][[gap]] <- placebo_state_draws(states, n_t, reps)
+      years[[s]][[gap]] <- placebo_year_draws(PLACEBO_YEARS, n_t, reps)
     }
   }
 }
@@ -185,11 +211,11 @@ for (s in names(SCENARIOS)) {
   sc <- SCENARIOS[[s]]
   for (gap in GAPS) {
     st <- data.frame(scenario = s, gap = gap, event_set = EVENT_SET, weighting = WEIGHTING,
-                     status = "ok", notes = "", stringsAsFactors = FALSE)
+                     panel = PANEL, status = "ok", notes = "", stringsAsFactors = FALSE)
     if (!gap %in% usable) {
       st$status <- "no placebo assignment possible"
       status[[paste(s, gap)]] <- st
-      say(sprintf("  %-9s %-16s skipped: %s", s, gap, st$status))
+      say(sprintf("  %-12s %-16s skipped: %s", s, gap, st$status))
       next
     }
     t0 <- Sys.time()
@@ -199,10 +225,12 @@ for (s in names(SCENARIOS)) {
     m <- mde_from_placebo(v)
     ok <- is.finite(v)
     states <- sort(unique(panels[[gap]]$panel$state))
-    o5 <- which(ov5$gap == gap & ov5$event_set == EVENT_SET & ov5$weighting == WEIGHTING)
-    n_t <- if (s == "observed") length(cohorts[[gap]]) else TEN_STATES
+    o5 <- which(ov5$gap == gap & ov5$event_set == EVENT_SET & ov5$weighting == WEIGHTING &
+                  ov5$panel == PANEL)
+    stopifnot(length(o5) == 1L)
+    n_t <- if (s == "observed") length(cohorts[[gap]]) else sc$n_treated
     row <- data.frame(
-      scenario = s, gap = gap, event_set = EVENT_SET, weighting = WEIGHTING,
+      scenario = s, gap = gap, event_set = EVENT_SET, weighting = WEIGHTING, panel = PANEL,
       reps = as.integer(reps), draws_ok = as.integer(m$draws),
       treated_states = as.integer(n_t), eligible_states = length(states),
       placebo_mean = if (any(ok)) mean(v[ok]) else NA_real_,
@@ -215,7 +243,7 @@ for (s in names(SCENARIOS)) {
       ceiling = POWER_CEILING, underpowered = as.integer(!is.finite(m$mde) | m$mde > POWER_CEILING),
       seconds = secs, stringsAsFactors = FALSE)
     # The projection columns exist on every row so the scenarios bind into one table;
-    # only the ten-state scenario fills them (PROJECTION_COLS, written to its file alone).
+    # only the drawn-year scenarios fill them (PROJECTION_COLS, written to their files).
     row$placebo_post_state_years <- NA_real_
     row$design_treated_states <- NA_integer_
     row$design_mean_post_years <- NA_real_
@@ -223,7 +251,7 @@ for (s in names(SCENARIOS)) {
     row$projection_scale <- NA_real_
     row$mde_projection <- NA_real_
     row$projection_basis <- NA_character_
-    if (s == "ten_state") {
+    if (isTRUE(sc$projection)) {
       # Post-reform state-years the placebo runs actually bought, averaged over the draws.
       pl_sy <- mean(vapply(years[[s]][[gap]], function(y) sum(post_years(y, max(win))), numeric(1)))
       row$placebo_post_state_years <- pl_sy
@@ -233,7 +261,7 @@ for (s in names(SCENARIOS)) {
       row$projection_scale <- sqrt(pl_sy / design$state_years)
       row$mde_projection <- mde_projection(m$mde, pl_sy, design$state_years)
       row$projection_basis <- paste0(
-        "supplementary projection, not a power calculation: the ten-state MDE times ",
+        "supplementary projection, not a power calculation: this scenario's MDE times ",
         "sqrt(placebo post-reform state-years / design post-reform state-years), the design ",
         "side from data/reference/event_table.csv with end year ", REG_END, " as a placeholder ",
         "and ", REG_DROP, " left out. Holds the outcome variance, the control-state count and ",
@@ -241,12 +269,12 @@ for (s in names(SCENARIOS)) {
     }
     mde[[paste(s, gap)]] <- row
     draws[[paste(s, gap)]] <- data.frame(scenario = s, gap = gap, event_set = EVENT_SET,
-                                         weighting = WEIGHTING, draw = seq_along(v), att = v,
-                                         stringsAsFactors = FALSE)
+                                         weighting = WEIGHTING, panel = PANEL,
+                                         draw = seq_along(v), att = v, stringsAsFactors = FALSE)
     top <- if (is.finite(m$mde)) 1.5 * m$mde else 4 * m$crit
     d <- seq(0, top, length.out = 61)
     curve[[paste(s, gap)]] <- data.frame(scenario = s, gap = gap, event_set = EVENT_SET,
-                                         weighting = WEIGHTING, effect = d,
+                                         weighting = WEIGHTING, panel = PANEL, effect = d,
                                          power = power_at(v, m$crit, d), stringsAsFactors = FALSE)
     if (!any(ok)) st$status <- "every placebo run failed"
     else if (sum(ok) < reps)
@@ -255,7 +283,7 @@ for (s in names(SCENARIOS)) {
       st$notes <- trimws(paste(st$notes, "| no shift on the placebo draws reaches the power target"))
     st$notes <- trimws(sub("^\\| ", "", st$notes))
     status[[paste(s, gap)]] <- st
-    say(sprintf("  %-9s %-16s %4d/%4d runs estimated, %6.1f s", s, gap, sum(ok), reps, secs))
+    say(sprintf("  %-12s %-16s %4d/%4d runs estimated, %6.1f s", s, gap, sum(ok), reps, secs))
   }
 }
 
@@ -265,14 +293,18 @@ mt <- bind(mde); dt <- bind(draws); ct <- bind(curve); stt <- bind(status)
 
 settings <- data.frame(
   setting = c("run", "stage", "blinding", "quick_run", "placebo_reps", "event_set", "weighting",
-              "test_level", "power_target", "mde_ceiling", "seed_step_observed",
-              "seed_step_ten_state", "ten_state_count", "ten_state_years", "projection_end_year",
+              "panel", "test_level", "power_target", "mde_ceiling", "registered_scenario",
+              "seed_step_observed", "seed_step_ten_state", "seed_step_twelve_state",
+              "ten_state_count", "twelve_state_count", "placebo_cohort_years",
+              "projection_end_year",
               "projection_dropped_years", "master_seed", "workers", "r_version", "did", "future",
               "furrr"),
   value = c(stamp, stage, readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
-            tolower(as.character(quick)), reps, EVENT_SET, WEIGHTING, POWER_LEVEL, POWER_TARGET,
-            POWER_CEILING, SCENARIOS$observed$seed_step, SCENARIOS$ten_state$seed_step,
-            TEN_STATES, paste0(min(TEN_YEARS), "-", max(TEN_YEARS)), REG_END, REG_DROP,
+            tolower(as.character(quick)), reps, EVENT_SET, WEIGHTING, PANEL, POWER_LEVEL,
+            POWER_TARGET, POWER_CEILING, REGISTERED, SCENARIOS$observed$seed_step,
+            SCENARIOS$ten_state$seed_step, SCENARIOS$twelve_state$seed_step,
+            TEN_STATES, TWELVE_STATES,
+            paste0(min(PLACEBO_YEARS), "-", max(PLACEBO_YEARS)), REG_END, REG_DROP,
             MASTER_SEED, WORKERS, R.version.string,
             as.character(utils::packageVersion("did")), as.character(utils::packageVersion("future")),
             as.character(utils::packageVersion("furrr"))),
@@ -285,7 +317,7 @@ PROJECTION_COLS <- c("placebo_post_state_years", "design_treated_states", "desig
 written <- character()
 for (s in names(SCENARIOS)) {
   sc <- SCENARIOS[[s]]
-  keep <- if (s == "ten_state") names(mt) else setdiff(names(mt), PROJECTION_COLS)
+  keep <- if (isTRUE(sc$projection)) names(mt) else setdiff(names(mt), PROJECTION_COLS)
   wr(mt[mt$scenario == s, keep, drop = FALSE], sc$mde_file)
   wr(dt[dt$scenario == s, ], sc$draws_file)
   written <- c(written, sc$mde_file, sc$draws_file)
@@ -318,18 +350,23 @@ pick_col <- function(s, col) {
 sbs <- data.frame(gap = GAPS,
                   mde_observed = round(pick_col("observed", "mde"), 4),
                   mde_ten_state = round(pick_col("ten_state", "mde"), 4),
-                  ratio = round(pick_col("ten_state", "mde") / pick_col("observed", "mde"), 3),
-                  over_ceiling = ifelse(pick_col("ten_state", "underpowered") == 1L, "yes", "no"),
+                  mde_twelve_state = round(pick_col("twelve_state", "mde"), 4),
+                  ratio_12_to_2 = round(pick_col("twelve_state", "mde") / pick_col("observed", "mde"), 3),
+                  over_ceiling = ifelse(pick_col(REGISTERED, "underpowered") == 1L, "yes", "no"),
                   stringsAsFactors = FALSE)
 say(paste(utils::capture.output(print(sbs, row.names = FALSE)), collapse = "\n"))
-tenr <- mt[mt$scenario == "ten_state", ]
-under <- nrow(tenr) == length(GAPS) && all(tenr$underpowered == 1L)
-say("Section 10's ", POWER_CEILING, " SD rule is applied to the ten-state scenario: it is exceeded for ",
-    sum(tenr$underpowered), " of ", nrow(tenr), " primary gaps -> ",
+regr <- mt[mt$scenario == REGISTERED, ]
+under <- nrow(regr) == length(GAPS) && all(regr$underpowered == 1L)
+say("Section 10's ", POWER_CEILING, " SD rule is applied to the ", REGISTERED,
+    " scenario (", SCENARIOS[[REGISTERED]]$n_treated,
+    " placebo-treated states, the registered power calculation): it is exceeded for ",
+    sum(regr$underpowered), " of ", nrow(regr), " primary gaps -> ",
     if (under) "UNDERPOWERED, the study proceeds as a bounds analysis"
     else "not underpowered on this criterion")
-say("The projection column of ", SCENARIOS$ten_state$mde_file,
-    ".csv is supplementary and is not printed here: it summarises the event table's cohort years.")
+say("The observed-cohort and ten-state runs are sensitivity runs and the rule is not applied to them.")
+say("The projection columns of ", SCENARIOS[[REGISTERED]]$mde_file, ".csv and ",
+    SCENARIOS$ten_state$mde_file,
+    ".csv are supplementary and are not printed here: they summarise the event table's cohort years.")
 
 say("\nWrote ", paste0(out_dir, "/", written, ".csv", collapse = ", "))
 if (quick) say("NOTE: --quick run. The registered count is ", POWER_REPS, " placebo runs per gap.")

@@ -3,7 +3,10 @@
 # (data/derived/gaps_race_district_year.csv, data/derived/gap_poverty_state_year.csv).
 # Author decisions 2026-09-11 (docs/decision_log.md):
 #   The outcome is the mean of math and RLA V in a unit-year; a unit-year needs both.
-#   Balanced panel: a unit enters only with the outcome in every window year.
+#   Unbalanced panel (author, 2026-09-11, replacing the balanced-panel rule of the same
+#   day): a unit enters with the outcome in any window year, and did::att_gt runs with
+#   allow_unbalanced_panel = TRUE. The balanced panel, where a unit needs the outcome in
+#   every window year, is kept as a robustness model (PANEL_TYPES).
 #   Covariates for gaps (b) and (c): log 2009-10 CCD membership, the SAIPE 2009
 #   child-poverty rate, and the Black and Hispanic shares of 2009-10 CCD school
 #   membership. Gap (a) has none. The test-replacement and CEP flags do not enter:
@@ -15,6 +18,11 @@
 EVENT_MIN <- -5L   # event times reported (Section 7); -1 is the reference period
 EVENT_MAX <- 8L
 CS_COVARIATES <- c("log_member_2009", "saipe_pov_rate_2009", "black_share_2009", "hisp_share_2009")
+# The two panel rules of step 5, named as they appear in the `panel` column of the step 5
+# files and in the model keys. The value is did's allow_unbalanced_panel: the unbalanced
+# panel is the primary model and the balanced panel the robustness one (author decision
+# 2026-09-11).
+PANEL_TYPES <- c(unbalanced = TRUE, balanced = FALSE)
 
 # did's cohort variable from one event table (columns state, treat_year, group).
 # One row per state: g (0 = not treated within the window) and cohort_status:
@@ -37,12 +45,14 @@ cohort_coding <- function(ev, window) {
   data.frame(state = ev$state, g = as.integer(g), cohort_status = status, stringsAsFactors = FALSE)
 }
 
-# Mean of math and RLA V within a unit-year (Section 6), then a balanced panel.
+# Mean of math and RLA V within a unit-year (Section 6), then the estimation panel.
 # x: rows of one gap file, already restricted to one sample, one event set and a
-# non-missing `value`. A unit-year needs both subjects and a unit needs every window
-# year (author decisions 2026-09-11). carry: further columns averaged over subjects.
-# Returns unit, state, sy_end, y and the carried columns.
-both_subjects <- function(x, unit, value, window, carry = character()) {
+# non-missing `value`. A unit-year needs both subjects (author decision 2026-09-11).
+# balanced = TRUE additionally keeps only the units with an outcome in every window
+# year (the robustness panel); balanced = FALSE keeps every unit-year (the primary
+# panel, estimated with allow_unbalanced_panel = TRUE). carry: further columns averaged
+# over subjects. Returns unit, state, sy_end, y and the carried columns.
+both_subjects <- function(x, unit, value, window, carry = character(), balanced = TRUE) {
   key  <- unique(c(unit, "state", "sy_end"))
   keep <- c(key, value, carry)
   m <- x[x$subject == "math", keep, drop = FALSE]
@@ -53,33 +63,39 @@ both_subjects <- function(x, unit, value, window, carry = character()) {
   out$y <- (y[[paste0(value, "_math")]] + y[[paste0(value, "_rla")]]) / 2
   for (cc in carry) out[[cc]] <- (y[[paste0(cc, "_math")]] + y[[paste0(cc, "_rla")]]) / 2
   out <- out[out$sy_end %in% window, , drop = FALSE]
-  full <- tapply(out$sy_end, out[[unit]], function(t) all(window %in% t))
-  out <- out[out[[unit]] %in% names(full)[full], , drop = FALSE]
+  if (balanced) {
+    full <- tapply(out$sy_end, out[[unit]], function(t) all(window %in% t))
+    out <- out[out[[unit]] %in% names(full)[full], , drop = FALSE]
+  }
   out <- out[order(out[[unit]], out$sy_end), , drop = FALSE]
   rownames(out) <- NULL
   out
 }
 
-# Gaps (b) and (c): the balanced district-year panel for one event set.
+# Gaps (b) and (c): the district-year panel for one event set, unbalanced (the primary
+# rule) or balanced over the window (the robustness rule).
 # gap: "bw" or "hw" (RACE_GAPS); flag: retained, retained_r1 or retained_r2.
 # tested_2010 is the fixed robustness weight: students tested in the gap's two
-# groups in the first window year, averaged over math and RLA.
-race_panel <- function(gaps, gap, flag, window, sample = "primary") {
+# groups in the first window year, averaged over math and RLA. On the unbalanced panel a
+# district with no first-window-year row has no such weight and gets NA, which leaves it
+# out of the weighted models only (author decision 2026-09-11); on the balanced panel
+# every district has one.
+race_panel <- function(gaps, gap, flag, window, sample = "primary", balanced = TRUE) {
   sg <- RACE_GAPS[[gap]]
   v <- paste0("v_", gap)
   x <- gaps[gaps$sample == sample & gaps[[flag]] == 1L & !is.na(gaps[[v]]), ]
   x$tested <- x[[paste0("n_", sg[1])]] + x[[paste0("n_", sg[2])]]
-  out <- both_subjects(x, "leaid", v, window, carry = "tested")
+  out <- both_subjects(x, "leaid", v, window, carry = "tested", balanced = balanced)
   w <- out$tested[out$sy_end == min(window)]
   out$tested_2010 <- w[match(out$leaid, out$leaid[out$sy_end == min(window)])]
   out$tested <- NULL
   out
 }
 
-# Gap (a): the balanced state-year panel for one event set.
-pov_panel <- function(pov, flag, window, sample = "primary") {
+# Gap (a): the state-year panel for one event set, unbalanced or balanced as above.
+pov_panel <- function(pov, flag, window, sample = "primary", balanced = TRUE) {
   x <- pov[pov$sample == sample & pov[[flag]] == 1L & !is.na(pov$v_pov), ]
-  both_subjects(x, "state", "v_pov", window)
+  both_subjects(x, "state", "v_pov", window, balanced = balanced)
 }
 
 # Black and Hispanic shares of district membership from a CCD school universe flat
@@ -154,6 +170,10 @@ attach_cohorts <- function(panel, coding, unit) {
 # reference), standard errors clustered by state through did's multiplier bootstrap
 # (seeded with seed_for(seed_step)); then did::aggte's dynamic aggregation over event
 # times min_e..max_e and its overall post-reform average.
+# allow_unbalanced_panel is passed to did::att_gt: TRUE is the primary model, where a
+# unit enters with the outcome in any window year and did estimates each ATT(g, t) from
+# the units observed in the two periods it compares; FALSE is the balanced-panel
+# robustness model and takes a panel already restricted to complete units.
 # panel: id (integer), state, sy_end, y, g (0 = not treated within the window) and
 # any covariates or weight column. A model without an estimable cohort, or one that
 # did cannot fit, returns a status instead of stopping.
@@ -161,11 +181,11 @@ attach_cohorts <- function(panel, coding, unit) {
 # with the cohorts, treated states and treated units behind it), overall, cells
 # (ATT(g, t)) and fit (the att_gt and aggte objects).
 run_cs <- function(panel, xformla = ~1, weightsname = NULL, seed_step,
-                   min_e = EVENT_MIN, max_e = EVENT_MAX) {
+                   min_e = EVENT_MIN, max_e = EVENT_MAX, allow_unbalanced_panel = FALSE) {
   stopifnot(all(c("id", "state", "sy_end", "y", "g") %in% names(panel)), is.integer(panel$id),
             !anyNA(panel[c("id", "sy_end", "y", "g")]), !anyDuplicated(panel[c("id", "sy_end")]))
   if (!is.null(weightsname))
-    stopifnot(all(panel[[weightsname]] > 0),
+    stopifnot(all(is.finite(panel[[weightsname]])), all(panel[[weightsname]] > 0),
               all(tapply(panel[[weightsname]], panel$id, function(w) length(unique(w)) == 1L)))
   notes <- character()
   ev <- data.frame(e = min_e:max_e, att = NA_real_, se = NA_real_, crit_val = NA_real_,
@@ -183,7 +203,8 @@ run_cs <- function(panel, xformla = ~1, weightsname = NULL, seed_step,
   fit <- tryCatch(withCallingHandlers({
     gt <- did::att_gt(yname = "y", tname = "sy_end", idname = "id", gname = "g", data = panel,
                       xformla = xformla, weightsname = weightsname, control_group = "notyettreated",
-                      est_method = "dr", base_period = "universal", clustervars = "state", bstrap = TRUE)
+                      est_method = "dr", base_period = "universal", clustervars = "state", bstrap = TRUE,
+                      allow_unbalanced_panel = allow_unbalanced_panel)
     es <- did::aggte(gt, type = "dynamic", min_e = min_e, max_e = max_e, na.rm = TRUE)
     list(att_gt = gt, aggte = es)
   }, warning = function(w) {

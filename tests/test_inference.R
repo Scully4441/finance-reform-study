@@ -88,10 +88,31 @@ stopifnot(is.null(cs_influence(NULL)), is.null(cs_influence(list(att_gt = NULL, 
 # refitting on did's stored panel reproduces the estimate, which is what randomization
 # inference reruns
 ipan <- cs_panel(ifit$fit)
-stopifnot(is.null(ipan$weightsname), nrow(ipan$panel) == nrow(ip),
+stopifnot(is.null(ipan$weightsname), nrow(ipan$panel) == nrow(ip), !ipan$allow_unbalanced,
           near(cs_overall(ipan$panel, ipan$xformla, ipan$weightsname, ipan$min_e, ipan$max_e),
                ifit$fit$aggte$overall.att, 1e-8))
 stopifnot(is.na(cs_overall(ipan$panel, ~no_such_covariate, NULL, ipan$min_e, ipan$max_e)))
+
+# the primary panel rule: cs_panel() carries allow_unbalanced_panel back, so the refits
+# of randomization inference and of the power simulation are the step 5 model
+set.seed(seed_for("test inference holes"))
+ipu <- ip[-sample(nrow(ip), round(0.15 * nrow(ip))), ]
+ifitu <- run_cs(ipu, ~x1, seed_step = "test inference unbalanced", allow_unbalanced_panel = TRUE)
+ipanu <- cs_panel(ifitu$fit)
+stopifnot(ifitu$status == "ok", ipanu$allow_unbalanced, is.null(ipanu$panel$.rowid),
+          near(cs_overall(ipanu$panel, ipanu$xformla, ipanu$weightsname, ipanu$min_e, ipanu$max_e,
+                          ipanu$allow_unbalanced), ifitu$fit$aggte$overall.att, 1e-8))
+# refitting the same panel under the balanced rule is a different model, which is why the
+# flag has to travel with the panel
+stopifnot(!near(cs_overall(ipanu$panel, ipanu$xformla, ipanu$weightsname, ipanu$min_e, ipanu$max_e,
+                           FALSE), ifitu$fit$aggte$overall.att, 1e-8))
+# the influence function of an unbalanced fit is still one row per unit, summed by state
+iinfu <- cs_influence(ifitu$fit)
+stopifnot(!is.null(iinfu), iinfu$n == length(unique(ipu$id)),
+          identical(iinfu$states, sort(unique(ipu$state))),
+          cluster_se(iinfu$scores[, "overall"], iinfu$n) > 0)
+iriu <- ri_overall(ifitu$fit, reps = 4L, seed_step = "test inference ri unbalanced", parallel = FALSE)
+stopifnot(iriu$status == "ok", length(iriu$values) == 4L, iriu$draws_ok > 0L)
 # a weighted model: did reserves .w for its own weights, so they come back under another name
 ipw <- ip
 ipw$wt <- 1 + as.integer(factor(ipw$state)) %% 3L
@@ -144,11 +165,13 @@ if (all(file.exists(of7))) {
   rd7 <- function(f) utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
   bo <- rd7(of7[1]); be <- rd7(of7[2]); ro <- rd7(of7[3]); rdw <- rd7(of7[4])
   rwf <- rd7(of7[5]); hdo <- rd7(of7[6]); st7 <- rd7(of7[7]); se7 <- rd7(of7[8])
-  key7 <- function(x) paste(x$gap, x$event_set, x$weighting)
+  key7 <- function(x) paste(x$gap, x$event_set, x$weighting, x$panel)
   mw7 <- c("a_poverty unweighted", "b_black_white unweighted", "b_black_white tested_weighted",
            "c_hispanic_white unweighted", "c_hispanic_white tested_weighted")
-  all7 <- unlist(lapply(c("primary", "r1", "r2"), function(s) sub(" ", paste0(" ", s, " "), mw7)))
-  stopifnot(nrow(st7) == 15L, setequal(key7(st7), all7), !anyDuplicated(key7(st7)))
+  all7 <- unlist(lapply(c("primary", "r1", "r2"), function(s)
+    unlist(lapply(names(PANEL_TYPES), function(pn) paste(sub(" ", paste0(" ", s, " "), mw7), pn)))))
+  stopifnot(nrow(st7) == 30L, setequal(key7(st7), all7), !anyDuplicated(key7(st7)),
+            setequal(st7$panel, names(PANEL_TYPES)), all(table(st7$panel) == 15L))
   used <- key7(st7)[st7$status == "ok"]
 
   # bootstrap: one row per usable model, a p-value on the (1 + count) / (reps + 1) grid
@@ -167,12 +190,19 @@ if (all(file.exists(of7))) {
   # Romano-Wolf: the unadjusted p-values are the bootstrap's (one set of draws per event
   # set), and the step-down never lowers them
   stopifnot(all(rwf$p_romano_wolf >= rwf$p_unadjusted - 1e-12), all(rwf$hypotheses >= 2),
-            all(rwf$family %in% c("unweighted", "tested_weighted")))
-  kb <- match(paste(rwf$gap, rwf$event_set, rwf$weighting), key7(bo))
+            all(rwf$family %in% c("unweighted", "tested_weighted")),
+            all(rwf$panel %in% names(PANEL_TYPES)))
+  # a family is the three gaps within one event set, weighting family and panel rule
+  stopifnot(setequal(paste(rwf$event_set, rwf$panel, rwf$family),
+                     as.vector(outer(c("primary", "r1", "r2"),
+                                     as.vector(outer(names(PANEL_TYPES),
+                                                     c("unweighted", "tested_weighted"), paste)),
+                                     paste))))
+  kb <- match(paste(rwf$gap, rwf$event_set, rwf$weighting, rwf$panel), key7(bo))
   stopifnot(!anyNA(kb), all(near(rwf$p_unadjusted, bo$p_value[kb], 1e-12)),
             all(near(rwf$t, bo$t[kb], 1e-10)))
-  for (f in unique(paste(rwf$event_set, rwf$family))) {       # monotone down the ordering
-    x <- rwf[paste(rwf$event_set, rwf$family) == f, ]
+  for (f in unique(paste(rwf$event_set, rwf$panel, rwf$family))) {   # monotone down the ordering
+    x <- rwf[paste(rwf$event_set, rwf$panel, rwf$family) == f, ]
     x <- x[order(x$rank), ]
     stopifnot(all(diff(x$p_romano_wolf) >= -1e-12))
   }

@@ -73,7 +73,7 @@ placebo_estimates <- function(cp, gs, picks, parallel = TRUE, seed = NULL) {
     g[pick] <- years
     p <- panel
     p$g <- unname(g[p$state])
-    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e)
+    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e, cp$allow_unbalanced)
   }
   if (parallel && requireNamespace("furrr", quietly = TRUE))
     furrr::future_map2_dbl(picks, gsl, one, .options = furrr::furrr_options(seed = seed))

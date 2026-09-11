@@ -122,9 +122,14 @@ rw_stepdown <- function(t_obs, t_boot) {
 # window year, which is the same thing as g = 0 over this window. Mapping those back to
 # 0 restores the step 5 coding; tests/test_inference.R checks the restored panel by
 # refitting it and comparing with the step 5 estimate.
+# allow_unbalanced: did clears DIDparams$panel when it accepts an unbalanced panel (it
+# keeps true_repeated_cross_sections FALSE, which is what separates that case from a
+# genuine repeated cross-section), so the refit has to set allow_unbalanced_panel again.
 cs_panel <- function(fit) {
   dp <- fit$att_gt$DIDparams
   d <- dp$data
+  if (".rowid" %in% names(d)) d$.rowid <- NULL     # did rebuilds its own row id
+  allow_unbalanced <- !isTRUE(dp$panel) && !isTRUE(dp$true_repeated_cross_sections)
   d[[dp$gname]] <- ifelse(d[[dp$gname]] > max(d[[dp$tname]]), 0, d[[dp$gname]])
   # did reserves the column name .w for the weights it builds and refuses a panel that
   # already has one, so the stored weights move to a column of our own.
@@ -134,19 +139,19 @@ cs_panel <- function(fit) {
     wn <- "ri_weight"
   }
   d$.w <- NULL
-  list(panel = d, xformla = dp$xformla, weightsname = wn,
+  list(panel = d, xformla = dp$xformla, weightsname = wn, allow_unbalanced = allow_unbalanced,
        min_e = fit$aggte$min_e, max_e = fit$aggte$max_e)
 }
 
 # One Callaway-Sant'Anna overall post-reform average, refit on a panel whose cohort
 # variable has been replaced. Point estimate only: randomization inference needs no
 # standard error, so the multiplier bootstrap is switched off.
-cs_overall <- function(panel, xformla, weightsname, min_e, max_e) {
+cs_overall <- function(panel, xformla, weightsname, min_e, max_e, allow_unbalanced = FALSE) {
   suppressWarnings(suppressMessages(tryCatch({
     gt <- did::att_gt(yname = "y", tname = "sy_end", idname = "id", gname = "g", data = panel,
                       xformla = xformla, weightsname = weightsname, control_group = "notyettreated",
                       est_method = "dr", base_period = "universal", clustervars = "state",
-                      bstrap = FALSE, cband = FALSE)
+                      bstrap = FALSE, cband = FALSE, allow_unbalanced_panel = allow_unbalanced)
     es <- did::aggte(gt, type = "dynamic", min_e = min_e, max_e = max_e, na.rm = TRUE,
                      bstrap = FALSE, cband = FALSE)
     as.numeric(es$overall.att)
@@ -177,7 +182,7 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
     g[pick] <- gs
     p <- panel
     p$g <- unname(g[p$state])
-    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e)
+    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e, cp$allow_unbalanced)
   }
   vals <- if (parallel && requireNamespace("furrr", quietly = TRUE))
     furrr::future_map_dbl(picks, one, .options = furrr::furrr_options(seed = seed_for(paste(seed_step, "workers"))))

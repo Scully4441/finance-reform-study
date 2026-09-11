@@ -8,7 +8,8 @@
 #   data/raw/ccd/lea-directory-sy2009-10.zip   2009-10 CCD membership (enrollment covariate)
 #   data/raw/ccd/membership-sy2009-10.zip      2009-10 CCD school membership by race
 #   data/reference/event_table.csv (primary), event_table_r1.csv, event_table_r2.csv (robustness)
-# Models, primary suppression sample, each on all three event sets:
+# Models, primary suppression sample, each on all three event sets and on both panel
+# rules (unbalanced, the primary rule; balanced, the robustness rule):
 #   a_poverty         state-year gap (a); no covariates; unweighted
 #   b_black_white     district-year gap (b); unweighted (primary) and tested-count weighted
 #   c_hispanic_white  district-year gap (c); unweighted (primary) and tested-count weighted
@@ -18,11 +19,19 @@
 # 1,000 draws, uniform bands); did::aggte dynamic aggregation over event times -5 to
 # +8, and its overall post-reform average (the mean of the event-time estimates from
 # 0 on). Inference for the study is step 7.
-# Author decisions 2026-09-11 (docs/decision_log.md): outcome = mean of math and RLA
-# V, both required; balanced panel; covariates for (b) and (c) = log 2009-10 CCD
-# membership, SAIPE 2009 child-poverty rate, Black and Hispanic shares of 2009-10
-# membership; none for (a); test-replacement and CEP flags not in the CS models;
-# weight = 2009-10 tested count in the gap's two groups, averaged over subjects.
+# Panel rule (author decision 2026-09-11, replacing the balanced-panel rule of the same
+# day): the primary models keep every unit-year with both subjects and run did with
+# allow_unbalanced_panel = TRUE; the balanced panel, where a unit needs the outcome in
+# every window year, is the robustness model. Both run on all three event sets and both
+# weightings, so the `panel` column of every output names which rule a row came from and
+# the model key is gap.event_set.weighting.panel. On the unbalanced panel a district
+# without a first-window-year row has no fixed tested-count weight and is left out of the
+# weighted models alone (dropped_missing_weight in panel_counts.csv).
+# Other author decisions 2026-09-11 (docs/decision_log.md): outcome = mean of math and
+# RLA V, both required; covariates for (b) and (c) = log 2009-10 CCD membership, SAIPE
+# 2009 child-poverty rate, Black and Hispanic shares of 2009-10 membership; none for (a);
+# test-replacement and CEP flags not in the CS models; weight = 2009-10 tested count in
+# the gap's two groups, averaged over subjects.
 # Cohorts: a state treated after the last window year has no post-period in the
 # window and is a not-yet-treated control (g = 0); a state treated in the first window
 # year has no pre-period and cannot enter. Both are counted in panel_counts.csv.
@@ -32,7 +41,8 @@
 #   overall_estimates.csv     the overall post-reform average per model
 #   group_time_estimates.csv  did's ATT(g, t) cells
 #   model_status.csv          status and did's warnings and messages per model
-#   panel_counts.csv          units and states entering each model, by rule and cohort status
+#   panel_counts.csv          units and states entering each model, by panel rule, sample
+#                             rule and cohort status
 #   cs_models.rds             the att_gt and aggte objects, for step 7
 #   outputs/logs/05_primary_<stamp>.log
 # Blinding (CLAUDE.md rule 7): the console shows panel sizes only. Everything that
@@ -84,8 +94,10 @@ say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; missi
 # ---- models ----------------------------------------------------------------------
 XF <- stats::reformulate(CS_COVARIATES)
 res <- list(); counts <- list()
-say("\n== Balanced panels (both subjects, every end year ", min(WINDOW), "-", max(WINDOW),
-    "; gaps (b) and (c) with all covariates), primary suppression sample")
+say("\n== Panels (both subjects; gaps (b) and (c) with all covariates), primary suppression",
+    " sample, end years ", min(WINDOW), "-", max(WINDOW))
+say("   unbalanced = the primary rule (any window year); balanced = the robustness rule",
+    " (every window year)")
 for (set in names(EVENT_SETS)) {
   flag <- FLAGS[[set]]
   ev <- utils::read.csv(file.path("data", "reference", EVENT_SETS[[set]]), stringsAsFactors = FALSE)
@@ -94,60 +106,73 @@ for (set in names(EVENT_SETS)) {
   note_df(as.data.frame(table(cohort_status = factor(coding$cohort_status, levels = STATUS_LEVELS)),
                         responseName = "states"))
   for (gap in c("a_poverty", "b_black_white", "c_hispanic_white")) {
-    if (gap == "a_poverty") {
-      unit <- "state"
-      n_any <- length(unique(pov$state[pov$sample == SAMPLE & pov[[flag]] == 1L & !is.na(pov$v_pov)]))
-      p <- pov_panel(pov, flag, WINDOW, SAMPLE)
-      n_bal <- length(unique(p$state)); n_nocov <- 0L
-      xf <- ~1; weightings <- "unweighted"
-    } else {
-      unit <- "leaid"
-      rg <- if (gap == "b_black_white") "bw" else "hw"
-      v <- paste0("v_", rg)
-      n_any <- length(unique(race$leaid[race$sample == SAMPLE & race[[flag]] == 1L & !is.na(race[[v]])]))
-      p <- race_panel(race, rg, flag, WINDOW, SAMPLE)
-      n_bal <- length(unique(p$leaid))
-      p <- cbind(p, cov[match(p$leaid, cov$leaid), CS_COVARIATES])
-      miss <- !stats::complete.cases(p[CS_COVARIATES])
-      n_nocov <- length(unique(p$leaid[miss]))
-      p <- p[!miss, ]
-      xf <- XF; weightings <- c("unweighted", "tested_weighted")
+    for (pan in names(PANEL_TYPES)) {
+      bal <- !PANEL_TYPES[[pan]]                 # PANEL_TYPES holds allow_unbalanced_panel
+      if (gap == "a_poverty") {
+        unit <- "state"
+        n_any <- length(unique(pov$state[pov$sample == SAMPLE & pov[[flag]] == 1L & !is.na(pov$v_pov)]))
+        p <- pov_panel(pov, flag, WINDOW, SAMPLE, balanced = bal)
+        n_panel <- length(unique(p$state)); n_nocov <- 0L
+        xf <- ~1; weightings <- "unweighted"
+      } else {
+        unit <- "leaid"
+        rg <- if (gap == "b_black_white") "bw" else "hw"
+        v <- paste0("v_", rg)
+        n_any <- length(unique(race$leaid[race$sample == SAMPLE & race[[flag]] == 1L & !is.na(race[[v]])]))
+        p <- race_panel(race, rg, flag, WINDOW, SAMPLE, balanced = bal)
+        n_panel <- length(unique(p$leaid))
+        p <- cbind(p, cov[match(p$leaid, cov$leaid), CS_COVARIATES])
+        miss <- !stats::complete.cases(p[CS_COVARIATES])
+        n_nocov <- length(unique(p$leaid[miss]))
+        p <- p[!miss, ]
+        xf <- XF; weightings <- c("unweighted", "tested_weighted")
+      }
+      say(sprintf("%-16s %-7s %-10s %5d %s in %2d states", gap, set, pan, length(unique(p[[unit]])),
+                  if (unit == "state") "states   " else "districts", length(unique(p$state))))
+      ac <- attach_cohorts(p, coding, unit)
+      stopifnot(ac$dropped[["excluded"]] == 0L)    # rule 6 exclusions never reach the gap files
+      p <- ac$panel
+      # The tested-count weight is fixed at the first window year, so a unit without a
+      # first-window-year row cannot carry one and is left out of the weighted models
+      # alone (author decision 2026-09-11). On the balanced panel there are none.
+      n_now <- 0L
+      if ("tested_2010" %in% names(p)) n_now <- length(unique(p[[unit]][is.na(p$tested_2010)]))
+      for (wt in weightings) {
+        key <- paste(gap, set, wt, pan, sep = ".")
+        pw <- if (wt == "tested_weighted" && n_now > 0L) p[!is.na(p$tested_2010), ] else p
+        fit <- run_cs(pw, xformla = xf, weightsname = if (wt == "tested_weighted") "tested_2010" else NULL,
+                      seed_step = paste("05_primary", key),
+                      allow_unbalanced_panel = PANEL_TYPES[[pan]])
+        res[[key]] <- c(list(gap = gap, event_set = set, weighting = wt, panel = pan), fit)
+      }
+      by_status <- function(x) {
+        n <- tapply(x, factor(p$cohort_status, levels = STATUS_LEVELS[1:3]), function(z) length(unique(z)))
+        n[is.na(n)] <- 0L
+        n
+      }
+      us <- by_status(p[[unit]]); ss <- by_status(p$state)
+      counts[[paste(gap, set, pan)]] <- data.frame(
+        gap = gap, event_set = set, panel = pan, unit = if (unit == "state") "state" else "district",
+        units_with_outcome = n_any, units_in_panel = n_panel, dropped_missing_covariates = n_nocov,
+        dropped_first_year_state = as.integer(ac$dropped[["first_year"]]),
+        units_in_model = length(unique(p$id)), states_in_model = length(unique(p$state)),
+        dropped_missing_weight = as.integer(n_now), unit_years = nrow(p),
+        unit_years_per_unit = nrow(p) / length(unique(p$id)),
+        units_estimable = as.integer(us[["estimable"]]), units_after_window = as.integer(us[["after_window"]]),
+        units_never = as.integer(us[["never"]]), states_estimable = as.integer(ss[["estimable"]]),
+        states_after_window = as.integer(ss[["after_window"]]), states_never = as.integer(ss[["never"]]),
+        stringsAsFactors = FALSE)
     }
-    say(sprintf("%-16s %-7s %5d %s in %2d states", gap, set, length(unique(p[[unit]])),
-                if (unit == "state") "states   " else "districts", length(unique(p$state))))
-    ac <- attach_cohorts(p, coding, unit)
-    stopifnot(ac$dropped[["excluded"]] == 0L)    # rule 6 exclusions never reach the gap files
-    p <- ac$panel
-    for (wt in weightings) {
-      key <- paste(gap, set, wt, sep = ".")
-      fit <- run_cs(p, xformla = xf, weightsname = if (wt == "tested_weighted") "tested_2010" else NULL,
-                    seed_step = paste("05_primary", key))
-      res[[key]] <- c(list(gap = gap, event_set = set, weighting = wt), fit)
-    }
-    by_status <- function(x) {
-      n <- tapply(x, factor(p$cohort_status, levels = STATUS_LEVELS[1:3]), function(z) length(unique(z)))
-      n[is.na(n)] <- 0L
-      n
-    }
-    us <- by_status(p[[unit]]); ss <- by_status(p$state)
-    counts[[paste(gap, set)]] <- data.frame(
-      gap = gap, event_set = set, unit = if (unit == "state") "state" else "district",
-      units_with_outcome = n_any, units_balanced = n_bal, dropped_missing_covariates = n_nocov,
-      dropped_first_year_state = as.integer(ac$dropped[["first_year"]]),
-      units_in_model = length(unique(p$id)), states_in_model = length(unique(p$state)),
-      units_estimable = as.integer(us[["estimable"]]), units_after_window = as.integer(us[["after_window"]]),
-      units_never = as.integer(us[["never"]]), states_estimable = as.integer(ss[["estimable"]]),
-      states_after_window = as.integer(ss[["after_window"]]), states_never = as.integer(ss[["never"]]),
-      stringsAsFactors = FALSE)
   }
 }
 
 # ---- outputs ---------------------------------------------------------------------
 tag <- function(r, x) if (nrow(x)) data.frame(gap = r$gap, event_set = r$event_set, weighting = r$weighting,
-                                              x, stringsAsFactors = FALSE)
+                                              panel = r$panel, x, stringsAsFactors = FALSE)
 stack <- function(part) {
   x <- do.call(rbind, lapply(res, function(r) tag(r, r[[part]])))
-  if (is.null(x)) x <- tag(list(gap = NA, event_set = NA, weighting = NA), res[[1]][[part]][0, ])
+  if (is.null(x)) x <- tag(list(gap = NA, event_set = NA, weighting = NA, panel = NA),
+                           res[[1]][[part]][0, ])
   rownames(x) <- NULL
   x
 }
@@ -155,8 +180,8 @@ event   <- stack("event")
 overall <- stack("overall")
 cells   <- stack("cells")
 status  <- do.call(rbind, lapply(res, function(r)
-  data.frame(gap = r$gap, event_set = r$event_set, weighting = r$weighting, status = r$status,
-             notes = paste(r$notes, collapse = " | "), stringsAsFactors = FALSE)))
+  data.frame(gap = r$gap, event_set = r$event_set, weighting = r$weighting, panel = r$panel,
+             status = r$status, notes = paste(r$notes, collapse = " | "), stringsAsFactors = FALSE)))
 rownames(status) <- NULL
 pc <- do.call(rbind, counts); rownames(pc) <- NULL
 
@@ -178,6 +203,7 @@ for (key in names(res)) {
 
 n_err <- sum(startsWith(status$status, "error"))
 say("\nWrote ", paste0(out_dir, "/", c(paste0(names(files), ".csv"), "cs_models.rds"), collapse = ", "))
-say(nrow(status), " models (", length(EVENT_SETS), " event sets); models that stopped with an error: ", n_err,
+say(nrow(status), " models (", length(EVENT_SETS), " event sets x ", length(PANEL_TYPES),
+    " panel rules); models that stopped with an error: ", n_err,
     ". Status per model: ", file.path(out_dir, "model_status.csv"))
 say("Log: ", log_file)

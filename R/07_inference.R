@@ -4,8 +4,8 @@
 #   Rscript R/07_inference.R --quick    reduced counts, for a test run only
 #
 # Inputs
-#   outputs/05_primary/cs_models.rds       R/05_primary.R: the 15 att_gt and aggte fits
-#                                          (3 gaps x 3 event sets x weighting)
+#   outputs/05_primary/cs_models.rds       R/05_primary.R: the 30 att_gt and aggte fits
+#                                          (3 gaps x 3 event sets x weighting x panel rule)
 #   outputs/05_primary/overall_estimates.csv  cross-check on the extracted estimates
 # The four procedures of Section 8, each on every step 5 model:
 #   wild cluster bootstrap  Webb weights, state clusters, 9,999 replications. The
@@ -22,6 +22,12 @@
 # rather than through fwildclusterboot and wildrwolf, which take an lm or fixest
 # object; the reassignments draw from every state in the panel; the Romano-Wolf family
 # is the three gaps within an event set.
+# Panel rule (author, 2026-09-11): step 5 fits every model on the unbalanced panel (the
+# primary rule) and on the balanced panel (the robustness rule), so every model key and
+# every output row here carries a `panel` column. All four procedures run on both, as
+# they already do on both weightings. A Romano-Wolf family is the three gaps within one
+# event set, weighting family and panel rule: the step-down has to compare hypotheses
+# estimated on the same data.
 # Every stochastic step takes its seed from seed_for() (CLAUDE.md rule 4). The
 # bootstrap weights and the reassignments are drawn in this process, so the results do
 # not depend on how many workers run them.
@@ -46,6 +52,7 @@ if (!identical(stage, 1L))
 
 GAPS       <- c("a_poverty", "b_black_white", "c_hispanic_white")
 EVENT_SETS <- c("primary", "r1", "r2")
+PANELS     <- names(PANEL_TYPES)        # unbalanced (primary), balanced (robustness)
 MBARVEC    <- c(0, 0.5, 1, 1.5, 2)      # design Section 8
 WORKERS    <- 12L                       # CLAUDE.md conventions: 14 cores, no forking
 # Registered replication counts (Section 8); --quick is for a test run only and is
@@ -85,19 +92,20 @@ if (!file.exists(rds)) stop("outputs/05_primary/cs_models.rds not found. Run R/0
 models <- readRDS(rds)
 keys <- names(models)
 parts <- do.call(rbind, lapply(strsplit(keys, ".", fixed = TRUE), function(z)
-  data.frame(gap = z[1], event_set = z[2], weighting = z[3], stringsAsFactors = FALSE)))
+  data.frame(gap = z[1], event_set = z[2], weighting = z[3], panel = z[4], stringsAsFactors = FALSE)))
 parts$key <- keys
-stopifnot(all(parts$gap %in% GAPS), all(parts$event_set %in% EVENT_SETS), !anyDuplicated(keys))
+stopifnot(all(parts$gap %in% GAPS), all(parts$event_set %in% EVENT_SETS),
+          all(parts$panel %in% PANELS), !anyDuplicated(keys))
 say("\n", length(keys), " step 5 models: ", sum(!vapply(models, is.null, TRUE)), " fitted")
 
 # Result rows carry the model's key. The key columns are scalars so that a one-row
 # slice of parts does not push its row names onto a longer table.
 tag <- function(i, x) data.frame(gap = parts$gap[i], event_set = parts$event_set[i],
-                                 weighting = parts$weighting[i], x, row.names = NULL,
-                                 stringsAsFactors = FALSE)
+                                 weighting = parts$weighting[i], panel = parts$panel[i], x,
+                                 row.names = NULL, stringsAsFactors = FALSE)
 
 infs <- lapply(models, cs_influence)
-status <- data.frame(parts[c("gap", "event_set", "weighting")], status = "ok", notes = "",
+status <- data.frame(parts[c("gap", "event_set", "weighting", "panel")], status = "ok", notes = "",
                      stringsAsFactors = FALSE)
 for (i in seq_along(keys)) {
   if (is.null(models[[i]])) status$status[i] <- "no step 5 fit"
@@ -108,8 +116,8 @@ usable <- status$status == "ok"
 # The extracted overall estimates must match the step 5 file.
 ov5 <- utils::read.csv(file.path("outputs", "05_primary", "overall_estimates.csv"),
                        stringsAsFactors = FALSE, na.strings = "")
-k5 <- match(paste(parts$gap, parts$event_set, parts$weighting),
-            paste(ov5$gap, ov5$event_set, ov5$weighting))
+k5 <- match(paste(parts$gap, parts$event_set, parts$weighting, parts$panel),
+            paste(ov5$gap, ov5$event_set, ov5$weighting, ov5$panel))
 got <- vapply(infs, function(x) if (is.null(x)) NA_real_ else as.numeric(x$overall_att), numeric(1))
 d5 <- abs(got - ov5$att[k5])
 if (any(is.finite(d5) & d5 > 1e-10)) stop("the overall estimates do not match outputs/05_primary/overall_estimates.csv")
@@ -159,23 +167,25 @@ say(sprintf("Wild cluster bootstrap: %d models, %.1f s", length(boot_overall),
 # outcome and is unweighted in both families.
 rw <- list()
 for (s in EVENT_SETS) {
-  for (fam in c("unweighted", "tested_weighted")) {
-    pick <- vapply(GAPS, function(g) {
-      w <- if (g == "a_poverty") "unweighted" else fam
-      k <- which(parts$gap == g & parts$event_set == s & parts$weighting == w)
-      if (length(k) == 1L && usable[k] && !is.null(t_boot[[keys[k]]])) k else NA_integer_
-    }, integer(1))
-    k <- pick[!is.na(pick)]
-    if (length(k) < 2L) next
-    tb <- do.call(cbind, t_boot[keys[k]])
-    to <- vapply(keys[k], function(x) boot_overall[[x]]$t, numeric(1))
-    pu <- vapply(keys[k], function(x) boot_overall[[x]]$p_value, numeric(1))
-    pa <- rw_stepdown(to, tb)
-    rw[[paste(s, fam)]] <- data.frame(
-      event_set = s, family = fam, gap = parts$gap[k], weighting = parts$weighting[k],
-      t = to, p_unadjusted = pu, p_romano_wolf = pa,
-      rank = rank(-abs(to), ties.method = "first"), hypotheses = length(k),
-      reps = reps$romano_wolf, stringsAsFactors = FALSE)
+  for (pan in PANELS) {
+    for (fam in c("unweighted", "tested_weighted")) {
+      pick <- vapply(GAPS, function(g) {
+        w <- if (g == "a_poverty") "unweighted" else fam
+        k <- which(parts$gap == g & parts$event_set == s & parts$weighting == w & parts$panel == pan)
+        if (length(k) == 1L && usable[k] && !is.null(t_boot[[keys[k]]])) k else NA_integer_
+      }, integer(1))
+      k <- pick[!is.na(pick)]
+      if (length(k) < 2L) next
+      tb <- do.call(cbind, t_boot[keys[k]])
+      to <- vapply(keys[k], function(x) boot_overall[[x]]$t, numeric(1))
+      pu <- vapply(keys[k], function(x) boot_overall[[x]]$p_value, numeric(1))
+      pa <- rw_stepdown(to, tb)
+      rw[[paste(s, pan, fam)]] <- data.frame(
+        event_set = s, panel = pan, family = fam, gap = parts$gap[k], weighting = parts$weighting[k],
+        t = to, p_unadjusted = pu, p_romano_wolf = pa,
+        rank = rank(-abs(to), ties.method = "first"), hypotheses = length(k),
+        reps = reps$romano_wolf, stringsAsFactors = FALSE)
+    }
   }
 }
 say("Romano-Wolf: ", length(rw), " families of ", length(GAPS), " gaps")
@@ -220,8 +230,8 @@ for (i in which(usable)) {
     status$notes[i] <- paste(c(status$notes[i],
                                sprintf("randomization: %d of %d reassignments had no estimable cell",
                                        r$reps - r$draws_ok, r$reps)), collapse = " | ")
-  say(sprintf("  %-16s %-7s %-15s %4d/%4d reassignments estimated, %5.1f s", parts$gap[i], parts$event_set[i],
-              parts$weighting[i], r$draws_ok, r$reps, secs))
+  say(sprintf("  %-16s %-7s %-15s %-10s %5d/%5d reassignments estimated, %6.1f s", parts$gap[i],
+              parts$event_set[i], parts$weighting[i], parts$panel[i], r$draws_ok, r$reps, secs))
 }
 
 # ---- outputs -------------------------------------------------------------------------

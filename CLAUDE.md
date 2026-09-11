@@ -48,10 +48,10 @@ decision the document does not make, stop and ask the author before coding it.
 | 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
-| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11) |
-| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set |
-| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11); run so far only at the reduced `--quick` counts |
-| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); observed-cohort and ten-state runs |
+| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |
+| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels |
+| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; run so far only at the reduced `--quick` counts |
+| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); observed-cohort, ten-state and twelve-state runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
 | 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | |
@@ -176,19 +176,29 @@ Update the Status column as steps finish.
   row (DC and HI never do). Standard errors cover binomial sampling only.
 - Primary estimator as implemented (author, 2026-09-11; docs/decision_log.md):
   outcome = mean of math and RLA V per unit-year, both subjects required;
-  balanced panel over the window; `did::att_gt` with not-yet-treated
+  unbalanced panel (`allow_unbalanced_panel = TRUE`), with the balanced panel
+  as a robustness model — every model is fitted under both rules and the
+  `panel` column (`unbalanced` primary, `balanced` robustness) names which,
+  so the model key is `gap.event_set.weighting.panel` and step 5 writes 30
+  models; `did::att_gt` with not-yet-treated
   controls, DR, universal base period, state clusters (did multiplier
   bootstrap, defaults); `aggte` dynamic −5..+8 and its overall post average.
   Covariates for (b) and (c): log 2009–10 CCD `MEMBER`, SAIPE 2009 rate,
   Black and Hispanic shares of 2009–10 CCD school membership; none for (a).
   The test-replacement and CEP flags are not in the CS models (did takes
   baseline covariates only). Tested-count weight: 2009–10 count in the gap's
-  two groups, mean of math and RLA, fixed. States treated after the window
+  two groups, mean of math and RLA, fixed; on the unbalanced panel a district
+  with no 2009–10 row has no such weight and is left out of the weighted
+  models alone (`dropped_missing_weight`). States treated after the window
   are not-yet-treated controls (g = 0); states treated in the first window
   year have no pre-period and cannot enter.
 - Secondary estimators as implemented (author, 2026-09-11; docs/decision_log.md):
-  the step 5 panels unchanged, unweighted, primary event set only (the step 6
-  instruction; `EVENT_SETS` takes r1 and r2). Controls in the regression
+  the step 5 balanced panels, unweighted, primary event set only (the step 6
+  instruction; `EVENT_SETS` takes r1 and r2). They stay on the balanced panel
+  because synthdid needs a rectangular state-by-year matrix and Section 7 gives
+  no rule for an unbalanced one, so the Section 13 agreement table compares an
+  unbalanced primary with balanced secondaries and step 5's balanced robustness
+  models are the like-for-like comparison — awaiting the author's confirmation. Controls in the regression
   estimators: test_replaced and cep for every gap, plus the four 2009 covariates
   interacted with year for (b) and (c) (stacked: with sub-experiment-by-year).
   synthdid: state level, cohort by cohort, no controls, placebo SEs; a cohort
@@ -201,13 +211,14 @@ Update the Status column as steps finish.
   units supply one pre-treatment observation, which is gap (a) — awaiting the
   author's confirmation.
 - Inference as implemented (author, 2026-09-11; docs/decision_log.md): all four
-  procedures of Section 8 run on the 15 step 5 models. The Webb wild cluster bootstrap
+  procedures of Section 8 run on the 30 step 5 models (both panel rules). The Webb wild cluster bootstrap
   and the Romano–Wolf step-down run on did's influence function summed within state,
   not through `fwildclusterboot` and `wildrwolf`, which take an lm or fixest object and
   cannot test an average of group-time effects. One set of state-level Webb draws per
   event set serves every model in it, so Romano–Wolf's unadjusted p-value is by
-  construction the bootstrap's. Romano–Wolf family: the three gaps within an event set,
-  once unweighted and once with the weighted (b) and (c). RI reassigns the observed
+  construction the bootstrap's. Romano–Wolf family: the three gaps within one event set, weighting
+  family and panel rule (the step-down compares hypotheses fitted on the same
+  data), once unweighted and once with the weighted (b) and (c). RI reassigns the observed
   cohort years among every state in the panel, keeping the states per cohort year, and
   refits; the reassignments are drawn in the parent process, so the result does not
   depend on the worker count. HonestDiD relative magnitudes on the overall post average
@@ -218,24 +229,30 @@ Update the Status column as steps finish.
   run are recorded in `outputs/07_inference/inference_settings.csv`.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - Power as implemented (author, 2026-09-11; docs/decision_log.md): the three primary
-  gaps of the primary event set, unweighted, each on its step 5 estimation panel; 2,000
-  placebo runs per gap in each of two scenarios, every draw made in the parent process
-  so neither result depends on the worker count. `observed` (`seed_for("power")`,
-  `mde.csv`): treated states drawn from every state in the panel and given the observed
-  cohort years (the Section 8 reassignment); in stage 1 that is two treated states, the
-  pre-period's own cohort count, so this run is descriptive of the pre-period.
-  `ten_state` (`seed_for("power_10")`, `mde_10states.csv`): ten placebo-treated states,
-  cohort years drawn uniformly from 2011–2013; this is the power calculation, and the
-  0.10 SD rule is applied to it. MDE = the smallest shift of the placebo distribution
+  gaps of the primary event set, unweighted, each on its step 5 estimation panel (the
+  primary, unbalanced one); 2,000 placebo runs per gap in each of three scenarios, every
+  draw made in the parent process so no result depends on the worker count.
+  `twelve_state` (`seed_for("power_12")`, `mde_12states.csv`, `TWELVE_STATES`): twelve
+  placebo-treated states, cohort years drawn uniformly from 2011–2013. This is the
+  registered power calculation and the 0.10 SD rule is applied to it alone; twelve is the
+  treated states the event table carries with post-reform data by 2025, which the script
+  checks and warns about if it differs. Sensitivity runs: `ten_state`
+  (`seed_for("power_10")`, `mde_10states.csv`, ten states, the earlier count) and
+  `observed` (`seed_for("power")`, `mde.csv`): treated states drawn from every state in
+  the panel and given the observed cohort years (the Section 8 reassignment); in stage 1
+  that is two treated states, the pre-period's own cohort count, so that run is
+  descriptive of the pre-period. MDE = the smallest shift of the placebo distribution
   that a test at the 95th percentile of the absolute placebo estimates rejects with
   probability 0.80; the normal-approximation figure (2.8016 x sd) is reported beside it.
-  Stage 1: 0.207, 0.260 and 0.167 SD observed, 0.112, 0.110 and 0.0996 SD ten-state, for
-  gaps (a), (b), (c). The ceiling is exceeded for two of the three gaps, not all three,
-  so Section 10's criterion does not read underpowered. `mde_10states.csv` also carries a
-  supplementary `mde_projection` column (square root of the post-reform state-year ratio,
-  registration end year 2025 as a placeholder, 2020 left out); it is not the power
-  calculation and is kept off the console because it summarises the event table's cohort
-  years. The event table carries twelve treated states with post-reform data by 2025, not
-  ten: the count is `TEN_STATES` in `R/08_power.R`. `--quick` is a test run at a reduced
-  count, recorded in `outputs/08_power/power_settings.csv`.
+  Stage 1: 0.152, 0.128 and 0.122 SD twelve-state, 0.156, 0.143 and 0.137 ten-state,
+  0.225, 0.300 and 0.245 observed, for gaps (a), (b), (c). The ceiling is exceeded for
+  all three gaps in the registered run, so on the stage 1 files Section 10's criterion
+  READS UNDERPOWERED — the balanced panel kept gap (c) under it, and the switch to the
+  unbalanced panel widened the placebo distribution. `mde_10states.csv` and
+  `mde_12states.csv` also carry a supplementary `mde_projection` column (square root of
+  the post-reform state-year ratio, registration end year 2025 as a placeholder, 2020
+  left out): 0.090, 0.076 and 0.072 SD at twelve states, against the registered window's
+  68 post-reform state-years. It is not the power calculation and is kept off the console
+  because it summarises the event table's cohort years. `--quick` is a test run at a
+  reduced count, recorded in `outputs/08_power/power_settings.csv`.
 - License: MIT.

@@ -3,11 +3,18 @@
 #
 # Inputs: those of step 5 (R/05_primary.R), plus the state-year test-replacement and
 # CEP flags (test_replaced, cep) in data/derived/sample_district_year.csv.
-# Panels: the step 5 panels, unchanged: primary suppression sample; mean of math and
+# Panels: the step 5 balanced panels: primary suppression sample; mean of math and
 # RLA V, both required; balanced over the window; gaps (b) and (c) with all four 2009
 # covariates; states treated in the first window year left out; states treated after
-# the window are controls (g = 0). The script stops if a panel's size differs from
-# outputs/05_primary/panel_counts.csv.
+# the window are controls (g = 0). The script stops if a panel's size differs from the
+# balanced rows of outputs/05_primary/panel_counts.csv.
+# Panel rule (author, 2026-09-11): step 5's primary Callaway-Sant'Anna models moved to
+# an unbalanced panel and keep the balanced panel as a robustness model. The secondary
+# estimators stay on the balanced panel, which is the one synthdid can take at all: it
+# needs a rectangular state-by-year outcome matrix, and Section 7 gives no rule for an
+# unbalanced one. The Section 13 agreement table therefore compares an unbalanced
+# primary with balanced secondaries; step 5's balanced robustness models are the
+# like-for-like comparison. Awaiting the author's confirmation.
 # Event set: the primary set (event_table.csv), as the step 6 instruction asked;
 # EVENT_SETS takes r1 and r2 when they are wanted.
 # Estimators (R/functions/secondary.R), all unweighted (Section 7: the weighted
@@ -31,6 +38,8 @@
 # times 0..+8, as step 5).
 # Outputs (outputs/06_secondary/): the step 5 files with an estimator column first,
 # so the Section 13 agreement table can bind them to step 5's.
+# Every output row carries the `panel` column step 5 writes, always `balanced` here, so the
+# Section 13 agreement table binds the two files and says which panel each row came from.
 #   event_time_estimates.csv  one row per estimator (not twfe_static), gap and event time
 #                             -5..+8, with the cohorts, treated states and treated units
 #                             behind each coefficient
@@ -53,6 +62,7 @@ WINDOW <- 2010:2013    # stage 1 end years (data acquisition 1)
 SAMPLE <- "primary"    # suppression sample, as step 5
 EVENT_SETS <- c(primary = "event_table.csv")
 FLAGS      <- c(primary = "retained", r1 = "retained_r1", r2 = "retained_r2")
+PANEL      <- "balanced"   # the step 5 panel rule these estimators run on (see the header)
 GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
 ESTIMATORS <- c("sun_abraham", "imputation", "synthdid", "stacked", "twfe", "twfe_static")
 
@@ -93,7 +103,7 @@ if (is.null(pc5)) say("No step 5 panel counts found; the panels are not checked 
 
 # ---- models ----------------------------------------------------------------------
 res <- list()
-say("\n== Panels (the step 5 panels), primary suppression sample")
+say("\n== Panels (the step 5 balanced panels), primary suppression sample")
 for (set in names(EVENT_SETS)) {
   flag <- FLAGS[[set]]
   ev <- utils::read.csv(file.path("data", "reference", EVENT_SETS[[set]]), stringsAsFactors = FALSE)
@@ -115,9 +125,10 @@ for (set in names(EVENT_SETS)) {
     p <- attach_flags(ac$panel, flags)
     n_units <- length(unique(p$id))
     if (!is.null(pc5)) {
-      n5 <- pc5$units_in_model[pc5$gap == gap & pc5$event_set == set]
+      n5 <- pc5$units_in_model[pc5$gap == gap & pc5$event_set == set & pc5$panel == "balanced"]
       if (length(n5) == 1L && n5 != n_units)
-        stop(gap, " (", set, "): ", n_units, " units against ", n5, " in step 5; the panels must match")
+        stop(gap, " (", set, "): ", n_units, " units against ", n5,
+             " in the step 5 balanced panel; the panels must match")
     }
     say(sprintf("%-16s %-7s %5d %s in %2d states", gap, set, n_units,
                 if (unit == "state") "states   " else "districts", length(unique(p$state))))
@@ -132,7 +143,7 @@ for (set in names(EVENT_SETS)) {
     stopifnot(identical(names(fits), ESTIMATORS))
     for (est in ESTIMATORS)
       res[[paste(est, gap, set, sep = ".")]] <- c(list(estimator = est, gap = gap, event_set = set,
-                                                      weighting = "unweighted",
+                                                      weighting = "unweighted", panel = PANEL,
                                                       unit = if (est == "synthdid") "state" else label),
                                                  fits[[est]])
   }
@@ -140,10 +151,10 @@ for (set in names(EVENT_SETS)) {
 
 # ---- outputs ---------------------------------------------------------------------
 keys <- data.frame(estimator = character(), gap = character(), event_set = character(), weighting = character(),
-                   stringsAsFactors = FALSE)
+                   panel = character(), stringsAsFactors = FALSE)
 tag <- function(r, x) if (!is.null(x) && nrow(x))
-  data.frame(estimator = r$estimator, gap = r$gap, event_set = r$event_set, weighting = r$weighting, x,
-             stringsAsFactors = FALSE)
+  data.frame(estimator = r$estimator, gap = r$gap, event_set = r$event_set, weighting = r$weighting,
+             panel = r$panel, x, stringsAsFactors = FALSE)
 stack <- function(part, template) {
   x <- do.call(rbind, lapply(res, function(r) tag(r, r[[part]])))
   if (is.null(x)) x <- cbind(keys, template[0, , drop = FALSE])
@@ -157,11 +168,12 @@ pooled  <- stack("pooled", data.frame(att = numeric(), se = numeric(), ci_lo = n
                                       cohorts = integer(), treated_states = integer()))
 status  <- do.call(rbind, lapply(res, function(r)
   data.frame(estimator = r$estimator, gap = r$gap, event_set = r$event_set, weighting = r$weighting,
-             status = r$status, notes = paste(r$notes, collapse = " | "), stringsAsFactors = FALSE)))
+             panel = r$panel, status = r$status, notes = paste(r$notes, collapse = " | "),
+             stringsAsFactors = FALSE)))
 rownames(status) <- NULL
 pc <- do.call(rbind, lapply(res, function(r) if (!is.null(r$size))
-  data.frame(estimator = r$estimator, gap = r$gap, event_set = r$event_set, unit = r$unit, r$size,
-             stringsAsFactors = FALSE)))
+  data.frame(estimator = r$estimator, gap = r$gap, event_set = r$event_set, panel = r$panel,
+             unit = r$unit, r$size, stringsAsFactors = FALSE)))
 rownames(pc) <- NULL
 
 files <- c(event_time_estimates = "event", overall_estimates = "overall", group_time_estimates = "cells",
