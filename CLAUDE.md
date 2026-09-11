@@ -45,7 +45,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
 | 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
-| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | |
+| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | |
@@ -111,5 +111,11 @@ Update the Status column as steps finish.
 - CPI-U all items, July–June school-year average, base = last window year.
 - Missing CPI month (design v17, Section 7): filled with the mean of the two
   adjacent months.
+- Sample rules as implemented (author, 2026-09-11; data acquisition 4.1):
+  participation passes when the reported value's lower bound is ≥ 95 (GE95
+  passes, GE90 fails, nothing reported fails); poverty quintiles fixed per
+  state among districts passing rules 1–2 with a 2009–10 grade span to 12 and
+  a SAIPE 2009 rate; stability = CCD BOUND not 2, 6, or 7 in every window year
+  and never 5, agency type 1–2 in every year.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.

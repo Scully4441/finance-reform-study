@@ -1,0 +1,75 @@
+Step 3 sample, run 20260911T192912Z; stage 1; blinding PERMUTED
+Wrote data/derived/sample_district_year.csv: 73223 district-years, 19061 districts, 57 columns.
+
+== Districts retained by each rule (end years 2010-2013)
+CCD agencies outside the 50 states and DC, dropped before the rules: 236
+                                     rule districts removed
+     CCD agencies in the 50 states and DC     19061      NA
+ rule 1: agency type 1 or 2 in every year     13923    5138
+ rule 2: operational in every window year     13490     433
+               rule 2: no boundary change     13463      27
+                rule 6: primary event set      9157    4306
+                rule 6: robustness set r1      9157    4306
+                rule 6: robustness set r2     11566    1897
+States with retained districts (primary set): 40
+Retained districts in the poverty-quintile set (grade span to 12 in 2009-10, SAIPE 2009 rate): 7935
+States with fewer than five quintile districts (no bottom quintile can form): DC (1), HI (1)
+Retained districts missing a SAIPE 2009 rate: 73
+EDFacts LEAIDs with HS counts but no CCD row in the 50 states and DC that year: 68
+
+== HS cells lost to suppression, retained districts (primary set), 2010-2013
+Each cell is one district-year-subject-subgroup. not_reported: no count in EDFacts (includes districts without high school grades); below_30: exact count under 30; not_exact: count >= 30 but percent proficient given as a range or symbol.
+ subject subgroup cells not_reported below_30 not_exact usable
+    math      all 36628         5227     4490     19924   6987
+    math       wh 36628         5524     6726     19635   4743
+    math       bl 36628        14479    16151      4898   1100
+    math       hi 36628        11049    19621      4757   1201
+    math      ecd 36628         5568    12672     15650   2738
+     rla      all 36628         5239     4486     20084   6819
+     rla       wh 36628         5552     6726     19859   4491
+     rla       bl 36628        14480    16226      4879   1043
+     rla       hi 36628        11027    19782      4627   1192
+     rla      ecd 36628         5583    12629     15864   2552
+
+District-years with every subgroup of the gap usable under rule 3 (before participation):
+              gap subject sy2010 sy2011 sy2012 sy2013
+            a_all    math   1698   1686   1685   1918
+            a_all     rla   1613   1666   1658   1882
+    b_black_white    math    205    196    199    238
+    b_black_white     rla    187    185    181    223
+ c_hispanic_white    math    181    185    188    279
+ c_hispanic_white     rla    166    185    183    280
+
+== Participation rule, retained districts (primary set)
+End years 2010-2012: no participation file; retained without the test.
+Cells usable under rule 3 in 2013, by participation outcome:
+ subject subgroup usable_cells pass fail_reported_below_95 fail_not_reported
+    math      all         1918 1742                    176                 0
+    math       wh         1264 1173                     91                 0
+    math       bl          309  248                     61                 0
+    math       hi          413  368                     45                 0
+    math      ecd          851  733                    118                 0
+     rla      all         1882 1718                    164                 0
+     rla       wh         1199 1125                     74                 0
+     rla       bl          297  246                     51                 0
+     rla       hi          416  381                     35                 0
+     rla      ecd          799  692                    107                 0
+
+State-years lost to participation in 2013 (state had at least one usable district cell for the gap before the rule and none after):
+              gap subject district_cells_before district_cells_after
+            a_all    math                  1918                 1742
+            a_all     rla                  1882                 1718
+    b_black_white    math                   238                  191
+    b_black_white     rla                   223                  192
+ c_hispanic_white    math                   279                  244
+ c_hispanic_white     rla                   280                  258
+ states_with_cells_before state_years_lost       states_lost
+                       40                0                  
+                       40                0                  
+                       29                3          OR PA WA
+                       29                4       IN OR PA WA
+                       26                4       CT OK PA WA
+                       28                6 CT LA MA OK PA WA
+
+Robustness sample (end years 2013 on): 9157 retained district-years of 36628.
+Log: outputs/logs/03_sample_20260911T192912Z.log

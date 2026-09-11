@@ -99,4 +99,7 @@ stopifnot(identical(real$state, perm$state), identical(real$group, perm$group))
 stopifnot(readLines("data/reference/blinding_status.txt", n = 1) == "PERMUTED")
 stopifnot(file.exists("data/reference/event_table_r1.csv"), file.exists("data/reference/event_table_r2.csv"))
 setwd(old)
+
+# sample rules and the step 3 output
+source("tests/test_sample.R")
 cat("All tests passed.\n")

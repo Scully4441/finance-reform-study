@@ -299,6 +299,43 @@ Both scripts print the counts the design asks for: districts retained by
 rule, cells lost to suppression, state-years lost to participation, and
 cohorts per event time.
 
+### 4.1 Sample rules as implemented (author decisions, 2026-09-11)
+
+`R/03_sample.R` writes `data/derived/sample_district_year.csv`; the shared
+rules are in `R/functions/sample_rules.R`.
+
+- Stability (Section 5, rule 2). The CCD LEA universe files for 2009-10
+  through 2012-13 have no separate status field; `BOUND` carries it: 1 no
+  change, 2 closed, 3 new, 4 added, 5 significant change in boundaries or
+  instructional responsibility, 6 temporarily closed, 7 future, 8 reopened.
+  A district is present in a year when it is listed with a code other than 2,
+  6, or 7, and it must be present in every window year. A code 5 in any window
+  year, 2009-10 included, excludes it. Agency type must be 1 or 2 in every
+  window year.
+- Suppression (rule 3). A cell is usable when the valid-test count is exact
+  and at least 30 and the percent proficient is exact.
+- Participation (rule 4). EDFacts reports most high school participation
+  rates as bounds or ranges (`GE95`, `GE90`, `90-94`). A cell passes when the
+  lowest rate consistent with the reported value is at least 95: an exact
+  value of 95 or more, `GE95`, `GE99`, or a range starting at 95 or above.
+  `GE90`, `GE80`, `GE50` and ranges starting below 95 fail. `PS`, `n/a`, `.`
+  and blank fail because no participation is reported. End years 2010-2012
+  are retained without the test; `robust_from_2013` marks the robustness
+  sample.
+- Poverty quintiles (Section 6, gap (a)). Fixed per state. The quintile set is
+  the districts that pass rules 1 and 2, have a SAIPE 2009 rate (children
+  5-17 in poverty over children 5-17), and have a 2009-10 CCD grade span
+  reaching grade 12. They are ranked by the rate, ties broken by LEAID, and
+  split into five groups of equal count (1 = lowest poverty). The same
+  assignment holds in every year.
+- CEP (stage 1). `cep` = 1 when the end year is on or after the state's
+  `first_cep_sy_end` in `data/reference/cep_phase_in.csv`: state
+  availability, not district adoption.
+- Treatment timing (rule 6). `retained`, `retained_r1` and `retained_r2`
+  apply rules 1, 2 and 6 with `event_table.csv`, `event_table_r1.csv` and
+  `event_table_r2.csv`. Only each state's group is read; treatment years stay
+  out of the sample file.
+
 ## 5. Stage 2 additions
 
 - Add manifest rows for every dataset for end years 2014 through the end year
