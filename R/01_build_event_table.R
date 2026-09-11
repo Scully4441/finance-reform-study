@@ -90,15 +90,26 @@ pseed <- suppressWarnings(as.integer(trimws(seed_line)))
 if (is.na(pseed)) stop("permutation_seed.txt must hold one integer on its first line")
 if (pseed == MASTER_SEED) stop("The permutation seed must differ from the master seed 130")
 
-permute <- function(tab) {
+# Permute treatment years among the treated states. The robustness sets can
+# have very few treated states, so an identity draw is likely; the loop keeps
+# drawing from the same seeded stream until the permutation differs from the
+# real table. The result is still fully determined by the seed.
+permute <- function(tab, label) {
   perm <- tab
   tr <- which(perm$group == "treated")
-  if (length(tr) < 2L) stop("Fewer than two treated states; nothing to permute")
+  if (length(tr) < 2L || length(unique(tab$treat_year[tr])) < 2L) {
+    message("Set ", label, ": fewer than two distinct treatment years, so no permutation is possible; table written as is.")
+    return(perm)
+  }
   set.seed(pseed)
-  perm$treat_year[tr] <- tab$treat_year[tr][sample.int(length(tr))]
-  if (identical(perm$treat_year, tab$treat_year))
-    stop("This seed produced the identity permutation. Choose a different permutation seed.")
-  perm
+  for (k in seq_len(1000L)) {
+    idx <- sample.int(length(tr))
+    if (!identical(tab$treat_year[tr][idx], tab$treat_year[tr])) {
+      perm$treat_year[tr] <- tab$treat_year[tr][idx]
+      return(perm)
+    }
+  }
+  stop("Could not find a non-identity permutation for set ", label)
 }
 
 write.csv(events, file.path(priv, "events_merged_real.csv"), row.names = FALSE)
@@ -106,7 +117,7 @@ dir.create("data/reference", recursive = TRUE, showWarnings = FALSE)
 suffix <- c(full = "", r1 = "_r1", r2 = "_r2")
 for (nm in names(tables)) {
   write.csv(tables[[nm]], file.path(priv, paste0("event_table_real", suffix[[nm]], ".csv")), row.names = FALSE)
-  write.csv(permute(tables[[nm]]), file.path("data", "reference", paste0("event_table", suffix[[nm]], ".csv")), row.names = FALSE)
+  write.csv(permute(tables[[nm]], nm), file.path("data", "reference", paste0("event_table", suffix[[nm]], ".csv")), row.names = FALSE)
 }
 writeLines(c("PERMUTED",
              paste("built_utc:", format(Sys.time(), tz = "UTC", "%Y-%m-%dT%H:%M:%SZ"))),
