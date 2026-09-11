@@ -25,3 +25,7 @@ Rows listed now are the stage-1 set (school years ending 2010–2013). Stage-2
 rows for later years are added after the OSF registration, when
 `data/stage.txt` becomes `2`. Dataset names beginning with `edfacts_` are
 outcome files and are subject to the stage gate.
+
+Deposits
+Stage 1: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11, containing stage1_raw.zip
+404a4bcc4f67d3bb61dee069771525613061c8765bb4d7b107a38b82474a78c6
