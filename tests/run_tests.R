@@ -112,4 +112,7 @@ source("tests/test_sample.R")
 
 # outcome construction and the step 4 outputs
 source("tests/test_outcomes.R")
+
+# primary estimator and the step 5 outputs
+source("tests/test_primary.R")
 cat("All tests passed.\n")

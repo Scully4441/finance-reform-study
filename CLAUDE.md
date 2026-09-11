@@ -48,7 +48,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
-| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | |
+| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | |
@@ -174,5 +174,17 @@ Update the Status column as steps finish.
   2012–13, rule 4. Rows carry `retained`, `retained_r1`, `retained_r2`. A
   gap (a) state-year without a usable district in quintile 1 or 5 gets no
   row (DC and HI never do). Standard errors cover binomial sampling only.
+- Primary estimator as implemented (author, 2026-09-11; docs/decision_log.md):
+  outcome = mean of math and RLA V per unit-year, both subjects required;
+  balanced panel over the window; `did::att_gt` with not-yet-treated
+  controls, DR, universal base period, state clusters (did multiplier
+  bootstrap, defaults); `aggte` dynamic −5..+8 and its overall post average.
+  Covariates for (b) and (c): log 2009–10 CCD `MEMBER`, SAIPE 2009 rate,
+  Black and Hispanic shares of 2009–10 CCD school membership; none for (a).
+  The test-replacement and CEP flags are not in the CS models (did takes
+  baseline covariates only). Tested-count weight: 2009–10 count in the gap's
+  two groups, mean of math and RLA, fixed. States treated after the window
+  are not-yet-treated controls (g = 0); states treated in the first window
+  year have no pre-period and cannot enter.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.
