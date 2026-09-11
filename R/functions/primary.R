@@ -107,6 +107,29 @@ read_ccd_race_shares <- function(path, sy_end) {
              schools = as.vector(table(d$LEAID[ok])[agg$leaid]), stringsAsFactors = FALSE)
 }
 
+# Covariates for gaps (b) and (c), all fixed at 2009-10 (author decisions 2026-09-11):
+# log 2009-10 CCD membership (MEMBER), the SAIPE 2009 child-poverty rate, and the
+# Black and Hispanic shares of 2009-10 CCD school membership. leaids: the districts
+# to cover; smp: rows of data/derived/sample_district_year.csv with leaid, sy_end and
+# saipe_pov_rate_2009. Returns one row per district with CS_COVARIATES (NA where
+# invalid). Shared by steps 5 and 6.
+cs_covariates <- function(leaids, smp, sy_end = 2010L,
+                          lea_zip = "data/raw/ccd/lea-directory-sy2009-10.zip",
+                          mem_zip = "data/raw/ccd/membership-sy2009-10.zip") {
+  td <- tempfile("ccd"); dir.create(td)
+  l09 <- read_ccd_lea(utils::unzip(lea_zip, exdir = td), sy_end, extra = "MEMBER")
+  rs  <- read_ccd_race_shares(utils::unzip(mem_zip, exdir = td), sy_end)
+  cov <- data.frame(leaid = sort(unique(leaids)), stringsAsFactors = FALSE)
+  m09 <- ccd_count(l09$member)[match(cov$leaid, l09$leaid)]
+  m09[!is.na(m09) & m09 <= 0] <- NA_real_
+  cov$log_member_2009 <- log(m09)
+  s09 <- smp[smp$sy_end == sy_end, ]
+  cov$saipe_pov_rate_2009 <- s09$saipe_pov_rate_2009[match(cov$leaid, s09$leaid)]
+  cov$black_share_2009 <- rs$black_share[match(cov$leaid, rs$leaid)]
+  cov$hisp_share_2009  <- rs$hisp_share[match(cov$leaid, rs$leaid)]
+  cov
+}
+
 # Attach did's cohort variable to a panel (unit column `unit`) and drop the units
 # whose state cannot enter (cohort_status first_year or excluded). Adds g,
 # cohort_status and an integer id. Returns the panel and the dropped unit count

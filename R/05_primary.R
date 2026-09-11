@@ -77,17 +77,7 @@ smp <- data.table::fread("data/derived/sample_district_year.csv", select = c("le
                          colClasses = c(leaid = "character"), data.table = FALSE, showProgress = FALSE)
 
 # Covariates for gaps (b) and (c), all fixed at 2009-10 (author decisions 2026-09-11).
-td <- tempfile("ccd"); dir.create(td)
-l09 <- read_ccd_lea(utils::unzip("data/raw/ccd/lea-directory-sy2009-10.zip", exdir = td), 2010L, extra = "MEMBER")
-rs  <- read_ccd_race_shares(utils::unzip("data/raw/ccd/membership-sy2009-10.zip", exdir = td), 2010L)
-cov <- data.frame(leaid = sort(unique(race$leaid)), stringsAsFactors = FALSE)
-m09 <- ccd_count(l09$member)[match(cov$leaid, l09$leaid)]
-m09[!is.na(m09) & m09 <= 0] <- NA_real_
-cov$log_member_2009 <- log(m09)
-s09 <- smp[smp$sy_end == min(WINDOW), ]
-cov$saipe_pov_rate_2009 <- s09$saipe_pov_rate_2009[match(cov$leaid, s09$leaid)]
-cov$black_share_2009 <- rs$black_share[match(cov$leaid, rs$leaid)]
-cov$hisp_share_2009  <- rs$hisp_share[match(cov$leaid, rs$leaid)]
+cov <- cs_covariates(race$leaid, smp, min(WINDOW))
 say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; missing: ",
     paste(CS_COVARIATES, colSums(is.na(cov[CS_COVARIATES])), collapse = ", "))
 

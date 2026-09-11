@@ -49,7 +49,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11) |
-| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | |
+| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
@@ -186,5 +186,19 @@ Update the Status column as steps finish.
   two groups, mean of math and RLA, fixed. States treated after the window
   are not-yet-treated controls (g = 0); states treated in the first window
   year have no pre-period and cannot enter.
+- Secondary estimators as implemented (author, 2026-09-11; docs/decision_log.md):
+  the step 5 panels unchanged, unweighted, primary event set only (the step 6
+  instruction; `EVENT_SETS` takes r1 and r2). Controls in the regression
+  estimators: test_replaced and cep for every gap, plus the four 2009 covariates
+  interacted with year for (b) and (c) (stacked: with sub-experiment-by-year).
+  synthdid: state level, cohort by cohort, no controls, placebo SEs; a cohort
+  with fewer than two pre-reform years is left out, which in stage 1 leaves one
+  cohort per gap. Stacked: event times −5..+5, clean controls through g+5,
+  corrective weights, sub-experiments not trimmed to complete windows (rule 6
+  keeps early cohorts). Overall = mean of the event-time estimates 0..+8; static
+  TWFE is its own row. Sun–Abraham uses the sunab cohort-by-period indicators
+  built in `sa_terms()`: fixest 0.14.2's `sunab()` drops a cohort whose treated
+  units supply one pre-treatment observation, which is gap (a) — awaiting the
+  author's confirmation.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.

@@ -1,0 +1,640 @@
+Step 6 secondary estimators, run 20260911T213431Z; stage 1; blinding PERMUTED; fixest 0.14.2, didimputation 0.5.1, synthdid 0.0.9
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/06_secondary and outputs/logs/06_secondary_20260911T213431Z.log
+Covariates for the 2879 districts in the gap (b)/(c) file; state-year flags: 204 state-years (test_replaced, cep)
+
+== Panels (the step 5 panels), primary suppression sample
+a_poverty        primary    36 states    in 36 states
+b_black_white    primary   806 districts in 37 states
+c_hispanic_white primary   773 districts in 36 states
+
+== Units, states, cohorts and observations in each model (panel_counts.csv)
+   estimator              gap event_set     unit units_in_model states_in_model
+ sun_abraham        a_poverty   primary    state             36              36
+  imputation        a_poverty   primary    state             36              36
+    synthdid        a_poverty   primary    state             35              35
+     stacked        a_poverty   primary    state             36              36
+        twfe        a_poverty   primary    state             36              36
+ twfe_static        a_poverty   primary    state             36              36
+ sun_abraham    b_black_white   primary district            806              37
+  imputation    b_black_white   primary district            806              37
+    synthdid    b_black_white   primary    state             36              36
+     stacked    b_black_white   primary district            806              37
+        twfe    b_black_white   primary district            806              37
+ twfe_static    b_black_white   primary district            806              37
+ sun_abraham c_hispanic_white   primary district            773              36
+  imputation c_hispanic_white   primary district            773              36
+    synthdid c_hispanic_white   primary    state             35              35
+     stacked c_hispanic_white   primary district            773              36
+        twfe c_hispanic_white   primary district            773              36
+ twfe_static c_hispanic_white   primary district            773              36
+ cohorts_in_model treated_units control_units  obs
+                2             2            34  143
+                2             2            34  144
+                1             1            34  140
+                2             2            34  280
+                2             2            34  144
+                2             2            34  144
+                2            37           769 3224
+                2            37           769 3224
+                1             1            35  144
+                2            37           769 6300
+                2            37           769 3224
+                2            37           769 3224
+                2            68           705 3092
+                2            68           705 3092
+                1             1            34  140
+                2            68           705 5912
+                2            68           705 3092
+                2            68           705 3092
+
+== sun_abraham.a_poverty.primary: ok
+notes: NOTE: 1 observation removed because of NA values (RHS: 1).
+  e          att         se       ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA          NA         NA       0              0
+ -4           NA         NA          NA         NA       0              0
+ -3           NA         NA          NA         NA       0              0
+ -2 -0.002754366 0.01564191 -0.03341194 0.02790321       1              1
+ -1  0.000000000         NA          NA         NA       2              2
+  0  0.042482446 0.01503345  0.01301742 0.07194747       2              2
+  1 -0.011028941 0.02216219 -0.05446603 0.03240815       2              2
+  2           NA         NA          NA         NA       0              0
+  3           NA         NA          NA         NA       0              0
+  4           NA         NA          NA         NA       0              0
+  5           NA         NA          NA         NA       0              0
+  6           NA         NA          NA         NA       0              0
+  7           NA         NA          NA         NA       0              0
+  8           NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se       ci_lo      ci_hi cohorts treated_states
+ 0.01572675 0.01639751 -0.01641177 0.04786528       2              2
+ treated_units
+             2
+
+== imputation.a_poverty.primary: ok
+  e          att          se        ci_lo       ci_hi cohorts treated_states
+ -5           NA          NA           NA          NA       0              0
+ -4           NA          NA           NA          NA       0              0
+ -3           NA          NA           NA          NA       0              0
+ -2 -0.002295634 0.016016724 -0.033687836  0.02909657       1              1
+ -1  0.000000000          NA           NA          NA       2              2
+  0  0.009692070 0.009829364 -0.009573129  0.02895727       2              2
+  1 -0.090538112 0.014600846 -0.119155244 -0.06192098       2              2
+  2 -0.223800539 0.022360160 -0.267625646 -0.17997543       1              1
+  3           NA          NA           NA          NA       0              0
+  4           NA          NA           NA          NA       0              0
+  5           NA          NA           NA          NA       0              0
+  6           NA          NA           NA          NA       0              0
+  7           NA          NA           NA          NA       0              0
+  8           NA          NA           NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se      ci_lo       ci_hi cohorts treated_states
+ -0.1015489 0.01441046 -0.1297928 -0.07330488       2              2
+ treated_units
+             2
+
+== synthdid.a_poverty.primary: ok
+notes: 1 of 2 cohort(s) left out: fewer than 2 pre-reform years (synthdid's noise level needs them)
+  e         att         se      ci_lo     ci_hi cohorts treated_states
+ -5          NA         NA         NA        NA       0              0
+ -4          NA         NA         NA        NA       0              0
+ -3          NA         NA         NA        NA       0              0
+ -2          NA         NA         NA        NA       0              0
+ -1          NA         NA         NA        NA       0              0
+  0  0.03686481 0.08331751 -0.1264345 0.2001641       1              1
+  1 -0.01688965 0.12892700 -0.2695819 0.2358026       1              1
+  2          NA         NA         NA        NA       0              0
+  3          NA         NA         NA        NA       0              0
+  4          NA         NA         NA        NA       0              0
+  5          NA         NA         NA        NA       0              0
+  6          NA         NA         NA        NA       0              0
+  7          NA         NA         NA        NA       0              0
+  8          NA         NA         NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             0
+             1
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.00998758 0.09163619 -0.169616 0.1895912       1              1             1
+synthdid pooled ATT:
+        att         se     ci_lo     ci_hi cohorts treated_states
+ 0.00998758 0.09163619 -0.169616 0.1895912       1              1
+
+== stacked.a_poverty.primary: ok
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5           NA         NA          NA          NA       0              0
+ -4           NA         NA          NA          NA       0              0
+ -3           NA         NA          NA          NA       0              0
+ -2 -0.035505207 0.02584839 -0.08616713  0.01515671       1              1
+ -1  0.000000000         NA          NA          NA       2              2
+  0  0.009142452 0.02027574 -0.03059726  0.04888217       2              2
+  1 -0.091123709 0.05415263 -0.19726092  0.01501350       2              2
+  2 -0.190596776 0.03424491 -0.25771556 -0.12347799       1              1
+  3           NA         NA          NA          NA       0              0
+  4           NA         NA          NA          NA       0              0
+  5           NA         NA          NA          NA       0              0
+  6           NA         NA          NA          NA       0              0
+  7           NA         NA          NA          NA       0              0
+  8           NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se     ci_lo       ci_hi cohorts treated_states
+ -0.09085934 0.03464027 -0.158753 -0.02296566       2              2
+ treated_units
+             2
+
+== twfe.a_poverty.primary: ok
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2 -0.03632653 0.02602194 -0.08732860  0.01467553       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0  0.01027540 0.02055213 -0.03000605  0.05055684       2              2
+  1 -0.09096043 0.05460940 -0.19799289  0.01607204       2              2
+  2 -0.19171477 0.03450500 -0.25934334 -0.12408621       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.09079993 0.03499194 -0.1593829 -0.02221699       2              2
+ treated_units
+             2
+
+== twfe_static.a_poverty.primary: ok
+[1] NA NA NA NA NA NA NA NA
+overall post-reform average:
+         att         se      ci_lo     ci_hi cohorts treated_states
+ -0.04973005 0.05275309 -0.1531242 0.0536641       2              2
+ treated_units
+             2
+
+== sun_abraham.b_black_white.primary: ok
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.07899142 0.01210692  0.05526229  0.10272054       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.08121083 0.01090286 -0.10258005 -0.05984161       2              2
+  1 -0.09556484 0.01290639 -0.12086090 -0.07026878       2              2
+  2 -0.06066972 0.01996154 -0.09979361 -0.02154582       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            16
+            37
+            37
+            37
+            21
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att        se      ci_lo       ci_hi cohorts treated_states
+ -0.07914846 0.0129406 -0.1045116 -0.05378535       2              2
+ treated_units
+            37
+
+== imputation.b_black_white.primary: ok
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.07730418 0.01225325  0.05328825  0.10132010       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.09425128 0.01184548 -0.11746800 -0.07103456       2              2
+  1 -0.10891261 0.01263252 -0.13367190 -0.08415332       2              2
+  2 -0.05499383 0.01898590 -0.09220551 -0.01778215       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            16
+            37
+            37
+            37
+            21
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.08605258 0.01289259 -0.1113216 -0.06078357       2              2
+ treated_units
+            37
+
+== synthdid.b_black_white.primary: ok
+notes: 1 of 2 cohort(s) left out: fewer than 2 pre-reform years (synthdid's noise level needs them)
+  e         att        se      ci_lo     ci_hi cohorts treated_states
+ -5          NA        NA         NA        NA       0              0
+ -4          NA        NA         NA        NA       0              0
+ -3          NA        NA         NA        NA       0              0
+ -2          NA        NA         NA        NA       0              0
+ -1          NA        NA         NA        NA       0              0
+  0 -0.09408466 0.1284639 -0.3458692 0.1576999       1              1
+  1 -0.11349127 0.1466762 -0.4009712 0.1739887       1              1
+  2          NA        NA         NA        NA       0              0
+  3          NA        NA         NA        NA       0              0
+  4          NA        NA         NA        NA       0              0
+  5          NA        NA         NA        NA       0              0
+  6          NA        NA         NA        NA       0              0
+  7          NA        NA         NA        NA       0              0
+  8          NA        NA         NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             0
+             1
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att        se      ci_lo     ci_hi cohorts treated_states treated_units
+ -0.103788 0.1250077 -0.3487986 0.1412227       1              1             1
+synthdid pooled ATT:
+       att        se      ci_lo     ci_hi cohorts treated_states
+ -0.103788 0.1250077 -0.3487986 0.1412227       1              1
+
+== stacked.b_black_white.primary: ok
+  e         att          se       ci_lo       ci_hi cohorts treated_states
+ -5          NA          NA          NA          NA       0              0
+ -4          NA          NA          NA          NA       0              0
+ -3          NA          NA          NA          NA       0              0
+ -2  0.08030500 0.008365456  0.06390901  0.09670100       1              1
+ -1  0.00000000          NA          NA          NA       2              2
+  0 -0.08085113 0.011117319 -0.10264068 -0.05906159       2              2
+  1 -0.09503301 0.012941522 -0.12039792 -0.06966809       2              2
+  2 -0.06100769 0.017974907 -0.09623786 -0.02577752       1              1
+  3          NA          NA          NA          NA       0              0
+  4          NA          NA          NA          NA       0              0
+  5          NA          NA          NA          NA       0              0
+  6          NA          NA          NA          NA       0              0
+  7          NA          NA          NA          NA       0              0
+  8          NA          NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            16
+            37
+            37
+            37
+            21
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.07896394 0.01231783 -0.1031064 -0.05482144       2              2
+ treated_units
+            37
+
+== twfe.b_black_white.primary: ok
+  e         att          se       ci_lo       ci_hi cohorts treated_states
+ -5          NA          NA          NA          NA       0              0
+ -4          NA          NA          NA          NA       0              0
+ -3          NA          NA          NA          NA       0              0
+ -2  0.08131356 0.008302896  0.06504018  0.09758694       1              1
+ -1  0.00000000          NA          NA          NA       2              2
+  0 -0.08124174 0.010965749 -0.10273421 -0.05974926       2              2
+  1 -0.09548197 0.012868160 -0.12070310 -0.07026084       2              2
+  2 -0.06238849 0.018044496 -0.09775505 -0.02702192       1              1
+  3          NA          NA          NA          NA       0              0
+  4          NA          NA          NA          NA       0              0
+  5          NA          NA          NA          NA       0              0
+  6          NA          NA          NA          NA       0              0
+  7          NA          NA          NA          NA       0              0
+  8          NA          NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            16
+            37
+            37
+            37
+            21
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.07970407 0.01233911 -0.1038883 -0.05551986       2              2
+ treated_units
+            37
+
+== twfe_static.b_black_white.primary: ok
+[1] NA NA NA NA NA NA NA NA
+overall post-reform average:
+        att        se      ci_lo       ci_hi cohorts treated_states
+ -0.1041905 0.0209254 -0.1452036 -0.06317752       2              2
+ treated_units
+            37
+
+== sun_abraham.c_hispanic_white.primary: ok
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.08388830 0.01095741  0.06241217 0.105364432       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.01669856 0.01153734 -0.03931132 0.005914205       2              2
+  1 -0.02447701 0.01349018 -0.05091728 0.001963260       2              2
+  2  0.05977572 0.04107907 -0.02073779 0.140289223       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            57
+            68
+            68
+            68
+            11
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se       ci_lo      ci_hi cohorts treated_states
+ 0.00620005 0.01558152 -0.02433917 0.03673927       2              2
+ treated_units
+            68
+
+== imputation.c_hispanic_white.primary: ok
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.08315920 0.01104087  0.06151950  0.10479891       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.05207012 0.01111765 -0.07386032 -0.03027992       2              2
+  1 -0.05945025 0.01097719 -0.08096514 -0.03793536       2              2
+  2  0.06158845 0.04301839 -0.02272605  0.14590295       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            57
+            68
+            68
+            68
+            11
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.01664397 0.01550942 -0.04704187 0.01375393       2              2
+ treated_units
+            68
+
+== synthdid.c_hispanic_white.primary: ok
+notes: 1 of 2 cohort(s) left out: fewer than 2 pre-reform years (synthdid's noise level needs them)
+  e         att         se      ci_lo     ci_hi cohorts treated_states
+ -5          NA         NA         NA        NA       0              0
+ -4          NA         NA         NA        NA       0              0
+ -3          NA         NA         NA        NA       0              0
+ -2          NA         NA         NA        NA       0              0
+ -1          NA         NA         NA        NA       0              0
+  0 -0.06808793 0.08780016 -0.2401731 0.1039972       1              1
+  1 -0.10462510 0.10151926 -0.3035992 0.0943490       1              1
+  2          NA         NA         NA        NA       0              0
+  3          NA         NA         NA        NA       0              0
+  4          NA         NA         NA        NA       0              0
+  5          NA         NA         NA        NA       0              0
+  6          NA         NA         NA        NA       0              0
+  7          NA         NA         NA        NA       0              0
+  8          NA         NA         NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             0
+             1
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo      ci_hi cohorts treated_states
+ -0.08635652 0.06040091 -0.2047401 0.03202709       1              1
+ treated_units
+             1
+synthdid pooled ATT:
+         att         se      ci_lo      ci_hi cohorts treated_states
+ -0.08635652 0.06040091 -0.2047401 0.03202709       1              1
+
+== stacked.c_hispanic_white.primary: ok
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2  0.09997130 0.02112466  0.05856773 0.14137486       1              1
+ -1  0.00000000         NA          NA         NA       2              2
+  0 -0.01726297 0.02135663 -0.05912120 0.02459526       2              2
+  1 -0.02755157 0.03876789 -0.10353523 0.04843209       2              2
+  2 -0.02723998 0.03156068 -0.08909777 0.03461782       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+            57
+            68
+            68
+            68
+            11
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.02401817 0.02712589 -0.07718394 0.02914759       2              2
+ treated_units
+            68
+
+== twfe.c_hispanic_white.primary: ok
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2  0.10148223 0.02396688  0.05450801 0.14845646       1              1
+ -1  0.00000000         NA          NA         NA       2              2
+  0 -0.01620952 0.02314762 -0.06157802 0.02915899       2              2
+  1 -0.02384908 0.04381554 -0.10972597 0.06202780       2              2
+  2 -0.03121058 0.03494981 -0.09971095 0.03728978       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+            57
+            68
+            68
+            68
+            11
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo     ci_hi cohorts treated_states
+ -0.02375639 0.03133287 -0.08516769 0.0376549       2              2
+ treated_units
+            68
+
+== twfe_static.c_hispanic_white.primary: ok
+[1] NA NA NA NA NA NA NA NA
+overall post-reform average:
+         att         se      ci_lo        ci_hi cohorts treated_states
+ -0.06478392 0.02949249 -0.1225881 -0.006979696       2              2
+ treated_units
+            68
+
+Wrote outputs/06_secondary/event_time_estimates.csv, outputs/06_secondary/overall_estimates.csv, outputs/06_secondary/group_time_estimates.csv, outputs/06_secondary/model_status.csv, outputs/06_secondary/panel_counts.csv, outputs/06_secondary/synthdid_pooled.csv, outputs/06_secondary/secondary_models.rds
+18 models (6 estimators, 3 gaps, 1 event set); models that stopped with an error: 0. Status per model: outputs/06_secondary/model_status.csv
+Log: outputs/logs/06_secondary_20260911T213431Z.log
