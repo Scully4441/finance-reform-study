@@ -48,24 +48,36 @@ placebo_state_draws <- function(states, n_treated, reps) {
   lapply(seq_len(reps), function(b) states[sample.int(length(states), n_treated)])
 }
 
+# The placebo cohort year of each treated state in each draw, drawn with replacement
+# from `years`. This is what the scenario that fixes the number of placebo-treated
+# states uses in place of the observed cohort years. The caller seeds, as above.
+placebo_year_draws <- function(years, n_treated, reps) {
+  stopifnot(length(years) >= 1L, n_treated >= 1L, reps >= 1L)
+  lapply(seq_len(reps), function(b) years[sample.int(length(years), n_treated, replace = TRUE)])
+}
+
 # The overall post-reform average refit on each placebo assignment.
-# cp: cs_panel() of a step 5 fit; gs: the cohort years to reassign, one per treated
-# state; picks: the treated states of each draw, from placebo_state_draws(). Returns
-# one estimate per draw, NA where did could not fit the reassignment.
+# cp: cs_panel() of a step 5 fit; picks: the treated states of each draw, from
+# placebo_state_draws(); gs: the cohort years those states take, either one vector
+# reused by every draw (the observed cohort years) or a list of one vector per draw
+# (drawn years, from placebo_year_draws()). Returns one estimate per draw, NA where
+# did could not fit the reassignment.
 placebo_estimates <- function(cp, gs, picks, parallel = TRUE, seed = NULL) {
   panel <- cp$panel
   states <- sort(unique(panel$state))
-  stopifnot(length(gs) >= 1L, all(lengths(picks) == length(gs)))
-  one <- function(pick) {
+  gsl <- if (is.list(gs)) gs else rep(list(gs), length(picks))
+  stopifnot(length(gsl) == length(picks), all(lengths(gsl) >= 1L),
+            all(lengths(picks) == lengths(gsl)))
+  one <- function(pick, years) {
     g <- stats::setNames(rep(0, length(states)), states)
-    g[pick] <- gs
+    g[pick] <- years
     p <- panel
     p$g <- unname(g[p$state])
     cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e)
   }
   if (parallel && requireNamespace("furrr", quietly = TRUE))
-    furrr::future_map_dbl(picks, one, .options = furrr::furrr_options(seed = seed))
-  else vapply(picks, one, numeric(1))
+    furrr::future_map2_dbl(picks, gsl, one, .options = furrr::furrr_options(seed = seed))
+  else vapply(seq_along(picks), function(i) one(picks[[i]], gsl[[i]]), numeric(1))
 }
 
 # Power of the placebo test against an effect of size d: the share of placebo draws
@@ -103,4 +115,23 @@ mde_from_placebo <- function(v, level = POWER_LEVEL, power = POWER_TARGET) {
     out$power_at_mde <- power_at(v, out$crit, out$mde)
   }
   out
+}
+
+# ---- projection to the registered window -----------------------------------------------
+# The post-reform end years a cohort year contributes to a window ending at last_year.
+# `drop` holds end years the design leaves out of the panel: 2019-20 has no EDFacts
+# assessment file, so no cohort gains a post-reform year from it.
+post_years <- function(g, last_year, drop = integer())
+  vapply(g, function(x) if (x > last_year) 0L else sum(!(seq.int(x, last_year) %in% drop)),
+         integer(1))
+
+# A minimum detectable effect carried from the simulated design to another by the square
+# root of the ratio of their post-reform state-years: the usual 1 / sqrt(N) scaling of a
+# standard error, and nothing more. It holds the outcome's variance, the number of
+# control states and the unit count of the panel fixed, none of which the registered
+# window will hold fixed, so what it returns is a projection and not an estimate of the
+# registered design's power.
+mde_projection <- function(mde, placebo_state_years, design_state_years) {
+  stopifnot(placebo_state_years > 0, design_state_years > 0)
+  mde * sqrt(placebo_state_years / design_state_years)
 }

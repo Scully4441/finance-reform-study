@@ -1,0 +1,502 @@
+Step 8 power, run 20260911T225937Z; stage 1; blinding PERMUTED; did 2.5.1
+Placebo runs per gap and scenario: 200  (--quick: a test run, not the registered count)
+Minimum detectable effect at 80% power, 5% two-sided test; Section 10 calls the study underpowered if every gap exceeds 0.1 SD
+  scenario observed  observed cohort count and observed cohort years -> mde.csv
+  scenario ten_state 10 placebo-treated states, cohort years drawn uniformly from 2011-2013 -> mde_10states.csv
+
+== Step 5 panels the placebo runs are built on
+a_poverty           36 states    in 36 states; 2 treated per observed draw, 10 per ten-state draw
+b_black_white      806 districts in 37 states; 2 treated per observed draw, 10 per ten-state draw
+c_hispanic_white   773 districts in 36 states; 2 treated per observed draw, 10 per ten-state draw
+Panels and estimates agree with outputs/05_primary/panel_counts.csv and overall_estimates.csv
+
+== Registered design, for the projection (end year 2025 placeholder, 2020 left out)
+Treated states with post-reform data by 2025: 12; the ten-state scenario simulates 10  <- these differ, see the log and the report
+Mean post-reform end years per treated state: 5.6667; design post-reform state-years: 68
+
+== Placebo runs: 200 per gap and scenario on 12 workers
+  observed  a_poverty         200/ 200 runs estimated,    4.0 s
+  observed  b_black_white     200/ 200 runs estimated,    2.3 s
+  observed  c_hispanic_white  200/ 200 runs estimated,    2.0 s
+  ten_state a_poverty         200/ 200 runs estimated,    1.1 s
+  ten_state b_black_white     200/ 200 runs estimated,    2.1 s
+  ten_state c_hispanic_white  200/ 200 runs estimated,    2.4 s
+
+== settings
+                  setting                             value
+                      run                  20260911T225937Z
+                    stage                                 1
+                 blinding                          PERMUTED
+                quick_run                              true
+             placebo_reps                               200
+                event_set                           primary
+                weighting                        unweighted
+               test_level                              0.95
+             power_target                               0.8
+              mde_ceiling                               0.1
+       seed_step_observed                             power
+      seed_step_ten_state                          power_10
+          ten_state_count                                10
+          ten_state_years                         2011-2013
+      projection_end_year                              2025
+ projection_dropped_years                              2020
+              master_seed                               130
+                  workers                                12
+                r_version R version 4.6.1 (2026-06-24 ucrt)
+                      did                             2.5.1
+                   future                            1.75.0
+                    furrr                             0.4.0
+
+== scenario observed: observed cohort count and observed cohort years
+ scenario              gap event_set  weighting reps draws_ok treated_states
+ observed        a_poverty   primary unweighted  200      200              2
+ observed    b_black_white   primary unweighted  200      200              2
+ observed c_hispanic_white   primary unweighted  200      200              2
+ eligible_states placebo_mean placebo_sd placebo_q05 placebo_q95 level
+              36  0.006831606 0.07286842 -0.09809886  0.12815843  0.95
+              37 -0.020644367 0.08932420 -0.16972400  0.10924852  0.95
+              36  0.005954022 0.05907570 -0.08998725  0.09979505  0.95
+ power_target crit_value       mde power_at_mde mde_normal   model_se
+          0.8  0.1492622 0.2049744          0.8  0.2041471 0.02827900
+          0.8  0.1920798 0.2645585          0.8  0.2502494 0.01308133
+          0.8  0.1110738 0.1501751          0.8  0.1655056 0.02625399
+ mde_over_model_se ceiling underpowered  seconds placebo_post_state_years
+          7.248289     0.1            1 3.965242                       NA
+         20.224124     0.1            1 2.290947                       NA
+          5.720089     0.1            1 2.025671                       NA
+ design_treated_states design_mean_post_years design_post_state_years
+                    NA                     NA                      NA
+                    NA                     NA                      NA
+                    NA                     NA                      NA
+ projection_scale mde_projection
+               NA             NA
+               NA             NA
+               NA             NA
+
+== scenario ten_state: 10 placebo-treated states, cohort years drawn uniformly from 2011-2013
+  scenario              gap event_set  weighting reps draws_ok treated_states
+ ten_state        a_poverty   primary unweighted  200      200             10
+ ten_state    b_black_white   primary unweighted  200      200             10
+ ten_state c_hispanic_white   primary unweighted  200      200             10
+ eligible_states  placebo_mean placebo_sd placebo_q05 placebo_q95 level
+              36  0.0009364426 0.04221566 -0.06622402  0.06829606  0.95
+              37 -0.0047707883 0.04067704 -0.06288202  0.06146255  0.95
+              36  0.0060719959 0.03396984 -0.04890950  0.05549379  0.95
+ power_target crit_value        mde power_at_mde mde_normal   model_se
+          0.8 0.07832748 0.11248092          0.8 0.11827077 0.02827900
+          0.8 0.07874741 0.11104727          0.8 0.11396018 0.01308133
+          0.8 0.06697387 0.09113828          0.8 0.09516941 0.02625399
+ mde_over_model_se ceiling underpowered  seconds placebo_post_state_years
+          3.977542     0.1            1 1.145700                   19.960
+          8.488987     0.1            1 2.065047                   20.260
+          3.471407     0.1            0 2.373715                   20.175
+ design_treated_states design_mean_post_years design_post_state_years
+                    12               5.666667                      68
+                    12               5.666667                      68
+                    12               5.666667                      68
+ projection_scale mde_projection
+        0.5417835     0.06094031
+        0.5458399     0.06061403
+        0.5446937     0.04964244
+
+== placebo distribution, deciles
+observed a_poverty: -0.230 -0.074 -0.056 -0.026 -0.011 0.004 0.025 0.048 0.070 0.097 0.183
+observed b_black_white: -0.323 -0.139 -0.073 -0.052 -0.037 -0.012 0.009 0.029 0.044 0.063 0.278
+observed c_hispanic_white: -0.282 -0.058 -0.039 -0.028 -0.011 0.004 0.024 0.041 0.057 0.076 0.134
+ten_state a_poverty: -0.100 -0.053 -0.034 -0.024 -0.009 0.001 0.015 0.024 0.034 0.050 0.146
+ten_state b_black_white: -0.174 -0.053 -0.032 -0.023 -0.015 -0.003 0.004 0.016 0.025 0.041 0.099
+ten_state c_hispanic_white: -0.084 -0.040 -0.025 -0.012 -0.002 0.008 0.016 0.024 0.037 0.047 0.087
+
+== power against effect size
+  scenario              gap event_set  weighting      effect power
+  observed        a_poverty   primary unweighted 0.000000000 0.050
+  observed        a_poverty   primary unweighted 0.005124359 0.055
+  observed        a_poverty   primary unweighted 0.010248718 0.050
+  observed        a_poverty   primary unweighted 0.015373077 0.065
+  observed        a_poverty   primary unweighted 0.020497437 0.075
+  observed        a_poverty   primary unweighted 0.025621796 0.090
+  observed        a_poverty   primary unweighted 0.030746155 0.095
+  observed        a_poverty   primary unweighted 0.035870514 0.090
+  observed        a_poverty   primary unweighted 0.040994873 0.090
+  observed        a_poverty   primary unweighted 0.046119232 0.095
+  observed        a_poverty   primary unweighted 0.051243591 0.100
+  observed        a_poverty   primary unweighted 0.056367950 0.130
+  observed        a_poverty   primary unweighted 0.061492310 0.145
+  observed        a_poverty   primary unweighted 0.066616669 0.145
+  observed        a_poverty   primary unweighted 0.071741028 0.155
+  observed        a_poverty   primary unweighted 0.076865387 0.175
+  observed        a_poverty   primary unweighted 0.081989746 0.215
+  observed        a_poverty   primary unweighted 0.087114105 0.215
+  observed        a_poverty   primary unweighted 0.092238464 0.260
+  observed        a_poverty   primary unweighted 0.097362824 0.280
+  observed        a_poverty   primary unweighted 0.102487183 0.315
+  observed        a_poverty   primary unweighted 0.107611542 0.330
+  observed        a_poverty   primary unweighted 0.112735901 0.340
+  observed        a_poverty   primary unweighted 0.117860260 0.350
+  observed        a_poverty   primary unweighted 0.122984619 0.390
+  observed        a_poverty   primary unweighted 0.128108978 0.410
+  observed        a_poverty   primary unweighted 0.133233337 0.440
+  observed        a_poverty   primary unweighted 0.138357697 0.460
+  observed        a_poverty   primary unweighted 0.143482056 0.490
+  observed        a_poverty   primary unweighted 0.148606415 0.515
+  observed        a_poverty   primary unweighted 0.153730774 0.575
+  observed        a_poverty   primary unweighted 0.158855133 0.590
+  observed        a_poverty   primary unweighted 0.163979492 0.625
+  observed        a_poverty   primary unweighted 0.169103851 0.675
+  observed        a_poverty   primary unweighted 0.174228211 0.700
+  observed        a_poverty   primary unweighted 0.179352570 0.710
+  observed        a_poverty   primary unweighted 0.184476929 0.725
+  observed        a_poverty   primary unweighted 0.189601288 0.750
+  observed        a_poverty   primary unweighted 0.194725647 0.750
+  observed        a_poverty   primary unweighted 0.199850006 0.780
+  observed        a_poverty   primary unweighted 0.204974365 0.800
+  observed        a_poverty   primary unweighted 0.210098725 0.815
+  observed        a_poverty   primary unweighted 0.215223084 0.840
+  observed        a_poverty   primary unweighted 0.220347443 0.890
+  observed        a_poverty   primary unweighted 0.225471802 0.900
+  observed        a_poverty   primary unweighted 0.230596161 0.920
+  observed        a_poverty   primary unweighted 0.235720520 0.930
+  observed        a_poverty   primary unweighted 0.240844879 0.940
+  observed        a_poverty   primary unweighted 0.245969238 0.945
+  observed        a_poverty   primary unweighted 0.251093598 0.950
+  observed        a_poverty   primary unweighted 0.256217957 0.960
+  observed        a_poverty   primary unweighted 0.261342316 0.960
+  observed        a_poverty   primary unweighted 0.266466675 0.960
+  observed        a_poverty   primary unweighted 0.271591034 0.960
+  observed        a_poverty   primary unweighted 0.276715393 0.960
+  observed        a_poverty   primary unweighted 0.281839752 0.965
+  observed        a_poverty   primary unweighted 0.286964112 0.965
+  observed        a_poverty   primary unweighted 0.292088471 0.965
+  observed        a_poverty   primary unweighted 0.297212830 0.970
+  observed        a_poverty   primary unweighted 0.302337189 0.970
+  observed        a_poverty   primary unweighted 0.307461548 0.975
+  observed    b_black_white   primary unweighted 0.000000000 0.050
+  observed    b_black_white   primary unweighted 0.006613963 0.045
+  observed    b_black_white   primary unweighted 0.013227926 0.045
+  observed    b_black_white   primary unweighted 0.019841888 0.045
+  observed    b_black_white   primary unweighted 0.026455851 0.045
+  observed    b_black_white   primary unweighted 0.033069814 0.045
+  observed    b_black_white   primary unweighted 0.039683777 0.040
+  observed    b_black_white   primary unweighted 0.046297740 0.040
+  observed    b_black_white   primary unweighted 0.052911703 0.045
+  observed    b_black_white   primary unweighted 0.059525665 0.045
+  observed    b_black_white   primary unweighted 0.066139628 0.050
+  observed    b_black_white   primary unweighted 0.072753591 0.050
+  observed    b_black_white   primary unweighted 0.079367554 0.055
+  observed    b_black_white   primary unweighted 0.085981517 0.075
+  observed    b_black_white   primary unweighted 0.092595480 0.075
+  observed    b_black_white   primary unweighted 0.099209442 0.070
+  observed    b_black_white   primary unweighted 0.105823405 0.075
+  observed    b_black_white   primary unweighted 0.112437368 0.085
+  observed    b_black_white   primary unweighted 0.119051331 0.095
+  observed    b_black_white   primary unweighted 0.125665294 0.105
+  observed    b_black_white   primary unweighted 0.132279256 0.115
+  observed    b_black_white   primary unweighted 0.138893219 0.145
+  observed    b_black_white   primary unweighted 0.145507182 0.175
+  observed    b_black_white   primary unweighted 0.152121145 0.210
+  observed    b_black_white   primary unweighted 0.158735108 0.250
+  observed    b_black_white   primary unweighted 0.165349071 0.315
+  observed    b_black_white   primary unweighted 0.171963033 0.365
+  observed    b_black_white   primary unweighted 0.178576996 0.380
+  observed    b_black_white   primary unweighted 0.185190959 0.405
+  observed    b_black_white   primary unweighted 0.191804922 0.450
+  observed    b_black_white   primary unweighted 0.198418885 0.470
+  observed    b_black_white   primary unweighted 0.205032848 0.505
+  observed    b_black_white   primary unweighted 0.211646810 0.530
+  observed    b_black_white   primary unweighted 0.218260773 0.555
+  observed    b_black_white   primary unweighted 0.224874736 0.575
+  observed    b_black_white   primary unweighted 0.231488699 0.630
+  observed    b_black_white   primary unweighted 0.238102662 0.650
+  observed    b_black_white   primary unweighted 0.244716624 0.700
+  observed    b_black_white   primary unweighted 0.251330587 0.730
+  observed    b_black_white   primary unweighted 0.257944550 0.750
+  observed    b_black_white   primary unweighted 0.264558513 0.800
+  observed    b_black_white   primary unweighted 0.271172476 0.810
+  observed    b_black_white   primary unweighted 0.277786439 0.830
+  observed    b_black_white   primary unweighted 0.284400401 0.835
+  observed    b_black_white   primary unweighted 0.291014364 0.845
+  observed    b_black_white   primary unweighted 0.297628327 0.860
+  observed    b_black_white   primary unweighted 0.304242290 0.865
+  observed    b_black_white   primary unweighted 0.310856253 0.875
+  observed    b_black_white   primary unweighted 0.317470216 0.880
+  observed    b_black_white   primary unweighted 0.324084178 0.885
+  observed    b_black_white   primary unweighted 0.330698141 0.900
+  observed    b_black_white   primary unweighted 0.337312104 0.910
+  observed    b_black_white   primary unweighted 0.343926067 0.915
+  observed    b_black_white   primary unweighted 0.350540030 0.930
+  observed    b_black_white   primary unweighted 0.357153992 0.930
+  observed    b_black_white   primary unweighted 0.363767955 0.950
+  observed    b_black_white   primary unweighted 0.370381918 0.950
+  observed    b_black_white   primary unweighted 0.376995881 0.955
+  observed    b_black_white   primary unweighted 0.383609844 0.955
+  observed    b_black_white   primary unweighted 0.390223807 0.965
+  observed    b_black_white   primary unweighted 0.396837769 0.970
+  observed c_hispanic_white   primary unweighted 0.000000000 0.050
+  observed c_hispanic_white   primary unweighted 0.003754378 0.050
+  observed c_hispanic_white   primary unweighted 0.007508757 0.045
+  observed c_hispanic_white   primary unweighted 0.011263135 0.060
+  observed c_hispanic_white   primary unweighted 0.015017513 0.065
+  observed c_hispanic_white   primary unweighted 0.018771891 0.070
+  observed c_hispanic_white   primary unweighted 0.022526270 0.080
+  observed c_hispanic_white   primary unweighted 0.026280648 0.095
+  observed c_hispanic_white   primary unweighted 0.030035026 0.100
+  observed c_hispanic_white   primary unweighted 0.033789404 0.105
+  observed c_hispanic_white   primary unweighted 0.037543783 0.115
+  observed c_hispanic_white   primary unweighted 0.041298161 0.130
+  observed c_hispanic_white   primary unweighted 0.045052539 0.150
+  observed c_hispanic_white   primary unweighted 0.048806917 0.175
+  observed c_hispanic_white   primary unweighted 0.052561296 0.200
+  observed c_hispanic_white   primary unweighted 0.056315674 0.220
+  observed c_hispanic_white   primary unweighted 0.060070052 0.260
+  observed c_hispanic_white   primary unweighted 0.063824430 0.275
+  observed c_hispanic_white   primary unweighted 0.067578809 0.295
+  observed c_hispanic_white   primary unweighted 0.071333187 0.315
+  observed c_hispanic_white   primary unweighted 0.075087565 0.350
+  observed c_hispanic_white   primary unweighted 0.078841943 0.360
+  observed c_hispanic_white   primary unweighted 0.082596322 0.365
+  observed c_hispanic_white   primary unweighted 0.086350700 0.400
+  observed c_hispanic_white   primary unweighted 0.090105078 0.435
+  observed c_hispanic_white   primary unweighted 0.093859456 0.455
+  observed c_hispanic_white   primary unweighted 0.097613835 0.470
+  observed c_hispanic_white   primary unweighted 0.101368213 0.485
+  observed c_hispanic_white   primary unweighted 0.105122591 0.490
+  observed c_hispanic_white   primary unweighted 0.108876969 0.515
+  observed c_hispanic_white   primary unweighted 0.112631348 0.540
+  observed c_hispanic_white   primary unweighted 0.116385726 0.570
+  observed c_hispanic_white   primary unweighted 0.120140104 0.590
+  observed c_hispanic_white   primary unweighted 0.123894482 0.610
+  observed c_hispanic_white   primary unweighted 0.127648861 0.640
+  observed c_hispanic_white   primary unweighted 0.131403239 0.650
+  observed c_hispanic_white   primary unweighted 0.135157617 0.675
+  observed c_hispanic_white   primary unweighted 0.138911995 0.695
+  observed c_hispanic_white   primary unweighted 0.142666374 0.735
+  observed c_hispanic_white   primary unweighted 0.146420752 0.755
+  observed c_hispanic_white   primary unweighted 0.150175130 0.800
+  observed c_hispanic_white   primary unweighted 0.153929508 0.835
+  observed c_hispanic_white   primary unweighted 0.157683887 0.860
+  observed c_hispanic_white   primary unweighted 0.161438265 0.865
+  observed c_hispanic_white   primary unweighted 0.165192643 0.880
+  observed c_hispanic_white   primary unweighted 0.168947021 0.905
+  observed c_hispanic_white   primary unweighted 0.172701400 0.905
+  observed c_hispanic_white   primary unweighted 0.176455778 0.905
+  observed c_hispanic_white   primary unweighted 0.180210156 0.915
+  observed c_hispanic_white   primary unweighted 0.183964534 0.915
+  observed c_hispanic_white   primary unweighted 0.187718913 0.920
+  observed c_hispanic_white   primary unweighted 0.191473291 0.930
+  observed c_hispanic_white   primary unweighted 0.195227669 0.940
+  observed c_hispanic_white   primary unweighted 0.198982047 0.945
+  observed c_hispanic_white   primary unweighted 0.202736426 0.950
+  observed c_hispanic_white   primary unweighted 0.206490804 0.950
+  observed c_hispanic_white   primary unweighted 0.210245182 0.970
+  observed c_hispanic_white   primary unweighted 0.213999560 0.970
+  observed c_hispanic_white   primary unweighted 0.217753939 0.975
+  observed c_hispanic_white   primary unweighted 0.221508317 0.975
+  observed c_hispanic_white   primary unweighted 0.225262695 0.980
+ ten_state        a_poverty   primary unweighted 0.000000000 0.050
+ ten_state        a_poverty   primary unweighted 0.002812023 0.055
+ ten_state        a_poverty   primary unweighted 0.005624046 0.060
+ ten_state        a_poverty   primary unweighted 0.008436069 0.060
+ ten_state        a_poverty   primary unweighted 0.011248092 0.075
+ ten_state        a_poverty   primary unweighted 0.014060115 0.080
+ ten_state        a_poverty   primary unweighted 0.016872138 0.080
+ ten_state        a_poverty   primary unweighted 0.019684161 0.085
+ ten_state        a_poverty   primary unweighted 0.022496184 0.090
+ ten_state        a_poverty   primary unweighted 0.025308207 0.095
+ ten_state        a_poverty   primary unweighted 0.028120229 0.095
+ ten_state        a_poverty   primary unweighted 0.030932252 0.115
+ ten_state        a_poverty   primary unweighted 0.033744275 0.130
+ ten_state        a_poverty   primary unweighted 0.036556298 0.140
+ ten_state        a_poverty   primary unweighted 0.039368321 0.160
+ ten_state        a_poverty   primary unweighted 0.042180344 0.185
+ ten_state        a_poverty   primary unweighted 0.044992367 0.210
+ ten_state        a_poverty   primary unweighted 0.047804390 0.225
+ ten_state        a_poverty   primary unweighted 0.050616413 0.265
+ ten_state        a_poverty   primary unweighted 0.053428436 0.285
+ ten_state        a_poverty   primary unweighted 0.056240459 0.315
+ ten_state        a_poverty   primary unweighted 0.059052482 0.345
+ ten_state        a_poverty   primary unweighted 0.061864505 0.370
+ ten_state        a_poverty   primary unweighted 0.064676528 0.420
+ ten_state        a_poverty   primary unweighted 0.067488551 0.425
+ ten_state        a_poverty   primary unweighted 0.070300574 0.455
+ ten_state        a_poverty   primary unweighted 0.073112597 0.470
+ ten_state        a_poverty   primary unweighted 0.075924620 0.490
+ ten_state        a_poverty   primary unweighted 0.078736643 0.510
+ ten_state        a_poverty   primary unweighted 0.081548665 0.530
+ ten_state        a_poverty   primary unweighted 0.084360688 0.560
+ ten_state        a_poverty   primary unweighted 0.087172711 0.595
+ ten_state        a_poverty   primary unweighted 0.089984734 0.620
+ ten_state        a_poverty   primary unweighted 0.092796757 0.640
+ ten_state        a_poverty   primary unweighted 0.095608780 0.665
+ ten_state        a_poverty   primary unweighted 0.098420803 0.680
+ ten_state        a_poverty   primary unweighted 0.101232826 0.695
+ ten_state        a_poverty   primary unweighted 0.104044849 0.715
+ ten_state        a_poverty   primary unweighted 0.106856872 0.745
+ ten_state        a_poverty   primary unweighted 0.109668895 0.765
+ ten_state        a_poverty   primary unweighted 0.112480918 0.800
+ ten_state        a_poverty   primary unweighted 0.115292941 0.825
+ ten_state        a_poverty   primary unweighted 0.118104964 0.825
+ ten_state        a_poverty   primary unweighted 0.120916987 0.835
+ ten_state        a_poverty   primary unweighted 0.123729010 0.845
+ ten_state        a_poverty   primary unweighted 0.126541033 0.865
+ ten_state        a_poverty   primary unweighted 0.129353056 0.880
+ ten_state        a_poverty   primary unweighted 0.132165079 0.905
+ ten_state        a_poverty   primary unweighted 0.134977102 0.910
+ ten_state        a_poverty   primary unweighted 0.137789124 0.925
+ ten_state        a_poverty   primary unweighted 0.140601147 0.930
+ ten_state        a_poverty   primary unweighted 0.143413170 0.945
+ ten_state        a_poverty   primary unweighted 0.146225193 0.955
+ ten_state        a_poverty   primary unweighted 0.149037216 0.970
+ ten_state        a_poverty   primary unweighted 0.151849239 0.975
+ ten_state        a_poverty   primary unweighted 0.154661262 0.980
+ ten_state        a_poverty   primary unweighted 0.157473285 0.980
+ ten_state        a_poverty   primary unweighted 0.160285308 0.980
+ ten_state        a_poverty   primary unweighted 0.163097331 0.980
+ ten_state        a_poverty   primary unweighted 0.165909354 0.990
+ ten_state        a_poverty   primary unweighted 0.168721377 0.990
+ ten_state    b_black_white   primary unweighted 0.000000000 0.050
+ ten_state    b_black_white   primary unweighted 0.002776182 0.050
+ ten_state    b_black_white   primary unweighted 0.005552364 0.045
+ ten_state    b_black_white   primary unweighted 0.008328545 0.055
+ ten_state    b_black_white   primary unweighted 0.011104727 0.060
+ ten_state    b_black_white   primary unweighted 0.013880909 0.075
+ ten_state    b_black_white   primary unweighted 0.016657091 0.075
+ ten_state    b_black_white   primary unweighted 0.019433272 0.080
+ ten_state    b_black_white   primary unweighted 0.022209454 0.085
+ ten_state    b_black_white   primary unweighted 0.024985636 0.090
+ ten_state    b_black_white   primary unweighted 0.027761818 0.100
+ ten_state    b_black_white   primary unweighted 0.030537999 0.100
+ ten_state    b_black_white   primary unweighted 0.033314181 0.100
+ ten_state    b_black_white   primary unweighted 0.036090363 0.115
+ ten_state    b_black_white   primary unweighted 0.038866545 0.125
+ ten_state    b_black_white   primary unweighted 0.041642726 0.140
+ ten_state    b_black_white   primary unweighted 0.044418908 0.160
+ ten_state    b_black_white   primary unweighted 0.047195090 0.175
+ ten_state    b_black_white   primary unweighted 0.049971272 0.190
+ ten_state    b_black_white   primary unweighted 0.052747453 0.210
+ ten_state    b_black_white   primary unweighted 0.055523635 0.240
+ ten_state    b_black_white   primary unweighted 0.058299817 0.260
+ ten_state    b_black_white   primary unweighted 0.061075999 0.285
+ ten_state    b_black_white   primary unweighted 0.063852180 0.315
+ ten_state    b_black_white   primary unweighted 0.066628362 0.340
+ ten_state    b_black_white   primary unweighted 0.069404544 0.360
+ ten_state    b_black_white   primary unweighted 0.072180726 0.385
+ ten_state    b_black_white   primary unweighted 0.074956907 0.420
+ ten_state    b_black_white   primary unweighted 0.077733089 0.470
+ ten_state    b_black_white   primary unweighted 0.080509271 0.500
+ ten_state    b_black_white   primary unweighted 0.083285453 0.535
+ ten_state    b_black_white   primary unweighted 0.086061634 0.545
+ ten_state    b_black_white   primary unweighted 0.088837816 0.560
+ ten_state    b_black_white   primary unweighted 0.091613998 0.575
+ ten_state    b_black_white   primary unweighted 0.094390180 0.610
+ ten_state    b_black_white   primary unweighted 0.097166361 0.645
+ ten_state    b_black_white   primary unweighted 0.099942543 0.685
+ ten_state    b_black_white   primary unweighted 0.102718725 0.700
+ ten_state    b_black_white   primary unweighted 0.105494907 0.765
+ ten_state    b_black_white   primary unweighted 0.108271088 0.780
+ ten_state    b_black_white   primary unweighted 0.111047270 0.800
+ ten_state    b_black_white   primary unweighted 0.113823452 0.825
+ ten_state    b_black_white   primary unweighted 0.116599634 0.835
+ ten_state    b_black_white   primary unweighted 0.119375815 0.845
+ ten_state    b_black_white   primary unweighted 0.122151997 0.865
+ ten_state    b_black_white   primary unweighted 0.124928179 0.870
+ ten_state    b_black_white   primary unweighted 0.127704361 0.885
+ ten_state    b_black_white   primary unweighted 0.130480542 0.890
+ ten_state    b_black_white   primary unweighted 0.133256724 0.910
+ ten_state    b_black_white   primary unweighted 0.136032906 0.920
+ ten_state    b_black_white   primary unweighted 0.138809088 0.930
+ ten_state    b_black_white   primary unweighted 0.141585269 0.945
+ ten_state    b_black_white   primary unweighted 0.144361451 0.955
+ ten_state    b_black_white   primary unweighted 0.147137633 0.960
+ ten_state    b_black_white   primary unweighted 0.149913815 0.960
+ ten_state    b_black_white   primary unweighted 0.152689996 0.960
+ ten_state    b_black_white   primary unweighted 0.155466178 0.960
+ ten_state    b_black_white   primary unweighted 0.158242360 0.970
+ ten_state    b_black_white   primary unweighted 0.161018542 0.970
+ ten_state    b_black_white   primary unweighted 0.163794723 0.975
+ ten_state    b_black_white   primary unweighted 0.166570905 0.975
+ ten_state c_hispanic_white   primary unweighted 0.000000000 0.050
+ ten_state c_hispanic_white   primary unweighted 0.002278457 0.055
+ ten_state c_hispanic_white   primary unweighted 0.004556914 0.055
+ ten_state c_hispanic_white   primary unweighted 0.006835371 0.060
+ ten_state c_hispanic_white   primary unweighted 0.009113828 0.060
+ ten_state c_hispanic_white   primary unweighted 0.011392285 0.060
+ ten_state c_hispanic_white   primary unweighted 0.013670742 0.075
+ ten_state c_hispanic_white   primary unweighted 0.015949199 0.080
+ ten_state c_hispanic_white   primary unweighted 0.018227656 0.095
+ ten_state c_hispanic_white   primary unweighted 0.020506113 0.105
+ ten_state c_hispanic_white   primary unweighted 0.022784570 0.120
+ ten_state c_hispanic_white   primary unweighted 0.025063027 0.135
+ ten_state c_hispanic_white   primary unweighted 0.027341484 0.170
+ ten_state c_hispanic_white   primary unweighted 0.029619941 0.190
+ ten_state c_hispanic_white   primary unweighted 0.031898398 0.220
+ ten_state c_hispanic_white   primary unweighted 0.034176855 0.240
+ ten_state c_hispanic_white   primary unweighted 0.036455312 0.250
+ ten_state c_hispanic_white   primary unweighted 0.038733770 0.265
+ ten_state c_hispanic_white   primary unweighted 0.041012227 0.275
+ ten_state c_hispanic_white   primary unweighted 0.043290684 0.310
+ ten_state c_hispanic_white   primary unweighted 0.045569141 0.360
+ ten_state c_hispanic_white   primary unweighted 0.047847598 0.375
+ ten_state c_hispanic_white   primary unweighted 0.050126055 0.395
+ ten_state c_hispanic_white   primary unweighted 0.052404512 0.420
+ ten_state c_hispanic_white   primary unweighted 0.054682969 0.450
+ ten_state c_hispanic_white   primary unweighted 0.056961426 0.470
+ ten_state c_hispanic_white   primary unweighted 0.059239883 0.500
+ ten_state c_hispanic_white   primary unweighted 0.061518340 0.510
+ ten_state c_hispanic_white   primary unweighted 0.063796797 0.540
+ ten_state c_hispanic_white   primary unweighted 0.066075254 0.575
+ ten_state c_hispanic_white   primary unweighted 0.068353711 0.590
+ ten_state c_hispanic_white   primary unweighted 0.070632168 0.605
+ ten_state c_hispanic_white   primary unweighted 0.072910625 0.620
+ ten_state c_hispanic_white   primary unweighted 0.075189082 0.665
+ ten_state c_hispanic_white   primary unweighted 0.077467539 0.680
+ ten_state c_hispanic_white   primary unweighted 0.079745996 0.700
+ ten_state c_hispanic_white   primary unweighted 0.082024453 0.715
+ ten_state c_hispanic_white   primary unweighted 0.084302910 0.750
+ ten_state c_hispanic_white   primary unweighted 0.086581367 0.770
+ ten_state c_hispanic_white   primary unweighted 0.088859824 0.780
+ ten_state c_hispanic_white   primary unweighted 0.091138281 0.800
+ ten_state c_hispanic_white   primary unweighted 0.093416738 0.815
+ ten_state c_hispanic_white   primary unweighted 0.095695195 0.840
+ ten_state c_hispanic_white   primary unweighted 0.097973652 0.865
+ ten_state c_hispanic_white   primary unweighted 0.100252109 0.880
+ ten_state c_hispanic_white   primary unweighted 0.102530566 0.885
+ ten_state c_hispanic_white   primary unweighted 0.104809023 0.895
+ ten_state c_hispanic_white   primary unweighted 0.107087480 0.900
+ ten_state c_hispanic_white   primary unweighted 0.109365937 0.905
+ ten_state c_hispanic_white   primary unweighted 0.111644394 0.920
+ ten_state c_hispanic_white   primary unweighted 0.113922851 0.935
+ ten_state c_hispanic_white   primary unweighted 0.116201309 0.955
+ ten_state c_hispanic_white   primary unweighted 0.118479766 0.965
+ ten_state c_hispanic_white   primary unweighted 0.120758223 0.970
+ ten_state c_hispanic_white   primary unweighted 0.123036680 0.975
+ ten_state c_hispanic_white   primary unweighted 0.125315137 0.975
+ ten_state c_hispanic_white   primary unweighted 0.127593594 0.975
+ ten_state c_hispanic_white   primary unweighted 0.129872051 0.975
+ ten_state c_hispanic_white   primary unweighted 0.132150508 0.975
+ ten_state c_hispanic_white   primary unweighted 0.134428965 0.985
+ ten_state c_hispanic_white   primary unweighted 0.136707422 0.990
+
+== model status
+  scenario              gap event_set  weighting status notes
+  observed        a_poverty   primary unweighted     ok      
+  observed    b_black_white   primary unweighted     ok      
+  observed c_hispanic_white   primary unweighted     ok      
+ ten_state        a_poverty   primary unweighted     ok      
+ ten_state    b_black_white   primary unweighted     ok      
+ ten_state c_hispanic_white   primary unweighted     ok      
+
+== Minimum detectable effect, 80% power, 5% two-sided test (V units, that is SD)
+              gap mde_observed sd_observed mde_ten_state sd_ten_state
+        a_poverty       0.2050      0.0729        0.1125       0.0422
+    b_black_white       0.2646      0.0893        0.1110       0.0407
+ c_hispanic_white       0.1502      0.0591        0.0911       0.0340
+ over_ceiling_ten_state
+                    yes
+                    yes
+                     no
+Section 10's 0.1 SD rule is applied to the ten-state scenario: it is exceeded for 2 of 3 primary gaps -> not underpowered on this criterion
+The projection column of mde_10states.csv is supplementary and is not printed here: it summarises the event table's cohort years.
+
+Wrote outputs/08_power/mde.csv, outputs/08_power/placebo_draws.csv, outputs/08_power/mde_10states.csv, outputs/08_power/placebo_draws_10states.csv, outputs/08_power/power_curve.csv, outputs/08_power/model_status.csv, outputs/08_power/power_settings.csv
+NOTE: --quick run. The registered count is 2000 placebo runs per gap.
+Log: outputs/logs/08_power_20260911T225937Z.log
