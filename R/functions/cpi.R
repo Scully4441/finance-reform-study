@@ -3,19 +3,44 @@
 # CUUR0000SA0 (CPI-U, U.S. city average, all items, not seasonally adjusted).
 # A school year ending in year Y runs July of Y-1 through June of Y.
 
+# Missing months are filled first (cpi_fill_gaps); `filled` counts them per year.
 cpi_school_year <- function(monthly) {
   stopifnot(all(c("year", "month", "value") %in% names(monthly)))
+  monthly <- cpi_fill_gaps(monthly)
   sy_end <- ifelse(monthly$month >= 7, monthly$year + 1, monthly$year)
   agg <- aggregate(list(cpi = monthly$value), list(sy_end = sy_end), mean)
   n <- aggregate(list(n = monthly$value), list(sy_end = sy_end), length)
+  f <- aggregate(list(f = monthly$filled), list(sy_end = sy_end), sum)
   agg$complete <- n$n[match(agg$sy_end, n$sy_end)] == 12
+  agg$filled <- f$f[match(agg$sy_end, f$sy_end)]
   agg
+}
+
+# Design v17, Section 7: a month missing from the published series is filled
+# with the mean of the two adjacent months. Only single-month gaps inside the
+# published range are filled; months after the last published value are not
+# yet released and are left out. A run of two or more missing months stops
+# with an error because the rule does not cover it.
+cpi_fill_gaps <- function(monthly) {
+  stopifnot(all(c("year", "month", "value") %in% names(monthly)))
+  monthly <- monthly[!is.na(monthly$value), c("year", "month", "value")]
+  idx <- monthly$year * 12 + monthly$month - 1
+  if (anyDuplicated(idx)) stop("duplicate CPI months")
+  gap <- setdiff(seq(min(idx), max(idx)), idx)
+  if (any(diff(gap) == 1)) stop("two or more consecutive CPI months missing")
+  fill <- data.frame(year = gap %/% 12, month = gap %% 12 + 1,
+                     value = (monthly$value[match(gap - 1, idx)] +
+                              monthly$value[match(gap + 1, idx)]) / 2)
+  monthly$filled <- rep(FALSE, nrow(monthly))
+  fill$filled <- rep(TRUE, nrow(fill))
+  out <- rbind(monthly, fill)
+  out[order(out$year, out$month), , drop = FALSE]
 }
 
 # Read the BLS data-viewer .xlsx export of CUUR0000SA0 (one row per year,
 # columns Jan..Dec, HALF1, HALF2) into the monthly format above. Base R only:
 # an .xlsx is a zip of XML parts. Months BLS left blank (October 2025, lapse in
-# appropriations) are dropped, so cpi_school_year() flags that year incomplete.
+# appropriations) are dropped here and filled by cpi_fill_gaps().
 cpi_from_bls_xlsx <- function(path) {
   td <- tempfile("xlsx"); on.exit(unlink(td, recursive = TRUE))
   utils::unzip(path, files = c("xl/sharedStrings.xml", "xl/worksheets/sheet1.xml"), exdir = td)

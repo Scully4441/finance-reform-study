@@ -26,7 +26,7 @@ Read this before touching the manifest or writing `R/03_sample.R` and
 | Dataset | Stage 1 (end years) | Stage 2 | Who obtains it |
 |---|---|---|---|
 | EDFacts achievement, math and RLA, LEA level | 2010-2013 | 2014 to end year | Claude Code, manifest |
-| EDFacts participation, math and RLA, LEA level | 2010-2013 | 2014 to end year | Claude Code, manifest |
+| EDFacts participation, math and RLA, LEA level | 2013 (none published earlier) | 2014 to end year | Claude Code, manifest |
 | CCD LEA universe / directory | 2010-2013 | 2014 to end year | Claude Code, manifest |
 | CCD school universe / membership by grade and race | 2010-2013 | 2014 to end year | Claude Code, manifest |
 | CCD school lunch program (CEP participation) | phase-in table only | 2015 to end year | Claude Code |
@@ -118,8 +118,11 @@ What: school-level membership by grade and by race/ethnicity. Aggregated to
 the district for the pre-treatment racial composition covariate (Section 7)
 and for the grade-9-to-12 enrollment ratios in the dropout check (Section 9).
 
-Where: same page as 2.3, level "Public School", the School Universe Survey
-(`sc091a` through `sc121a`), then the Membership file from 2014-15 on.
+Where: same page as 2.3, level "Public School", the School Universe Survey,
+then the Membership file from 2014-15 on. Stage 1 uses the newest release of
+each year, as flat-text `_txt.zip` files: `sc092a` (v.2a) for 2009-10,
+`sc102a` (v.2a) for 2010-11, `sc111a_supp` (v.1a) for 2011-12, and `sc122a`
+(v.2a) for 2012-13.
 
 Fields: `NCESSCH`, `LEAID`, grade counts `G09`-`G12`, race counts
 (`WHITE`, `BLACK`, `HISP`, and the post-2010 categories).

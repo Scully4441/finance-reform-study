@@ -31,6 +31,18 @@ sy <- cpi_school_year(m)
 stopifnot(sy$complete[sy$sy_end == 2010], !sy$complete[sy$sy_end == 2009])
 stopifnot(near(sy$cpi[sy$sy_end == 2010], mean(c(107:112, 113:118))))
 stopifnot(near(deflate_to_base(100, 2010, sy, 2011), 100 * sy$cpi[sy$sy_end == 2011] / sy$cpi[sy$sy_end == 2010]))
+# CPI fill (design v17): a single missing month takes the mean of its neighbours
+g <- m[!(m$year == 2010 & m$month == 10), ]
+f <- cpi_fill_gaps(g)
+stopifnot(nrow(f) == nrow(m), sum(f$filled) == 1)
+stopifnot(near(f$value[f$year == 2010 & f$month == 10], mean(m$value[m$year == 2010 & m$month %in% c(9, 11)])))
+syg <- cpi_school_year(g)
+stopifnot(syg$complete[syg$sy_end == 2011], syg$filled[syg$sy_end == 2011] == 1)
+stopifnot(near(syg$cpi, sy$cpi))                          # linear series: the fill equals the true value
+g$value[g$year == 2011 & g$month == 3] <- NA              # an NA value is a gap too
+stopifnot(sum(cpi_fill_gaps(g)$filled) == 2)
+stopifnot(nrow(cpi_fill_gaps(m[-1, ])) == nrow(m) - 1)    # a month outside the published range is not filled
+stopifnot(inherits(try(cpi_fill_gaps(m[!(m$year == 2010 & m$month %in% 10:11), ]), silent = TRUE), "try-error"))
 
 # event-table build script on synthetic inputs, in a temporary tree
 root <- tempfile("evtest"); dir.create(root)
