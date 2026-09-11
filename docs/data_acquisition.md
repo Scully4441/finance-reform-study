@@ -268,10 +268,10 @@ Drafting conventions (Claude Code, 2026-09-11; author to confirm):
   pre-2012 EDFacts reading result included the Grade 10 Writing component.
 - Row decisions from the author (2026-09-11) are recorded in `notes` as
   "Author decision 2026-09-11: ...".
-- Interim, stage 1 draft: the MT, NE, NV, NH, NJ, NM, NY, NC rows were
-  researched without web search. Until they are re-run with search, rows
-  with a replacement stay `documented` and all other rows in those states
-  are `inferred`.
+- Stage 1 re-run (2026-09-11): the MT, NE, NV, NH, NJ, NM, NY, NC rows,
+  first drafted without web search, were re-run with web search. Their
+  `evidence` follows the documented/inferred rules above, and rows with no
+  source for the year list the searches tried in `notes`.
 
 The author checks every row before it is used.
 

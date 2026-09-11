@@ -59,6 +59,12 @@ stopifnot(length(src) >= nrow(tr), all(grepl("^(SEA|Wayback|ESEA flexibility req
 wb <- src[startsWith(src, "Wayback: ")]
 stopifnot(all(grepl("web\\.archive\\.org/web/[0-9]+", wb)), all(grepl("\\(captured [0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", wb)))
 
+# CEP phase-in table (data acquisition 3.3)
+cep <- read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE, na.strings = character())
+stopifnot(identical(names(cep), c("state", "first_cep_sy_end", "source")))
+stopifnot(nrow(cep) == 51, !anyDuplicated(cep$state), setequal(cep$state, c(state.abb, "DC")))
+stopifnot(all(cep$first_cep_sy_end %in% 2012:2015), all(nzchar(trimws(cep$source))))
+
 # event-table build script on synthetic inputs, in a temporary tree
 root <- tempfile("evtest"); dir.create(root)
 repo <- file.path(root, "finance-reform-study"); priv <- file.path(root, "finance-reform-study-private")
