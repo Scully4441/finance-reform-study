@@ -81,6 +81,11 @@ mappings. Download that documentation alongside the data and keep it in
 What: percent of enrolled students tested, same structure as 2.1. Used for the
 95 percent participation rule (Section 5).
 
+Participation files begin with SY2012-13. None were published for 2009-10
+through 2011-12 (checked on ed.gov and the Education Data Center archive,
+2026-09-11); under design v17 those years are retained without the
+participation test (Section 5).
+
 Files: `math-participation-lea-syYYYY-YY.csv`, `rla-participation-lea-syYYYY-YY.csv`.
 Fields: `S_MTHHSNUMPART_YYYY`, `S_MTHHSPCTPART_YYYY` and the RLA equivalents.
 
@@ -91,8 +96,12 @@ boundary-change indicator, and totals. Defines the district universe (Section 5)
 
 Where: nces.ed.gov/ccd/files.asp. Choose the school year, level "Public School
 District (LEA)", "Nonfiscal", then the universe/directory file. For 2009-10
-through 2013-14 the file is the Local Education Agency Universe Survey
-(`ag091a`, `ag101a`, `ag111a`, `ag121a`). From 2014-15 the CCD switched to
+through 2013-14 the file is the Local Education Agency Universe Survey.
+Stage 1 uses the newest release of each year, as flat-text `_txt.zip`
+files: `ag092a` (v.2a) for 2009-10, `ag102a` (v.2a) for 2010-11, `ag111a`
+(v.1a) for 2011-12, and `ag121a_supp` (v.1a) for 2012-13. The matching
+school universe files (2.4) are `sc092a` (v.2a), `sc102a` (v.2a),
+`sc111a_supp` (v.1a), and `sc122a` (v.2a). From 2014-15 the CCD switched to
 separate Directory, Membership, and Characteristics files.
 
 Fields: `LEAID`, `TYPE` (agency type), `STATUS`, `BOUND` (boundary change
@@ -153,7 +162,11 @@ What: district revenue by source and enrollment. Source of per-pupil
 state-plus-local revenue for dose scaling (Section 7).
 
 Where: census.gov/programs-surveys/school-finances/data/tables.html, the
-fiscal year, then the individual unit data or table (`elsecYYt`). NCES
+fiscal year, then the individual unit data. Stage 1 uses the Census
+comma-delimited text files `elsec10.txt` through `elsec13.txt`
+(www2.census.gov/programs-surveys/school-finances/tables/YYYY/secondary-education-finance/),
+saved as `f33/f33-fyYYYY.csv`. These carry `V33`; the `elsecYYt` table
+files report `ENROLL` instead and are not used. NCES
 republishes the same survey as the CCD School District Finance Survey with SAS
 and text formats; either is acceptable, record which.
 

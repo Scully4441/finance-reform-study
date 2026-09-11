@@ -44,7 +44,7 @@ decision the document does not make, stop and ask the author before coding it.
 |---|---|---|---|
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
-| 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | |
+| 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | |
@@ -78,6 +78,10 @@ Update the Status column as steps finish.
   reforms in 2005–2009 exclude the state; early cohorts kept, with cohort
   counts reported per event time and a robustness check dropping cohorts
   with fewer than three pre-years.
+- Participation rule (design v17, Section 5): EDFacts participation files
+  begin with 2012–13, so the 95% rule applies from 2012–13 onward;
+  2009–10 through 2011–12 are retained without the participation test, and
+  a robustness check restricts the sample to 2012–13 onward.
 - Assessment flag: test replacements only. Table in `data/reference/`.
 - Outcome: probit gap V from single-cut proficiency shares. No multi-level data.
 - Gaps (b) and (c): unweighted primary; tested-count weighted robustness.
@@ -87,5 +91,7 @@ Update the Status column as steps finish.
   RI 10,000; Romano–Wolf 9,999; HonestDiD relative magnitudes on the overall
   post average, M̄ ∈ {0, 0.5, 1, 1.5, 2}.
 - CPI-U all items, July–June school-year average, base = last window year.
+- Missing CPI month (design v17, Section 7): filled with the mean of the two
+  adjacent months.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - License: MIT.

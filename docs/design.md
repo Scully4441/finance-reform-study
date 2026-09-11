@@ -169,7 +169,11 @@ before any file for school years after 2012–13 is downloaded.
     > participation is at least 95 percent for each subgroup in the gap.
     > If many students skip the test the tested group no longer
     > represents the enrolled group. This rule excludes most of 2020–21
-    > without a case-by-case decision.
+    > without a case-by-case decision. EDFacts participation files begin
+    > with 2012–13. No participation file exists for 2009–10 through
+    > 2011–12, so those state-years are retained without the
+    > participation test and a robustness check restricts the sample to
+    > 2012–13 onward. The rule applies in full from 2012–13.
 
 5.  **Assessment regime.** A state-year is flagged if the state replaced
     > its high school assessment in that year. Cut-score changes on an
@@ -346,13 +350,14 @@ much money they move. The first stage regresses district per-pupil
 state-plus-local revenue (F-33) on the same event-study design. Revenue
 is deflated with the CPI-U all-items index averaged over July through
 June of each school year. Dollars are expressed in the last year of the
-window. This yields the average revenue change a reform produces. The
-ratio of the gap effect to the revenue effect gives the effect per
-\$1,000 and is estimated by two-stage least squares with the event-study
-indicators as instruments. This scaling requires an exclusion
-restriction: the reform affects gaps only through revenue and not
-through other channels such as accountability rules passed alongside it.
-That is stated as an assumption and not asserted as fact. The
+window. A month missing from the published CPI series is filled with the
+mean of the two adjacent months. This yields the average revenue change
+a reform produces. The ratio of the gap effect to the revenue effect
+gives the effect per \$1,000 and is estimated by two-stage least squares
+with the event-study indicators as instruments. This scaling requires an
+exclusion restriction: the reform affects gaps only through revenue and
+not through other channels such as accountability rules passed alongside
+it. That is stated as an assumption and not asserted as fact. The
 reduced-form estimate (the direct effect of reform on gaps) remains the
 primary answer to the question.
 
@@ -543,6 +548,12 @@ estimate would hide.
 - Cut-score changes on an unchanged test are not flagged. V is invariant
   > to the cut under the normality assumption in Section 6. It is not
   > invariant if that assumption fails.
+
+- The participation rule cannot be applied to 2009–10 through 2011–12
+  > because no participation files were published for those years. Test
+  > participation was a federal requirement in those years and the
+  > opt-out movement had not yet begun, so the retained state-years are
+  > unlikely to fail the rule.
 
 - Post-2011 reforms that changed parameters of an existing formula
   > without replacing it are coded as untreated. This can attenuate the
