@@ -82,7 +82,24 @@ Update the Status column as steps finish.
   begin with 2012–13, so the 95% rule applies from 2012–13 onward;
   2009–10 through 2011–12 are retained without the participation test, and
   a robustness check restricts the sample to 2012–13 onward.
-- Assessment flag: test replacements only. Table in `data/reference/`.
+- Assessment flag: test replacements only. Table
+  `data/reference/test_replacement.csv` (data acquisition 3.2): the 50 states
+  plus DC, no PR, BIE, or VI; stage 1 is end years 2010–2013, 204 rows.
+  Columns: state, sy_end, replaced_math, replaced_rla, replaced,
+  assessment_math, assessment_rla, source, evidence, notes. Subjects are coded
+  separately; replaced = 1 if either is 1. A subject is 1 in the first school
+  year in which its EDFacts high school result comes from the new test. A test
+  rebuilt for new standards with a new scale is a replacement even if the name
+  is unchanged; a new cut score on an unchanged test is 0. A year that mixes
+  old and new results is flagged. Every row is coded from the state education
+  agency's assessment history page (Wayback Machine copies allowed, cited with
+  the archived URL and capture date); the state's ESEA flexibility request
+  (label "ESEA flexibility request", kept distinct from SEA pages), ESEA
+  accountability workbook, or ESSA plan comes third. The EDFacts
+  "significantly changed" lists are pointers
+  only. Documented rows get evidence = documented; a state-year with no
+  documented change is 0 with evidence = inferred. Wyoming 2009–10 keeps a row
+  coded from the test administered, with a note about the invalidated results.
 - Outcome: probit gap V from single-cut proficiency shares. No multi-level data.
 - Gaps (b) and (c): unweighted primary; tested-count weighted robustness.
 - CS estimator with not-yet-treated controls, event time −5..+8, reference −1,

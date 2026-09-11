@@ -214,15 +214,56 @@ seed and is never used by repository code.
 
 ### 3.2 Test-replacement table
 
-`data/reference/test_replacement.csv`, columns `state, sy_end, replaced`
-(0/1), `assessment_name, source`. `replaced` = 1 in the first school year a
-different high school assessment was administered; a new cut score on the
-same test is 0. Sources, in order: the state-specific assessment mappings in
-the appendix of each EDFacts assessment documentation file
-(`data/raw/edfacts/docs/`); the state education agency's assessment history
-page; the state's ESEA accountability workbook or ESSA plan. Stage 1 covers
-2010-2013; stage 2 extends it to the end year. The author checks every row
-before it is used.
+`data/reference/test_replacement.csv`, one row per state and school year:
+the 50 states plus DC (no PR, BIE, or VI). Stage 1 covers end years
+2010-2013 (204 rows); stage 2 extends it to the end year. Columns: `state`,
+`sy_end`; `replaced_math`, `replaced_rla` (0/1 per subject); `replaced` (1
+if either subject is 1); `assessment_math`, `assessment_rla` (the regular
+high school test behind that year's EDFacts high school result); `source`
+(every source for the row, separated by ` | `); `evidence` (`documented` or
+`inferred`); `notes`.
+
+Rules (author, 2026-09-11):
+- A subject is 1 in the first school year in which the EDFacts high school
+  result for that subject comes from the new test. A test rebuilt for new
+  standards with a new scale is a replacement even if the name is unchanged;
+  a new cut score on an unchanged test is 0.
+- A year that mixes old and new results is flagged: `notes` begins `MIXED:`.
+- Sources, in order: the state education agency's assessment history page
+  (Wayback Machine copies allowed, cited with the archived URL and capture
+  date); the state's ESEA flexibility request (author, 2026-09-11: an
+  approved source, labelled separately from SEA pages), ESEA accountability
+  workbook, or ESSA plan. The EDFacts
+  "significantly changed" lists (FAQ of the SY2011-12 and SY2012-13
+  documentation) are pointers only. The Appendix D mappings in the EDFacts
+  documentation name no tests (they map performance levels to proficiency by
+  assessment type) and cannot code a row.
+- Documented rows get evidence `documented`; a state-year with no documented
+  change is coded 0 with evidence `inferred`.
+- Wyoming 2009-10: the online administration failed and no valid results
+  exist; the row is coded from the test administered, with a note.
+
+Drafting conventions (Claude Code, 2026-09-11; author to confirm):
+- The 1 goes on the first year any part of the high school result comes from
+  the new test; that year and any later mixed year carry `MIXED:`.
+- Only the regular assessment is coded; alternate-assessment changes go in
+  `notes`.
+- A change of tested grade with the same test program and scale is 0, with
+  `notes` beginning `CHECK:`. `CHECK:` also marks a documented change whose
+  year is ambiguous.
+- `documented`: a cited source states which test was used that year or
+  documents the change in that year. `inferred`: coded 0 because no change
+  was documented. A 1 is never inferred.
+- Where a state has no single history page, SEA-published program overviews,
+  technical reports, and press releases count as the SEA source.
+- Source format: `SEA: <url> (accessed YYYY-MM-DD)`,
+  `Wayback: <archived url> (captured YYYY-MM-DD)`,
+  `ESEA flexibility request: <url>`, `ESEA workbook: <url>`,
+  `ESSA plan: <url>`.
+- A change in which instrument is reported counts as a replacement (author,
+  2026-09-11: Maine 2011 math, augmented SAT to SAT alone, is 1).
+
+The author checks every row before it is used.
 
 ### 3.3 CEP phase-in table
 

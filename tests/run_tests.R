@@ -44,6 +44,21 @@ stopifnot(sum(cpi_fill_gaps(g)$filled) == 2)
 stopifnot(nrow(cpi_fill_gaps(m[-1, ])) == nrow(m) - 1)    # a month outside the published range is not filled
 stopifnot(inherits(try(cpi_fill_gaps(m[!(m$year == 2010 & m$month %in% 10:11), ]), silent = TRUE), "try-error"))
 
+# test-replacement table (data acquisition 3.2)
+tr <- read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
+stopifnot(identical(names(tr), c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
+                                 "assessment_math", "assessment_rla", "source", "evidence", "notes")))
+stopifnot(nrow(tr) == 204, !anyDuplicated(tr[c("state", "sy_end")]))
+stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 4), setequal(tr$sy_end, 2010:2013))
+stopifnot(all(unlist(tr[c("replaced_math", "replaced_rla", "replaced")]) %in% 0:1))
+stopifnot(all(tr$replaced == pmax(tr$replaced_math, tr$replaced_rla)))
+stopifnot(all(tr$evidence %in% c("documented", "inferred")), all(tr$replaced[tr$evidence == "inferred"] == 0))
+stopifnot(all(nzchar(tr$assessment_math)), all(nzchar(tr$assessment_rla)))
+src <- trimws(unlist(strsplit(tr$source, " | ", fixed = TRUE)))
+stopifnot(length(src) >= nrow(tr), all(grepl("^(SEA|Wayback|ESEA flexibility request|ESEA workbook|ESSA plan): ", src)))
+wb <- src[startsWith(src, "Wayback: ")]
+stopifnot(all(grepl("web\\.archive\\.org/web/[0-9]+", wb)), all(grepl("\\(captured [0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", wb)))
+
 # event-table build script on synthetic inputs, in a temporary tree
 root <- tempfile("evtest"); dir.create(root)
 repo <- file.path(root, "finance-reform-study"); priv <- file.path(root, "finance-reform-study-private")
