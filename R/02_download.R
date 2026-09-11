@@ -9,6 +9,11 @@
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
 if (!stage %in% c(1L, 2L)) stop("data/stage.txt must be 1 or 2")
 
+# ed.gov answers 403 to R's default user agent, so identify the client plainly.
+# The larger files take longer than R's 60-second default timeout.
+options(HTTPUserAgent = "finance-reform-study (R download.file; academic research)",
+        timeout = max(1800, getOption("timeout")))
+
 man <- read.csv("data/manifest/download_manifest.csv", stringsAsFactors = FALSE,
                 colClasses = "character", na.strings = character(0))
 man$sy_end <- as.integer(man$sy_end)
@@ -25,7 +30,11 @@ for (i in seq_len(nrow(man))) {
   if (!file.exists(dest)) {
     dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
     message("downloading ", label)
-    utils::download.file(man$url[i], dest, mode = "wb", quiet = TRUE)
+    # Download under a temporary name so a failed transfer never leaves a
+    # partial file that a later run would checksum as the archived version.
+    part <- paste0(dest, ".part")
+    utils::download.file(man$url[i], part, mode = "wb", quiet = TRUE)
+    if (!file.rename(part, dest)) stop("could not move ", part, " to ", dest)
   }
   h <- digest::digest(file = dest, algo = "sha256")
   if (!blank(man$sha256[i]) && man$sha256[i] != h) {
