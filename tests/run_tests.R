@@ -46,8 +46,9 @@ stopifnot(inherits(try(cpi_fill_gaps(m[!(m$year == 2010 & m$month %in% 10:11), ]
 
 # test-replacement table (data acquisition 3.2)
 tr <- read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
-stopifnot(identical(names(tr), c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
-                                 "assessment_math", "assessment_rla", "source", "evidence", "notes")))
+tr_cols <- c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
+             "assessment_math", "assessment_rla", "source", "evidence", "notes")
+stopifnot(identical(names(tr), tr_cols) || identical(names(tr), c(tr_cols, "author_check")))  # author_check optional, last
 stopifnot(nrow(tr) == 204, !anyDuplicated(tr[c("state", "sy_end")]))
 stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 4), setequal(tr$sy_end, 2010:2013))
 stopifnot(all(unlist(tr[c("replaced_math", "replaced_rla", "replaced")]) %in% 0:1))
