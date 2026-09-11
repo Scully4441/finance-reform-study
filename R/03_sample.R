@@ -12,8 +12,9 @@
 #   saipe_pov_rate_2009, pov_quintile_2009    SAIPE 2009 child poverty; quintile 1 = lowest
 #   cep                       state CEP availability (data/reference/cep_phase_in.csv, stage 1)
 #   test_replaced, test_replaced_math, test_replaced_rla   data/reference/test_replacement.csv
-#   part_<subj>_<sg>, part_ok_<subj>_<sg>     reported HS participation and the 95% rule
-#                                             (NA before 2012-13: retained untested)
+#   part_<subj>_<sg>, part_ok_<subj>_<sg>     reported HS participation and the 95% rule on
+#                                             the exact value or band midpoint, all three
+#                                             samples (NA before 2012-13: retained untested)
 #   n_<subj>_<sg>, cell_<subj>_<sg>           exact HS valid-test count and rule 3 status
 #   w_<subj>_<sg>                             width in points of the reported percent
 #                                             proficient (0 exact; NA when suppressed)
@@ -161,6 +162,14 @@ for (subj in names(SUBJECTS)) for (s in SUBGROUPS) {
   pv <- paste0("part_", subj, "_", s)
   smp[[paste0("part_ok_", subj, "_", s)]] <-
     ifelse(smp$sy_end >= PART_FROM, as.integer(part_pass(smp[[pv]])), NA_integer_)
+  # The exact-only sample keeps exact participation values (author decision 2026-09-11).
+  # Its cells report participation exactly or as GE99/LE1 (width 1), where the
+  # midpoint test gives the same answer; a wider band there needs an author decision.
+  k  <- smp$sy_end >= PART_FROM & cell_in_sample(smp[[cv]], smp[[paste0("w_", subj, "_", s)]], "exact")
+  pw <- edfacts_range(smp[[pv]][k])$width
+  if (any(!is.na(pw) & pw > 1))
+    stop("exact-only sample: participation band wider than 1 point in ", sum(!is.na(pw) & pw > 1),
+         " ", subj, " ", s, " cells; the participation rule for that sample needs an author decision")
 }
 
 cols <- c("leaid", "state", "sy_end", "retained", "reason", "retained_r1", "retained_r2",
@@ -290,12 +299,13 @@ utils::write.csv(gy, file.path(out_dir, "usable_gap_district_years.csv"), row.na
 # ---- report 4: participation (rule 4) ----------------------------------------------
 say("\n== Participation rule, retained districts (primary set)")
 say("End years ", min(WINDOW), "-", PART_FROM - 1L, ": no participation file; retained without the test.")
+say("From ", PART_FROM, ": the exact value or band midpoint must be at least 95 (GE90 passes, 90-94 fails).")
 r13 <- ret[ret$sy_end == PART_FROM, ]
 pc <- do.call(rbind, lapply(names(SUBJECTS), function(subj) do.call(rbind, lapply(SUBGROUPS, function(s) {
   u <- r13[[paste0("cell_", subj, "_", s)]] == "usable"
-  lb <- part_lower_bound(r13[[paste0("part_", subj, "_", s)]])
-  data.frame(subject = subj, subgroup = s, usable_cells = sum(u), pass = sum(u & !is.na(lb) & lb >= 95),
-             fail_reported_below_95 = sum(u & !is.na(lb) & lb < 95), fail_not_reported = sum(u & is.na(lb)))
+  pv <- part_value(r13[[paste0("part_", subj, "_", s)]])
+  data.frame(subject = subj, subgroup = s, usable_cells = sum(u), pass = sum(u & !is.na(pv) & pv >= 95),
+             fail_reported_below_95 = sum(u & !is.na(pv) & pv < 95), fail_not_reported = sum(u & is.na(pv)))
 }))))
 say("Cells usable under rule 3 in ", PART_FROM, ", by participation outcome:")
 show(pc)
@@ -315,7 +325,7 @@ say("\nState-years lost to participation in ", PART_FROM, " (state had at least 
 show(sy_lost)
 utils::write.csv(sy_lost, file.path(out_dir, paste0("participation_state_years_", PART_FROM, ".csv")), row.names = FALSE)
 
-no_part <- tapply(is.na(part_lower_bound(r13$part_math_all)) & is.na(part_lower_bound(r13$part_rla_all)),
+no_part <- tapply(is.na(part_value(r13$part_math_all)) & is.na(part_value(r13$part_rla_all)),
                   r13$state, all)
 if (any(no_part)) say("States reporting no HS all-students participation for any retained district in ",
                       PART_FROM, ": ", paste(names(no_part)[no_part], collapse = " "))

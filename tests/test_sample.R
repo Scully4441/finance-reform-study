@@ -21,10 +21,12 @@ stopifnot(identical(cell_in_sample(st, wd, "primary"), st == "usable"),
           identical(which(cell_in_sample(st, wd, "exact")), c(1L, 7L)))
 stopifnot(inherits(try(cell_in_sample("usable", 0, "r3"), silent = TRUE), "try-error"))
 
-# rule 4: lower bound of the reported participation must reach 95
-x <- c("96", "GE95", "GE90", "90-94", "95-99", "LT50", "PS", "n/a", ".", "", "94.9", "GE99", NA, " ge95 ")
-stopifnot(identical(part_lower_bound(x), c(96, 95, 90, 90, 95, 0, NA, NA, NA, NA, 94.9, 99, NA, 95)))
-stopifnot(identical(part_pass(x), c(TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, TRUE)))
+# rule 4 (author decision 2026-09-11): the exact value or band midpoint must reach 95
+x <- c("96", "GE95", "GE90", "90-94", "95-99", "LT50", "PS", "n/a", ".", "", "94.9", "GE99", NA, " ge90 ",
+       "80-89", "GE80", "LE1", "95")
+stopifnot(identical(part_value(x), c(96, 97.5, 95, 92, 97, 25, NA, NA, NA, NA, 94.9, 99.5, NA, 95, 84.5, 90, 0.5, 95)))
+stopifnot(identical(part_pass(x), c(TRUE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE,
+                                    FALSE, TRUE, FALSE, FALSE, FALSE, TRUE)))
 
 # rules 1 and 2 on a synthetic CCD panel
 w <- 2010:2013
@@ -141,6 +143,12 @@ if (file.exists(out)) {
     wv <- s[[paste0("w_", v)]]; pv <- s[[paste0("p_", v)]]
     stopifnot(all(s[[paste0("n_", v)]][u] >= 30), all(wv[u] <= 10), !anyNA(pv[u]), all(pv[u] >= 0 & pv[u] <= 100),
               all(is.na(pv[!u])), all(wv[cs == "wide_range"] > 10), all(is.na(wv[cs == "suppressed"])))
+    # participation flag = exact value or band midpoint >= 95; the exact-only sample's
+    # cells report participation exactly or at a 1-point end band (GE99/LE1)
+    pr <- s[[paste0("part_", v)]]; t13 <- s$sy_end >= 2013
+    stopifnot(all(s[[paste0("part_ok_", v)]][t13] == as.integer(part_pass(pr[t13]))))
+    pw <- edfacts_range(pr[t13 & cell_in_sample(cs, wv, "exact")])$width
+    stopifnot(all(is.na(pw) | pw <= 1))
   }
   q <- s$pov_quintile_2009[s$retained == 1 & !is.na(s$pov_quintile_2009)]
   stopifnot(all(q %in% 1:5))

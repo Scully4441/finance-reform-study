@@ -112,14 +112,25 @@ Update the Status column as steps finish.
 - CPI-U all items, July–June school-year average, base = last window year.
 - Missing CPI month (design v17, Section 7): filled with the mean of the two
   adjacent months.
+- Author decisions made before registration are logged in
+  docs/decision_log.md (date, section, decision, rationale). docs/deviations.md
+  holds departures from the registered design after filing.
 - Sample rules as implemented (author, 2026-09-11; data acquisition 4.1):
-  participation passes when the reported value's lower bound is ≥ 95 (GE95
-  passes, GE90 fails, nothing reported fails); poverty quintiles fixed per
+  participation by the band rule below; poverty quintiles fixed per
   state among districts passing rules 1–2 with a 2009–10 grade span to 12 and
   a SAIPE 2009 rate; stability = CCD BOUND not 2, 6, or 7 in every window year
   and never 5 or 8, agency type 1–2 in every year.
+- Participation bands (author, 2026-09-11; replaces the lower-bound reading;
+  data acquisition 4.1; docs/decision_log.md): the 95% test applies to the
+  exact value where one is reported and to the band midpoint where
+  participation is banded (printed endpoints, as in the suppression rule):
+  GE90 (95) passes, 90-94 (92) and lower bands fail, nothing reported fails.
+  The exact-only sample keeps exact participation values; its cells report
+  participation exactly or as GE99, which passes, so one `part_ok_*` flag
+  serves all three samples. Rationale: the same logic as the midpoint rule,
+  and it keeps sample composition stable across 2012 and 2013.
 - Suppression rule (author, 2026-09-11; replaces exact-only; data acquisition
-  4.1; logged in docs/deviations.md): the valid-test count must be exact and
+  4.1; docs/decision_log.md): the valid-test count must be exact and
   ≥ 30. Percent proficient enters as the exact value or, when reported as a
   range no wider than 10 percentage points, at the range midpoint; wider
   ranges and suppressed values (PS, N/A, blank) are missing. Width and
@@ -128,8 +139,15 @@ Update the Status column as steps finish.
   an exact value: width 0). Two robustness samples: exact values only, and
   ranges of 5 points or less (`MAX_WIDTH`, `cell_in_sample()`). The sample
   file carries each cell's width (`w_*`) and entering percent (`p_*`) for
-  step 4.
-- SAIPE (author, 2026-09-11; logged in docs/deviations.md): districts passing
+  step 4. Rationale: the exact-only rule left about 200 district-years per
+  subject-year for gaps (b) and (c), all in the largest districts; a range
+  midpoint is measurement error in the outcome, bounded at half the range
+  width and unrelated to treatment, which does not bias a DiD estimate and
+  only widens its interval. The error is not classical (it depends on where
+  the true rate sits in its band and is larger in probit units at the
+  tails), so the no-bias claim is approximate; the exact-only and 5-point
+  samples are the check.
+- SAIPE (author, 2026-09-11; docs/decision_log.md): districts passing
   rules 1–2 with no SAIPE 2009 child-poverty rate (absent from the file, or no
   children 5–17) are dropped for all gaps.
 - CCD BOUND 8 (reopened) is a change code like 5 (author, 2026-09-11): a code

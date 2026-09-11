@@ -318,7 +318,7 @@ rules are in `R/functions/sample_rules.R`.
   the other change codes: author decision 2026-09-11). Agency type must be
   1 or 2 in every window year.
 - Suppression (rule 3; author decision 2026-09-11, replacing the exact-only
-  rule; logged in `docs/deviations.md`). The valid-test count must be exact
+  rule; logged in `docs/decision_log.md`). The valid-test count must be exact
   and at least 30. Percent proficient enters as the exact value or, when
   EDFacts reports it as a range no wider than 10 percentage points, at the
   range midpoint. Wider ranges and suppressed values (`PS`, `N/A`, `.`,
@@ -339,19 +339,24 @@ rules are in `R/functions/sample_rules.R`.
   the three samples. The sample file carries `w_<subj>_<sg>` (width in
   points; 0 exact; NA suppressed) and `p_<subj>_<sg>` (the exact value or
   midpoint, usable cells only) for `R/04_outcomes.R`.
-- SAIPE (author decision 2026-09-11; logged in `docs/deviations.md`). A
+- SAIPE (author decision 2026-09-11; logged in `docs/decision_log.md`). A
   district that passes rules 1 and 2 but has no SAIPE 2009 child-poverty rate
   (absent from the file, or no children 5-17) is dropped before rule 6, for
   all three gaps. The dropped LEAIDs are listed in
   `outputs/03_sample/no_saipe_2009.csv`.
-- Participation (rule 4). EDFacts reports most high school participation
-  rates as bounds or ranges (`GE95`, `GE90`, `90-94`). A cell passes when the
-  lowest rate consistent with the reported value is at least 95: an exact
-  value of 95 or more, `GE95`, `GE99`, or a range starting at 95 or above.
-  `GE90`, `GE80`, `GE50` and ranges starting below 95 fail. `PS`, `n/a`, `.`
-  and blank fail because no participation is reported. End years 2010-2012
-  are retained without the test; `robust_from_2013` marks the robustness
-  sample.
+- Participation (rule 4; author decision 2026-09-11, replacing the
+  lower-bound reading; logged in `docs/decision_log.md`). EDFacts reports most
+  high school participation rates as bands (`GE95`, `GE90`, `90-94`). The 95
+  percent test applies to the exact value where one is reported and to the
+  band midpoint where participation is banded (`part_value()`, printed
+  endpoints as in rule 3): `GE90` (95), `GE95` (97.5) and `GE99` (99.5) pass;
+  `90-94` (92), `80-89`, `GE80`, `GE50` and lower bands fail. `PS`, `n/a`, `.`
+  and blank fail because no participation is reported. The exact-only sample
+  keeps exact participation values. Its cells report participation as an
+  exact value or `GE99`, which passes, so one `part_ok_*` flag serves all
+  three samples; `R/03_sample.R` stops if a wider band appears there. End
+  years 2010-2012 are retained without the test; `robust_from_2013` marks the
+  robustness sample.
 - Poverty quintiles (Section 6, gap (a)). Fixed per state. The quintile set is
   the districts that pass rules 1 and 2, have a SAIPE 2009 rate (children
   5-17 in poverty over children 5-17), and have a 2009-10 CCD grade span

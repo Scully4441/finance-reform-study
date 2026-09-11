@@ -5,7 +5,8 @@
 #   poverty quintiles are fixed per state among high school districts;
 #   stability = operational (BOUND not 2, 6, 7) every window year and never BOUND 5.
 # Later the same day: percent proficient may enter as the midpoint of a range no
-# wider than 10 points (replacing exact-only), and BOUND 8 counts as a change.
+# wider than 10 points (replacing exact-only), BOUND 8 counts as a change, and
+# participation is tested at the exact value or band midpoint (replacing the lower bound).
 
 # Two-digit state FIPS codes for the 50 states and DC (the study universe).
 STATE_FIPS <- c(AL = "01", AK = "02", AZ = "04", AR = "05", CA = "06", CO = "08", CT = "09", DE = "10",
@@ -134,29 +135,19 @@ cell_in_sample <- function(status, width, sample = names(MAX_WIDTH)) {
   status == "usable" & !is.na(width) & width <= MAX_WIDTH[[sample]]
 }
 
-# Rule 4 (participation). The lowest participation rate consistent with the
-# reported value: an exact value is itself; "GEnn"/"GTnn" and a range "a-b" give
-# nn or a; "LTnn"/"LEnn" give 0. Suppressed or blank values ("PS", "n/a", ".", "")
-# give NA (nothing reported).
-part_lower_bound <- function(x) {
-  x <- toupper(trimws(as.character(x)))
-  out <- rep(NA_real_, length(x))
-  ex <- grepl("^[0-9]+(\\.[0-9]+)?$", x)
-  out[ex] <- as.numeric(x[ex])
-  ge <- grepl("^G[ET][0-9]+(\\.[0-9]+)?$", x)
-  out[ge] <- as.numeric(sub("^G[ET]", "", x[ge]))
-  rg <- grepl("^[0-9]+(\\.[0-9]+)?-[0-9]+(\\.[0-9]+)?$", x)
-  out[rg] <- as.numeric(sub("-.*$", "", x[rg]))
-  lt <- grepl("^L[ET][0-9]+(\\.[0-9]+)?$", x)
-  out[lt] <- 0
-  out
-}
+# Rule 4 (participation; author decision 2026-09-11, replacing the lower-bound
+# reading). The rate tested is the exact value where one is reported and the band
+# midpoint where participation is banded, from the printed endpoints as in rule 3
+# (edfacts_range()): "GE90" is 95, "90-94" is 92, "GE95" is 97.5, "LT50" is 25.
+# Suppressed or blank values ("PS", "n/a", ".", "") give NA (nothing reported).
+part_value <- function(x) edfacts_range(x)$mid
 
-# TRUE when the reported value guarantees participation of at least 95 percent
-# (author decision 2026-09-11). Nothing reported fails.
+# TRUE when that rate is at least 95 percent: GE90 passes, lower bands fail, and
+# nothing reported fails. Cells in the exact-only sample report participation as
+# an exact value or GE99, so the same test keeps their exact values.
 part_pass <- function(x, threshold = 95) {
-  lb <- part_lower_bound(x)
-  !is.na(lb) & lb >= threshold
+  v <- part_value(x)
+  !is.na(v) & v >= threshold
 }
 
 # Rules 1 and 2 at the district level, from the long CCD table (one row per
