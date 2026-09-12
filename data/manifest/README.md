@@ -64,10 +64,17 @@ row points:
   `sc132a`). From 2014-15 the nonfiscal survey is split, so each later year has
   three rows: the LEA Directory file (`ccd_lea_029_*`), the school Membership
   file (`ccd_sch_052_*`) and, under `ccd_lunch_program`, the school Lunch
-  Program Eligibility file (`ccd_sch_033_*`) that carries the CEP field
-  (Section 2.5 of `docs/data_acquisition.md`). Each url is the newest release
+  Program Eligibility file (`ccd_sch_033_*`). Each url is the newest release
   of that year listed by the NCES file API, flat text where the release offers
   a format choice.
+- **CCD school Characteristics (`ccd_school_characteristics`), end years
+  2015-2021**, added 2026-09-12. This is the file that carries the CEP field
+  `NSLPSTATUS`, not the Lunch Program Eligibility file, whose `LUNCH_PROGRAM`
+  field has no CEP value in any year (Section 2.5 of
+  `docs/data_acquisition.md`). End year 2014 needs no row: the combined school
+  universe file already archived under `ccd_membership` 2014 (`sc132a`) carries
+  `NSLPSTATUS`. The rows stop at 2021, the registration end year, because no
+  later year enters either outcome.
 - **F-33, FY2022.** `elsec22.txt` holds only 1,730 of the 14,106 unit records
   Census published for that fiscal year (17 Alabama systems against 138 in the
   companion flag file `elsec22f.txt`), so the FY2022 row archives

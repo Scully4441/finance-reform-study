@@ -45,7 +45,7 @@ decision the document does not make, stop and ask the author before coding it.
 |---|---|---|---|
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
-| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published |
+| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |

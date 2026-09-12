@@ -191,3 +191,98 @@ poverty_quintile <- function(state, rate, leaid) {
   }
   q
 }
+
+# ---- Community Eligibility Provision (data acquisition 2.5) ----------------------
+
+# The CCD records the provision under which each school takes part in the National
+# School Lunch Program in NSLPSTATUS, added with the SY2013-14 collection. It is a
+# school Characteristics field, not a Lunch Program Eligibility field: ccd_sch_033
+# carries only free and reduced-price counts and has no CEP value in any year.
+# Three layouts, all read here:
+#   end year 2014      combined school universe file sc132a.txt, column NSLPSTATUS,
+#                      codes NSLPCEO / NSLPWOPRO / NSLPNO / NSLPPRO1-3 / M
+#   end years 2015-16  ccd_sch_129 releases, column NSLPSTATUS_CODE,
+#                      codes CEO / NP / NO / P1 / P2 / P3 / M
+#   end years 2017 on  ccd_sch_129 releases, column NSLP_STATUS, codes as for 2014
+CEP_CODES <- c("NSLPCEO", "CEO")   # community eligibility, in either code set
+
+# One row per school: leaid, ncessch, the reported status, and cep_school.
+read_ccd_nslp <- function(path, sy_end) {
+  d <- if (endsWith(tolower(path), ".csv"))
+    utils::read.csv(path, colClasses = "character", na.strings = character(), check.names = FALSE)
+  else
+    utils::read.delim(path, colClasses = "character", quote = "\"",
+                      na.strings = character(), comment.char = "", check.names = FALSE)
+  up <- toupper(names(d))
+  col <- function(nm) { k <- which(up == nm); if (length(k) == 1L) d[[k]] else NULL }
+  status <- col("NSLPSTATUS_CODE")
+  if (is.null(status)) status <- col("NSLP_STATUS")
+  if (is.null(status)) status <- col("NSLPSTATUS")
+  if (is.null(status)) stop(basename(path), ": no NSLP status column")
+  sch <- col("NCESSCH")
+  lea <- col("LEAID")
+  if (is.null(sch)) stop(basename(path), ": no NCESSCH column")
+  sch <- trimws(sch)
+  lea <- if (is.null(lea)) substr(sch, 1, 7) else trimws(lea)
+  if (!all(grepl("^[0-9]{7}$", lea))) stop(basename(path), ": LEAID not 7 digits")
+  if (!all(grepl("^[0-9]{12}$", sch))) stop(basename(path), ": NCESSCH not 12 digits")
+  if (anyDuplicated(sch)) stop(basename(path), ": duplicate NCESSCH")
+  status <- toupper(trimws(status))
+  data.frame(leaid = lea, ncessch = sch, sy_end = as.integer(sy_end), nslp_status = status,
+             cep_school = as.integer(status %in% CEP_CODES), stringsAsFactors = FALSE)
+}
+
+# Preparation rule of 2.5: the district-year indicator is 1 when any school in the
+# district is under CEP. A district whose schools all report a missing status is
+# still 0: the CCD reports no CEP school there.
+cep_district_year <- function(sch) {
+  stopifnot(all(c("leaid", "sy_end", "cep_school") %in% names(sch)))
+  k <- paste(sch$leaid, sch$sy_end)
+  agg <- tapply(sch$cep_school, k, max)
+  parts <- strsplit(names(agg), " ", fixed = TRUE)
+  out <- data.frame(leaid = vapply(parts, `[`, "", 1L),
+                    sy_end = as.integer(vapply(parts, `[`, "", 2L)),
+                    cep = as.integer(unname(agg)), stringsAsFactors = FALSE)
+  out[order(out$leaid, out$sy_end), ]
+}
+
+# The archived CCD file that carries NSLPSTATUS for an end year, and the name of
+# the member to unzip. End year 2014 is the last combined school universe file.
+ccd_nslp_zip <- function(sy_end) {
+  if (sy_end == 2014L) "data/raw/ccd/membership-sy2013-14.zip"
+  else sprintf("data/raw/ccd/school-characteristics-sy%d-%02d.zip", sy_end - 1L, sy_end %% 100L)
+}
+
+# District-year CEP indicator for one end year, read from the CCD.
+cep_from_ccd <- function(sy_end, exdir = tempfile("ccdnslp")) {
+  z <- ccd_nslp_zip(sy_end)
+  if (!file.exists(z)) stop("missing CCD file for CEP in end year ", sy_end, ": ", z)
+  dir.create(exdir, recursive = TRUE, showWarnings = FALSE)
+  f <- utils::unzip(z, exdir = exdir)
+  f <- f[endsWith(tolower(f), ".txt") | endsWith(tolower(f), ".csv")]
+  if (length(f) != 1L) stop(basename(z), ": expected one text member, found ", length(f))
+  cep_district_year(read_ccd_nslp(f, sy_end))
+}
+
+# CEP indicator for the district-years of a sample frame (leaid, state, sy_end).
+# Before end year 2014 the CCD has no CEP field, so the state-level USDA phase-in
+# table is used; from 2014 the indicator is the district's own CCD status. A
+# district-year with no CCD school row in a CCD year is 0.
+CEP_FROM_CCD <- 2014L
+cep_indicator <- function(leaid, state, sy_end,
+                          phase_in = "data/reference/cep_phase_in.csv") {
+  stopifnot(length(leaid) == length(state), length(state) == length(sy_end))
+  cep <- integer(length(leaid))
+  early <- sy_end < CEP_FROM_CCD
+  if (any(early)) {
+    p <- utils::read.csv(phase_in, stringsAsFactors = FALSE, na.strings = character())
+    cep[early] <- as.integer(sy_end[early] >= p$first_cep_sy_end[match(state[early], p$state)])
+  }
+  for (y in sort(unique(sy_end[!early]))) {
+    d <- cep_from_ccd(y)
+    k <- which(sy_end == y)
+    m <- match(leaid[k], d$leaid)
+    cep[k] <- ifelse(is.na(m), 0L, d$cep[m])
+  }
+  cep
+}

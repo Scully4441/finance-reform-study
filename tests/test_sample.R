@@ -156,8 +156,17 @@ if (file.exists(out)) {
   k <- match(paste(s$state, s$sy_end), paste(trr$state, trr$sy_end))
   stopifnot(!anyNA(k), all(s$test_replaced == trr$replaced[k]), all(s$test_replaced_math == trr$replaced_math[k]),
             all(s$test_replaced_rla == trr$replaced_rla[k]))
+  # CEP: the state phase-in table before end year 2014, the district's own CCD
+  # NSLPSTATUS from 2014 on (data acquisition 2.5)
   cp <- utils::read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE)
-  stopifnot(all(s$cep == as.integer(s$sy_end >= cp$first_cep_sy_end[match(s$state, cp$state)])))
+  e <- s$sy_end < CEP_FROM_CCD
+  stopifnot(all(s$cep[e] == as.integer(s$sy_end[e] >= cp$first_cep_sy_end[match(s$state[e], cp$state)])))
+  for (y in sort(unique(s$sy_end[!e]))) {
+    d <- cep_from_ccd(y)
+    k <- which(s$sy_end == y)
+    m <- match(s$leaid[k], d$leaid)
+    stopifnot(all(s$cep[k] == ifelse(is.na(m), 0L, d$cep[m])))
+  }
   for (set in c("", "_r1", "_r2")) {
     ev <- utils::read.csv(paste0("data/reference/event_table", set, ".csv"), stringsAsFactors = FALSE)
     rv <- s[[paste0("retained", if (nzchar(set)) set else "")]]

@@ -10,7 +10,9 @@
 #   robust_from_2013          1 for end years 2013 on: the participation robustness sample (v17)
 #   agency_type, ccd_bound, boundary_change   CCD TYPE, CCD BOUND code, BOUND 5 or 8
 #   saipe_pov_rate_2009, pov_quintile_2009    SAIPE 2009 child poverty; quintile 1 = lowest
-#   cep                       state CEP availability (data/reference/cep_phase_in.csv, stage 1)
+#   cep                       CEP: the state phase-in table (data/reference/cep_phase_in.csv)
+#                             before end year 2014, the district's own CCD NSLPSTATUS from
+#                             2014 on (cep_indicator(); data acquisition 2.5)
 #   test_replaced, test_replaced_math, test_replaced_rla   data/reference/test_replacement.csv
 #   part_<subj>_<sg>, part_ok_<subj>_<sg>     reported HS participation and the 95% rule on
 #                                             the exact value or band midpoint, all three
@@ -65,6 +67,8 @@ groups <- lapply(ev_files, function(f) {
 })
 
 tr <- utils::read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
+# cep_indicator() reads the phase-in table itself for end years before 2014; it is
+# read here only so a missing or short table fails before any CCD file is opened.
 cep <- utils::read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE, na.strings = character())
 stopifnot(all(outer(names(STATE_FIPS), WINDOW, paste) %in% paste(tr$state, tr$sy_end)),
           setequal(cep$state, names(STATE_FIPS)))
@@ -113,7 +117,7 @@ smp$robust_from_2013 <- as.integer(smp$sy_end >= PART_FROM)
 smp$boundary_change  <- as.integer(smp$ccd_bound %in% BOUND_CHANGE)
 smp$saipe_pov_rate_2009 <- dr$saipe_pov_rate_2009[k]
 smp$pov_quintile_2009   <- dr$pov_quintile_2009[k]
-smp$cep <- as.integer(smp$sy_end >= cep$first_cep_sy_end[match(smp$state, cep$state)])
+smp$cep <- cep_indicator(smp$leaid, smp$state, smp$sy_end)
 kt <- match(paste(smp$state, smp$sy_end), paste(tr$state, tr$sy_end))
 smp$test_replaced      <- tr$replaced[kt]
 smp$test_replaced_math <- tr$replaced_math[kt]

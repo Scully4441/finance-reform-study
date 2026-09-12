@@ -56,8 +56,8 @@ tr <- read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, 
 tr_cols <- c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
              "assessment_math", "assessment_rla", "source", "evidence", "notes")
 stopifnot(identical(names(tr), tr_cols) || identical(names(tr), c(tr_cols, "author_check")))  # author_check optional, last
-stopifnot(nrow(tr) == 204, !anyDuplicated(tr[c("state", "sy_end")]))
-stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 4), setequal(tr$sy_end, 2010:2013))
+stopifnot(nrow(tr) == 612, !anyDuplicated(tr[c("state", "sy_end")]))   # 51 states x end years 2010-2021
+stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 12), setequal(tr$sy_end, 2010:2021))
 stopifnot(all(unlist(tr[c("replaced_math", "replaced_rla", "replaced")]) %in% 0:1))
 stopifnot(all(tr$replaced == pmax(tr$replaced_math, tr$replaced_rla)))
 stopifnot(all(tr$evidence %in% c("documented", "inferred")), all(tr$replaced[tr$evidence == "inferred"] == 0))
@@ -67,11 +67,41 @@ stopifnot(length(src) >= nrow(tr), all(grepl("^(SEA|Wayback|ESEA flexibility req
 wb <- src[startsWith(src, "Wayback: ")]
 stopifnot(all(grepl("web\\.archive\\.org/web/[0-9]+", wb)), all(grepl("\\(captured [0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", wb)))
 
-# CEP phase-in table (data acquisition 3.3)
+# the stage 2 rows carry no author_check yet (author decision 2026-09-12)
+stopifnot("author_check" %in% names(tr), all(!nzchar(trimws(tr$author_check[tr$sy_end >= 2014]))))
+
+# CEP phase-in table (data acquisition 3.3), still the source before end year 2014
 cep <- read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE, na.strings = character())
 stopifnot(identical(names(cep), c("state", "first_cep_sy_end", "source")))
 stopifnot(nrow(cep) == 51, !anyDuplicated(cep$state), setequal(cep$state, c(state.abb, "DC")))
 stopifnot(all(cep$first_cep_sy_end %in% 2012:2015), all(nzchar(trimws(cep$source))))
+
+# CEP from the CCD (data acquisition 2.5): NSLPSTATUS in the school Characteristics
+# file from end year 2015 and in the combined school universe file for 2014.
+stopifnot(identical(ccd_nslp_zip(2014L), "data/raw/ccd/membership-sy2013-14.zip"),
+          identical(ccd_nslp_zip(2021L), "data/raw/ccd/school-characteristics-sy2020-21.zip"))
+sch <- data.frame(leaid = c("0100005", "0100005", "0100006", "0100006", "0100007"),
+                  ncessch = sprintf("%012d", 1:5), sy_end = 2015L,
+                  cep_school = c(0L, 1L, 0L, 0L, 0L), stringsAsFactors = FALSE)
+dy <- cep_district_year(sch)
+stopifnot(identical(dy$leaid, c("0100005", "0100006", "0100007")), identical(dy$cep, c(1L, 0L, 0L)))
+# real files, when they have been downloaded
+for (y in c(2014L, 2015L, 2021L)) {
+  if (!file.exists(ccd_nslp_zip(y))) next
+  d <- cep_from_ccd(y)
+  stopifnot(all(grepl("^[0-9]{7}$", d$leaid)), !anyDuplicated(d$leaid), all(d$cep %in% 0:1),
+            all(d$sy_end == y), sum(d$cep) > 0)
+}
+if (file.exists(ccd_nslp_zip(2015L))) {
+  # before 2014 the phase-in table decides; from 2014 the district's own CCD status
+  d <- cep_from_ccd(2015L)
+  one <- d$leaid[d$cep == 1][1]
+  st <- fips_to_state(substr(one, 1, 2))
+  stopifnot(cep_indicator(one, st, 2015L) == 1L,
+            cep_indicator("9999999", st, 2015L) == 0L,          # not in the CCD that year
+            cep_indicator(one, "IL", 2012L) == 1L,              # phase-in: IL pilot from 2011-12
+            cep_indicator(one, "AK", 2012L) == 0L)
+}
 
 # event-table build script on synthetic inputs, in a temporary tree
 root <- tempfile("evtest"); dir.create(root)

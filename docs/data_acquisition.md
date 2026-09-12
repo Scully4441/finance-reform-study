@@ -31,7 +31,7 @@ Read this before touching the manifest or writing `R/03_sample.R` and
 | EDFacts participation, math and RLA, LEA level | 2013 (none published earlier) | 2014 to end year | Claude Code, manifest |
 | CCD LEA universe / directory | 2010-2013 | 2014 to end year | Claude Code, manifest |
 | CCD school universe / membership by grade and race | 2010-2013 | 2014 to end year | Claude Code, manifest |
-| CCD school lunch program (CEP participation) | phase-in table only | 2015 to end year | Claude Code |
+| CCD school Characteristics (`NSLPSTATUS`, CEP participation) | phase-in table only | 2014 from the combined school universe file, 2015-2021 from `ccd_sch_129_*` | Claude Code, manifest |
 | SAIPE school district poverty | 2009-2012 | 2013 to end year minus 1 | Claude Code, manifest |
 | F-33 school finance | FY2010-FY2013 | FY2014 to end year | Claude Code, manifest |
 | BLS CPI-U monthly | all months 2009 onward | refresh | Claude Code or hand download |
@@ -136,16 +136,38 @@ What: whether a school participates in the Community Eligibility Provision.
 CEP adoption is a time-varying control (Section 7) and explains breaks in
 free-lunch counts (Section 9).
 
-Where: from SY2014-15 the CCD school Characteristics or Lunch Program file
-carries a lunch program field with a CEP value. For the stage-1 years the CCD
-has no CEP field. Use the USDA phase-in schedule instead, coded at the state
-level: pilots began in 2011-12 in Illinois, Kentucky, and Michigan; 2012-13
-added the District of Columbia, New York, Ohio, and West Virginia; 2013-14
-added Florida, Georgia, Maryland, and Massachusetts; 2014-15 nationwide.
-Verify that schedule against a USDA or FRAC source and record the source in
-`data/reference/cep_phase_in.csv`.
+Where (corrected 2026-09-12): the CEP field is `NSLPSTATUS`, in the CCD **school
+Characteristics** file, not the Lunch Program Eligibility file. The 2015-16 CCD
+file documentation says the variable "was added to the CCD starting with the
+SY2013-14 collection" and "indicates the provision under which a school is
+participating in the NSLP". The Lunch Program Eligibility file (`ccd_sch_033`)
+carries only free and reduced-price counts: its `LUNCH_PROGRAM` field takes the
+values *Free lunch qualified*, *Reduced-price lunch qualified*, *Missing*,
+*No Category Codes* and *Not Applicable*, with no CEP value in any year
+2014-15 through 2020-21. It is kept in the manifest for the free-lunch counts
+(Section 9) and is not the source of this indicator.
 
-Preparation: district-year indicator = any school in the district under CEP.
+By end year:
+
+- 2010-2013 (stage 1): the CCD has no CEP field. The USDA phase-in schedule is
+  used instead, coded at the state level: pilots began in 2011-12 in Illinois,
+  Kentucky, and Michigan; 2012-13 added the District of Columbia, New York,
+  Ohio, and West Virginia; 2013-14 added Florida, Georgia, Maryland, and
+  Massachusetts; 2014-15 nationwide. That schedule is verified against a USDA
+  or FRAC source and the source is recorded in
+  `data/reference/cep_phase_in.csv` (3.3).
+- 2014: the last combined school universe file, `sc132a.txt` (archived under
+  `ccd_membership` 2014), carries `NSLPSTATUS`.
+- 2015-2021: the School Characteristics file `ccd_sch_129_*`, archived under
+  the manifest dataset `ccd_school_characteristics`. The field is
+  `NSLPSTATUS_CODE` in the SY2014-15 and SY2015-16 releases and `NSLP_STATUS`
+  from SY2016-17 on.
+
+Preparation: a school is under CEP when its status code is the community
+eligibility value; the district-year indicator is 1 when any school in the
+district is under CEP. `read_ccd_nslp()` and `cep_district_year()` in
+`R/functions/sample_rules.R` do this, and `cep_indicator()` picks the phase-in
+table for end years before 2014 and the CCD file from 2014 on.
 
 ### 2.6 SAIPE school district estimates
 
@@ -219,7 +241,8 @@ seed and is never used by repository code.
 
 `data/reference/test_replacement.csv`, one row per state and school year:
 the 50 states plus DC (no PR, BIE, or VI). Stage 1 covers end years
-2010-2013 (204 rows); stage 2 extends it to the end year. Columns: `state`,
+2010-2013 (204 rows); stage 2 extended it to end years 2014-2021 on 2026-09-12
+(408 further rows, 612 in all). Columns: `state`,
 `sy_end`; `replaced_math`, `replaced_rla` (0/1 per subject); `replaced` (1
 if either subject is 1); `assessment_math`, `assessment_rla` (the regular
 high school test behind that year's EDFacts high school result); `source`
@@ -275,6 +298,20 @@ Drafting conventions (Claude Code, 2026-09-11; author to confirm):
   first drafted without web search, were re-run with web search. Their
   `evidence` follows the documented/inferred rules above, and rows with no
   source for the year list the searches tried in `notes`.
+- Stage 2 draft (Claude Code, 2026-09-12; end years 2014-2021, author to
+  confirm): every row carries the state's SEA source or sources for the
+  window; `author_check` is blank on all 408 rows. End year 2020 has a row for
+  every state with `replaced_math` and `replaced_rla` 0, the test then in force
+  named in the assessment columns with "(not administered)", and a note that
+  the assessment requirement was waived for 2019-20, so there is no EDFacts
+  high school result that year. Where a documented change fell in 2019-20, the
+  1 is coded in the first school year whose EDFacts high school result can come
+  from the new test, that is end year 2021 (MD, and the reading side of NC).
+  `CHECK:` is used as in the stage 1 conventions, and appears in a note
+  whenever a change is documented but its first year is not pinned by a
+  year-specific citation; `MIXED:` marks the years in which a state's high
+  school result can come from more than one instrument (NY 2014-2015, ND from
+  2019, OK from 2018, SC 2017).
 
 The author checks every row before it is used.
 
@@ -283,8 +320,10 @@ The author checks every row before it is used.
 `data/reference/cep_phase_in.csv`, columns `state, first_cep_sy_end, source`:
 the first school year (end year) districts in the state could participate in
 the Community Eligibility Provision, from a USDA Food and Nutrition Service or
-Food Research & Action Center source. Used for the stage-1 years, when the
-CCD has no CEP field (see 2.5).
+Food Research & Action Center source. It is kept, unchanged, for the stage-1
+years (end years 2010-2013), when the CCD has no CEP field. From end year 2014
+the indicator comes from the CCD `NSLPSTATUS` field at the school level and is
+district-specific rather than state-wide (see 2.5).
 
 ## 4. What "prepared" means
 
@@ -413,6 +452,9 @@ functions are in `R/functions/outcomes.R`. Decisions are logged in
   Library in a different layout; the loader must be extended without changing
   any rule.
 - Extend `test_replacement.csv` and the CEP indicator through the end year.
+  Done 2026-09-12: `test_replacement.csv` now runs to end year 2021 (3.2), and
+  the CEP indicator comes from the CCD `NSLPSTATUS` field from end year 2014
+  (2.5), with `cep_phase_in.csv` kept for the stage-1 years.
 - The author rechecks the pending court cases listed in the private candidates file.
 
 ### 5.1 Stage 2 as downloaded (2026-09-12)
@@ -459,7 +501,11 @@ what is missing:
   three rows: `ccd_lea_directory` = the LEA Directory file `ccd_lea_029_*`,
   `ccd_membership` = the school Membership file `ccd_sch_052_*`, and
   `ccd_lunch_program` = the school Lunch Program Eligibility file
-  `ccd_sch_033_*`, which carries the CEP field from 2014-15 (2.5). Urls are the
+  `ccd_sch_033_*`. A fourth dataset, `ccd_school_characteristics` = the school
+  Characteristics file `ccd_sch_129_*`, was added on 2026-09-12 for end years
+  2015-2021: it, and not the Lunch Program file, carries the CEP field (2.5).
+  It stops at 2021 because the registration end year is 2021 and no later year
+  enters either outcome. Urls are the
   newest release of each year in the NCES file API
   (`nces.ed.gov/ccd/datatables/api/File/2/{5|7}/{yearId}/0/0/0`), flat text
   where a release offers a format choice. The split means the LEA Directory
