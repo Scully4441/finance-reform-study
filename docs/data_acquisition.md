@@ -444,9 +444,11 @@ what is missing:
   and 2021. **Nothing exists for end years 2022, 2023 and 2024.** Checked
   2026-09-12: the ED Data Library's file-spec 150 listing holds LEA files only
   through 2020-21, SEA files for 2021-22 and 2022-23, and nothing at all for
-  2023-24; the legacy names 404 for all three years. Those three rows carry no
-  url. Design Section 3 runs the graduation outcome through 2023-24, so the
-  author has to fix its end year the way the achievement end year was fixed.
+  2023-24; the legacy names 404 for all three years. Those three rows, and the
+  three matching documentation rows, carry no url and stay that way. The
+  graduation window is therefore end years 2011 through 2021, not the 2023-24
+  of design Section 3, and end year 2020 is kept for this outcome alone
+  (author, 2026-09-12; `docs/deviations.md`, Section 3).
 - **Documentation.** `edfacts_docs` now carries the assessment documentation
   for end years 2014-2019 and 2021 and `edfacts_acgr_docs` the graduation
   documentation for 2011-2021, all in `data/raw/edfacts/docs/`. ED published no

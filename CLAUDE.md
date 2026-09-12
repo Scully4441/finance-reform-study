@@ -45,7 +45,7 @@ decision the document does not make, stop and ask the author before coding it.
 |---|---|---|---|
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
-| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12), except the graduation-rate rows for end years 2022-2024, which have no published LEA file |
+| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |
@@ -82,6 +82,14 @@ Update the Status column as steps finish.
   (`https://eddataexpress.ed.gov/download/data-library`); the legacy
   `www.ed.gov/sites/ed/files/.../data-files/` names serve end years 2013–2018 and 2021
   but not 2019, which step 2's manifest pattern will need a different URL for.
+- Graduation window (author, 2026-09-12; docs/deviations.md, Section 3): end
+  years **2011 through 2021**, not 2024. LEA-level adjusted cohort graduation
+  rate files exist only through 2020–21; the ED Data Library's 2022–23 and
+  2023–24 graduation listings are state level, which cannot form a
+  within-district gap. 2020 is included for the graduation outcome only — the
+  Section 3 exclusion of 2019–20 covers the waived assessments, and graduation
+  rates were reported that year. Reforms after 2020 have no post-reform years
+  in either outcome and stay not-yet-treated controls.
 - Sample: regular districts (CCD types 1–2); stable ID; exact counts;
   percent proficient exact or a range midpoint (suppression rule below);
   tested count ≥ 30 per cell; 95% participation; treatment at state level;

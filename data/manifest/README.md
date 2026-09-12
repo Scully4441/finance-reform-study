@@ -3,7 +3,10 @@
 One row per file. `url` is filled in when the current download location is
 located on data.ed.gov, nces.ed.gov, census.gov, or bls.gov. `sha256` and
 `downloaded_utc` are written by `R/02_download.R` on first download and
-verified on every later run.
+verified on every later run. A blank `url` means the file is **not published**:
+the row records that the study looked for it and the source has none. Six rows
+are in that state, all listed under the graduation bullet below;
+`R/02_download.R` skips them and every other row carries a checksum.
 
 Files are archived as the source publishes them, so `filename` carries the
 source format: CCD rows are the NCES tab-delimited `.zip`, SAIPE rows are the
@@ -41,16 +44,22 @@ row points:
   the legacy files. Every other achievement and participation row, 2014–2018
   and 2021, is the legacy ed.gov CSV.
 - **End year 2020 (SY2019-20).** No EDFacts assessment file of any kind was
-  published, and design Section 3 excludes that school year, so the manifest
-  has no achievement or participation row for it.
+  published, and design Section 3 excludes that school year from the
+  achievement gaps, so the manifest has no achievement or participation row for
+  it. The graduation file for that year does exist and is archived: the
+  exclusion covers the waived assessments only (author, 2026-09-12;
+  `docs/deviations.md`, Section 3).
 - **Graduation rate (`edfacts_acgr_lea`).** Legacy ed.gov per-year CSVs for end
-  years 2011–2018; ED Data Library zips for 2019, 2020 and 2021. **No LEA-level
-  file has been published for end years 2022, 2023 or 2024** (checked
-  2026-09-12: the ED Data Library holds SEA-level graduation files for 2022 and
-  2023 and none for 2024, and the legacy names 404 for all three). Those rows
-  carry no url and no checksum until a source is found; design Section 3 puts
-  the graduation window at 2010-11 through 2023-24, so the author has to settle
-  the end year of that outcome.
+  years 2011–2018; ED Data Library zips for 2019, 2020 and 2021. **Not
+  published for end years 2022, 2023 or 2024.** Checked 2026-09-12: the ED Data
+  Library holds state-level graduation files for 2022 and 2023 and none for
+  2024, and the legacy names 404 for all three. A state-level rate cannot form
+  a within-district gap, so there is no substitute. These six rows — three
+  `edfacts_acgr_lea` and the three matching `edfacts_acgr_docs` — are the
+  manifest's only blank-url rows, and they stay blank: they are a record that
+  no LEA file exists, not a download still to be made. The graduation window is
+  therefore end years 2011 through 2021 (author, 2026-09-12;
+  `docs/deviations.md`, Section 3), with 2020 retained for this outcome alone.
 - **CCD.** End year 2014 is the last combined universe file (`ag131a_supp`,
   `sc132a`). From 2014-15 the nonfiscal survey is split, so each later year has
   three rows: the LEA Directory file (`ccd_lea_029_*`), the school Membership
