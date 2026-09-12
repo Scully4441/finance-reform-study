@@ -45,14 +45,14 @@ decision the document does not make, stop and ask the author before coding it.
 |---|---|---|---|
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
-| 2 | `R/02_download.R` (stage 1 rows of the manifest) | Claude Code | complete (2026-09-11) |
+| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12), except the graduation-rate rows for end years 2022-2024, which have no published LEA file |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; run so far only at the reduced `--quick` counts |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
-| — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
+| — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | complete (2026-09-11) |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
 | 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | |
 

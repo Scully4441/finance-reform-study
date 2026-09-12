@@ -414,3 +414,60 @@ functions are in `R/functions/outcomes.R`. Decisions are logged in
   any rule.
 - Extend `test_replacement.csv` and the CEP indicator through the end year.
 - The author rechecks the pending court cases listed in the private candidates file.
+
+### 5.1 Stage 2 as downloaded (2026-09-12)
+
+`data/stage.txt` is `2`. 117 rows were added to the manifest and
+`R/02_download.R` archived every one that has a url. Where a row points and
+what is missing:
+
+- **EDFacts achievement and participation, LEA, end years 2014-2021.** The
+  legacy `www.ed.gov/sites/ed/files/about/inits/ed/edfacts/data-files/` names
+  serve 2014-2018 and 2021. They 404 for SY2018-19, so end year 2019 comes from
+  the ED Data Library: `SY1819_FS175_DG583` (math performance),
+  `SY1819_FS178_DG584` (RLA performance), `SY1819_FS185_DG588` (math
+  participation) and `SY1819_FS188_DG589` (RLA participation), each a zipped
+  CSV under `eddataexpress.ed.gov/sites/default/files/data_download/EID_*/`.
+  Those four files are in the ED Data Library's long layout — one row per
+  LEA-subgroup-measure with columns `School Year, State, NCES LEA ID, LEA,
+  School, NCES SCH ID, Data Group, Data Description, Value, Numerator,
+  Denominator, Population, Subgroup, Characteristics, Age/Grade, Academic
+  Subject, Outcome, Program Type` — so the loader has to read both layouts.
+  The high school band is `Age/Grade`, the percent proficient (exact value or
+  range) is `Value`, and the valid-test count is `Denominator`; the range and
+  suppression rules of 4.1 apply unchanged. End year 2020 has no assessment
+  file at any level and is excluded by design Section 3, so it has no row.
+- **EDFacts adjusted cohort graduation rate, LEA, end years 2011-2024**
+  (`edfacts_acgr_lea`, secondary outcome, design Section 6). Legacy per-year
+  CSVs `acgr-lea-syYYYY-YY.csv` for 2011-2018; ED Data Library zips
+  `SY1819_`, `SY1920_` and `SY2021_FS150_FS151_DG695_DG696_LEA` for 2019, 2020
+  and 2021. **Nothing exists for end years 2022, 2023 and 2024.** Checked
+  2026-09-12: the ED Data Library's file-spec 150 listing holds LEA files only
+  through 2020-21, SEA files for 2021-22 and 2022-23, and nothing at all for
+  2023-24; the legacy names 404 for all three years. Those three rows carry no
+  url. Design Section 3 runs the graduation outcome through 2023-24, so the
+  author has to fix its end year the way the achievement end year was fixed.
+- **Documentation.** `edfacts_docs` now carries the assessment documentation
+  for end years 2014-2019 and 2021 and `edfacts_acgr_docs` the graduation
+  documentation for 2011-2021, all in `data/raw/edfacts/docs/`. ED published no
+  assessment documentation for SY2019-20 and no graduation documentation for
+  2021-22 onward; those rows carry no url.
+- **CCD, end years 2014-2024.** End year 2014 is the last combined universe
+  file (`ag131a_supp_txt.zip`, `sc132a_txt.zip`). From 2014-15 each year has
+  three rows: `ccd_lea_directory` = the LEA Directory file `ccd_lea_029_*`,
+  `ccd_membership` = the school Membership file `ccd_sch_052_*`, and
+  `ccd_lunch_program` = the school Lunch Program Eligibility file
+  `ccd_sch_033_*`, which carries the CEP field from 2014-15 (2.5). Urls are the
+  newest release of each year in the NCES file API
+  (`nces.ed.gov/ccd/datatables/api/File/2/{5|7}/{yearId}/0/0/0`), flat text
+  where a release offers a format choice. The split means the LEA Directory
+  file no longer carries `MEMBER` or `BOUND`; the stability and type rules of
+  4.1 have to be re-expressed in its own fields when `R/03_sample.R` is
+  extended.
+- **SAIPE, income years 2013-2023**, pairing with school years ending
+  2014-2024 (2.6).
+- **F-33, FY2014-FY2024** (2.7). FY2022 is the one row that is not
+  `elsecYY.txt`: `elsec22.txt` holds 1,730 of the 14,106 unit records Census
+  published that year (17 Alabama systems against 138 in the companion flag
+  file `elsec22f.txt`), so the row archives `elsec22.xlsx`, which holds all
+  14,106. The loader reads that one year from the spreadsheet.
