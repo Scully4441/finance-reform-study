@@ -77,3 +77,6 @@ row points:
 Deposits
 Stage 1: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11, containing stage1_raw.zip
 404a4bcc4f67d3bb61dee069771525613061c8765bb4d7b107a38b82474a78c6
+
+Stage 2: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11
+d51b0f3ce5ebc9fbbda3dfab33561a48f832d0d97ff3da91ec12354fb81cbc41
