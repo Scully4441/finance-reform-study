@@ -19,3 +19,4 @@ and never opened inside a Claude Code session.
 
 Two files gate the run: `data/stage.txt` (download stage) and
 `data/reference/blinding_status.txt` (PERMUTED or REAL). See `CLAUDE.md`.
+Registration: https://doi.org/10.17605/OSF.IO/JNM6D 09/11/2026
