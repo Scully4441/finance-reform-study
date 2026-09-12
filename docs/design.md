@@ -70,12 +70,12 @@ judgment calls: each decision is converted into a rule that a computer
 can apply identically to every case.
 
 | **Term**              | **Operational definition**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | **Source of definition**                    |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------|
+|------------------|----------------------------------------------------------------|------------------|
 | Secondary school      | Grades 9–12 as tested by the state high school assessment reported to EDFacts                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | NCES grade-span convention                  |
 | School finance reform | An event on the Lafortune, Rothstein, and Schanzenbach (2018) list for 1990 through 2011. After December 31, 2011 two written rules apply. Court rule: a ruling that held the state's K–12 finance system or its formula for state operating aid unconstitutional and that became final because it was not appealed or was affirmed on appeal. Rulings later vacated, reversed, or disavowed by the issuing court do not count. Statute rule: a statute that enacted a new primary formula for distributing state operating aid to districts and repealed or superseded the formula in force. Statutes that amended parameters of an existing formula or added supplemental programs do not count. A formula counts as new when its architecture changes, not when components or weights within the existing architecture are revised. A statute that applies a new formula only to funding above a locked-in base does not supersede the formula in force. Candidates come from the Education Law Center "SchoolFunding.info" case database for rulings and from Education Commission of the States and National Conference of State Legislatures finance records for statutes. Each post-2011 event is coded from the ruling or statute text before any outcome file is downloaded. The coding table with every candidate considered, the decision, and the citation is deposited with the registration. | Prior published lists; no researcher coding |
 | Reform year           | The school year in which the listed ruling or enactment occurred. A spring ruling is assigned to the following school year.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Rule applied uniformly                      |
-| Achievement disparity | Three pre-specified gap measures, each in pooled SD units (Section 6): (a) between-district gap by child poverty quintile, (b) within-district Black–White gap, (c) within-district Hispanic–White gap                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Pre-registered                              |
-| Analysis window       | School years 2009–10 through the newest EDFacts release available on the registration date (Section 11). The end year is entered in the registration. 2019–20 is excluded.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Data availability                           |
+| Achievement disparity | Three pre-specified gap measures, each in pooled SD units (Section 6): (a) between-district gap by child poverty quintile, (b) within-district Black–White gap, (c) within-district Hispanic–White gap. A secondary outcome, the within-district Black–White and Hispanic–White gaps in four-year graduation rates, is defined in Section 6 and reported after the primary gaps                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Pre-registered                              |
+| Analysis window       | School years 2009–10 through 2020–21 for the achievement gaps: 2020–21 is the newest school year with LEA-level EDFacts achievement files for both subjects on the registration date (Section 4). 2019–20 is excluded. The secondary graduation outcome runs 2010–11 through 2023–24, the newest graduation-rate release.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Data availability                           |
 
 **Why the reform list is borrowed through 2011 and rule-bound after.**
 Deciding what counts as a reform is the largest point of discretion in
@@ -111,9 +111,10 @@ registered so the study cannot select between them after seeing results.
 ## **4. Data sources (all free and public)**
 
 | **Data**                                                                                                                                                 | **Use**                                                          | **Location**                                |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|---------------------------------------------|
+|----------------------------------------|-----------------------------------|-------------------------|
 | EDFacts assessment files (school and LEA level, by subgroup, HS grade band, math and reading/language arts)                                              | Outcome construction                                             | data.ed.gov                                 |
 | EDFacts assessment participation files                                                                                                                   | Sample validity checks                                           | data.ed.gov                                 |
+| EDFacts adjusted cohort graduation rate files (LEA level, by subgroup)                                                                                   | Secondary graduation outcome (Section 6), 2010–11 through 2023–24 | ED Data Library (eddataexpress.ed.gov)      |
 | NCES Common Core of Data (CCD): membership by grade, race, FRL; district directory and agency type                                                       | Denominators, composition, district identity                     | nces.ed.gov/ccd                             |
 | Census SAIPE school-district child poverty estimates                                                                                                     | Between-district poverty quintiles independent of school records | census.gov/programs-surveys/saipe           |
 | Census F-33 Annual Survey of School System Finances                                                                                                      | Per-pupil revenue by source; dose variable                       | census.gov/programs-surveys/school-finances |
@@ -131,14 +132,25 @@ enrollment census of public schools. SAIPE is the Census Bureau's annual
 estimate of child poverty for each school district boundary. F-33 is the
 Census Bureau's annual survey of school district revenues and spending.
 
+**Data availability at registration.** Checked on 11 September 2026 in
+three public sources, the ED Data Library, the legacy ed.gov file paths
+by HEAD request, and the Urban Institute Education Data Portal, with no
+outcome file for any year after 2012–13 downloaded or opened: the newest
+school year with LEA-level achievement files for both mathematics and
+reading/language arts is 2020–21; 2021–22 carries a reading file only;
+no assessment file of any kind exists for 2022–23 or later. Graduation
+rate files exist through 2023–24. The ED Data Express download tool was
+non-functional on that date. The check is recorded in the decision log
+deposited with the registration.
+
 **Archiving.** Each release is archived with a checksum and a
 DOI-bearing deposit on OSF at the time of download. A copy is held in
 the analysis repository on the author's workstation (Section 11).
 Outcome files are downloaded in two stages. The 2009–10 through 2012–13
 assessment files are downloaded first for the power simulation (Section
 10). All later years are downloaded after the registration is filed
-(Section 11). The registration date fixes the last school year in the
-window (Section 3). Federal files are periodically revised. Archiving
+(Section 11). The availability check above fixes the last school year in the
+window, which is entered in the registration (Section 3). Federal files are periodically revised. Archiving
 fixes the version used so the analysis can be reproduced exactly.
 
 ## **5. Sample construction rules**
@@ -159,11 +171,19 @@ before any file for school years after 2012–13 is downloaded.
     > change is not the same unit before and after, and comparing its
     > gaps over time would mix two different populations.
 
-3.  **Suppression.** A district-year-subject-subgroup cell is used only
-    > if the EDFacts count is reported as an exact value (not a range)
-    > and the tested count is at least 30. Range-reported cells are
-    > treated as missing and are not imputed. Suppression is explained
-    > below.
+3.  **Suppression.** A district-year-subject-subgroup cell is used if
+    > the tested count is at least 30 and the proficiency share is
+    > reported either as an exact value or as a range no wider than 10
+    > percentage points; a range enters at its midpoint. Width and
+    > midpoint come from the printed endpoints, with one-sided labels
+    > closed at 0 and 100 (20–29 has width 9 and midpoint 24.5; GE95 has
+    > width 5 and midpoint 97.5). Wider ranges and suppressed cells are
+    > missing and are not imputed. Two robustness samples are registered:
+    > exact values only, and ranges of 5 points or less. In the stage-1
+    > files EDFacts reports a whole-number percentage only for groups of
+    > more than 300 tested students; groups of 31–60 receive 10-point
+    > ranges and groups of 61–300 receive 5-point ranges. Suppression is
+    > explained below.
 
 4.  **Participation.** A district-year-subject is used only if reported
     > participation is at least 95 percent for each subgroup in the gap.
@@ -173,14 +193,31 @@ before any file for school years after 2012–13 is downloaded.
     > with 2012–13. No participation file exists for 2009–10 through
     > 2011–12, so those state-years are retained without the
     > participation test and a robustness check restricts the sample to
-    > 2012–13 onward. The rule applies in full from 2012–13.
+    > 2012–13 onward. The rule applies in full from 2012–13. Where
+    > participation is reported as a band, the test applies to the band
+    > midpoint (GE90 passes; 90–94 and lower bands fail); the exact-only
+    > robustness sample keeps exact participation values. Because band
+    > widths depend on group size, the effective threshold is 90 for
+    > groups of 31–60 tested students, 95 for groups of 61–300, and the
+    > literal 95 for larger groups.
 
-5.  **Assessment regime.** A state-year is flagged if the state replaced
-    > its high school assessment in that year. Cut-score changes on an
-    > unchanged test are not flagged. The flag is a state-by-year table
-    > built from state assessment documentation and EDFacts metadata.
-    > Each entry is checked before registration. The flag enters the
-    > model as a control and is used in a robustness exclusion.
+5.  **Assessment regime.** A state-year-subject is flagged if the state
+    > replaced its high school assessment in that subject in that year: a
+    > different test, the same-named test rebuilt for new standards on a
+    > new scale, or a change in the instrument behind the reported result
+    > (for example an augmented SAT replaced by the SAT alone). A new cut
+    > score on an unchanged test is not flagged. The flag is placed on the
+    > first school year in which the EDFacts high school result for the
+    > subject comes from the new test, and a year that mixes old and new
+    > results is flagged. The state-year flag used as a control is 1 if
+    > either subject was replaced; the subject flags are used in the
+    > robustness exclusion. The table covers the 50 states and DC and is
+    > coded from state education agency assessment history pages (archived
+    > copies allowed, cited with capture date), then ESEA accountability
+    > workbooks, ESSA plans, and ESEA flexibility requests, with the
+    > EDFacts lists of significantly changed assessments used only as
+    > pointers. A state-year with no documented change is coded 0 and
+    > marked inferred. Each row records its source and the author's check.
 
 6.  **Treatment timing.** States with a reform in the window are treated
     > cohorts. States with no reform in the window and no reform in the
@@ -193,12 +230,17 @@ before any file for school years after 2012–13 is downloaded.
     > with the estimate. A robustness version drops cohorts with fewer
     > than three pre-reform years.
 
+7.  **Poverty measure.** A district that passes rules 1 and 2 but has no
+    > SAIPE 2009 child-poverty rate is dropped for all three gaps, because
+    > that rate defines the fixed poverty quintiles and is a pre-treatment
+    > covariate in every model.
+
 **What suppression is and why it matters here.** Federal privacy rules
 prohibit publishing results that could reveal an individual student's
 score. When a subgroup in a district has few tested students EDFacts
 replaces the exact proficiency rate with a range (for example "20–39%")
-or withholds it. Ranges cannot be converted into the gap measure in
-Section 6. High school files are more affected than elementary files
+or withholds it. A range of 10 points or less enters the gap measure at its
+midpoint (rule 3); wider ranges cannot. High school files are more affected than elementary files
 because states test one high school grade rather than six, so counts are
 smaller. The 30-student floor is stricter than the federal suppression
 threshold. It is set there because a proficiency rate based on 10
@@ -258,7 +300,10 @@ limitation in Section 14.
 districts are assigned to SAIPE child-poverty quintiles using poverty
 rates fixed at the 2009 value. The gap is the enrollment-weighted mean
 district score (Φ⁻¹(p) per district) in the top-poverty quintile minus
-that in the bottom-poverty quintile. Poverty is fixed at 2009 so that
+that in the bottom-poverty quintile. The enrollment weight is the
+district's total membership in the 2009–10 CCD file, fixed across
+years; a district without a valid 2009–10 membership count is left out
+of gap (a). Poverty is fixed at 2009 so that
 districts cannot migrate between quintiles in response to the reform.
 This measure does not depend on school-reported free-lunch status and is
 therefore immune to the Community Eligibility Provision problem
@@ -266,10 +311,14 @@ described below.
 
 **Gaps (b) and (c): within-district racial gaps.** V computed from
 subgroup proficiency shares in each district-year-subject. Race
-classification is stable across the window.
+classification is stable across the window. V is Black minus White and
+Hispanic minus White, so all three gaps point the same way: gaps are
+usually negative and a positive effect means the gap narrowed. This is
+the reverse of Reardon's convention.
 
 Math and reading/language arts are analyzed separately and then averaged
-within district-year. The three gaps form one outcome family for
+within district-year (state-year for gap a). Both subjects are
+required; a unit-year with one subject is missing. The three gaps form one outcome family for
 multiplicity adjustment (Section 8).
 
 **Why an economically-disadvantaged gap is not primary.** The Community
@@ -280,6 +329,21 @@ flagged as economically disadvantaged changes for administrative reasons
 unrelated to actual poverty. A gap built on that flag would move when
 the flag changes rather than when achievement changes. The ED gap is
 reported as a supplementary outcome with CEP adoption year as a control.
+
+**Secondary outcome: graduation-rate gaps.** Public achievement files
+end at 2020–21 (Section 4). To give the reforms after 2020 a measured
+post-period, the study adds one secondary outcome family: the within-
+district Black–White and Hispanic–White gaps in the four-year adjusted
+cohort graduation rate, from the EDFacts LEA-level graduation files
+for 2010–11 through 2023–24. The gap is V computed from the two
+groups' graduation rates exactly as for proficiency shares, with the
+same 30-student floor on the cohort count and the same range rules as
+Section 5 rule 3. It uses the same event sets, estimators, inference,
+and reporting as the primary gaps and is reported after them. It is
+not scale-invariant in the sense of this section, since a graduation
+rate is not a cut on a test scale; it is a gap in a binary outcome
+expressed in probit units. There is no poverty-quintile graduation
+gap.
 
 ## **7. Identification and estimation**
 
@@ -297,12 +361,27 @@ comparisons to not-yet-treated states is what avoids the
 negative-weighting problem of two-way fixed effects described in Section
 2.
 
-**Covariates.** Pre-treatment district characteristics (2009 enrollment,
-SAIPE poverty, racial composition) enter through the doubly-robust
-specification. "Doubly robust" means the estimator combines a model of
+**Panel.** Districts (gaps b and c) and states (gap a) enter the
+Callaway–Sant'Anna models with the outcome in any window year, through
+did's unbalanced-panel option. A balanced panel requiring the outcome
+in every window year is a registered robustness check. did conditions
+only on baseline covariates, so the time-varying assessment-
+replacement and CEP flags do not enter the Callaway–Sant'Anna models;
+they enter the transition-year robustness exclusion (Section 9) and
+the regression-based secondary estimators.
+
+**Covariates.** Pre-treatment district characteristics enter through
+the doubly-robust specification for gaps (b) and (c): the log of
+2009–10 CCD membership, the SAIPE 2009 child-poverty rate, and the Black
+and Hispanic shares of 2009–10 school membership summed within the
+district. A district missing any of them is left out of those models.
+Gap (a) is estimated without covariates, since it is a state-year
+outcome and the covariates are district characteristics. "Doubly robust" means the estimator combines a model of
 the outcome with a model of treatment probability and remains consistent
-if either one is correct. Time-varying controls are limited to the
-assessment-regime flag and CEP adoption. No post-treatment variables
+if either one is correct. The time-varying assessment-regime flag and CEP
+availability enter the regression-based secondary estimators, with the
+2009 covariates interacted with year, and not the Callaway–Sant'Anna
+models. No post-treatment variables
 enter the model. Controlling for something the reform itself may have
 changed would absorb part of the effect.
 
@@ -310,8 +389,9 @@ changed would absorb part of the effect.
 district-year counts once because the district is the unit of analysis
 (Section 5). The estimand for those gaps is therefore the effect in the
 average district rather than for the average student. A version weighted
-by the number of students tested in the two groups is registered as a
-robustness check. A difference between the two estimates would suggest
+by the number of students in the gap's two groups tested in 2009–10,
+averaged over math and reading and fixed across years, is registered
+as a robustness check. A difference between the two estimates would suggest
 that the effect varies with district size. Gap (a) is a state-level
 outcome and does not involve this choice.
 
@@ -328,12 +408,30 @@ guards against the possibility that the result depends on one choice.
 
 - Synthetic difference-in-differences (Arkhangelsky et al., 2021). This
   > reweights control states so that their pre-reform trend matches the
-  > treated states, which weakens the parallel-trends requirement.
+  > treated states, which weakens the parallel-trends requirement. It
+  > runs at the state level, cohort by cohort, with gaps (b) and (c)
+  > first averaged to state-year; each cohort is compared with states
+  > not treated within the window; cohort estimates are pooled with
+  > weights equal to treated states times post-reform years, and
+  > standard errors come from seeded placebo reassignment among the
+  > control states.
 
 - Stacked regression with a clean-control window of five years. This
   > builds a separate dataset for each reform cohort and stacks them, so
   > that each cohort is compared only to states untreated within its own
-  > window.
+  > window. Each cohort's sub-experiment covers event times −5 to +5;
+  > clean controls are states untreated through the cohort year plus
+  > five; the regression uses the corrective weights of Wing, Freedman,
+  > and Hollingsworth (2024) with sub-experiment-by-unit and
+  > sub-experiment-by-year fixed effects.
+
+For every estimator the overall post-reform average is the equal-weight
+mean of its event-time estimates from 0 to +8 (0 to +5 for the stacked
+regression), the definition the primary estimator's aggregation uses,
+so the agreement table compares the same quantity. Two-way fixed
+effects with a single post-reform indicator are reported as their own
+row for comparison only. The secondary estimators run on the balanced
+panel, which synthetic difference-in-differences requires.
 
 Agreement across estimators is a pre-registered criterion for reporting
 a point estimate as robust.
@@ -343,7 +441,11 @@ described in Section 11. Callaway–Sant'Anna uses the did package. The
 weighted robustness check enters through its sampling-weight option.
 Sun–Abraham and the stacked regression use fixest. The imputation
 estimator uses didimputation. Synthetic difference-in-differences uses
-synthdid. Package versions are recorded in the registration.
+synthdid. The wild cluster bootstrap and the Romano–Wolf step-down are
+computed on the did influence function (Section 8) rather than through
+the fwildclusterboot and wildrwolf packages, which take regression
+objects that the primary estimate is not. Package versions are
+recorded in the registration.
 
 **Dose scaling.** The question asks about degree. Reforms differ in how
 much money they move. The first stage regresses district per-pupil
@@ -383,21 +485,36 @@ unreliable, so each is replaced.
   > are too small. The wild cluster bootstrap with Webb weights is the
   > primary inference method. It rebuilds the sampling distribution by
   > resampling at the state level in a way that performs acceptably with
-  > as few as six clusters. It uses 9,999 replications and the
-  > fwildclusterboot R package.
+  > as few as six clusters. It uses 9,999 replications. Because the
+  > primary estimate is an average of doubly robust group-time effects
+  > rather than a regression coefficient, the bootstrap is applied to
+  > the estimator's influence function: the did package returns one
+  > influence-function row per unit, rows are summed within state, and
+  > each replication multiplies every state's sum by an independent
+  > Webb weight. This is did's own multiplier bootstrap with Webb
+  > weights in place of Mammen's, applied to the overall post-reform
+  > average and to every event-time estimate.
 
 - **Randomization inference.** Reform years are reassigned across states
   > 10,000 times and the estimator is rerun each time. This produces the
   > distribution of estimates one would see if reforms had no effect and
   > were randomly timed. The actual estimate is compared to that
   > distribution. This method makes no assumption about the error
-  > structure at all.
+  > structure at all. Each reassignment draws the treated states at
+  > random from every state in the model's panel and gives them the
+  > observed cohort years, keeping the number of states per cohort
+  > year, so the number of distinct reassignments is not capped by the
+  > number of treated states.
 
 - **Multiplicity.** Testing three gaps raises the chance that one
   > appears significant by luck. The Romano–Wolf step-down procedure
   > adjusts the p-values so that the probability of any false positive
-  > across the family is controlled. It is run with 9,999 bootstrap
-  > draws through the wildrwolf R package.
+  > across the family is controlled. It is computed on the same 9,999
+  > bootstrap draws: one set of state-level Webb weights is drawn per
+  > event set and shared across the three gaps, so the draws carry the
+  > dependence between them. The family is the three gaps within an
+  > event set; a second family takes the tested-count-weighted models
+  > of gaps (b) and (c) with gap (a) unweighted.
 
 - **Pre-trend sensitivity.** Rambachan and Roth (2023) honest-DiD bounds
   > ask: if the pre-reform trends were allowed to be non-parallel by up
@@ -408,7 +525,11 @@ unreliable, so each is replaced.
   > deviation the conclusion can tolerate. The relative-magnitudes
   > restriction is applied to the overall post-reform average. Bound
   > sets are reported for M̄ values of 0, 0.5, 1, 1.5, and 2. The
-  > HonestDiD R package is used.
+  > HonestDiD R package is used. The bound is placed on the equal-weight
+  > average of the estimated post-reform event times with the
+  > state-clustered covariance from the same influence function. A
+  > model with no estimated pre-reform event time other than the
+  > reference has no bound and is reported with that status.
 
 - **Seeds.** Every stochastic step derives its seed from one master
   > integer. The master integer is 130 and is recorded in the
@@ -420,9 +541,9 @@ unreliable, so each is replaced.
 ## **9. Threats to validity and the built-in remedies**
 
 | **Threat**                                                       | **Remedy**                                                                                                                                                                                       |
-|------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-----------------------------------|-----------------------------------------------------------------|
 | Researcher discretion in coding reforms                          | Published list through 2011; written finality and formula-replacement rules after 2011 applied before outcome data are downloaded; coding table deposited; robustness on two narrower event sets |
-| Assessment changes coincide with reforms                         | Test-replacement flag as control; robustness excluding transition years; scale-invariant outcome                                                                                                 |
+| Assessment changes coincide with reforms                         | Test-replacement flag as a control in the regression-based estimators; robustness excluding transition years; scale-invariant outcome                                                            |
 | Non-normal latent distributions bias V                           | No remedy in the design. Equal-variance normality is a maintained assumption (Section 6) and a stated limitation (Section 14)                                                                    |
 | Differential dropout alters the tested population in high school | CCD grade-9-to-12 enrollment ratios by subgroup; Lee (2009) trimming bounds on the gap effect                                                                                                    |
 | FRL classification breaks (CEP)                                  | Poverty gap uses SAIPE; ED gap is supplementary only                                                                                                                                             |
@@ -431,7 +552,8 @@ unreliable, so each is replaced.
 | Few pre-reform years for early cohorts                           | Cohort count reported for each event-time coefficient; robustness drops cohorts with fewer than three pre-reform years                                                                           |
 | Negative weights under staggered adoption                        | Estimators designed for staggered timing; two-way fixed effects reported only for comparison                                                                                                     |
 | A few large districts dominate the district-level estimates      | Unweighted primary estimate for gaps (b) and (c); tested-count weighted version as a registered robustness check                                                                                 |
-| Suppressed cells not missing at random                           | No imputation; sample-inclusion indicator regressed on treatment as a selection check                                                                                                            |
+| Suppressed cells not missing at random                           | Ranges of 10 points or less enter at the midpoint; exact-only and 5-point robustness samples; sample-inclusion indicator regressed on treatment as a selection check                              |
+| Public achievement files end at 2020–21                          | Window ends at the newest release; reforms after 2020 enter the achievement models as not-yet-treated controls; the secondary graduation outcome carries their post-period through 2023–24        |
 | Data revision                                                    | Archived snapshots with checksums in the repository and on OSF                                                                                                                                   |
 
 **The dropout threat explained.** In high school some students leave
@@ -471,6 +593,28 @@ reported in the pre-registration. If the minimum detectable effect
 exceeds 0.10 SD for every primary gap the study is registered as
 underpowered and proceeds only as a bounds analysis.
 
+**Result.** The simulation was run with six placebo-treated states,
+the number of treated states with a post-reform year at or before the
+2021 end year, cohort years drawn from 2011 through 2013, 2,000 runs,
+on the unbalanced primary panel. Placebo states are drawn by the
+reassignment rule in Section 8, and the minimum detectable effect is
+the exact inversion of the placebo distribution (the smallest constant
+shift that the 95th-percentile critical value rejects with probability
+0.80), with the normal approximation reported beside it. Minimum
+detectable effects: 0.182 SD for gap (a), 0.168 SD for gap (b), and
+0.154 SD for gap (c). All three exceed 0.10 SD, so the study is
+registered as underpowered and proceeds as a bounds analysis: every
+estimate and test in Sections 7 and 8 is computed and reported, the
+honest-DiD bound sets are the primary result, and conclusions are
+stated as ranges rather than as significance claims. Runs with two,
+ten, and twelve placebo-treated states are reported as sensitivity;
+the ten- and twelve-state runs were made under an assumed 2025 end
+year. A projection of each MDE to the full post-period length is
+reported as supplementary and is not a power calculation. The
+graduation outcome is registered without its own power calculation
+because no graduation file for a year after 2012–13 was opened before
+registration.
+
 ## **11. Pre-registration and reproducibility**
 
 Pre-registration is the public deposit of the full analysis plan before
@@ -481,8 +625,9 @@ to results without the change being visible.
   > procedures are registered on OSF after the power simulation and
   > before any outcome file for school years after 2012–13 is
   > downloaded. The registration also records the master seed, the R
-  > package versions, the code license, the end year of the window, and
-  > the post-2011 event coding table.
+  > package versions, the code license, the end year of the window
+  > (2021), the post-2011 event coding table, and the decision log of
+  > author decisions made before registration.
 
 - All analysis code is written in R and kept in a version-controlled
   > repository on the author's workstation. The workstation runs Windows
@@ -494,7 +639,9 @@ to results without the change being visible.
   > environment so that any reader can rerun it. The container pins the
   > R and package versions used in the final run.
 
-- Deviations from the registration are logged with the date and reason.
+- Author decisions made before registration are logged in a decision
+  > log with date, section, decision, and rationale. Deviations after
+  > registration are logged separately with the date and reason.
 
 - A blinded analysis is used. The set of reforming states stays real
   > during pipeline development. Their reform years are permuted among
@@ -509,9 +656,12 @@ Published causal work on finance reforms and achievement has relied on
 NAEP grades 4 and 8 or on attainment outcomes such as graduation. To my
 knowledge no study has estimated reform effects on high school
 test-score gaps across states using scale-invariant gap measures. The
-post-2010 reform wave (for example Illinois, Nevada, Texas, Ohio,
-Maryland, and Tennessee) appears not to have been studied with a
-multi-state design. Combining EDFacts high school files with the
+reforms of 2017 through 2019 (South Dakota, Illinois, New Mexico)
+appear not to have been studied with a multi-state design, and the
+reforms of 2020 onward enter here through the graduation outcome.
+Public achievement files end at 2020–21, so the achievement analysis
+covers six treated states and the design is registered as a bounds
+analysis (Section 10). Combining EDFacts high school files with the
 probit-based gap method and modern staggered-adoption estimators is the
 contribution.
 
@@ -527,7 +677,10 @@ narrower event definitions. The answer to the research question is
 stated as an interval in SD units and per \$1,000, not as a single
 number. An interval is the honest form of the answer because the
 assumptions in Sections 7 through 9 each carry uncertainty that a point
-estimate would hide.
+estimate would hide. The graduation-rate gaps are reported with the
+same items after the primary gaps. Because the study is registered as
+a bounds analysis, the honest-DiD bound sets lead the presentation of
+each gap, and no result is described as statistically significant.
 
 ## **14. Stated limitations**
 
@@ -561,3 +714,22 @@ estimate would hide.
   > changes at the end of 2011 from a published list to written rules;
   > the narrower-set robustness checks show how much the estimate
   > depends on the added codings.
+
+- Public LEA-level achievement files end at 2020–21, so the
+  > achievement window closes there and six treated states carry post-
+  > reform achievement data; reforms from 2020 onward enter the
+  > achievement models only as not-yet-treated controls.
+
+- A range midpoint is measurement error in the outcome, bounded at
+  > half the range width. It is not classical error, since it depends on
+  > where the true rate falls within its band and is larger in probit
+  > units near the tails, so the no-bias argument is approximate and the
+  > exact-only and 5-point samples are the check.
+
+- The graduation outcome is a gap in a binary outcome in probit units,
+  > not a scale-invariant test-score gap, and it has no pre-registered
+  > power calculation.
+
+- The secondary estimators run on the balanced panel while the primary
+  > estimator runs on the unbalanced panel, so the agreement table
+  > compares estimators that differ in sample as well as method.
