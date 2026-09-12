@@ -76,8 +76,9 @@ stopifnot(is.na(mde_from_placebo(c(1, NA))$mde), is.na(mde_from_placebo(numeric(
 pna <- mde_from_placebo(c(pv[1:100], rep(NA_real_, 20)))
 stopifnot(pna$draws == 100L, is.finite(pna$mde))
 
-# the three scenarios draw from three different seed steps
-stopifnot(length(unique(c(seed_for("power"), seed_for("power_10"), seed_for("power_12")))) == 3L)
+# the four scenarios draw from four different seed steps
+stopifnot(length(unique(c(seed_for("power"), seed_for("power_6"), seed_for("power_10"),
+                          seed_for("power_12")))) == 4L)
 
 # a small panel, as in test_inference: cohorts 2011 and 2012 among nine states
 psim <- function(n = 6L, effect = 0.5) {
@@ -125,40 +126,50 @@ stopifnot(inherits(try(placebo_estimates(pcp, lapply(pyr, function(y) y[1:2]), p
 of8 <- file.path("outputs", "08_power",
                  c("mde.csv", "placebo_draws.csv", "mde_10states.csv",
                    "placebo_draws_10states.csv", "power_curve.csv", "model_status.csv",
-                   "power_settings.csv", "mde_12states.csv", "placebo_draws_12states.csv"))
+                   "power_settings.csv", "mde_12states.csv", "placebo_draws_12states.csv",
+                   "mde_6states.csv", "placebo_draws_6states.csv"))
 if (all(file.exists(of8))) {
   rd8 <- function(f) utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
   m8 <- rd8(of8[1]); d8 <- rd8(of8[2]); m10 <- rd8(of8[3]); d10 <- rd8(of8[4])
   c8 <- rd8(of8[5]); s8 <- rd8(of8[6]); g8 <- rd8(of8[7])
-  m12 <- rd8(of8[8]); d12 <- rd8(of8[9])
+  m12 <- rd8(of8[8]); d12 <- rd8(of8[9]); m6 <- rd8(of8[10]); d6 <- rd8(of8[11])
   gaps8 <- c("a_poverty", "b_black_white", "c_hispanic_white")
   set8 <- function(k) g8$value[g8$setting == k]
   rep8 <- as.integer(set8("placebo_reps"))
+  six8 <- as.integer(set8("six_state_count"))
   ten8 <- as.integer(set8("ten_state_count"))
   twelve8 <- as.integer(set8("twelve_state_count"))
   PROJ <- c("placebo_post_state_years", "design_treated_states", "design_mean_post_years",
             "design_post_state_years", "projection_scale", "mde_projection", "projection_basis")
 
-  # three scenarios, three primary gaps each, on the primary (unbalanced) step 5 panel;
-  # the projection belongs to the two drawn-year files
-  stopifnot(nrow(s8) == 9L, setequal(s8$scenario, c("observed", "ten_state", "twelve_state")),
+  # four scenarios, three primary gaps each, on the primary (unbalanced) step 5 panel;
+  # the projection belongs to the three drawn-year files
+  stopifnot(nrow(s8) == 12L,
+            setequal(s8$scenario, c("observed", "six_state", "ten_state", "twelve_state")),
             all(table(s8$scenario) == 3L), all(s8$status == "ok"),
             all(s8$event_set == "primary"), all(s8$weighting == "unweighted"),
             all(s8$panel == "unbalanced"), set8("panel") == "unbalanced")
-  stopifnot(all(m8$scenario == "observed"), all(m10$scenario == "ten_state"),
-            all(m12$scenario == "twelve_state"),
+  stopifnot(all(m8$scenario == "observed"), all(m6$scenario == "six_state"),
+            all(m10$scenario == "ten_state"), all(m12$scenario == "twelve_state"),
             !any(PROJ %in% names(m8)), all(PROJ %in% names(m10)),
-            identical(names(m12), names(m10)))          # same columns as the ten-state file
-  stopifnot(ten8 == 10L, twelve8 == 12L, all(m10$treated_states == ten8),
+            identical(names(m12), names(m10)),          # same columns as the ten-state file
+            identical(names(m6), names(m10)))
+  stopifnot(six8 == 6L, ten8 == 10L, twelve8 == 12L, all(m6$treated_states == six8),
+            all(m10$treated_states == ten8),
             all(m12$treated_states == twelve8), all(m8$treated_states >= 1),
-            all(m8$treated_states < ten8))
-  # the registered power calculation is the twelve-state run; the other two are sensitivity
-  stopifnot(set8("registered_scenario") == "twelve_state",
+            all(m8$treated_states < six8))
+  # the registered power calculation is the six-state run: six is the number of treated
+  # states the event table carries with post-reform data by the registration end year
+  # 2021. The observed-cohort, ten- and twelve-state runs are sensitivity runs.
+  stopifnot(set8("registered_scenario") == "six_state",
+            set8("seed_step_six_state") == "power_6",
             set8("seed_step_twelve_state") == "power_12",
-            all(m12$design_treated_states == twelve8))   # 12 matches the event table's count
+            all(m6$design_treated_states == six8),       # 6 matches the event table count
+            all(m10$design_treated_states == six8), all(m12$design_treated_states == six8))
 
   # each scenario: the MDE is the one its own saved draws give
-  for (part in list(list(m = m8, d = d8), list(m = m10, d = d10), list(m = m12, d = d12))) {
+  for (part in list(list(m = m8, d = d8), list(m = m6, d = d6), list(m = m10, d = d10),
+                    list(m = m12, d = d12))) {
     mm8 <- part$m; dd8 <- part$d
     stopifnot(setequal(mm8$gap, gaps8), !anyDuplicated(mm8$gap), all(mm8$reps == rep8),
               all(mm8$draws_ok <= mm8$reps), all(mm8$eligible_states > mm8$treated_states),
@@ -185,20 +196,22 @@ if (all(file.exists(of8))) {
                 x$power[nrow(x)] >= POWER_TARGET, x$power[1] < 0.2)
     }
   }
-  # more placebo-treated states buy a tighter placebo distribution: 2 < 10 < 12. The
+  # more placebo-treated states buy a tighter placebo distribution: 2 < 6 < 10 < 12. The
   # test is on the critical value and the MDE, the quantiles the step actually inverts,
   # not on placebo_sd: a handful of extreme draws can leave the standard deviation of a
   # ten-state distribution above a two-state one (gap (b) in stage 1) while every
   # quantile of it is tighter.
-  k10 <- match(m8$gap, m10$gap); k12 <- match(m8$gap, m12$gap)
-  stopifnot(!anyNA(k10), !anyNA(k12),
+  k6 <- match(m8$gap, m6$gap); k10 <- match(m8$gap, m10$gap); k12 <- match(m8$gap, m12$gap)
+  stopifnot(!anyNA(k6), !anyNA(k10), !anyNA(k12),
+            all(m6$crit_value[k6] < m8$crit_value), all(m6$mde[k6] < m8$mde),
+            all(m10$crit_value[k10] < m6$crit_value[k6]), all(m10$mde[k10] < m6$mde[k6]),
             all(m10$crit_value[k10] < m8$crit_value), all(m10$mde[k10] < m8$mde),
             all(m12$crit_value[k12] < m8$crit_value), all(m12$mde[k12] < m8$mde),
             all(m12$crit_value[k12] < m10$crit_value[k10]), all(m12$mde[k12] < m10$mde[k10]))
 
   # the projection: each scenario's MDE rescaled by the square root of the state-year
   # ratio, labelled as a projection and carrying the inputs it was built from
-  for (mm in list(m10, m12)) {
+  for (mm in list(m6, m10, m12)) {
     n_t <- mm$treated_states[1]
     stopifnot(all(mm$design_treated_states >= 1), all(mm$design_mean_post_years > 0),
               all(near(mm$design_post_state_years,
@@ -210,16 +223,22 @@ if (all(file.exists(of8))) {
               all(near(mm$mde_projection, mm$mde * mm$projection_scale, 1e-12)),
               all(near(mm$mde_projection, mde_projection(mm$mde, mm$placebo_post_state_years,
                                                          mm$design_post_state_years), 1e-12)),
-              all(mm$mde_projection < mm$mde),      # the registered window is the longer one
+              # with the end year at 2021 the registered window is no longer longer than the
+              # placebo one by construction, so the direction of the projection follows the
+              # state-year ratio it is built from
+              all((mm$mde_projection < mm$mde) ==
+                    (mm$placebo_post_state_years < mm$design_post_state_years)),
               all(grepl("projection", mm$projection_basis)),
               all(grepl("not a power calculation", mm$projection_basis)))
   }
-  # the projection end year is the placeholder, and the dropped end year is out of the count
-  stopifnot(set8("projection_end_year") == "2025", set8("projection_dropped_years") == "2020")
+  # the projection end year is the registration end year, and the dropped end year is
+  # out of the count
+  stopifnot(set8("projection_end_year") == "2021", set8("projection_dropped_years") == "2020")
 
   # the settings file records every scenario's seed and the counts this run used
-  stopifnot(all(c("placebo_reps", "quick_run", "seed_step_observed", "seed_step_ten_state",
-                  "seed_step_twelve_state", "ten_state_count", "twelve_state_count",
+  stopifnot(all(c("placebo_reps", "quick_run", "seed_step_observed", "seed_step_six_state",
+                  "seed_step_ten_state", "seed_step_twelve_state", "six_state_count",
+                  "ten_state_count", "twelve_state_count",
                   "placebo_cohort_years", "registered_scenario", "panel", "projection_end_year",
                   "projection_dropped_years", "master_seed", "mde_ceiling") %in% g8$setting),
             set8("master_seed") == as.character(MASTER_SEED),

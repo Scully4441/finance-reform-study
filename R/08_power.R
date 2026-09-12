@@ -28,23 +28,31 @@
 #                 the stage 1 window that is two treated states, which is the pre-period's
 #                 own cohort count and not the registered design's. Sensitivity only.
 #                 Written to mde.csv; draws from seed_for("power").
-#   ten_state     TEN_STATES placebo-treated states, cohort years drawn uniformly from
-#                 PLACEBO_YEARS. Sensitivity: it simulates two treated states fewer than
-#                 the registered design has. Written to mde_10states.csv, with the
-#                 projection columns; draws from seed_for("power_10").
+#   six_state     SIX_STATES placebo-treated states, cohort years drawn uniformly from
+#                 PLACEBO_YEARS. SIX_STATES is the treated states the event table carries
+#                 with post-reform data by REG_END, the registration end year 2021, so this
+#                 is the registered power calculation and the one the 0.10 SD rule of
+#                 Section 10 is applied against (REGISTERED). Written to mde_6states.csv,
+#                 with the projection columns; draws from seed_for("power_6").
+#   ten_state     TEN_STATES placebo-treated states, cohort years drawn the same way.
+#                 Sensitivity, and one of the two runs made while the end year was still
+#                 assumed to be 2025. Written to mde_10states.csv, with the projection
+#                 columns; draws from seed_for("power_10").
 #   twelve_state  TWELVE_STATES placebo-treated states, cohort years drawn the same way.
-#                 TWELVE_STATES is the treated states the event table carries with
-#                 post-reform data by REG_END, so this is the registered power
-#                 calculation and the one the 0.10 SD rule of Section 10 is applied
-#                 against (REGISTERED). Written to mde_12states.csv, with the same
-#                 columns as mde_10states.csv; draws from seed_for("power_12").
+#                 Twelve is the treated states the event table carries by 2025, so this was
+#                 the registered calculation while 2025 was the assumed end year; with the
+#                 end year fixed at 2021 it is a sensitivity run. Written to
+#                 mde_12states.csv; draws from seed_for("power_12").
 # All three draw in this process and hand the assignments to the workers (CLAUDE.md rule
 # 4), so no result depends on how many workers run it.
 # Outputs (outputs/08_power/)
 #   mde.csv                 observed-cohort scenario: MDE per gap and the placebo spread
-#   mde_10states.csv        ten-state scenario: the same, plus the projection columns
-#   mde_12states.csv        twelve-state scenario (the registered one): the same columns
+#   mde_6states.csv         six-state scenario (the registered one): the same, plus the
+#                           projection columns
+#   mde_10states.csv        ten-state scenario: the same columns
+#   mde_12states.csv        twelve-state scenario: the same columns
 #   placebo_draws.csv       every placebo estimate of the observed scenario
+#   placebo_draws_6states.csv   every placebo estimate of the six-state scenario
 #   placebo_draws_10states.csv  every placebo estimate of the ten-state scenario
 #   placebo_draws_12states.csv  every placebo estimate of the twelve-state scenario
 #   power_curve.csv         power against effect size per scenario and gap
@@ -70,15 +78,17 @@ WEIGHTING  <- "unweighted"  # the primary weighting for all three gaps (design S
 PANEL      <- "unbalanced"  # the primary panel rule of step 5 (author, 2026-09-11)
 WORKERS    <- 12L           # CLAUDE.md conventions: 14 cores, no forking
 QUICK_REPS <- 200L
-# Placebo-treated state counts (author, 2026-09-11). TWELVE_STATES is the treated states
-# the event table carries with post-reform data by REG_END and is the registered power
-# calculation; TEN_STATES is the earlier count, kept as a sensitivity run. The design
-# block below checks TWELVE_STATES against the event table.
+# Placebo-treated state counts (author, 2026-09-11). SIX_STATES is the treated states the
+# event table carries with post-reform data by REG_END, the registration end year, and is
+# the registered power calculation; TEN_STATES and TWELVE_STATES are the counts of the runs
+# made while the end year was still assumed to be 2025, kept as sensitivity runs. The design
+# block below checks the registered scenario's count against the event table.
+SIX_STATES    <- 6L
 TEN_STATES    <- 10L
 TWELVE_STATES <- 12L
-REGISTERED    <- "twelve_state"   # the scenario Section 10's 0.10 SD rule is applied to
+REGISTERED    <- "six_state"      # the scenario Section 10's 0.10 SD rule is applied to
 PLACEBO_YEARS <- 2011:2013  # cohort years a stage 1 placebo can take: 2010 has no pre-period
-REG_END    <- 2025L         # placeholder registration end year, for the projection only
+REG_END    <- 2021L         # registration end year (author, 2026-09-11; decision log, Section 3)
 REG_DROP   <- 2020L         # end years the design leaves out of the panel (no EDFacts file)
 
 drawn_label <- function(n) sprintf("%d placebo-treated states, cohort years drawn uniformly from %d-%d",
@@ -87,6 +97,9 @@ SCENARIOS <- list(
   observed     = list(seed_step = "power",    mde_file = "mde",
                       draws_file = "placebo_draws", n_treated = NA_integer_, projection = FALSE,
                       label = "observed cohort count and observed cohort years"),
+  six_state    = list(seed_step = "power_6",  mde_file = "mde_6states",
+                      draws_file = "placebo_draws_6states", n_treated = SIX_STATES,
+                      projection = TRUE, label = drawn_label(SIX_STATES)),
   ten_state    = list(seed_step = "power_10", mde_file = "mde_10states",
                       draws_file = "placebo_draws_10states", n_treated = TEN_STATES,
                       projection = TRUE, label = drawn_label(TEN_STATES)),
@@ -95,6 +108,8 @@ SCENARIOS <- list(
                       projection = TRUE, label = drawn_label(TWELVE_STATES)))
 stopifnot(REGISTERED %in% names(SCENARIOS))
 MAX_TREATED <- max(vapply(SCENARIOS, function(x) as.numeric(x$n_treated), numeric(1)), na.rm = TRUE)
+DRAWN <- vapply(SCENARIOS, function(x) isTRUE(x$projection), TRUE)   # the drawn-year scenarios
+DRAWN_COUNTS <- vapply(SCENARIOS[DRAWN], function(x) as.integer(x$n_treated), integer(1))
 
 quick <- "--quick" %in% commandArgs(trailingOnly = TRUE)
 reps  <- if (quick) QUICK_REPS else POWER_REPS
@@ -152,10 +167,10 @@ for (gap in GAPS) {
   panels[[gap]] <- cp
   cohorts[[gap]] <- gs
   usable <- c(usable, gap)
-  say(sprintf("%-16s %5d %s in %2d states, %s panel; %d treated per observed draw, %d and %d in the drawn-year scenarios",
+  say(sprintf("%-16s %5d %s in %2d states, %s panel; %d treated per observed draw, %s in the drawn-year scenarios",
               gap, length(unique(cp$panel$id)),
               if (gap == "a_poverty") "states   " else "districts", length(states), PANEL,
-              length(gs), TEN_STATES, TWELVE_STATES))
+              length(gs), paste(DRAWN_COUNTS, collapse = ", ")))
 }
 say("Panels and estimates agree with outputs/05_primary/panel_counts.csv and overall_estimates.csv")
 win <- sort(unique(panels[[usable[1]]]$panel$sy_end))
@@ -171,15 +186,16 @@ g_full <- evt$treat_year[evt$group == "treated" & !is.na(evt$treat_year)]
 g_full <- g_full[g_full > min(win) & g_full <= REG_END]
 full_post <- post_years(g_full, REG_END, REG_DROP)
 design <- list(states = length(g_full), mean_post = mean(full_post), state_years = sum(full_post))
-say("\n== Registered design, for the projection (end year ", REG_END, " placeholder, ", REG_DROP,
+say("\n== Registered design, for the projection (end year ", REG_END, ", ", REG_DROP,
     " left out)")
 say("Treated states with post-reform data by ", REG_END, ": ", design$states,
     "; the registered scenario simulates ", SCENARIOS[[REGISTERED]]$n_treated,
     if (design$states != SCENARIOS[[REGISTERED]]$n_treated)
       "  <- these differ, see the log and the report" else "  (they agree)")
-if (design$states != TWELVE_STATES)
-  warning("TWELVE_STATES is ", TWELVE_STATES, " but the event table carries ", design$states,
-          " treated states with post-reform data by ", REG_END, call. = FALSE)
+if (design$states != SCENARIOS[[REGISTERED]]$n_treated)
+  warning("The registered scenario (", REGISTERED, ") simulates ",
+          SCENARIOS[[REGISTERED]]$n_treated, " placebo-treated states but the event table carries ",
+          design$states, " treated states with post-reform data by ", REG_END, call. = FALSE)
 note("Mean post-reform end years per treated state: ", round(design$mean_post, 4),
      "; design post-reform state-years: ", design$state_years)
 
@@ -263,8 +279,8 @@ for (s in names(SCENARIOS)) {
       row$projection_basis <- paste0(
         "supplementary projection, not a power calculation: this scenario's MDE times ",
         "sqrt(placebo post-reform state-years / design post-reform state-years), the design ",
-        "side from data/reference/event_table.csv with end year ", REG_END, " as a placeholder ",
-        "and ", REG_DROP, " left out. Holds the outcome variance, the control-state count and ",
+        "side from data/reference/event_table.csv with the registration end year ", REG_END,
+        " and ", REG_DROP, " left out. Holds the outcome variance, the control-state count and ",
         "the panel's unit count fixed, none of which the registered window holds fixed.")
     }
     mde[[paste(s, gap)]] <- row
@@ -294,16 +310,17 @@ mt <- bind(mde); dt <- bind(draws); ct <- bind(curve); stt <- bind(status)
 settings <- data.frame(
   setting = c("run", "stage", "blinding", "quick_run", "placebo_reps", "event_set", "weighting",
               "panel", "test_level", "power_target", "mde_ceiling", "registered_scenario",
-              "seed_step_observed", "seed_step_ten_state", "seed_step_twelve_state",
-              "ten_state_count", "twelve_state_count", "placebo_cohort_years",
+              "seed_step_observed", "seed_step_six_state", "seed_step_ten_state",
+              "seed_step_twelve_state", "six_state_count", "ten_state_count",
+              "twelve_state_count", "placebo_cohort_years",
               "projection_end_year",
               "projection_dropped_years", "master_seed", "workers", "r_version", "did", "future",
               "furrr"),
   value = c(stamp, stage, readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
             tolower(as.character(quick)), reps, EVENT_SET, WEIGHTING, PANEL, POWER_LEVEL,
             POWER_TARGET, POWER_CEILING, REGISTERED, SCENARIOS$observed$seed_step,
-            SCENARIOS$ten_state$seed_step, SCENARIOS$twelve_state$seed_step,
-            TEN_STATES, TWELVE_STATES,
+            SCENARIOS$six_state$seed_step, SCENARIOS$ten_state$seed_step,
+            SCENARIOS$twelve_state$seed_step, SIX_STATES, TEN_STATES, TWELVE_STATES,
             paste0(min(PLACEBO_YEARS), "-", max(PLACEBO_YEARS)), REG_END, REG_DROP,
             MASTER_SEED, WORKERS, R.version.string,
             as.character(utils::packageVersion("did")), as.character(utils::packageVersion("future")),
@@ -349,9 +366,11 @@ pick_col <- function(s, col) {
 }
 sbs <- data.frame(gap = GAPS,
                   mde_observed = round(pick_col("observed", "mde"), 4),
+                  mde_six_state = round(pick_col("six_state", "mde"), 4),
                   mde_ten_state = round(pick_col("ten_state", "mde"), 4),
                   mde_twelve_state = round(pick_col("twelve_state", "mde"), 4),
-                  ratio_12_to_2 = round(pick_col("twelve_state", "mde") / pick_col("observed", "mde"), 3),
+                  ratio_reg_to_observed = round(pick_col(REGISTERED, "mde") /
+                                                  pick_col("observed", "mde"), 3),
                   over_ceiling = ifelse(pick_col(REGISTERED, "underpowered") == 1L, "yes", "no"),
                   stringsAsFactors = FALSE)
 say(paste(utils::capture.output(print(sbs, row.names = FALSE)), collapse = "\n"))
@@ -363,10 +382,12 @@ say("Section 10's ", POWER_CEILING, " SD rule is applied to the ", REGISTERED,
     sum(regr$underpowered), " of ", nrow(regr), " primary gaps -> ",
     if (under) "UNDERPOWERED, the study proceeds as a bounds analysis"
     else "not underpowered on this criterion")
-say("The observed-cohort and ten-state runs are sensitivity runs and the rule is not applied to them.")
-say("The projection columns of ", SCENARIOS[[REGISTERED]]$mde_file, ".csv and ",
-    SCENARIOS$ten_state$mde_file,
-    ".csv are supplementary and are not printed here: they summarise the event table's cohort years.")
+say("The ", paste(setdiff(names(SCENARIOS), REGISTERED), collapse = ", "),
+    " runs are sensitivity runs and the rule is not applied to them; the ten- and twelve-state ",
+    "runs were made while the end year was still assumed to be 2025.")
+say("The projection columns of ",
+    paste0(vapply(SCENARIOS[DRAWN], function(x) x$mde_file, character(1)), ".csv", collapse = ", "),
+    " are supplementary and are not printed here: they summarise the event table's cohort years.")
 
 say("\nWrote ", paste0(out_dir, "/", written, ".csv", collapse = ", "))
 if (quick) say("NOTE: --quick run. The registered count is ", POWER_REPS, " placebo runs per gap.")

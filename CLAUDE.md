@@ -51,7 +51,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; run so far only at the reduced `--quick` counts |
-| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); observed-cohort, ten-state and twelve-state runs |
+| 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
 | 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | |
@@ -74,6 +74,14 @@ Update the Status column as steps finish.
   full set is primary and r1/r2 are reported as robustness (design Section 3).
 - Window: end years 2010 through the newest EDFacts release on the
   registration date; 2020 excluded; 2021 kept only where participation ≥ 95%.
+- Registration end year (author, 2026-09-11; docs/decision_log.md, Section 3): **2021**
+  (school year 2020–21), the newest school year with LEA-level EDFacts achievement files
+  for both mathematics and reading/language arts. SY2021–22 carries the LEA
+  reading/language arts file only; SY2022–23 onward carries no LEA assessment file. ED
+  publishes the assessment files in the ED Data Library
+  (`https://eddataexpress.ed.gov/download/data-library`); the legacy
+  `www.ed.gov/sites/ed/files/.../data-files/` names serve end years 2013–2018 and 2021
+  but not 2019, which step 2's manifest pattern will need a different URL for.
 - Sample: regular districts (CCD types 1–2); stable ID; exact counts;
   percent proficient exact or a range midpoint (suppression rule below);
   tested count ≥ 30 per cell; 95% participation; treatment at state level;
@@ -230,29 +238,34 @@ Update the Status column as steps finish.
 - Power: 2,000 placebo runs on 2010–2013; report the MDE at 80% power.
 - Power as implemented (author, 2026-09-11; docs/decision_log.md): the three primary
   gaps of the primary event set, unweighted, each on its step 5 estimation panel (the
-  primary, unbalanced one); 2,000 placebo runs per gap in each of three scenarios, every
+  primary, unbalanced one); 2,000 placebo runs per gap in each of four scenarios, every
   draw made in the parent process so no result depends on the worker count.
-  `twelve_state` (`seed_for("power_12")`, `mde_12states.csv`, `TWELVE_STATES`): twelve
+  `six_state` (`seed_for("power_6")`, `mde_6states.csv`, `SIX_STATES`): six
   placebo-treated states, cohort years drawn uniformly from 2011–2013. This is the
-  registered power calculation and the 0.10 SD rule is applied to it alone; twelve is the
-  treated states the event table carries with post-reform data by 2025, which the script
-  checks and warns about if it differs. Sensitivity runs: `ten_state`
-  (`seed_for("power_10")`, `mde_10states.csv`, ten states, the earlier count) and
-  `observed` (`seed_for("power")`, `mde.csv`): treated states drawn from every state in
+  registered power calculation and the 0.10 SD rule is applied to it alone; six is the
+  treated states the event table carries with post-reform data by the registration end
+  year 2021 (`REG_END`), which the script checks and warns about if it differs.
+  Sensitivity runs: `twelve_state` (`seed_for("power_12")`, `mde_12states.csv`) and
+  `ten_state` (`seed_for("power_10")`, `mde_10states.csv`), both made while the end year
+  was still assumed to be 2025 — twelve is the treated-state count under that assumption,
+  ten the count assumed before it — and `observed` (`seed_for("power")`, `mde.csv`):
+  treated states drawn from every state in
   the panel and given the observed cohort years (the Section 8 reassignment); in stage 1
   that is two treated states, the pre-period's own cohort count, so that run is
   descriptive of the pre-period. MDE = the smallest shift of the placebo distribution
   that a test at the 95th percentile of the absolute placebo estimates rejects with
   probability 0.80; the normal-approximation figure (2.8016 x sd) is reported beside it.
-  Stage 1: 0.152, 0.128 and 0.122 SD twelve-state, 0.156, 0.143 and 0.137 ten-state,
-  0.225, 0.300 and 0.245 observed, for gaps (a), (b), (c). The ceiling is exceeded for
+  Stage 1: 0.182, 0.168 and 0.154 SD six-state, 0.152, 0.128 and 0.122 twelve-state,
+  0.156, 0.143 and 0.137 ten-state, 0.225, 0.300 and 0.245 observed, for gaps (a), (b),
+  (c). The ceiling is exceeded for
   all three gaps in the registered run, so on the stage 1 files Section 10's criterion
   READS UNDERPOWERED — the balanced panel kept gap (c) under it, and the switch to the
-  unbalanced panel widened the placebo distribution. `mde_10states.csv` and
+  unbalanced panel widened the placebo distribution. `mde_6states.csv`,
+  `mde_10states.csv` and
   `mde_12states.csv` also carry a supplementary `mde_projection` column (square root of
-  the post-reform state-year ratio, registration end year 2025 as a placeholder, 2020
-  left out): 0.090, 0.076 and 0.072 SD at twelve states, against the registered window's
-  68 post-reform state-years. It is not the power calculation and is kept off the console
+  the post-reform state-year ratio, registration end year 2021, 2020
+  left out): 0.117, 0.108 and 0.099 SD at six states, against the registered window's
+  29 post-reform state-years. It is not the power calculation and is kept off the console
   because it summarises the event table's cohort years. `--quick` is a test run at a
   reduced count, recorded in `outputs/08_power/power_settings.csv`.
 - License: MIT.
