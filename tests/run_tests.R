@@ -67,9 +67,6 @@ stopifnot(length(src) >= nrow(tr), all(grepl("^(SEA|Wayback|ESEA flexibility req
 wb <- src[startsWith(src, "Wayback: ")]
 stopifnot(all(grepl("web\\.archive\\.org/web/[0-9]+", wb)), all(grepl("\\(captured [0-9]{4}-[0-9]{2}-[0-9]{2}\\)$", wb)))
 
-# the stage 2 rows carry no author_check yet (author decision 2026-09-12)
-stopifnot("author_check" %in% names(tr), all(!nzchar(trimws(tr$author_check[tr$sy_end >= 2014]))))
-
 # CEP phase-in table (data acquisition 3.3), still the source before end year 2014
 cep <- read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE, na.strings = character())
 stopifnot(identical(names(cep), c("state", "first_cep_sy_end", "source")))
