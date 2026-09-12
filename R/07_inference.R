@@ -2,6 +2,14 @@
 # Run from the repository folder:
 #   Rscript R/07_inference.R            the registered replication counts
 #   Rscript R/07_inference.R --quick    reduced counts, for a test run only
+#   add --outcome graduation            the same four procedures on the 24 graduation
+#                                       models of step 5 (outputs/05_primary/graduation/),
+#                                       written to outputs/07_inference/graduation/
+#
+# Graduation pass (design v18, Sections 6 and 8; R/functions/graduation.R): the Romano-Wolf
+# family is the two graduation gaps within an event set, weighting family and panel rule
+# (author decision 2026-09-12); the Webb draws are drawn per event set from their own
+# seed step, so they do not share draws with the achievement gaps.
 #
 # Inputs
 #   outputs/05_primary/cs_models.rds       R/05_primary.R: the 30 att_gt and aggte fits
@@ -46,11 +54,20 @@
 
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
+OUTCOME <- outcome_arg()
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
-if (!identical(stage, 1L))
-  stop("R/07_inference.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 first.")
+if (OUTCOME == "achievement") {
+  if (!identical(stage, 1L))
+    stop("R/07_inference.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 first.")
+  GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
+  in_dir <- file.path("outputs", "05_primary")
+} else {
+  if (!identical(stage, 2L)) stop("the graduation pass needs stage 2 (graduation files after 2012-13)")
+  GAPS <- names(GRAD_GAPS)
+  in_dir <- file.path("outputs", "05_primary", "graduation")
+}
+seed_tag <- if (OUTCOME == "achievement") "07_inference" else "07_inference graduation"
 
-GAPS       <- c("a_poverty", "b_black_white", "c_hispanic_white")
 EVENT_SETS <- c("primary", "r1", "r2")
 PANELS     <- names(PANEL_TYPES)        # unbalanced (primary), balanced (robustness)
 MBARVEC    <- c(0, 0.5, 1, 1.5, 2)      # design Section 8
@@ -66,10 +83,10 @@ reps  <- if (quick) QUICK else FULL
 reps$romano_wolf <- reps$bootstrap
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")
-out_dir <- "outputs/07_inference"
+out_dir <- if (OUTCOME == "achievement") "outputs/07_inference" else "outputs/07_inference/graduation"
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/logs", recursive = TRUE, showWarnings = FALSE)
-log_file <- file.path("outputs", "logs", paste0("07_inference_", stamp, ".log"))
+log_file <- file.path("outputs", "logs", paste0(if (OUTCOME == "achievement") "07_inference_" else "07_inference_graduation_", stamp, ".log"))
 say <- function(...) {                      # console and log
   txt <- paste0(...)
   cat(txt, "\n", sep = "")
@@ -78,7 +95,7 @@ say <- function(...) {                      # console and log
 note <- function(...) cat(paste0(...), "\n", sep = "", file = log_file, append = TRUE)   # log only
 note_df <- function(x) note(paste(utils::capture.output(print(x, row.names = FALSE)), collapse = "\n"))
 
-say("Step 7 inference, run ", stamp, "; stage ", stage, "; blinding ",
+say("Step 7 inference (", OUTCOME, "), run ", stamp, "; stage ", stage, "; blinding ",
     readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
     "; did ", utils::packageVersion("did"), ", HonestDiD ", utils::packageVersion("HonestDiD"))
 say("Replication counts: bootstrap ", reps$bootstrap, ", Romano-Wolf ", reps$romano_wolf,
@@ -87,8 +104,8 @@ say("Replication counts: bootstrap ", reps$bootstrap, ", Romano-Wolf ", reps$rom
 say("Console: model names, cluster counts and timings. Estimates and p-values: ", out_dir, " and ", log_file)
 
 # ---- inputs ------------------------------------------------------------------------
-rds <- file.path("outputs", "05_primary", "cs_models.rds")
-if (!file.exists(rds)) stop("outputs/05_primary/cs_models.rds not found. Run R/05_primary.R first.")
+rds <- file.path(in_dir, "cs_models.rds")
+if (!file.exists(rds)) stop(rds, " not found. Run R/05_primary.R", if (OUTCOME == "graduation") " --outcome graduation", " first.")
 models <- readRDS(rds)
 keys <- names(models)
 parts <- do.call(rbind, lapply(strsplit(keys, ".", fixed = TRUE), function(z)
@@ -114,14 +131,14 @@ for (i in seq_along(keys)) {
 usable <- status$status == "ok"
 
 # The extracted overall estimates must match the step 5 file.
-ov5 <- utils::read.csv(file.path("outputs", "05_primary", "overall_estimates.csv"),
+ov5 <- utils::read.csv(file.path(in_dir, "overall_estimates.csv"),
                        stringsAsFactors = FALSE, na.strings = "")
 k5 <- match(paste(parts$gap, parts$event_set, parts$weighting, parts$panel),
             paste(ov5$gap, ov5$event_set, ov5$weighting, ov5$panel))
 got <- vapply(infs, function(x) if (is.null(x)) NA_real_ else as.numeric(x$overall_att), numeric(1))
 d5 <- abs(got - ov5$att[k5])
-if (any(is.finite(d5) & d5 > 1e-10)) stop("the overall estimates do not match outputs/05_primary/overall_estimates.csv")
-say("Overall estimates agree with outputs/05_primary/overall_estimates.csv")
+if (any(is.finite(d5) & d5 > 1e-10)) stop("the overall estimates do not match ", file.path(in_dir, "overall_estimates.csv"))
+say("Overall estimates agree with ", file.path(in_dir, "overall_estimates.csv"))
 
 # ---- Webb bootstrap draws, one set per event set -------------------------------------
 # Every model of an event set draws from the same state-level weights, so the
@@ -131,7 +148,7 @@ for (s in EVENT_SETS) {
   k <- which(usable & parts$event_set == s)
   if (!length(k)) next
   st <- sort(unique(unlist(lapply(infs[k], `[[`, "states"))))
-  set.seed(seed_for(paste("07_inference bootstrap", s)))
+  set.seed(seed_for(paste(seed_tag, "bootstrap", s)))
   set_states[[s]] <- st
   wmat[[s]] <- webb_weights(length(st), reps$bootstrap)
   say(sprintf("Webb draws for event set %-7s %d states x %d replications", s, length(st), reps$bootstrap))
@@ -161,10 +178,10 @@ for (i in which(usable)) {
 say(sprintf("Wild cluster bootstrap: %d models, %.1f s", length(boot_overall),
             as.numeric(difftime(Sys.time(), t0, units = "secs"))))
 
-# ---- Romano-Wolf over the three gaps -------------------------------------------------
+# ---- Romano-Wolf over the gaps -------------------------------------------------------
 # One family per event set and weighting: the three gaps. The tested-count-weighted
 # family takes the weighted models of gaps (b) and (c); gap (a) is a state-level
-# outcome and is unweighted in both families.
+# outcome and is unweighted in both families. Graduation: the two graduation gaps.
 rw <- list()
 for (s in EVENT_SETS) {
   for (pan in PANELS) {
@@ -210,7 +227,7 @@ on.exit(future::plan(future::sequential), add = TRUE)
 ri <- list(); ri_draws <- list()
 for (i in which(usable)) {
   t0 <- Sys.time()
-  r <- ri_overall(models[[i]], reps$randomization, paste("07_inference randomization", keys[i]))
+  r <- ri_overall(models[[i]], reps$randomization, paste(seed_tag, "randomization", keys[i]))
   secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   att <- infs[[i]]$overall_att
   v <- r$values[is.finite(r$values)]
@@ -230,7 +247,7 @@ for (i in which(usable)) {
     status$notes[i] <- paste(c(status$notes[i],
                                sprintf("randomization: %d of %d reassignments had no estimable cell",
                                        r$reps - r$draws_ok, r$reps)), collapse = " | ")
-  say(sprintf("  %-16s %-7s %-15s %-10s %5d/%5d reassignments estimated, %6.1f s", parts$gap[i],
+  say(sprintf("  %-19s %-7s %-15s %-10s %5d/%5d reassignments estimated, %6.1f s", parts$gap[i],
               parts$event_set[i], parts$weighting[i], parts$panel[i], r$draws_ok, r$reps, secs))
 }
 
@@ -240,11 +257,11 @@ bo <- bind(boot_overall); be <- bind(boot_event); rwt <- bind(rw); hd <- bind(ho
 rit <- bind(ri); rid <- bind(ri_draws)
 status$notes <- trimws(sub("^ \\| ", "", status$notes))
 
-settings <- data.frame(setting = c("run", "stage", "blinding", "quick_run", "bootstrap_reps",
+settings <- data.frame(setting = c("run", "outcome", "stage", "blinding", "quick_run", "bootstrap_reps",
                                    "romano_wolf_reps", "randomization_reps", "webb_support", "mbar",
                                    "master_seed", "workers", "boot_level", "r_version", "did", "HonestDiD",
                                    "fwildclusterboot", "wildrwolf"),
-                       value = c(stamp, stage, readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
+                       value = c(stamp, OUTCOME, stage, readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
                                  tolower(as.character(quick)), reps$bootstrap, reps$romano_wolf,
                                  reps$randomization, paste(round(WEBB_SUPPORT, 6), collapse = " "),
                                  paste(MBARVEC, collapse = " "), MASTER_SEED, WORKERS, BOOT_LEVEL,
@@ -263,7 +280,7 @@ for (fn in names(files))
 note("\n== settings"); note_df(settings)
 note("\n== wild cluster bootstrap, overall post-reform average"); note_df(bo)
 note("\n== wild cluster bootstrap, event times"); note_df(be[!is.na(be$att), ])
-note("\n== Romano-Wolf over the three gaps"); note_df(rwt)
+note("\n== Romano-Wolf over the gaps"); note_df(rwt)
 note("\n== HonestDiD relative magnitudes"); note_df(hd)
 note("\n== randomization inference"); note_df(rit)
 note("\n== model status"); note_df(status)

@@ -48,9 +48,11 @@ decision the document does not make, stop and ask the author before coding it.
 | 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
-| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11) |
-| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels |
-| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; run so far only at the reduced `--quick` counts |
+| 3g | `R/03g_graduation_sample.R` — graduation sample, design v18 Sections 5, 6 | Claude Code | complete (2026-09-12) |
+| 4g | `R/04g_graduation_outcomes.R` — graduation gaps, design v18 Section 6 | Claude Code | complete (2026-09-12) |
+| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11); graduation pass `--outcome graduation`, 24 models (2026-09-12) |
+| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12) |
+| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); both run so far only at the reduced `--quick` counts |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | complete (2026-09-11) |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
@@ -60,6 +62,21 @@ Update the Status column as steps finish.
 
 ## Decisions already made (do not reopen)
 
+- Design v18 governs (`docs/design.md`, commit `a263a49`, with the deviations in
+  `docs/deviations.md`). It adds one secondary outcome family: the within-district
+  Black–White and Hispanic–White gaps in the four-year adjusted cohort graduation
+  rate (EDFacts LEA files), as V under the Section 5 rules (30 on the cohort count,
+  range midpoints for ranges of 10 points or less, exact-only and 5-point samples),
+  on the same event sets, estimators, inference and reporting as the primary gaps,
+  reported after them, with no power calculation. As implemented (author,
+  2026-09-12; docs/deviations.md; data acquisition 5.2): end years 2011–2021;
+  `R/03g_graduation_sample.R`, `R/04g_graduation_outcomes.R`, then steps 5–7 with
+  `--outcome graduation` (outputs in `graduation/` subfolders); rules 1–2 over
+  2010–2021 with `LEA_TYPE`/`UPDATED_STATUS` for `TYPE`/`BOUND` from 2014-15;
+  rule 6 from the event tables' groups unchanged; weight = 2010-11 cohort count in
+  the gap's two groups (`cohort_2011`); regression controls = CEP (district-year)
+  and the 2009 covariates by year, no test-replacement flag; step 6 on all three
+  event sets; Romano–Wolf family = the two graduation gaps.
 - Reform list: LRS (2018) list for 1990–2011. After Dec 31, 2011 two written
   rules: court rule (ruling holding the K–12 finance system or operating-aid
   formula unconstitutional that became final: unappealed or affirmed; vacated

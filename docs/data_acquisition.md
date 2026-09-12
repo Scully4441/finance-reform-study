@@ -32,6 +32,7 @@ Read this before touching the manifest or writing `R/03_sample.R` and
 | CCD LEA universe / directory | 2010-2013 | 2014 to end year | Claude Code, manifest |
 | CCD school universe / membership by grade and race | 2010-2013 | 2014 to end year | Claude Code, manifest |
 | CCD school Characteristics (`NSLPSTATUS`, CEP participation) | phase-in table only | 2014 from the combined school universe file, 2015-2021 from `ccd_sch_129_*` | Claude Code, manifest |
+| EDFacts adjusted cohort graduation rate, LEA level (secondary outcome, 5.2) | none (not opened before registration) | 2011-2024 rows; LEA files exist for 2011-2021 | Claude Code, manifest |
 | SAIPE school district poverty | 2009-2012 | 2013 to end year minus 1 | Claude Code, manifest |
 | F-33 school finance | FY2010-FY2013 | FY2014 to end year | Claude Code, manifest |
 | BLS CPI-U monthly | all months 2009 onward | refresh | Claude Code or hand download |
@@ -519,3 +520,73 @@ what is missing:
   published that year (17 Alabama systems against 138 in the companion flag
   file `elsec22f.txt`), so the row archives `elsec22.xlsx`, which holds all
   14,106. The loader reads that one year from the spreadsheet.
+
+### 5.2 Graduation outcome as implemented (2026-09-12)
+
+The secondary outcome of design v18 (Sections 3, 5, 6): within-district
+Black-White and Hispanic-White gaps in the four-year adjusted cohort
+graduation rate, as V. Code: `R/functions/graduation.R`,
+`R/03g_graduation_sample.R`, `R/04g_graduation_outcomes.R`, and the
+graduation pass of steps 5-7 (`--outcome graduation`).
+
+- **Files.** Manifest rows `edfacts_acgr_lea`, end years 2011-2024
+  (`acgr_manifest()`, `load_acgr()`). Two layouts, one loader
+  (`read_acgr_lea()`):
+  - end years 2011-2018, legacy wide CSV `acgr-lea-syYYYY-YY.csv`: one row
+    per LEA, `LEAID`, and for each subgroup `<SG>_COHORT_<yyyy>` (cohort
+    count) and `<SG>_RATE_<yyyy>` (rate), with `MWH` White, `MBL` Black,
+    `MHI` Hispanic and `<yyyy>` the year tag (`1011` for end year 2011);
+  - end years 2019-2021, ED Data Library zip
+    `SY<yyyy>_FS150_FS151_DG695_DG696_LEA.csv`: one row per LEA and subgroup,
+    `NCES LEA ID`, `Subgroup`, `Value` (rate) and `Denominator` (cohort
+    count), data group `695|696`, population `All Students`. Subgroup labels:
+    `White or Caucasian (not Hispanic)`; `Black or African American` (2019)
+    or `Black (not Hispanic) African American` (2020, 2021);
+    `Hispanic/Latino`. The 2020 and 2021 releases carry a few placeholder
+    rows per state with subgroup `Missing`, value `MISSING`, cohort 0 and no
+    LEA ID; they are dropped.
+  - end years 2022-2024: no LEA file was published (5.1); the loader reports
+    them and the window stops at 2021 (`docs/deviations.md`, 2026-09-12).
+- **Notation.** Cohort counts are exact in every year. Rates in the wide
+  files use the assessment labels (`91`, `80-84`, `GE95`, `LT50`, `LE5`,
+  `PS`). The long files write `93%`, `90-94%`, `>=80%`, `<50%`, `<=5%` and
+  `S`; `acgr_value()` maps them to `93`, `90-94`, `GE80`, `LT50`, `LE5` and
+  `PS`, and stops on any other value. Width and midpoint then come from
+  `edfacts_range()` as for proficiency. Widths by cohort size across
+  2011-2021 (`outputs/03g_graduation_sample/range_widths_by_bracket.csv`):
+  cohorts of 6-15 get 50-point ranges, 16-30 get 18- to 20-point ranges,
+  31-60 get 8- to 10-point ranges, 61-300 get 3- to 5-point ranges, and
+  cohorts over 300 get whole numbers (or `GE99`/`LE1`).
+- **Rule 3.** A subgroup cell is usable when its cohort count is exact and at
+  least 30 and its rate is exact or a range of 10 points or less, entering at
+  the midpoint (`grad_cells()`, `cell_status()`). Robustness samples: 5 points
+  or less, exact only (`cell_in_sample()`). Rule 4 has no graduation
+  counterpart. A gap needs both of its groups usable in the sample
+  (`grad_gaps()`); V is Black or Hispanic minus White, as for achievement, with
+  a rate of 0 or 100 clamped at 1/(2n). Standard errors: binomial sampling only.
+- **Rules 1, 2, 6 and 7** (author decisions 2026-09-12). Rules 1 and 2 over end
+  years 2010-2021, 2009-10 included because the covariates are fixed there.
+  From 2014-15 the CCD LEA Directory carries `LEA_TYPE` and `UPDATED_STATUS`
+  in place of `TYPE` and `BOUND` (`read_ccd_lea_any()`): `LEA_TYPE` 1-2 is a
+  regular district (type 9, specialized district, appears from 2019-20 and
+  fails rule 1: 74 districts that were type 1 or 2 in other years), and
+  `UPDATED_STATUS` uses `BOUND`'s codes 1-8, so the rule of 4.1 applies
+  unchanged (2, 6, 7 not operational; 5, 8 a change). Rule 6 takes each event
+  table's groups as they stand (excluded = a reform in 2005-2009). A district
+  without a SAIPE 2009 rate is dropped.
+- **Outputs.** `data/derived/graduation_sample_district_year.csv` (step 3g: one
+  row per CCD district-year, 2011-2021, with the retained flags, CEP indicator
+  and cells `n_`, `p_`, `w_`, `cell_` for `wh`, `bl`, `hi`) and
+  `data/derived/gaps_graduation_district_year.csv` (step 4g: `v_bw`, `se_bw`,
+  `v_hw`, `se_hw` by district-year and suppression sample). Districts retained:
+  8,709 under the primary set and r1, 11,013 under r2.
+- **Estimation** (Sections 7, 8, 13). `R/05_primary.R`, `R/06_secondary.R` and
+  `R/07_inference.R` with `--outcome graduation` run the same estimators,
+  panels, inference and event sets on the graduation gaps, end years
+  2011-2021, and write to a `graduation/` folder in each step's output folder.
+  Differences from the achievement pass, all author decisions of 2026-09-12:
+  one outcome per district-year (no subject mean); the tested-count weight is
+  the 2010-11 cohort count in the gap's two groups (`cohort_2011`); the
+  regression estimators control for CEP (district-year) and the 2009
+  covariates by year, without the test-replacement flag; step 6 runs all three
+  event sets; the Romano-Wolf family is the two graduation gaps.

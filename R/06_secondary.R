@@ -1,5 +1,14 @@
 # Step 6. Secondary estimators (design document, Section 7).
-# Run from the repository folder: Rscript R/06_secondary.R
+# Run from the repository folder:
+#   Rscript R/06_secondary.R                        the achievement gaps
+#   Rscript R/06_secondary.R --outcome graduation   the secondary graduation gaps
+#
+# Graduation pass (design v18, Section 6; R/functions/graduation.R): the same estimators
+# on the step 5 graduation balanced panels (outputs/05_primary/graduation/panel_counts.csv),
+# end years 2011-2021, for all three event sets. Controls in the regression estimators:
+# cep, district-year, plus the four 2009 covariates interacted with year; the
+# test-replacement flag is an assessment flag and does not enter (author decision
+# 2026-09-12). Outputs in outputs/06_secondary/graduation/ under the file names below.
 #
 # Inputs: those of step 5 (R/05_primary.R), plus the state-year test-replacement and
 # CEP flags (test_replaced, cep) in data/derived/sample_district_year.csv.
@@ -55,22 +64,32 @@
 
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
+OUTCOME <- outcome_arg()
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
-if (!identical(stage, 1L))
-  stop("R/06_secondary.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 and extend WINDOW first.")
-WINDOW <- 2010:2013    # stage 1 end years (data acquisition 1)
 SAMPLE <- "primary"    # suppression sample, as step 5
-EVENT_SETS <- c(primary = "event_table.csv")
 FLAGS      <- c(primary = "retained", r1 = "retained_r1", r2 = "retained_r2")
 PANEL      <- "balanced"   # the step 5 panel rule these estimators run on (see the header)
-GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
+if (OUTCOME == "achievement") {
+  if (!identical(stage, 1L))
+    stop("R/06_secondary.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 and extend WINDOW first.")
+  WINDOW <- 2010:2013    # stage 1 end years (data acquisition 1)
+  EVENT_SETS <- c(primary = "event_table.csv")
+  GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
+  CONTROLS <- SEC_FLAGS
+} else {
+  if (!identical(stage, 2L)) stop("the graduation pass needs stage 2 (graduation files after 2012-13)")
+  WINDOW <- GRAD_WINDOW
+  EVENT_SETS <- c(primary = "event_table.csv", r1 = "event_table_r1.csv", r2 = "event_table_r2.csv")
+  GAPS <- names(GRAD_GAPS)
+  CONTROLS <- GRAD_SEC_FLAGS
+}
 ESTIMATORS <- c("sun_abraham", "imputation", "synthdid", "stacked", "twfe", "twfe_static")
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")
-out_dir <- "outputs/06_secondary"
+out_dir <- if (OUTCOME == "achievement") "outputs/06_secondary" else "outputs/06_secondary/graduation"
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create("outputs/logs", recursive = TRUE, showWarnings = FALSE)
-log_file <- file.path("outputs", "logs", paste0("06_secondary_", stamp, ".log"))
+log_file <- file.path("outputs", "logs", paste0(if (OUTCOME == "achievement") "06_secondary_" else "06_secondary_graduation_", stamp, ".log"))
 say <- function(...) {                      # console and log
   txt <- paste0(...)
   cat(txt, "\n", sep = "")
@@ -79,31 +98,44 @@ say <- function(...) {                      # console and log
 note <- function(...) cat(paste0(...), "\n", sep = "", file = log_file, append = TRUE)   # log only
 note_df <- function(x) note(paste(utils::capture.output(print(x, row.names = FALSE)), collapse = "\n"))
 
-say("Step 6 secondary estimators, run ", stamp, "; stage ", stage, "; blinding ",
+say("Step 6 secondary estimators (", OUTCOME, "), run ", stamp, "; stage ", stage, "; blinding ",
     readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE), "; fixest ", utils::packageVersion("fixest"),
     ", didimputation ", utils::packageVersion("didimputation"), ", synthdid ", utils::packageVersion("synthdid"))
 say("Console: panel sizes only. Cohort counts, estimates and model status: ", out_dir, " and ", log_file)
 
 # ---- inputs ----------------------------------------------------------------------
-race <- utils::read.csv("data/derived/gaps_race_district_year.csv", colClasses = c(leaid = "character"),
-                        stringsAsFactors = FALSE, na.strings = "")
-pov  <- utils::read.csv("data/derived/gap_poverty_state_year.csv", stringsAsFactors = FALSE, na.strings = "")
-stopifnot(all(race$sy_end %in% WINDOW), all(pov$sy_end %in% WINDOW),
-          SAMPLE %in% race$sample, SAMPLE %in% pov$sample)
-smp <- data.table::fread("data/derived/sample_district_year.csv",
-                         select = c("leaid", "state", "sy_end", "saipe_pov_rate_2009", SEC_FLAGS),
-                         colClasses = c(leaid = "character"), data.table = FALSE, showProgress = FALSE)
-cov <- cs_covariates(race$leaid, smp, min(WINDOW))
-flags <- state_flags(smp, WINDOW)
-say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; state-year flags: ", nrow(flags),
-    " state-years (", paste(SEC_FLAGS, collapse = ", "), ")")
-pc5_file <- file.path("outputs", "05_primary", "panel_counts.csv")
+if (OUTCOME == "achievement") {
+  race <- utils::read.csv("data/derived/gaps_race_district_year.csv", colClasses = c(leaid = "character"),
+                          stringsAsFactors = FALSE, na.strings = "")
+  pov  <- utils::read.csv("data/derived/gap_poverty_state_year.csv", stringsAsFactors = FALSE, na.strings = "")
+  stopifnot(all(race$sy_end %in% WINDOW), all(pov$sy_end %in% WINDOW),
+            SAMPLE %in% race$sample, SAMPLE %in% pov$sample)
+  smp <- data.table::fread("data/derived/sample_district_year.csv",
+                           select = c("leaid", "state", "sy_end", "saipe_pov_rate_2009", SEC_FLAGS),
+                           colClasses = c(leaid = "character"), data.table = FALSE, showProgress = FALSE)
+  cov <- cs_covariates(race$leaid, smp, min(WINDOW))
+  flags <- state_flags(smp, WINDOW)
+  say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; state-year flags: ", nrow(flags),
+      " state-years (", paste(SEC_FLAGS, collapse = ", "), ")")
+} else {
+  race <- utils::read.csv("data/derived/gaps_graduation_district_year.csv", colClasses = c(leaid = "character"),
+                          stringsAsFactors = FALSE, na.strings = "")
+  stopifnot(all(race$sy_end %in% WINDOW), SAMPLE %in% race$sample)
+  cov <- cs_covariates(race$leaid, graduation_saipe(race$leaid), 2010L)
+  dflags <- data.table::fread("data/derived/graduation_sample_district_year.csv",
+                              select = c("leaid", "sy_end", GRAD_SEC_FLAGS), colClasses = c(leaid = "character"),
+                              data.table = FALSE, showProgress = FALSE)
+  say("Covariates for the ", nrow(cov), " districts in the graduation gap file; district-year flags: ",
+      nrow(dflags), " district-years (", paste(GRAD_SEC_FLAGS, collapse = ", "), ")")
+}
+pc5_file <- file.path(if (OUTCOME == "achievement") "outputs/05_primary" else "outputs/05_primary/graduation",
+                      "panel_counts.csv")
 pc5 <- if (file.exists(pc5_file)) utils::read.csv(pc5_file, stringsAsFactors = FALSE) else NULL
 if (is.null(pc5)) say("No step 5 panel counts found; the panels are not checked against step 5.")
 
 # ---- models ----------------------------------------------------------------------
 res <- list()
-say("\n== Panels (the step 5 balanced panels), primary suppression sample")
+say("\n== Panels (the step 5 balanced panels), primary suppression sample, ", OUTCOME)
 for (set in names(EVENT_SETS)) {
   flag <- FLAGS[[set]]
   ev <- utils::read.csv(file.path("data", "reference", EVENT_SETS[[set]]), stringsAsFactors = FALSE)
@@ -113,6 +145,12 @@ for (set in names(EVENT_SETS)) {
       unit <- "state"
       p <- pov_panel(pov, flag, WINDOW, SAMPLE)
       covs <- character()
+    } else if (OUTCOME == "graduation") {
+      unit <- "leaid"
+      p <- grad_panel(race, GRAD_GAPS[[gap]], flag, WINDOW, SAMPLE)
+      p <- cbind(p, cov[match(p$leaid, cov$leaid), CS_COVARIATES])
+      p <- p[stats::complete.cases(p[CS_COVARIATES]), ]
+      covs <- CS_COVARIATES
     } else {
       unit <- "leaid"
       p <- race_panel(race, if (gap == "b_black_white") "bw" else "hw", flag, WINDOW, SAMPLE)
@@ -122,7 +160,7 @@ for (set in names(EVENT_SETS)) {
     }
     ac <- attach_cohorts(p, coding, unit)
     stopifnot(ac$dropped[["excluded"]] == 0L)
-    p <- attach_flags(ac$panel, flags)
+    p <- if (OUTCOME == "graduation") attach_district_flags(ac$panel, dflags) else attach_flags(ac$panel, flags)
     n_units <- length(unique(p$id))
     if (!is.null(pc5)) {
       n5 <- pc5$units_in_model[pc5$gap == gap & pc5$event_set == set & pc5$panel == "balanced"]
@@ -130,14 +168,15 @@ for (set in names(EVENT_SETS)) {
         stop(gap, " (", set, "): ", n_units, " units against ", n5,
              " in the step 5 balanced panel; the panels must match")
     }
-    say(sprintf("%-16s %-7s %5d %s in %2d states", gap, set, n_units,
+    say(sprintf("%-19s %-7s %5d %s in %2d states", gap, set, n_units,
                 if (unit == "state") "states   " else "districts", length(unique(p$state))))
     label <- if (unit == "state") "state" else "district"
-    tw <- run_twfe(p, SEC_FLAGS, covs, WINDOW)
-    fits <- list(sun_abraham = run_sunab(p, SEC_FLAGS, covs, WINDOW),
-                 imputation  = run_imputation(p, SEC_FLAGS, covs, WINDOW),
-                 synthdid    = run_sdid(p, seed_step = paste("06_secondary synthdid", gap, set)),
-                 stacked     = run_stacked(p, SEC_FLAGS, covs),
+    tw <- run_twfe(p, CONTROLS, covs, WINDOW)
+    fits <- list(sun_abraham = run_sunab(p, CONTROLS, covs, WINDOW),
+                 imputation  = run_imputation(p, CONTROLS, covs, WINDOW),
+                 synthdid    = run_sdid(p, seed_step = if (OUTCOME == "achievement") paste("06_secondary synthdid", gap, set)
+                                        else paste("06_secondary graduation synthdid", gap, set)),
+                 stacked     = run_stacked(p, CONTROLS, covs),
                  twfe        = tw$dynamic,
                  twfe_static = tw$static)
     stopifnot(identical(names(fits), ESTIMATORS))
@@ -196,6 +235,6 @@ for (key in names(res)) {
 
 n_err <- sum(startsWith(status$status, "error"))
 say("\nWrote ", paste0(out_dir, "/", c(paste0(names(files), ".csv"), "secondary_models.rds"), collapse = ", "))
-say(nrow(status), " models (", length(ESTIMATORS), " estimators, ", length(GAPS), " gaps, ", length(EVENT_SETS),
-    " event set); models that stopped with an error: ", n_err, ". Status per model: ", file.path(out_dir, "model_status.csv"))
+say(nrow(status), " ", OUTCOME, " models (", length(ESTIMATORS), " estimators, ", length(GAPS), " gaps, ",
+    length(EVENT_SETS), " event set(s)); models that stopped with an error: ", n_err, ". Status per model: ", file.path(out_dir, "model_status.csv"))
 say("Log: ", log_file)

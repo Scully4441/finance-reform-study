@@ -154,4 +154,7 @@ source("tests/test_inference.R")
 
 # power simulation and the step 8 outputs
 source("tests/test_power.R")
+
+# secondary graduation outcome: loaders, gaps and the graduation pass of steps 5-7
+source("tests/test_graduation.R")
 cat("All tests passed.\n")
