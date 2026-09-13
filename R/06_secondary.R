@@ -70,9 +70,8 @@ SAMPLE <- "primary"    # suppression sample, as step 5
 FLAGS      <- c(primary = "retained", r1 = "retained_r1", r2 = "retained_r2")
 PANEL      <- "balanced"   # the step 5 panel rule these estimators run on (see the header)
 if (OUTCOME == "achievement") {
-  if (!identical(stage, 1L))
-    stop("R/06_secondary.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 and extend WINDOW first.")
-  WINDOW <- 2010:2013    # stage 1 end years (data acquisition 1)
+  if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
+  WINDOW <- ACH_WINDOW   # end years 2010-2019 and 2021 (design Section 3)
   EVENT_SETS <- c(primary = "event_table.csv")
   GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
   CONTROLS <- SEC_FLAGS
@@ -110,13 +109,21 @@ if (OUTCOME == "achievement") {
   pov  <- utils::read.csv("data/derived/gap_poverty_state_year.csv", stringsAsFactors = FALSE, na.strings = "")
   stopifnot(all(race$sy_end %in% WINDOW), all(pov$sy_end %in% WINDOW),
             SAMPLE %in% race$sample, SAMPLE %in% pov$sample)
+  cell_cols <- as.vector(outer(c("cell_", "w_", "part_ok_"), paste0(names(SUBJECTS), "_all"), paste0))
   smp <- data.table::fread("data/derived/sample_district_year.csv",
-                           select = c("leaid", "state", "sy_end", "saipe_pov_rate_2009", SEC_FLAGS),
+                           select = c("leaid", "state", "sy_end", "retained", "retained_r1", "retained_r2",
+                                      "saipe_pov_rate_2009", "pov_quintile_2009", SEC_FLAGS, cell_cols),
                            colClasses = c(leaid = "character"), data.table = FALSE, showProgress = FALSE)
   cov <- cs_covariates(race$leaid, smp, min(WINDOW))
-  flags <- state_flags(smp, WINDOW)
-  say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; state-year flags: ", nrow(flags),
-      " state-years (", paste(SEC_FLAGS, collapse = ", "), ")")
+  # CEP is district-year from 2014 (author decision 2026-09-12): gaps (b) and (c) take the
+  # flags by district-year; gap (a) takes gap_a_flags() per event set, with the 2009-10
+  # membership that decides which districts enter gap (a).
+  td09 <- tempfile("ccd"); dir.create(td09)
+  m09 <- read_ccd_lea(utils::unzip("data/raw/ccd/lea-directory-sy2009-10.zip", exdir = td09), 2010L, extra = "MEMBER")
+  smp$member_2009 <- ccd_count(m09$member)[match(smp$leaid, m09$leaid)]
+  dflags <- smp[c("leaid", "sy_end", SEC_FLAGS)]
+  say("Covariates for the ", nrow(cov), " districts in the gap (b)/(c) file; district-year flags: ", nrow(dflags),
+      " district-years (", paste(SEC_FLAGS, collapse = ", "), "); gap (a): state-year test_replaced and CEP share")
 } else {
   race <- utils::read.csv("data/derived/gaps_graduation_district_year.csv", colClasses = c(leaid = "character"),
                           stringsAsFactors = FALSE, na.strings = "")
@@ -160,7 +167,9 @@ for (set in names(EVENT_SETS)) {
     }
     ac <- attach_cohorts(p, coding, unit)
     stopifnot(ac$dropped[["excluded"]] == 0L)
-    p <- if (OUTCOME == "graduation") attach_district_flags(ac$panel, dflags) else attach_flags(ac$panel, flags)
+    p <- if (OUTCOME == "graduation") attach_district_flags(ac$panel, dflags)
+         else if (gap == "a_poverty") attach_flags(ac$panel, gap_a_flags(smp, flag, WINDOW, SAMPLE))
+         else attach_district_flags(ac$panel, dflags, SEC_FLAGS)
     n_units <- length(unique(p$id))
     if (!is.null(pc5)) {
       n5 <- pc5$units_in_model[pc5$gap == gap & pc5$event_set == set & pc5$panel == "balanced"]

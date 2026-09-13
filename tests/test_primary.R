@@ -153,7 +153,11 @@ if (all(file.exists(of))) {
   n_mod <- length(models)
   key <- function(x) paste(x$gap, x$event_set, x$weighting, x$panel)
   stopifnot(n_mod == 30, nrow(ms) == n_mod, setequal(key(ms), models), !anyDuplicated(key(ms)),
-            !any(startsWith(ms$status, "error")), all(ms$status %in% c("ok", "no estimable cohort")))
+            all(ms$status %in% c("ok", "no estimable cohort") | startsWith(ms$status, "error:")),
+            # full window: did can find no estimable cell on a small balanced robustness panel
+            # (recorded as a status, as in the graduation pass); the primary models must fit
+            !any(startsWith(ms$status, "error") & ms$panel == "unbalanced"),
+            all(ms$status[ms$event_set == "primary" & ms$panel == "unbalanced"] == "ok"))
   stopifnot(nrow(ee) == n_mod * 14, all(table(key(ee)) == 14), all(ee$e %in% EVENT_MIN:EVENT_MAX),
             nrow(oo) == n_mod, setequal(key(oo), models))
   # every model is fitted under both panel rules, and only the unbalanced ones say so
@@ -175,8 +179,8 @@ if (all(file.exists(of))) {
   kb <- match(paste(pc$gap[ku], pc$event_set[ku]), paste(pc$gap[!ku], pc$event_set[!ku]))
   stopifnot(sum(ku) == 9, !anyNA(kb), all(pc$units_in_panel[ku] >= pc$units_in_panel[!ku][kb]),
             all(pc$unit_years[ku] >= pc$unit_years[!ku][kb]),
-            all(near(pc$unit_years_per_unit[!ku], 4)),          # 2010-2013, every year
-            all(pc$unit_years_per_unit[ku] <= 4),
+            all(near(pc$unit_years_per_unit[!ku], length(ACH_WINDOW)) | pc$units_in_model[!ku] == 0),  # every window year
+            all(pc$unit_years_per_unit[ku] <= length(ACH_WINDOW)),
             all(pc$dropped_missing_weight[!ku] == 0), all(pc$dropped_missing_weight >= 0),
             all(pc$dropped_missing_weight[pc$gap == "a_poverty"] == 0))
 }

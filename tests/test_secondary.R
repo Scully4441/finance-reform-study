@@ -12,6 +12,20 @@ sm2 <- sm; sm2$cep[2] <- 1L
 stopifnot(inherits(try(state_flags(sm2, W), silent = TRUE), "try-error"))
 stopifnot(inherits(try(attach_flags(data.frame(state = "C", sy_end = 2010L), fl), silent = TRUE), "try-error"))
 
+# gap (a) flags (author decision 2026-09-12): cep = share of the state-year's gap (a)
+# districts under CEP (quintile 1 or 5, valid 2009-10 membership, retained, all-students
+# cell usable in both subjects); other districts do not count
+ga <- data.frame(leaid = as.character(1:6), state = "A", sy_end = 2015L, retained = c(1L, 1L, 1L, 1L, 1L, 0L),
+                 pov_quintile_2009 = c(1L, 5L, 5L, 3L, 1L, 1L), member_2009 = c(100, 200, 300, 400, NA, 100),
+                 test_replaced = 1L, cep = c(1L, 0L, 1L, 1L, 1L, 1L), stringsAsFactors = FALSE)
+for (subj in names(SUBJECTS)) {
+  ga[[paste0("cell_", subj, "_all")]] <- "usable"; ga[[paste0("w_", subj, "_all")]] <- 0
+  ga[[paste0("part_ok_", subj, "_all")]] <- 1L
+}
+ga$part_ok_rla_all[3] <- 0L                        # district 3 fails rule 4 in RLA
+af <- gap_a_flags(ga, "retained", 2015L)
+stopifnot(nrow(af) == 1, af$test_replaced == 1L, near(af$cep, 0.5))   # districts 1 and 2 only
+
 # covariate-by-year columns: none for the first window year
 cy <- add_cov_year(data.frame(sy_end = W, x = 2), "x", W)
 stopifnot(identical(cy$terms, paste0("cy_x_", 2011:2013)), identical(cy$panel$cy_x_2011, c(0, 2, 0, 0)))

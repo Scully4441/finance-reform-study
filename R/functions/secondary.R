@@ -25,7 +25,7 @@
 # Standard errors are clustered by state (synthdid: placebo) and describe the
 # estimates; inference for the study is step 7.
 
-SEC_FLAGS    <- c("test_replaced", "cep")   # state-year controls from the step 3 sample file
+SEC_FLAGS    <- c("test_replaced", "cep")   # controls from the step 3 sample file (cep district-year from 2014)
 STACK_PRE    <- 5L                          # stacked sub-experiment: event times -5..+5
 STACK_POST   <- 5L
 SDID_REPS    <- 200L                        # placebo replications (synthdid's default)
@@ -42,6 +42,26 @@ state_flags <- function(smp, window) {
   if (anyNA(x[SEC_FLAGS])) stop("flags missing for ", sum(!stats::complete.cases(x[SEC_FLAGS])), " state-years")
   rownames(x) <- NULL
   x
+}
+
+# Controls for the gap (a) state-year panel over the full window (author decision
+# 2026-09-12, docs/deviations.md). From end year 2014 the step 3 cep column is the
+# district's own CCD status, so it differs within a state-year: gaps (b) and (c) take it
+# by district-year (attach_district_flags()), and gap (a) takes cep = the share of the
+# state-year's gap (a) districts under CEP. Gap (a) districts: quintile 1 or 5, a valid
+# 2009-10 membership, retained under the event set, and the all-students cell usable in
+# both math and RLA in the suppression sample (rules 3 and 4). test_replaced is state-year.
+# d: rows of data/derived/sample_district_year.csv with member_2009 attached.
+gap_a_flags <- function(d, flag, window, sample = "primary") {
+  x <- d[d$sy_end %in% window, ]
+  tr <- unique(x[c("state", "sy_end", "test_replaced")])
+  if (anyDuplicated(tr[c("state", "sy_end")])) stop("test_replaced differs across districts within a state-year")
+  ok <- x[[flag]] == 1L & x$pov_quintile_2009 %in% c(1L, 5L) & !is.na(x$member_2009) & x$member_2009 > 0 &
+    gap_cells_ok(x, "math", "all", sample) & gap_cells_ok(x, "rla", "all", sample)
+  y <- x[ok, ]
+  share <- stats::aggregate(list(cep = y$cep), list(state = y$state, sy_end = y$sy_end), mean)
+  out <- merge(tr, share, by = c("state", "sy_end"))
+  out[order(out$state, out$sy_end), c("state", "sy_end", SEC_FLAGS)]
 }
 
 attach_flags <- function(panel, flags) {

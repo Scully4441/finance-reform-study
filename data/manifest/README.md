@@ -43,6 +43,33 @@ row points:
   Denominator, Subgroup, Age/Grade, Academic Subject`), not the wide layout of
   the legacy files. Every other achievement and participation row, 2014–2018
   and 2021, is the legacy ed.gov CSV.
+- **EDFacts, end year 2019: the ED release is truncated; the files used come
+  from an archive (2026-09-12).** The four ED Data Library files above hold
+  only Alabama through North Dakota, BIE and Puerto Rico: the
+  `_LEA_part_2_of_2_OH_to_WY.csv` member carries 96 Puerto Rico rows, and the
+  README's item count (1,391,420) exceeds the 937,216 rows present, so Ohio,
+  Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina, South Dakota,
+  Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,
+  Wisconsin and Wyoming are missing. A fresh download on 2026-09-12 was
+  byte-identical to the archived zips. The four rows
+  `edfacts_*_edc_archive` archive the same school year from the Education
+  Data Center EDFacts archive (`https://www.eddatacenter.org/edfacts`, files
+  on `storage.googleapis.com/edc-education-exports/edfacts/`, object
+  last-modified 2025-03-26): ED's legacy long-layout files
+  `{math,rla}-{achievement,participation}-lea-sy2018-19-long.csv`
+  (`DATE_CUR` 13AUG20; columns `SCHOOL_YEAR, STNAM, FIPST, LEAID, ST_LEAID,
+  LEANM, SUBJECT, GRADE, CATEGORY, DATE_CUR, NUMVALID|NUMPART,
+  PCTPROF|PCTPART`), which cover all 50 states and DC. Checked against the
+  ED release for the 36 jurisdictions both carry, high school band, subgroups
+  ALL, MWH, MBL, MHI and ECD: every reported percentage is identical
+  (154,444 cells over the four files); the only differences are cells ED
+  writes with count `0` and value `.` where the archive leaves the count
+  blank, and neither passes rule 3 or rule 4. The loader reads the archive
+  rows for end year 2019; the ED Data Library rows stay in the manifest as
+  the record of the truncated release. The Urban Institute Education Data
+  Portal (`school-districts/edfacts/assessments`, year 2018) also carries the
+  sixteen states, but in its own recoded layout, so it was not used.
+  (`docs/deviations.md`, 2026-09-12.)
 - **End year 2020 (SY2019-20).** No EDFacts assessment file of any kind was
   published, and design Section 3 excludes that school year from the
   achievement gaps, so the manifest has no achievement or participation row for

@@ -95,6 +95,28 @@ for (case in list(list(y = 2010L, up = FALSE), list(y = 2013L, up = TRUE))) {
   stopifnot(inherits(try(read_edfacts_hs(tmp_csv, "rla", case$y, "achievement"), silent = TRUE), "try-error"))
 }
 
+# EDFacts reader, long layout (end years 2019 and 2021): HS rows only, one row per LEA,
+# a subgroup the file does not list comes back blank
+lg <- data.frame(SCHOOL_YEAR = "2020-2021", STNAM = "ALABAMA", FIPST = "01",
+                 LEAID = c("0100005", "0100005", "0100005", "0100006", "0100006"), ST_LEAID = "x", LEANM = "x",
+                 SUBJECT = "MTH", GRADE = c("HS", "HS", "00", "HS", "08"), CATEGORY = c("ALL", "MBL", "ALL", "MWH", "ALL"),
+                 DATE_CUR = "30MAR22", NUMVALID = c("353", "40", "999", "31", "5"), PCTPROF = c("19", "20-24", "50", "GE50", "PS"),
+                 stringsAsFactors = FALSE)
+tmp_csv <- tempfile(fileext = ".csv"); utils::write.csv(lg, tmp_csv, row.names = FALSE)
+e <- read_edfacts_hs(tmp_csv, "math", 2021L, "achievement")
+stopifnot(identical(e$leaid, c("0100005", "0100006")), identical(e$n_all, c("353", "")), identical(e$p_bl, c("20-24", "")),
+          identical(e$p_wh, c("", "GE50")), ncol(e) == 1 + 2 * length(SUBGROUPS))
+stopifnot(inherits(try(read_edfacts_hs(tmp_csv, "rla", 2021L, "achievement"), silent = TRUE), "try-error"),   # subject
+          inherits(try(read_edfacts_hs(tmp_csv, "math", 2019L, "achievement"), silent = TRUE), "try-error"))  # year
+pl <- lg; names(pl)[names(pl) == "NUMVALID"] <- "NUMPART"; names(pl)[names(pl) == "PCTPROF"] <- "PCTPART"
+pl$PCTPART <- c("GE95", "90-94", "98", "GE99", "PS")
+utils::write.csv(pl, tmp_csv, row.names = FALSE)
+e <- read_edfacts_hs(tmp_csv, "math", 2021L, "participation")
+stopifnot(identical(e$part_all, c("GE95", "")), identical(e$part_bl, c("90-94", "")), ncol(e) == 1 + length(SUBGROUPS))
+stopifnot(identical(edfacts_hs_file("rla", 2019L, "participation"), "data/raw/edfacts/rla-participation-lea-sy2018-19-long.csv"),
+          identical(edfacts_hs_file("math", 2018L, "achievement"), "data/raw/edfacts/math-achievement-lea-sy2017-18.csv"),
+          identical(ACH_WINDOW, c(2010:2019, 2021L)))
+
 # SAIPE reader: fields found by pattern whatever the column widths
 tmp <- tempfile(fileext = ".txt")
 writeLines(c("01 00005 Albertville City School District                                     19085     3467     1049 USSD09.txt 05APR2011  ",
@@ -144,11 +166,12 @@ if (file.exists(out)) {
     stopifnot(all(s[[paste0("n_", v)]][u] >= 30), all(wv[u] <= 10), !anyNA(pv[u]), all(pv[u] >= 0 & pv[u] <= 100),
               all(is.na(pv[!u])), all(wv[cs == "wide_range"] > 10), all(is.na(wv[cs == "suppressed"])))
     # participation flag = exact value or band midpoint >= 95; the exact-only sample's
-    # cells report participation exactly or at a 1-point end band (GE99/LE1)
+    # cells report participation exactly, at a 1-point end band (GE99/LE1) or as GE95, never
+    # as a band straddling 95 (author decision 2026-09-12)
     pr <- s[[paste0("part_", v)]]; t13 <- s$sy_end >= 2013
     stopifnot(all(s[[paste0("part_ok_", v)]][t13] == as.integer(part_pass(pr[t13]))))
-    pw <- edfacts_range(pr[t13 & cell_in_sample(cs, wv, "exact")])$width
-    stopifnot(all(is.na(pw) | pw <= 1))
+    px <- edfacts_range(pr[t13 & cell_in_sample(cs, wv, "exact")])
+    stopifnot(!any(!is.na(px$width) & px$width > 0 & px$lo < 95 & px$hi >= 95))
   }
   q <- s$pov_quintile_2009[s$retained == 1 & !is.na(s$pov_quintile_2009)]
   stopifnot(all(q %in% 1:5))

@@ -1,0 +1,2 @@
+Step 6 secondary estimators (achievement), run 20260912T214434Z; stage 2; blinding PERMUTED; fixest 0.14.2, didimputation 0.5.1, synthdid 0.0.9
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/06_secondary and outputs/logs/06_secondary_20260912T214434Z.log

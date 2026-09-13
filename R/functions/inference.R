@@ -158,6 +158,16 @@ cs_overall <- function(panel, xformla, weightsname, min_e, max_e, allow_unbalanc
   }, error = function(e) NA_real_)))
 }
 
+# Two-sided randomization p-value: (1 + the placebo estimates at least as far from zero as
+# the observed one) / (draws + 1). A reassignment that reproduces the observed treated
+# states gives the observed estimate again, but a refit can land a floating-point hair
+# below it; such ties count as at least as far, so the comparison allows a relative
+# tolerance of 1e-9 (far below any estimate's precision). vals: finite placebo estimates.
+RI_TIE_TOL <- 1e-9
+ri_pvalue <- function(vals, att) {
+  (1 + sum(abs(vals) >= abs(att) - RI_TIE_TOL * max(1, abs(att)))) / (length(vals) + 1)
+}
+
 # Randomization inference on the overall post-reform average.
 # The cohort years of the treated states are reassigned among every state in the panel,
 # keeping the number of states per cohort year, and the estimator is rerun. The
@@ -188,7 +198,7 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
     furrr::future_map_dbl(picks, one, .options = furrr::furrr_options(seed = seed_for(paste(seed_step, "workers"))))
   else vapply(picks, one, numeric(1))
   ok <- is.finite(vals)
-  p <- if (!any(ok) || !is.finite(att)) NA_real_ else (1 + sum(abs(vals[ok]) >= abs(att))) / (sum(ok) + 1)
+  p <- if (!any(ok) || !is.finite(att)) NA_real_ else ri_pvalue(vals[ok], att)
   list(status = if (any(ok)) "ok" else "every reassignment failed", p_value = p, values = vals,
        reps = reps, draws_ok = sum(ok), treated_states = length(gs), eligible_states = length(states))
 }

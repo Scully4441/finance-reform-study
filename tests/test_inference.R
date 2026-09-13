@@ -113,6 +113,10 @@ stopifnot(!is.null(iinfu), iinfu$n == length(unique(ipu$id)),
           cluster_se(iinfu$scores[, "overall"], iinfu$n) > 0)
 iriu <- ri_overall(ifitu$fit, reps = 4L, seed_step = "test inference ri unbalanced", parallel = FALSE)
 stopifnot(iriu$status == "ok", length(iriu$values) == 4L, iriu$draws_ok > 0L)
+# a placebo draw that reproduces the observed estimate up to floating-point noise is a tie
+# and counts as at least as far from zero
+stopifnot(near(ri_pvalue(c(0.3 - 1e-15, -0.3 + 1e-14, 0.1, 0.5), 0.3), 4 / 5),
+          near(ri_pvalue(c(0.2999, 0.1), -0.3), 1 / 3))
 # a weighted model: did reserves .w for its own weights, so they come back under another name
 ipw <- ip
 ipw$wt <- 1 + as.integer(factor(ipw$state)) %% 3L
@@ -193,11 +197,12 @@ if (all(file.exists(of7))) {
             all(rwf$family %in% c("unweighted", "tested_weighted")),
             all(rwf$panel %in% names(PANEL_TYPES)))
   # a family is the three gaps within one event set, weighting family and panel rule
-  stopifnot(setequal(paste(rwf$event_set, rwf$panel, rwf$family),
-                     as.vector(outer(c("primary", "r1", "r2"),
-                                     as.vector(outer(names(PANEL_TYPES),
-                                                     c("unweighted", "tested_weighted"), paste)),
-                                     paste))))
+  # (a family forms where at least two of its gaps have a step 5 fit; on the full window
+  # the balanced r1 and r2 panels do not)
+  fams <- as.vector(outer(c("primary", "r1", "r2"),
+                          as.vector(outer(names(PANEL_TYPES), c("unweighted", "tested_weighted"), paste)), paste))
+  stopifnot(all(paste(rwf$event_set, rwf$panel, rwf$family) %in% fams),
+            all(paste("primary", names(PANEL_TYPES), "unweighted") %in% paste(rwf$event_set, rwf$panel, rwf$family)))
   kb <- match(paste(rwf$gap, rwf$event_set, rwf$weighting, rwf$panel), key7(bo))
   stopifnot(!anyNA(kb), all(near(rwf$p_unadjusted, bo$p_value[kb], 1e-12)),
             all(near(rwf$t, bo$t[kb], 1e-10)))
@@ -233,8 +238,7 @@ if (all(file.exists(of7))) {
     v <- rdw$att[key7(rdw) == m]
     v <- v[!is.na(v)]
     r <- ro[key7(ro) == m, ]
-    stopifnot(length(v) == r$draws_ok,
-              near(r$p_value, (1 + sum(abs(v) >= abs(r$att))) / (length(v) + 1), 1e-10))
+    stopifnot(length(v) == r$draws_ok, near(r$p_value, ri_pvalue(v, r$att), 1e-10))
   }
   # the settings file records the counts this run used
   stopifnot(all(c("bootstrap_reps", "randomization_reps", "romano_wolf_reps", "quick_run", "master_seed") %in%

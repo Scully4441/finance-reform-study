@@ -35,11 +35,12 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
-if (!identical(stage, 1L))
-  stop("R/03_sample.R covers stage 1 (end years 2010-2013). Extend WINDOW and the loaders for stage 2 without changing any rule.")
-WINDOW    <- 2010:2013    # stage 1 end years (data acquisition 1)
-PART_FROM <- 2013L        # participation files begin with 2012-13 (design Section 5, v17)
-stopifnot(max(WINDOW) <= 2013L)   # stage gate: no outcome file after 2013 is read
+if (!identical(stage, 2L))
+  stop("R/03_sample.R reads the full achievement window, which needs stage 2 (outcome files after 2012-13).")
+# Full window (design Section 3): end years 2010-2019 and 2021 (ACH_WINDOW); PART_FROM = 2013.
+# Rules 1 and 2 are tested in these years; from 2014-15 the CCD LEA Directory's LEA_TYPE and
+# UPDATED_STATUS stand in for TYPE and BOUND (read_ccd_lea_any(); docs/deviations.md 2026-09-12).
+WINDOW <- ACH_WINDOW
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")
 out_dir <- "outputs/03_sample"
@@ -74,11 +75,7 @@ stopifnot(all(outer(names(STATE_FIPS), WINDOW, paste) %in% paste(tr$state, tr$sy
           setequal(cep$state, names(STATE_FIPS)))
 
 # ---- CCD LEA universe: rules 1 and 2 ---------------------------------------------
-td <- tempfile("ccd"); dir.create(td)
-lea <- do.call(rbind, lapply(WINDOW, function(y) {
-  z <- sprintf("data/raw/ccd/lea-directory-sy%d-%02d.zip", y - 1L, y %% 100L)
-  read_ccd_lea(utils::unzip(z, exdir = td), y)
-}))
+lea <- do.call(rbind, lapply(WINDOW, read_ccd_lea_year))
 lea$state <- fips_to_state(lea$fipst)
 n_outside <- length(unique(lea$leaid[is.na(lea$state)]))
 lea <- lea[!is.na(lea$state), ]
@@ -127,8 +124,7 @@ smp$test_replaced_rla  <- tr$replaced_rla[kt]
 edf <- lapply(WINDOW, function(y) {
   yr <- NULL
   for (subj in names(SUBJECTS)) {
-    f <- sprintf("data/raw/edfacts/%s-achievement-lea-sy%d-%02d.csv", subj, y - 1L, y %% 100L)
-    a <- read_edfacts_hs(f, subj, y, "achievement")
+    a <- read_edfacts_hs(edfacts_hs_file(subj, y, "achievement"), subj, y, "achievement")
     x <- data.frame(leaid = a$leaid, stringsAsFactors = FALSE)
     for (s in SUBGROUPS) {
       n_raw <- a[[paste0("n_", s)]]
@@ -141,8 +137,7 @@ edf <- lapply(WINDOW, function(y) {
       x[[paste0("cell_", subj, "_", s)]] <- st
     }
     if (y >= PART_FROM) {
-      pf <- sprintf("data/raw/edfacts/%s-participation-lea-sy%d-%02d.csv", subj, y - 1L, y %% 100L)
-      p <- read_edfacts_hs(pf, subj, y, "participation")
+      p <- read_edfacts_hs(edfacts_hs_file(subj, y, "participation"), subj, y, "participation")
       pp <- data.frame(leaid = p$leaid, stringsAsFactors = FALSE)
       for (s in SUBGROUPS) pp[[paste0("part_", subj, "_", s)]] <- trimws(p[[paste0("part_", s)]])
       x <- merge(x, pp, by = "leaid", all.x = TRUE)
@@ -167,12 +162,15 @@ for (subj in names(SUBJECTS)) for (s in SUBGROUPS) {
   smp[[paste0("part_ok_", subj, "_", s)]] <-
     ifelse(smp$sy_end >= PART_FROM, as.integer(part_pass(smp[[pv]])), NA_integer_)
   # The exact-only sample keeps exact participation values (author decision 2026-09-11).
-  # Its cells report participation exactly or as GE99/LE1 (width 1), where the
-  # midpoint test gives the same answer; a wider band there needs an author decision.
+  # Its cells report participation exactly, as GE99/LE1 (width 1), or in six full-window
+  # cells as GE95; none of those can straddle 95, so every reading of the band gives the
+  # midpoint test's answer (author decision 2026-09-12, docs/deviations.md: GE95 passes).
+  # A band that straddles 95 (lower end below, upper end at or above) needs an author decision.
   k  <- smp$sy_end >= PART_FROM & cell_in_sample(smp[[cv]], smp[[paste0("w_", subj, "_", s)]], "exact")
-  pw <- edfacts_range(smp[[pv]][k])$width
-  if (any(!is.na(pw) & pw > 1))
-    stop("exact-only sample: participation band wider than 1 point in ", sum(!is.na(pw) & pw > 1),
+  pr <- edfacts_range(smp[[pv]][k])
+  straddle <- !is.na(pr$width) & pr$width > 0 & pr$lo < 95 & pr$hi >= 95
+  if (any(straddle))
+    stop("exact-only sample: participation band straddling 95 in ", sum(straddle),
          " ", subj, " ", s, " cells; the participation rule for that sample needs an author decision")
 }
 

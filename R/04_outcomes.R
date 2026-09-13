@@ -43,10 +43,9 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
-if (!identical(stage, 1L))
-  stop("R/04_outcomes.R covers stage 1 (end years 2010-2013). Rerun R/03_sample.R for stage 2 first.")
-WINDOW    <- 2010:2013    # stage 1 end years (data acquisition 1)
-PART_FROM <- 2013L        # participation files begin with 2012-13 (design Section 5, v17)
+if (!identical(stage, 2L))
+  stop("R/04_outcomes.R reads the full achievement window, which needs stage 2.")
+WINDOW <- ACH_WINDOW      # end years 2010-2019 and 2021 (design Section 3); PART_FROM = 2013
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")
 out_dir <- "outputs/04_outcomes"

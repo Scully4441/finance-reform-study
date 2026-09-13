@@ -46,13 +46,13 @@ decision the document does not make, stop and ask the author before coding it.
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
 | 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file |
-| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11) |
-| 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11) |
+| 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11); full window 2010-2019 and 2021 (2026-09-12), end year 2019 from the EDC archive (ED's release truncated), LEA_TYPE/UPDATED_STATUS for TYPE/BOUND |
+| 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11); full window (2026-09-12) |
 | 3g | `R/03g_graduation_sample.R` — graduation sample, design v18 Sections 5, 6 | Claude Code | complete (2026-09-12) |
 | 4g | `R/04g_graduation_outcomes.R` — graduation gaps, design v18 Section 6 | Claude Code | complete (2026-09-12) |
-| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11); graduation pass `--outcome graduation`, 24 models (2026-09-12) |
-| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12) |
-| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); both run so far only at the reduced `--quick` counts |
+| 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11); graduation pass `--outcome graduation`, 24 models (2026-09-12); both outcomes rerun on the full window (2026-09-12) |
+| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12); full window (2026-09-12), CEP district-year for (b)/(c) and a share for (a) |
+| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); full window at the registered counts (9,999 / 10,000), both outcomes (2026-09-13), with ties counted in the randomization p-value |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | complete (2026-09-11) |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |

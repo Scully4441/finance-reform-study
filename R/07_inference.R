@@ -57,8 +57,7 @@ for (f in list.files("R/functions", full.names = TRUE)) source(f)
 OUTCOME <- outcome_arg()
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
 if (OUTCOME == "achievement") {
-  if (!identical(stage, 1L))
-    stop("R/07_inference.R covers stage 1 (end years 2010-2013). Rerun steps 3 to 5 for stage 2 first.")
+  if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
   GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
   in_dir <- file.path("outputs", "05_primary")
 } else {

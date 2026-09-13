@@ -60,13 +60,35 @@ read_ccd_lea <- function(path, sy_end, extra = character()) {
   out
 }
 
+# Achievement window (design Section 3; decision log 2026-09-11): end years 2010 through
+# the registration end year 2021, with 2019-20 excluded (no assessment was given).
+ACH_WINDOW <- c(2010:2019, 2021L)
+PART_FROM  <- 2013L     # participation files begin with 2012-13 (design Section 5, v17)
+
+# The archived EDFacts LEA file for one subject, end year and kind. End years 2010-2018
+# are ED's legacy wide CSVs. End year 2019 is ED's legacy long CSV from the Education Data
+# Center archive: ED's own ED Data Library release for that year is truncated after North
+# Dakota (docs/deviations.md, 2026-09-12; data/manifest/README.md). End year 2021 is ED's
+# legacy long CSV.
+edfacts_hs_file <- function(subject, sy_end, kind = c("achievement", "participation")) {
+  kind <- match.arg(kind)
+  sprintf("data/raw/edfacts/%s-%s-lea-sy%d-%02d%s.csv", subject, kind, sy_end - 1L, sy_end %% 100L,
+          if (sy_end == 2019L) "-long" else "")
+}
+
 # EDFacts LEA file, high school band only (grade "HS", never "00").
 # kind = "achievement": returns n_<sg> (raw valid-test count) and p_<sg> (raw percent proficient).
 # kind = "participation": returns part_<sg> (raw percent participating).
 # Values are returned as reported (character); callers parse them.
+# Two layouts: wide (one row per LEA, columns ALL_MTHHSNUMVALID_1011, ...; end years
+# 2010-2018) and long (one row per LEA-grade-subgroup, columns SUBJECT, GRADE, CATEGORY,
+# NUMVALID/PCTPROF or NUMPART/PCTPART; end years 2019 and 2021). A subgroup the long file
+# does not list for an LEA is returned blank, as the wide files leave it.
 read_edfacts_hs <- function(path, subject, sy_end, kind = c("achievement", "participation")) {
   kind <- match.arg(kind)
   code <- SUBJECTS[[subject]]
+  hdr <- toupper(gsub("\"", "", strsplit(readLines(path, n = 1L, warn = FALSE), ",", fixed = TRUE)[[1]]))
+  if (all(c("GRADE", "CATEGORY") %in% hdr)) return(read_edfacts_hs_long(path, subject, sy_end, kind))
   d <- utils::read.csv(path, colClasses = "character", na.strings = character(), check.names = FALSE)
   up <- toupper(names(d))
   tag <- edfacts_year_tag(sy_end)
@@ -87,6 +109,32 @@ read_edfacts_hs <- function(path, subject, sy_end, kind = c("achievement", "part
     } else {
       out[[paste0("part_", s)]] <- col(sg, "PCTPART")
     }
+  }
+  out
+}
+
+read_edfacts_hs_long <- function(path, subject, sy_end, kind) {
+  code <- SUBJECTS[[subject]]
+  fields <- if (kind == "achievement") c(n = "NUMVALID", p = "PCTPROF") else c(part = "PCTPART")
+  need <- c("SCHOOL_YEAR", "LEAID", "SUBJECT", "GRADE", "CATEGORY", unname(fields))
+  d <- data.table::fread(path, colClasses = "character", na.strings = NULL, select = need,
+                         showProgress = FALSE, data.table = FALSE)
+  miss <- setdiff(need, names(d))
+  if (length(miss)) stop(basename(path), " lacks columns: ", paste(miss, collapse = ", "))
+  yr <- sprintf("%d-%d", sy_end - 1L, sy_end)
+  if (!all(d$SCHOOL_YEAR == yr)) stop(basename(path), ": SCHOOL_YEAR is not ", yr)
+  if (!all(d$SUBJECT == code)) stop(basename(path), ": SUBJECT is not ", code)
+  d$LEAID <- trimws(d$LEAID)
+  if (!all(grepl("^[0-9]{7}$", d$LEAID))) stop(basename(path), ": LEAID not 7 digits")
+  hs <- d[d$GRADE == "HS", ]
+  if (!nrow(hs)) stop(basename(path), ": no GRADE HS rows")
+  out <- data.frame(leaid = sort(unique(hs$LEAID)), stringsAsFactors = FALSE)
+  for (sg in names(SUBGROUPS)) {
+    x <- hs[hs$CATEGORY == sg, ]
+    if (anyDuplicated(x$LEAID)) stop(basename(path), ": duplicate LEAID for ", sg)
+    k <- match(out$leaid, x$LEAID)
+    for (f in names(fields))
+      out[[paste0(f, "_", SUBGROUPS[[sg]])]] <- ifelse(is.na(k), "", x[[fields[[f]]]][k])
   }
   out
 }

@@ -63,9 +63,8 @@ for (f in list.files("R/functions", full.names = TRUE)) source(f)
 OUTCOME <- outcome_arg()
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
 if (OUTCOME == "achievement") {
-  if (!identical(stage, 1L))
-    stop("R/05_primary.R covers stage 1 (end years 2010-2013). Rerun steps 3 and 4 for stage 2 and extend WINDOW first.")
-  WINDOW <- 2010:2013    # stage 1 end years (data acquisition 1)
+  if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
+  WINDOW <- ACH_WINDOW   # end years 2010-2019 and 2021 (design Section 3)
   GAPS   <- c("a_poverty", "b_black_white", "c_hispanic_white")
   WCOL   <- "tested_2010"
 } else {
