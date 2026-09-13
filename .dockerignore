@@ -1,0 +1,11 @@
+# the Windows project library must not overwrite the one restored in the image
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+.Rhistory
+.RData
+.Rproj.user/
