@@ -114,3 +114,7 @@ Stage 1: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11, containing
 
 Stage 2: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11
 d51b0f3ce5ebc9fbbda3dfab33561a48f832d0d97ff3da91ec12354fb81cbc41
+
+Stage 2 supplement: added to the stage 2 component on 2026-09-13, containing stage2_supplement_2018-19.zip with the four SY 2018-19 achievement and participation files from the Education Data Center EDFacts archive, used in place of ED's truncated release
+
+859709c1a787e448b03774723d7400233bb93b3bf41e3c4478137e9297ee7ecb
