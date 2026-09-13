@@ -231,27 +231,30 @@ if (all(file.exists(of5g))) {
             all(pc$unit_years_per_unit <= length(GW)), all(pc$dropped_missing_weight[pc$panel == "balanced"] == 0))
 }
 
-# graduation pass of step 6, when it has been built
-of6g <- file.path("outputs", "06_secondary", "graduation", c("event_time_estimates.csv", "overall_estimates.csv",
-                                                           "model_status.csv", "panel_counts.csv"))
+# graduation pass of step 6, when it has been built: the unbalanced panel in the main
+# folder, the balanced panel in appendix/ (author decision 2026-09-13)
+for (d6 in c(unbalanced = "outputs/06_secondary/graduation", balanced = "outputs/06_secondary/appendix/graduation")) {
+of6g <- file.path(d6, c("event_time_estimates.csv", "overall_estimates.csv", "model_status.csv", "panel_counts.csv"))
 if (all(file.exists(of6g))) {
+  pname <- if (grepl("appendix", d6)) "balanced" else "unbalanced"
   ee <- rdg(of6g[1]); oo <- rdg(of6g[2]); ms <- rdg(of6g[3]); pc6 <- rdg(of6g[4])
   ests <- c("sun_abraham", "imputation", "synthdid", "stacked", "twfe", "twfe_static")
   models <- as.vector(outer(ests, outer(names(GRAD_GAPS), c("primary", "r1", "r2"), paste), paste))
   key6 <- function(x) paste(x$estimator, x$gap, x$event_set)
-  stopifnot(nrow(ms) == 36, setequal(key6(ms), models), all(ms$panel == "balanced"), all(ms$weighting == "unweighted"),
+  stopifnot(nrow(ms) == 36, setequal(key6(ms), models), all(ms$panel == pname), all(ms$weighting == "unweighted"),
             nrow(ee) == 30 * 14, nrow(oo) == 36)
-  if (all(file.exists(of5g))) {                                               # the step 5 balanced panels
-    p5 <- rdg(of5g[4]); p5 <- p5[p5$panel == "balanced", ]
+  if (all(file.exists(of5g))) {                                               # the matching step 5 panels
+    p5 <- rdg(of5g[4]); p5 <- p5[p5$panel == pname, ]
     x <- pc6[pc6$estimator == "twfe", ]
     k <- match(paste(x$gap, x$event_set), paste(p5$gap, p5$event_set))
     stopifnot(!anyNA(k), all(x$units_in_model == p5$units_in_model[k]))
   }
   # the controls: cep and the covariate-by-year terms, never the test-replacement flag
-  fits <- readRDS(file.path("outputs", "06_secondary", "graduation", "secondary_models.rds"))
+  fits <- readRDS(file.path(d6, "secondary_models.rds"))
   tw <- fits[[paste("twfe", "grad_black_white", "primary", sep = ".")]]
   if (!is.null(tw)) stopifnot(!any(grepl("test_replaced", names(stats::coef(tw)))),
                               any(grepl("^cy_log_member_2009_", names(stats::coef(tw)))))
+}
 }
 
 # graduation pass of step 7, when it has been built

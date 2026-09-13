@@ -77,6 +77,13 @@ sa  <- run_sunab(p2, SEC_FLAGS, "x1", W)
 bi  <- run_imputation(p2, SEC_FLAGS, "x1", W)
 stk <- run_stacked(p2, SEC_FLAGS, "x1")
 tw  <- run_twfe(p2, SEC_FLAGS, "x1", W)
+# unbalanced input: treated units observed only after reform cannot be imputed; they are
+# left out of the weights with a note, and the overall stays the equal-weight mean of
+# the event-time estimates
+pun <- p2[!(p2$g > 0L & p2$sy_end < p2$g & p2$id %in% unique(p2$id[p2$g > 0L])[1:10]), ]
+biu <- run_imputation(pun, SEC_FLAGS, "x1", W)
+stopifnot(biu$status == "ok", any(grepl("^10 treated unit\\(s\\) without an untreated observation", biu$notes)),
+          near(biu$overall$att, mean(biu$event$att[biu$event$e >= 0 & !is.na(biu$event$att)]), 1e-8))
 exp_c <- c(0L, 0L, 1L, 2L, 3L, 3L, 2L, 1L, rep(0L, 6))    # cohorts per event time -5..+8
 exp_s <- c(0L, 0L, 1L, 3L, 4L, 4L, 3L, 1L, rep(0L, 6))    # treated states
 for (f in list(sa, bi, stk, tw$dynamic)) {
@@ -155,6 +162,14 @@ stopifnot(identical(run_sdid(p3, seed_step = "test secondary sdid", reps = 50L)$
 sdf <- run_sdid(p3[p3$g %in% c(0L, 2012L, 2013L) & p3$state %in% c("S02", "S03", "S04", "S07", "S08"), ],
                 seed_step = "test secondary sdid few", reps = 5L)
 stopifnot(sdf$status == "ok", all(is.na(sdf$event$se)), any(grepl("more control states", sdf$notes)))
+# unbalanced input (author decision 2026-09-13): a state without a mean in every year stops
+# the balanced call; with complete_states it is left out with a note and the rest estimate
+pu <- p3[!(p3$state == "S09" & p3$sy_end == min(p3$sy_end)), ]
+stopifnot(inherits(try(run_sdid(pu, seed_step = "test secondary sdid", reps = 5L), silent = TRUE), "try-error"))
+sdu <- run_sdid(pu, seed_step = "test secondary sdid unbalanced", reps = 5L, complete_states = TRUE)
+sdc <- run_sdid(p3[p3$state != "S09", ], seed_step = "test secondary sdid unbalanced", reps = 5L)
+stopifnot(sdu$status == "ok", any(grepl("^1 of [0-9]+ state\\(s\\) without", sdu$notes)),
+          near(sdu$overall$att, sdc$overall$att), sdu$size$units_in_model == sdc$size$units_in_model)
 
 # no estimable cohort: a status, not an error
 p0 <- p2; p0$g <- 0L
@@ -165,12 +180,16 @@ for (f in list(run_sunab(p0, SEC_FLAGS, "x1", W), run_imputation(p0, SEC_FLAGS, 
             identical(f$event$e, -5:8), is.na(f$overall$att), nrow(f$cells) == 0)
 stopifnot(t0$static$status == "no estimable cohort", is.null(t0$static$event))
 
-# step 6 outputs, when they have been built
-of6 <- file.path("outputs", "06_secondary", c("event_time_estimates.csv", "overall_estimates.csv", "model_status.csv",
-                                            "panel_counts.csv", "group_time_estimates.csv", "synthdid_pooled.csv"))
+# step 6 outputs, when they have been built: the unbalanced panel in the main folder and
+# the balanced panel in appendix/ (author decision 2026-09-13)
+for (pan6 in c(unbalanced = "outputs/06_secondary", balanced = "outputs/06_secondary/appendix")) {
+of6 <- file.path(pan6, c("event_time_estimates.csv", "overall_estimates.csv", "model_status.csv",
+                         "panel_counts.csv", "group_time_estimates.csv", "synthdid_pooled.csv"))
 if (all(file.exists(of6))) {
   rd <- function(f) utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
   ee <- rd(of6[1]); oo <- rd(of6[2]); ms <- rd(of6[3]); pc6 <- rd(of6[4]); gt <- rd(of6[5]); sdp <- rd(of6[6])
+  pname <- if (endsWith(pan6, "appendix")) "balanced" else "unbalanced"
+  stopifnot(all(ms$panel == pname), all(ee$panel == pname), all(oo$panel == pname), all(pc6$panel == pname))
   ests <- c("sun_abraham", "imputation", "synthdid", "stacked", "twfe", "twfe_static")
   gps <- c("a_poverty", "b_black_white", "c_hispanic_white")
   models <- as.vector(outer(ests, gps, paste))
@@ -194,4 +213,5 @@ if (all(file.exists(of6))) {
   stopifnot(nrow(pc6) == 18, all(pc6$units_in_model == pc6$treated_units + pc6$control_units |
                                    pc6$estimator == "stacked"),
             nrow(sdp) == sum(ms$estimator == "synthdid" & ms$status == "ok"))
+}
 }

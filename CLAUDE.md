@@ -51,7 +51,7 @@ decision the document does not make, stop and ask the author before coding it.
 | 3g | `R/03g_graduation_sample.R` — graduation sample, design v18 Sections 5, 6 | Claude Code | complete (2026-09-12) |
 | 4g | `R/04g_graduation_outcomes.R` — graduation gaps, design v18 Section 6 | Claude Code | complete (2026-09-12) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11); graduation pass `--outcome graduation`, 24 models (2026-09-12); both outcomes rerun on the full window (2026-09-12) |
-| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12); full window (2026-09-12), CEP district-year for (b)/(c) and a share for (a) |
+| 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12); full window (2026-09-12), CEP district-year for (b)/(c) and a share for (a); moved to the unbalanced panel, balanced versions in `outputs/06_secondary/appendix/` (2026-09-13) |
 | 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); full window at the registered counts (9,999 / 10,000), both outcomes (2026-09-13), with ties counted in the randomization p-value |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | complete (2026-09-11) |
@@ -225,6 +225,12 @@ Update the Status column as steps finish.
   models alone (`dropped_missing_weight`). States treated after the window
   are not-yet-treated controls (g = 0); states treated in the first window
   year have no pre-period and cannot enter.
+- Secondary estimators on the unbalanced panel (author, 2026-09-13; docs/deviations.md,
+  Section 7): Sun–Abraham, imputation, stacked and the TWFE rows run on the step 5
+  unbalanced panel (main step 6 files); synthdid stays at the state level on state-year
+  means of the unbalanced panel, states with a mean in every window year only; the
+  balanced-panel versions go to `outputs/06_secondary/appendix/`. This replaces the
+  balanced-panel statement in the entry below.
 - Secondary estimators as implemented (author, 2026-09-11; docs/decision_log.md):
   the step 5 balanced panels, unweighted, primary event set only (the step 6
   instruction; `EVENT_SETS` takes r1 and r2). They stay on the balanced panel

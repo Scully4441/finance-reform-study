@@ -263,6 +263,14 @@ run_imputation <- function(panel, flags = character(), covs = character(), windo
   d <- cy$panel
   rel <- ifelse(d$g > 0L, d$sy_end - d$g, NA_integer_)
   post <- !is.na(rel) & rel >= 0L
+  # A treated unit with no untreated observation has no unit effect to impute, and
+  # didimputation drops its rows and rescales the weights, which would break the equal
+  # weight per event time of the overall. On the unbalanced panel (step 6 from 2026-09-13)
+  # such units occur, so the weights are built over the imputable treated rows only; on a
+  # balanced panel every treated unit has a pre-reform row and nothing changes.
+  n_post_units <- length(unique(d$id[post]))
+  post <- post & d$id %in% d$id[!post]            # right-hand side uses post before this line
+  n_left <- n_post_units - length(unique(d$id[post]))
   hs <- sort(unique(rel[post & rel <= max_e]))
   wtr <- paste0("wtr_e", hs)
   for (i in seq_along(hs)) d[[wtr[i]]] <- as.numeric(post & rel == hs[i])
@@ -285,6 +293,7 @@ run_imputation <- function(panel, flags = character(), covs = character(), windo
                                                 pretrends = if (length(leads)) leads else NULL,
                                                 cluster_var = "state"),
                   drop = "NAs introduced by coercion")
+  if (n_left > 0L) r$notes <- c(r$notes, sprintf("%d treated unit(s) without an untreated observation left out of the imputed estimands", n_left))
   if (r$failed) return(empty_result(paste("error:", conditionMessage(r$value)), r$notes))
   out <- as.data.frame(r$value)
   pre <- out[out$term %in% as.character(leads), ]
@@ -431,23 +440,34 @@ state_year_means <- function(panel) {
 # everything is re-estimated (weights included); SE = sqrt((r - 1) / r) * sd, as in
 # synthdid's placebo_se. There is no pre-reform reference row: synthdid weights the
 # pre-reform years rather than normalising on -1.
+# complete_states = TRUE (the unbalanced step 6 panel; author decision 2026-09-13): the
+# state-year means come from whatever district-years the panel holds, and only the states
+# with a mean in every panel year enter; the others are left out with a note. With FALSE
+# (the balanced panel) a state missing a year stops the run.
 run_sdid <- function(panel, seed_step, reps = SDID_REPS, min_pre = SDID_MIN_PRE,
-                     min_e = EVENT_MIN, max_e = EVENT_MAX) {
+                     min_e = EVENT_MIN, max_e = EVENT_MAX, complete_states = FALSE) {
   check_panel(panel)
   if (!any(panel$g > 0L)) return(empty_result("no estimable cohort", ref = FALSE))
   sp <- state_year_means(panel)
   years <- sort(unique(sp$sy_end))
-  if (any(table(sp$state) != length(years))) stop("synthdid needs a balanced state-year panel")
+  notes <- character()
+  full <- table(sp$state) == length(years)
+  if (any(!full)) {
+    if (!complete_states) stop("synthdid needs a balanced state-year panel")
+    notes <- sprintf("%d of %d state(s) without a state-year mean in every window year left out",
+                     sum(!full), length(full))
+    sp <- sp[sp$state %in% names(full)[full], ]
+    if (!any(sp$g > 0L)) return(empty_result("no estimable cohort in the complete states", notes, ref = FALSE))
+  }
   Y <- tapply(sp$y, list(sp$state, sp$sy_end), mean)
   gs <- tapply(sp$g, sp$state, function(z) z[1])
   controls <- names(gs)[gs == 0L]
   all_c <- sort(unique(gs[gs > 0L]))
   t0_all <- vapply(all_c, function(a) sum(years < a), integer(1))
   cohorts <- all_c[t0_all >= min_pre]
-  notes <- character()
   if (length(cohorts) < length(all_c))
-    notes <- sprintf("%d of %d cohort(s) left out: fewer than %d pre-reform years (synthdid's noise level needs them)",
-                     length(all_c) - length(cohorts), length(all_c), min_pre)
+    notes <- c(notes, sprintf("%d of %d cohort(s) left out: fewer than %d pre-reform years (synthdid's noise level needs them)",
+                              length(all_c) - length(cohorts), length(all_c), min_pre))
   if (!length(cohorts)) return(empty_result(sprintf("no cohort with %d pre-reform years", min_pre), notes, ref = FALSE))
   treated <- lapply(cohorts, function(a) names(gs)[gs == a])
   n_tr <- lengths(treated)
