@@ -44,6 +44,7 @@ decision the document does not make, stop and ask the author before coding it.
 | Step | Script | Who runs it | Status |
 |---|---|---|---|
 | 0 | `R/00_install_packages.R` | Claude Code | |
+| 0r | Environment lock — `renv.lock`, `Dockerfile` (`renv::restore()`, R 4.6.1) | Claude Code | complete (2026-09-13); image holds code and the lockfile only, the repository is mounted as `/study` at run time; `tests/run_tests.R` passes in the container |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
 | 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11); full window 2010-2019 and 2021 (2026-09-12), end year 2019 from the EDC archive (ED's release truncated), LEA_TYPE/UPDATED_STATUS for TYPE/BOUND |
@@ -299,4 +300,8 @@ Update the Status column as steps finish.
   29 post-reform state-years. It is not the power calculation and is kept off the console
   because it summarises the event table's cohort years. `--quick` is a test run at a
   reduced count, recorded in `outputs/08_power/power_settings.csv`.
+- Environment lock (author, 2026-09-13): `fwildclusterboot`, `wildrwolf`, `summclust`
+  and `testthat` stay out of `renv.lock`. They appear in `outputs/package_versions.csv`
+  because they were installed, but no script uses them: the wild cluster bootstrap and
+  Romano–Wolf are computed on the did influence function.
 - License: MIT.

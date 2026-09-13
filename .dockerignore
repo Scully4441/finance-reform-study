@@ -1,3 +1,7 @@
+# data and results are mounted at run time, not built into the image
+data/raw/
+data/derived/
+outputs/
 # the Windows project library must not overwrite the one restored in the image
 renv/library/
 renv/local/

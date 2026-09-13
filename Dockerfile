@@ -1,6 +1,8 @@
 # Reproducibility container (design document, Section 11).
 # R version pinned to the one recorded in outputs/package_versions.csv (4.6.1);
-# packages restored from renv.lock.
+# packages restored from renv.lock. The image holds code and the lockfile only;
+# data/raw, data/derived and outputs are excluded (.dockerignore) and the
+# repository folder is mounted as /study at run time (README, How to reproduce).
 FROM rocker/r-ver:4.6.1
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git libcurl4-openssl-dev libssl-dev libxml2-dev \
@@ -10,7 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.85.0
 ENV PATH=/root/.cargo/bin:$PATH
 WORKDIR /study
-ENV RENV_PATHS_LIBRARY=/study/renv/library
+# library outside /study, so the mounted repository does not hide it
+ENV RENV_PATHS_LIBRARY=/opt/renv/library
 COPY renv.lock renv.lock
 COPY .Rprofile .Rprofile
 COPY renv/activate.R renv/activate.R
