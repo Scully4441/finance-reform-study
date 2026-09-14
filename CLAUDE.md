@@ -46,18 +46,18 @@ decision the document does not make, stop and ask the author before coding it.
 | 0 | `R/00_install_packages.R` | Claude Code | |
 | 0r | Environment lock — `renv.lock`, `Dockerfile` (`renv::restore()`, R 4.6.1) | Claude Code | complete (2026-09-13); image holds code and the lockfile only, the repository is mounted as `/study` at run time; `tests/run_tests.R` passes in the container |
 | 1 | `R/01_build_event_table.R` | author, plain terminal | |
-| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file |
+| 2 | `R/02_download.R` (all manifest rows) | Claude Code | stage 1 complete (2026-09-11); stage 2 complete (2026-09-12); the graduation-rate rows for end years 2022-2024 stay blank, no LEA file is published; `ccd_school_characteristics` rows for end years 2015-2021 added and archived (2026-09-12), the CEP field being in that file and not the lunch program file; `ccd_membership` rows for end years 2007-2009 added and archived (2026-09-14), for the Lee shares, not yet in an OSF deposit |
 | 3 | `R/03_sample.R` — sample rules, design Section 5 | Claude Code | complete (2026-09-11); range midpoints (2026-09-11); full window 2010-2019 and 2021 (2026-09-12), end year 2019 from the EDC archive (ED's release truncated), LEA_TYPE/UPDATED_STATUS for TYPE/BOUND |
 | 4 | `R/04_outcomes.R` — gaps (a) (b) (c), design Section 6 | Claude Code | complete (2026-09-11); full window (2026-09-12) |
 | 3g | `R/03g_graduation_sample.R` — graduation sample, design v18 Sections 5, 6 | Claude Code | complete (2026-09-12) |
 | 4g | `R/04g_graduation_outcomes.R` — graduation gaps, design v18 Section 6 | Claude Code | complete (2026-09-12) |
 | 5 | `R/05_primary.R` — Callaway–Sant'Anna, design Section 7 | Claude Code | complete (2026-09-11); unbalanced panel primary, balanced panel robustness (2026-09-11); graduation pass `--outcome graduation`, 24 models (2026-09-12); both outcomes rerun on the full window (2026-09-12) |
 | 6 | `R/06_secondary.R` — four secondary estimators | Claude Code | complete (2026-09-11), primary event set, step 5 balanced panels; graduation pass, all three event sets (2026-09-12); full window (2026-09-12), CEP district-year for (b)/(c) and a share for (a); moved to the unbalanced panel, balanced versions in `outputs/06_secondary/appendix/` (2026-09-13); achievement pass on all three event sets (2026-09-13, step 10) |
-| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); full window at the registered counts (9,999 / 10,000), both outcomes (2026-09-13), with ties counted in the randomization p-value |
+| 7 | `R/07_inference.R` — bootstrap, RI, Romano–Wolf, HonestDiD, Section 8 | Claude Code | complete (2026-09-11), 30 models; graduation pass, 24 models (2026-09-12); full window at the registered counts (9,999 / 10,000), both outcomes (2026-09-13), with ties counted in the randomization p-value; HonestDiD bound sets recomputed on widened grids, `--honest-only` (2026-09-14) |
 | 8 | `R/08_power.R` — placebo simulation on 2010–2013, Section 10 | Claude Code | complete (2026-09-11); six-state registered run for end year 2021, observed-cohort, ten-state and twelve-state sensitivity runs |
 | — | Author files the OSF registration; sets `data/stage.txt` to `2` | author | complete (2026-09-11) |
 | 9 | `R/09_unblind.R` after `git tag -a freeze` | author, plain terminal | |
-| 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | complete (2026-09-14), full rehearsal on the PERMUTED tables: steps 3–7 at the registered counts, 123 robustness-variant models, Lee bounds, dose scaling, `outputs/13_report/`; rerun after unblinding; `--resume` continues an interrupted run, `--report` rebuilds the report |
+| 10 | `R/10_run_all.R` — full run and reporting, Section 13 | Claude Code | complete (2026-09-14), full rehearsal on the PERMUTED tables: steps 3–7 at the registered counts, 123 robustness-variant models, Lee bounds, dose scaling, `outputs/13_report/`; rerun after unblinding; `--resume` continues an interrupted run, `--report` rebuilds the report; pre-freeze corrections (HonestDiD grid, revenue floor, CCD 2007–2009) rerun for variants, Lee, dose and report (2026-09-14) |
 
 Update the Status column as steps finish.
 
@@ -311,13 +311,22 @@ Update the Status column as steps finish.
   Romano–Wolf at 9,999, HonestDiD at every M̄, randomization inference at 1,000 (compute
   deviation; step 5 models keep 10,000 in step 7); Lee bounds for gaps (b) and (c) only,
   tested share over CCD grade 9 membership three years earlier, trim fraction = the larger
-  subgroup share effect, share years 2013 on; dose scaling = ratio of the CS overall effect
-  on the gap to that on (TSTREV + TLOCREV) / V33 in thousands of 2021 dollars (gap (a): the
-  quintile 5 − quintile 1 revenue gap), percentile interval from step 7's Webb draws,
+  subgroup share effect, share years from 2010 (CCD school files for end years 2007–2009
+  added 2026-09-14; 2006-07 is fixed-width with a separate layout); dose scaling = ratio of
+  the CS overall effect on the gap to that on (TSTREV + TLOCREV) / V33 in thousands of 2021
+  dollars (gap (a): the quintile 5 − quintile 1 revenue gap), excluding district-years with
+  V33 below 30 or revenue above $100,000 per pupil (2026-09-14), percentile interval from
+  step 7's Webb draws,
   "unbounded" when the revenue interval includes zero; M̄ = 1 is the headline bound set;
   graduation gets every Section 13 item but Lee bounds. Achievement step 6 now runs on all
   three event sets. `R/10_run_all.R` sets `RENV_CONFIG_SANDBOX_ENABLED=FALSE` for the
   processes it starts: under renv, 12 workers starting together deadlock on renv's sandbox
   lock and leave it stale (`~/AppData/Local/R/cache/R/renv/sandbox/.../*.lock`; delete it
   if R hangs at startup and no R process is running).
+- HonestDiD grid (code correction, 2026-09-14; docs/deviations.md): `honest_rm()` widens
+  HonestDiD's default grid (±20 sd, 1,000 points) on any side a bound set reaches, at the
+  same step, up to 6 times, and records the grid on each row; no reported bound set touches
+  a grid edge. `Rscript R/07_inference.R --honest-only [--outcome graduation]` recomputes
+  the bound sets from the step 5 fits without rerunning the bootstrap or randomization
+  inference, writing `honestdid_grid_change.csv` beside them.
 - License: MIT.

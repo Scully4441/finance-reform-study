@@ -1,0 +1,18 @@
+Step 7 inference (graduation), run 20260914T154908Z; stage 2; blinding PERMUTED; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference/graduation and outputs/logs/07_inference_graduation_20260914T154908Z.log
+
+24 step 5 models: 18 fitted
+Overall estimates agree with outputs/05_primary/graduation/overall_estimates.csv
+Webb draws for event set primary 39 states x 9999 replications
+Webb draws for event set r1      39 states x 9999 replications
+Webb draws for event set r2      44 states x 9999 replications
+Wild cluster bootstrap: 18 models, 0.3 s
+Romano-Wolf: 8 families of 2 gaps
+HonestDiD relative magnitudes: 18 models x 5 M-bar values, 536.6 s; grid widened for 33 M-bar rows
+Wrote outputs/07_inference/graduation/honestdid_overall.csv, outputs/07_inference/graduation/honestdid_grid_change.csv; updated model_status.csv notes and inference_settings.csv
+Bootstrap, Romano-Wolf and randomization files unchanged. Log: outputs/logs/07_inference_graduation_20260914T154908Z.log
+
+real	8m59.920s
+user	0m0.000s
+sys	0m0.015s

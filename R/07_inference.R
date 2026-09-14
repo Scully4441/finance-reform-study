@@ -2,6 +2,9 @@
 # Run from the repository folder:
 #   Rscript R/07_inference.R            the registered replication counts
 #   Rscript R/07_inference.R --quick    reduced counts, for a test run only
+#   Rscript R/07_inference.R --honest-only   recompute the HonestDiD bound sets from the step 5
+#                                       fits, leaving the bootstrap, Romano-Wolf and
+#                                       randomization files unchanged (2026-09-14)
 #   add --outcome graduation            the same four procedures on the 24 graduation
 #                                       models of step 5 (outputs/05_primary/graduation/),
 #                                       written to outputs/07_inference/graduation/
@@ -207,22 +210,68 @@ for (s in EVENT_SETS) {
 say("Romano-Wolf: ", length(rw), " families of ", length(GAPS), " gaps")
 
 # ---- HonestDiD -----------------------------------------------------------------------
+# One model per worker: the grid widening of honest_rm() (code correction 2026-09-14) makes
+# a model with wide bound sets take minutes. HonestDiD is deterministic, so the worker
+# count does not change the result.
 t0 <- Sys.time()
+future::plan(future::multisession, workers = WORKERS)
+on.exit(future::plan(future::sequential), add = TRUE)
+hs <- furrr::future_map(which(usable), function(i) suppressWarnings(honest_rm(infs[[i]], MBARVEC)),
+                        .options = furrr::furrr_options(seed = NULL))
 honest <- list()
-for (i in which(usable)) {
-  h <- honest_rm(infs[[i]], MBARVEC)
+for (j in seq_along(hs)) {
+  i <- which(usable)[j]; h <- hs[[j]]
   honest[[keys[i]]] <- tag(i, h)
   bad <- h$status != "ok"
   if (any(bad)) status$notes[i] <- paste(c(status$notes[i], paste("HonestDiD:", unique(h$status[bad]))),
                                          collapse = " | ")
 }
-say(sprintf("HonestDiD relative magnitudes: %d models x %d M-bar values, %.1f s",
-            length(honest), length(MBARVEC), as.numeric(difftime(Sys.time(), t0, units = "secs"))))
+hd_new <- do.call(rbind, honest); rownames(hd_new) <- NULL
+say(sprintf("HonestDiD relative magnitudes: %d models x %d M-bar values, %.1f s; grid widened for %d M-bar rows",
+            length(honest), length(MBARVEC), as.numeric(difftime(Sys.time(), t0, units = "secs")),
+            sum(hd_new$grid_points > HONEST_GRID_POINTS, na.rm = TRUE)))
+
+# --honest-only: recompute the bound sets from the step 5 fits and stop, leaving the
+# bootstrap, Romano-Wolf and randomization files as they are (code correction 2026-09-14).
+# The previous bound sets are kept beside the new ones in honestdid_grid_change.csv, and the
+# HonestDiD part of each model's notes in model_status.csv is replaced.
+if ("--honest-only" %in% commandArgs(trailingOnly = TRUE)) {
+  hf <- file.path(out_dir, "honestdid_overall.csv")
+  old <- utils::read.csv(hf, stringsAsFactors = FALSE, na.strings = "")
+  k_old <- paste(old$gap, old$event_set, old$weighting, old$panel, old$mbar, old$method)
+  k_new <- paste(hd_new$gap, hd_new$event_set, hd_new$weighting, hd_new$panel, hd_new$mbar, hd_new$method)
+  j <- match(k_new, k_old)
+  chg <- data.frame(hd_new[c("gap", "event_set", "weighting", "panel", "mbar", "method")],
+                    lb_before = old$lb[j], ub_before = old$ub[j], width_before = old$ub[j] - old$lb[j],
+                    status_before = old$status[j], lb_after = hd_new$lb, ub_after = hd_new$ub,
+                    width_after = hd_new$ub - hd_new$lb, status_after = hd_new$status,
+                    grid_lb = hd_new$grid_lb, grid_ub = hd_new$grid_ub, grid_points = hd_new$grid_points,
+                    stringsAsFactors = FALSE)
+  utils::write.csv(chg, file.path(out_dir, "honestdid_grid_change.csv"), row.names = FALSE, na = "")
+  utils::write.csv(hd_new, hf, row.names = FALSE, na = "")
+  ms <- utils::read.csv(file.path(out_dir, "model_status.csv"), stringsAsFactors = FALSE, na.strings = "")
+  km <- match(paste(ms$gap, ms$event_set, ms$weighting, ms$panel), paste(status$gap, status$event_set, status$weighting, status$panel))
+  ms$notes <- vapply(seq_len(nrow(ms)), function(r) {
+    kept <- trimws(strsplit(if (is.na(ms$notes[r])) "" else ms$notes[r], " | ", fixed = TRUE)[[1]])
+    kept <- kept[nzchar(kept) & !startsWith(kept, "HonestDiD:")]
+    new <- trimws(strsplit(status$notes[km[r]], " | ", fixed = TRUE)[[1]])
+    paste(c(new[startsWith(new, "HonestDiD:")], kept), collapse = " | ")
+  }, "")
+  utils::write.csv(ms, file.path(out_dir, "model_status.csv"), row.names = FALSE, na = "")
+  st <- utils::read.csv(file.path(out_dir, "inference_settings.csv"), stringsAsFactors = FALSE, na.strings = "")
+  add <- data.frame(setting = c("honest_grid", "honest_recomputed"),
+                    value = c(sprintf("start +/-%d sd, %d points; widened by its width per edge side, same step, up to %d times",
+                                      HONEST_GRID_SD, HONEST_GRID_POINTS, HONEST_GRID_MAX_WIDEN), stamp))
+  st <- rbind(st[!st$setting %in% add$setting, ], add)
+  utils::write.csv(st, file.path(out_dir, "inference_settings.csv"), row.names = FALSE, na = "")
+  note("\n== HonestDiD relative magnitudes (recomputed, --honest-only)"); note_df(hd_new)
+  say("Wrote ", hf, ", ", file.path(out_dir, "honestdid_grid_change.csv"), "; updated model_status.csv notes and inference_settings.csv")
+  say("Bootstrap, Romano-Wolf and randomization files unchanged. Log: ", log_file)
+  quit(save = "no", status = 0)
+}
 
 # ---- randomization inference ---------------------------------------------------------
 say("\nRandomization inference: ", reps$randomization, " reassignments per model on ", WORKERS, " workers")
-future::plan(future::multisession, workers = WORKERS)
-on.exit(future::plan(future::sequential), add = TRUE)
 ri <- list(); ri_draws <- list()
 # --cache-dir <dir> (R/10_run_all.R): each model's reassignment result is saved there as it
 # finishes and reused by a rerun when the model's estimate, count and seed step match, so an
@@ -287,6 +336,9 @@ settings <- data.frame(setting = c("run", "outcome", "stage", "blinding", "quick
                                  # not used, and not in renv.lock (author, 2026-09-13)
                                  pkg_version_or_none("fwildclusterboot"), pkg_version_or_none("wildrwolf")),
                        stringsAsFactors = FALSE)
+settings <- rbind(settings, data.frame(setting = "honest_grid", value = sprintf(
+  "start +/-%d sd, %d points; widened by its width per edge side, same step, up to %d times",
+  HONEST_GRID_SD, HONEST_GRID_POINTS, HONEST_GRID_MAX_WIDEN)))
 
 files <- list(bootstrap_overall = bo, bootstrap_event_time = be, randomization_overall = rit,
               randomization_draws = rid, romano_wolf = rwt, honestdid_overall = hd,

@@ -203,12 +203,13 @@ run_variants <- function(outcome) {
 run_lee <- function() {
   ldir <- file.path(OUT, "lee"); dir.create(ldir, recursive = TRUE, showWarnings = FALSE)
   g9_file <- file.path(OUT, "cache", "ccd_grade9_district.csv")
-  share_years <- ACH_WINDOW[ACH_WINDOW - LEE_LAG >= 2010L]
-  if (file.exists(g9_file)) g9 <- utils::read.csv(g9_file, colClasses = c(leaid = "character"), stringsAsFactors = FALSE) else {
+  share_years <- ACH_WINDOW[ACH_WINDOW - LEE_LAG >= LEE_FIRST_CCD]
+  if (file.exists(g9_file)) g9 <- utils::read.csv(g9_file, colClasses = c(leaid = "character"), stringsAsFactors = FALSE)
+  if (!file.exists(g9_file) || !all((share_years - LEE_LAG) %in% g9$sy_end)) {
     td <- tempfile("ccdg9"); dir.create(td); on.exit(unlink(td, recursive = TRUE), add = TRUE)
     g9 <- bind(lapply(share_years - LEE_LAG, function(y) {
       t0 <- Sys.time(); p <- ccd_membership_file(y, td)
-      x <- ccd_grade9_district(p, y); unlink(p)
+      x <- ccd_grade9_district(p, y, attr(p, "layout")); unlink(p)
       say(sprintf("  CCD grade 9 membership, end year %d: %d districts, %.1f min", y, nrow(x),
                   as.numeric(difftime(Sys.time(), t0, units = "mins")))); x }))
     wcsv(g9, g9_file)
@@ -265,7 +266,20 @@ run_lee <- function() {
 run_dose <- function(outcome) {
   ddir <- file.path(OUT, "dose", outcome); dir.create(ddir, recursive = TRUE, showWarnings = FALSE)
   window <- outcome_window(outcome)
-  rev <- real_revenue(read_f33_revenue(window))
+  rev_all <- real_revenue(read_f33_revenue(window))
+  excl <- revenue_excluded(rev_all)
+  rev <- rev_all[!excl, , drop = FALSE]
+  count_excl <- function(scope, gap, s, lea_sy) {     # lea_sy: "leaid sy_end" keys of the district-years in scope
+    k <- paste(rev_all$leaid, rev_all$sy_end) %in% lea_sy
+    data.frame(scope = scope, gap = gap, event_set = s, district_years_with_revenue = sum(k),
+               excluded_enrollment_below_30 = sum(k & rev_all$v33 < REV_MIN_ENROLL),
+               excluded_revenue_above_100k = sum(k & rev_all$rev_pp_real > REV_MAX_PP),
+               excluded_total = sum(k & excl), stringsAsFactors = FALSE)
+  }
+  exrows <- list(all = count_excl("all F-33 districts, window years", NA_character_, NA_character_,
+                                  paste(rev_all$leaid, rev_all$sy_end)))
+  say(sprintf("  revenue exclusions (%s window): %d of %d F-33 district-years (enrollment < %d or revenue > $%dk per pupil)",
+              outcome, sum(excl), nrow(rev_all), REV_MIN_ENROLL, REV_MAX_PP))
   sdir <- if (outcome == "achievement") "outputs/07_inference" else "outputs/07_inference/graduation"
   st7 <- rcsv(file.path(sdir, "inference_settings.csv"))
   reps7 <- as.integer(st7$value[st7$setting == "bootstrap_reps"])
@@ -286,6 +300,13 @@ run_dose <- function(outcome) {
     mp <- cs_model_panel(inp, gap, s)
     rp <- if (gap == "a_poverty") pov_revenue_panel(smp, RETAIN_FLAGS[[s]], rev, window, mp$panel) else
       dist_revenue_panel(mp$panel, rev, window)
+    scope <- if (gap == "a_poverty") {
+      x <- smp[smp[[RETAIN_FLAGS[[s]]]] == 1L & smp$pov_quintile_2009 %in% c(1L, 5L) & !is.na(smp$member_2009) &
+                 smp$member_2009 > 0 & smp$sy_end %in% window & smp$state %in% mp$panel$state, , drop = FALSE]
+      paste(x$leaid, x$sy_end)
+    } else as.vector(outer(unique(mp$panel$leaid), window, paste))
+    exrows[[key]] <- count_excl(if (gap == "a_poverty") "quintile 1 and 5 districts of the gap (a) states" else
+                                  "districts of the gap's primary model", gap, s, scope)
     fr <- run_cs(rp, xformla = mp$xformla, seed_step = paste("10_run_all dose", outcome, key), allow_unbalanced_panel = TRUE)
     inf_r <- cs_influence(fr$fit)
     say(sprintf("  revenue first stage %-19s %-7s %5d units, %s", gap, s, length(unique(rp$id)), fr$status))
@@ -306,6 +327,7 @@ run_dose <- function(outcome) {
   wcsv(bind(rows), file.path(ddir, "dose_scaled.csv"))
   wcsv(bind(fs_ov), file.path(ddir, "revenue_first_stage_overall.csv"))
   wcsv(bind(fs_ev), file.path(ddir, "revenue_first_stage_event_time.csv"))
+  wcsv(bind(exrows), file.path(ddir, "revenue_exclusions.csv"))
 }
 
 if (!REPORT_ONLY) {
@@ -366,10 +388,14 @@ build_report <- function() {
       # 1. honest-DiD bound sets
       ht <- data.frame(`M̄` = ifelse(!is.na(h$mbar), formatC(h$mbar, format = "g"),
                                     ifelse(h$method %in% "original", "original CS (no restriction)", "–")),
-                       lower = fmt(h$lb), upper = fmt(h$ub), status = h$status,
+                       lower = fmt(h$lb), upper = fmt(h$ub), width = fmt(h$ub - h$lb), status = h$status,
+                       grid = ifelse(is.na(h$grid_points), "–", paste0("[", fmt(h$grid_lb), ", ", fmt(h$grid_ub), "], ",
+                                                                        h$grid_points, " points")),
                        headline = ifelse(!is.na(h$mbar) & h$mbar == HEADLINE_MBAR, "**headline**", ""), check.names = FALSE)
       wcsv(h, file.path(REP, "tables", paste0(gap, "_1_honestdid.csv")))
-      md <- c(md, "### 1. Honest-DiD bound sets (relative magnitudes, overall post-reform average)", "", md_table(ht))
+      md <- c(md, "### 1. Honest-DiD bound sets (relative magnitudes, overall post-reform average)", "",
+              "Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the overall estimate, 1,000 points); a grid that a bound set reaches is widened on that side at the same step until no reported bound touches an edge (code correction 2026-09-14).", "",
+              md_table(ht))
       # 2. event-study plot
       ev <- sel(be7, gap); e5 <- sel(ev5, gap)
       ev$cohorts <- e5$cohorts[match(ev$e, e5$e)]; ev$treated_states <- e5$treated_states[match(ev$e, e5$e)]
@@ -396,6 +422,8 @@ build_report <- function() {
       md <- c(md, "### 3. Overall post-reform average", "", md_table(ot))
       # 4. dose-scaled
       d <- dose[dose$gap == gap & dose$event_set == "primary", , drop = FALSE]
+      ex <- rcsv(file.path(OUT, "dose", outcome, "revenue_exclusions.csv"))
+      ex <- ex[!is.na(ex$gap) & ex$gap == gap & ex$event_set == "primary", , drop = FALSE]
       dt <- data.frame(effect_sd = fmt(d$att_outcome), revenue_effect = fmt(d$att_revenue),
         revenue_boot_ci = paste0("[", fmt(d$revenue_ci_lo), ", ", fmt(d$revenue_ci_hi), "]"),
         sd_per_1000 = fmt(d$dose_scaled), interval_per_1000 = ifelse(is.na(d$ci_lo), "unbounded", paste0("[", fmt(d$ci_lo), ", ", fmt(d$ci_hi), "]")),
@@ -404,6 +432,10 @@ build_report <- function() {
       md <- c(md, "### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2021 dollars)", "",
         paste0("Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2021 dollars as the outcome",
                if (gap == "a_poverty") " (the 2009-10 membership-weighted top-minus-bottom poverty-quintile gap in revenue per pupil)" else " (district revenue per pupil)",
+               ". District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil (2021 dollars) are excluded",
+               if (nrow(ex)) sprintf(": %d of the %d district-years in scope (%d below 30 enrolled, %d above $100,000)",
+                                     ex$excluded_total, ex$district_years_with_revenue, ex$excluded_enrollment_below_30,
+                                     ex$excluded_revenue_above_100k) else "",
                ". The dose-scaled estimate is the ratio of the two overall effects (the Wald form of the two-stage estimate), with a percentile interval from the step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction); accountability or other provisions enacted with a reform would violate it. The assumption is stated, not tested."),
         "", md_table(dt))
       # 5. Lee bounds
@@ -414,7 +446,7 @@ build_report <- function() {
           estimate_trim_top = fmt(l$att_trim_top), estimate_trim_bottom = fmt(l$att_trim_bottom),
           lee_bracket = paste0("[", fmt(l$lee_lower), ", ", fmt(l$lee_upper), "]"), status = l$status)
         wcsv(l, file.path(REP, "tables", paste0(gap, "_5_lee.csv")))
-        md <- c(md, "### 5. Lee bounds", "", "Tested share = the subgroup's tested count (mean of math and RLA) over its CCD grade 9 membership three years earlier, all-students counts where race-by-grade membership is unavailable; end years 2013 on (the CCD files begin with 2009-10). Trim fraction = the larger absolute effect on the two shares; the treated post-reform district-years are trimmed from the top and from the bottom and the primary model refitted. The bracket assumes monotone selection.", "", md_table(lt))
+        md <- c(md, "### 5. Lee bounds", "", "Tested share = the subgroup's tested count (mean of math and RLA) over its CCD grade 9 membership three years earlier, all-students counts where race-by-grade membership is unavailable; every window year (grade 9 membership from the CCD school files for 2006-07 on, added 2026-09-14). Trim fraction = the larger absolute effect on the two shares; the treated post-reform district-years are trimmed from the top and from the bottom and the primary model refitted. The bracket assumes monotone selection.", "", md_table(lt))
       } else md <- c(md, "### 5. Lee bounds", "", if (outcome == "graduation") "Not computed for the graduation gaps: dropout is part of the outcome itself (author decision 2026-09-13)." else
         "Not computed for gap (a) (author decision 2026-09-13).", "")
       # 6. estimator agreement

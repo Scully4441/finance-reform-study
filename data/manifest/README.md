@@ -102,6 +102,14 @@ row points:
   universe file already archived under `ccd_membership` 2014 (`sc132a`) carries
   `NSLPSTATUS`. The rows stop at 2021, the registration end year, because no
   later year enters either outcome.
+- **CCD school universe, end years 2007-2009** (`ccd_membership`, added
+  2026-09-14), for the Lee bounds' grade 9 membership three years before each
+  tested year (`docs/deviations.md`, 2026-09-14). 2007-08 (`sc071b`, v.1b) and
+  2008-09 (`sc081b`, v.1b) are single tab-delimited national files. 2006-07
+  (`sc061c`, v.1c) is published only as three fixed-width files by state group
+  (`ai`, `kn`, `ow`), so it has three rows, plus a `ccd_membership_layout` row
+  for its NCES record layout `psu061clay.txt`, which gives the field positions.
+  Not yet in an OSF deposit.
 - **F-33, FY2022.** `elsec22.txt` holds only 1,730 of the 14,106 unit records
   Census published for that fiscal year (17 Alabama systems against 138 in the
   companion flag file `elsec22f.txt`), so the FY2022 row archives

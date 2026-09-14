@@ -1,0 +1,65 @@
+11:59:15  Step 10 run-all, run 20260913T164910Z (resumed); stage 2; blinding PERMUTED
+11:59:15  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+11:59:15  skip step 03_sample (finished in run 20260913T164910Z)
+11:59:15  skip step 04_outcomes (finished in run 20260913T164910Z)
+11:59:15  skip step 03g_graduation_sample (finished in run 20260913T164910Z)
+11:59:15  skip step 04g_graduation_outcomes (finished in run 20260913T164910Z)
+11:59:15  skip step 05_primary (finished in run 20260913T164910Z)
+11:59:15  skip step 05_primary_graduation (finished in run 20260913T164910Z)
+11:59:15  skip step 06_secondary (finished in run 20260913T164910Z)
+11:59:15  skip step 06_secondary_graduation (finished in run 20260913T164910Z)
+11:59:15  skip step 07_inference (finished in run 20260913T164910Z)
+11:59:15  skip step 07_inference_graduation (finished in run 20260913T164910Z)
+11:59:23  start variants achievement
+11:59:25  achievement variants: 75 models (5 variants x 3 event sets x gaps and weightings)
+12:28:44  achievement variants: bootstrap, Romano-Wolf and HonestDiD done for 48 fitted models
+12:28:45  achievement variants: randomization inference (1000 reassignments) on 48 models, 0.0 min
+12:28:45  done  variants achievement  29.4 min
+12:28:45  start variants graduation
+12:28:47  graduation variants: 48 models (4 variants x 3 event sets x gaps and weightings)
+12:40:32  graduation variants: bootstrap, Romano-Wolf and HonestDiD done for 30 fitted models
+12:40:32  graduation variants: randomization inference (1000 reassignments) on 30 models, 0.0 min
+12:40:33  done  variants graduation  11.8 min
+12:40:33  start lee bounds
+12:40:35    CCD grade 9 membership, end year 2007: 17098 districts, 0.0 min
+12:40:36    CCD grade 9 membership, end year 2008: 16946 districts, 0.0 min
+12:40:37    CCD grade 9 membership, end year 2009: 17068 districts, 0.0 min
+12:40:38    CCD grade 9 membership, end year 2010: 17177 districts, 0.0 min
+12:40:38    CCD grade 9 membership, end year 2011: 17329 districts, 0.0 min
+12:40:39    CCD grade 9 membership, end year 2012: 17396 districts, 0.0 min
+12:40:40    CCD grade 9 membership, end year 2013: 17476 districts, 0.0 min
+12:40:41    CCD grade 9 membership, end year 2014: 17606 districts, 0.0 min
+12:40:42    CCD grade 9 membership, end year 2015: 17396 districts, 0.0 min
+12:40:43    CCD grade 9 membership, end year 2016: 17246 districts, 0.0 min
+12:40:55    CCD grade 9 membership, end year 2018: 13410 districts, 0.2 min
+12:41:00    Lee share model b_black_white     bl: 1577 districts, ok
+12:41:01    Lee share model b_black_white     wh: 1577 districts, ok
+12:41:05    Lee share model c_hispanic_white  hi: 1901 districts, ok
+12:41:06    Lee share model c_hispanic_white  wh: 1901 districts, ok
+12:41:08  done  lee bounds  0.6 min
+12:41:08  start dose achievement
+12:41:09    revenue exclusions (achievement window): 3338 of 147794 F-33 district-years (enrollment < 30 or revenue > $100k per pupil)
+12:41:12    revenue first stage a_poverty           primary    38 units, ok
+12:41:13    revenue first stage b_black_white       primary  1577 units, ok
+12:41:14    revenue first stage c_hispanic_white    primary  1901 units, ok
+12:41:14    revenue first stage a_poverty           r1         38 units, ok
+12:41:15    revenue first stage b_black_white       r1       1577 units, ok
+12:41:16    revenue first stage c_hispanic_white    r1       1901 units, ok
+12:41:16    revenue first stage a_poverty           r2         43 units, ok
+12:41:17    revenue first stage b_black_white       r2       1918 units, ok
+12:41:18    revenue first stage c_hispanic_white    r2       2473 units, ok
+12:41:18  done  dose achievement  0.2 min
+12:41:18  start dose graduation
+12:41:18    revenue exclusions (graduation window): 3372 of 147482 F-33 district-years (enrollment < 30 or revenue > $100k per pupil)
+12:41:22    revenue first stage grad_black_white    primary  1532 units, ok
+12:41:23    revenue first stage grad_hispanic_white primary  1776 units, ok
+12:41:23    revenue first stage grad_black_white    r1       1513 units, ok
+12:41:24    revenue first stage grad_hispanic_white r1       1722 units, ok
+12:41:24    revenue first stage grad_black_white    r2       1838 units, ok
+12:41:25    revenue first stage grad_hispanic_white r2       2212 units, ok
+12:41:25  done  dose graduation  0.1 min
+12:41:25  start report
+12:41:25  Report: outputs/13_report/report.md (5 plots, 42 tables)
+12:41:25  done  report  0.0 min
+12:41:25  Run 20260913T164910Z finished. Total run time over parts: 4.44 h (wall clock since start: 23.87 h)
+12:41:25  Run times per part: outputs/10_run_all/run_times.csv; log: outputs/logs/10_run_all_20260914T155915Z.log

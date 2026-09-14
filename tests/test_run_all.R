@@ -28,6 +28,15 @@ stopifnot(!any(startsWith(ha$status, "error")), all(ha$num_pre == 1L), all(ha$nu
           near(post01, fa$overall$att))
 stopifnot(honest_rm(ia, 1, ref = -1L)$status == "event times are not consecutive around the reference period")
 
+# ---- honest_rm search grid (code correction 2026-09-14) ------------------------------------------
+hg <- suppressWarnings(honest_rm(i0, c(0, 2)))
+stopifnot(all(c("grid_lb", "grid_ub", "grid_points") %in% names(hg)), is.na(hg$grid_points[is.na(hg$mbar)]),
+          all(hg$grid_points[!is.na(hg$mbar)] >= HONEST_GRID_POINTS))
+hk <- hg$status == "ok" & !is.na(hg$mbar)
+stopifnot(all(hg$lb[hk] > hg$grid_lb[hk] + (hg$grid_ub[hk] - hg$grid_lb[hk]) / (hg$grid_points[hk] - 1) / 2),
+          all(hg$ub[hk] < hg$grid_ub[hk] - (hg$grid_ub[hk] - hg$grid_lb[hk]) / (hg$grid_points[hk] - 1) / 2))
+stopifnot(identical(names(honest_rm(NULL, 1)), names(hg)))                          # failure rows bind with the rest
+
 # ---- infer_fits: shared draws, reference-aware event rows -------------------------------------
 inf2 <- infer_fits(list(a = list(fit = f0$fit, ref = -1L), b = list(fit = fa$fit, ref = -2L)), "test run_all boot", 99L)
 stopifnot(setequal(names(inf2$overall), c("a", "b")), all(is.na(inf2$event$b$att[inf2$event$b$e == -2])),
@@ -74,6 +83,21 @@ gl <- ccd_grade9_district(long, 2018L)
 stopifnot(identical(gl$g9_all, c(10, 12)), identical(gl$g9_wh, c(10, 10)),
           identical(gl$g9_bl, c(0, NA)))                                          # blank = 0 only when the cells add up
 
+# fixed-width 2006-07 layout (data addition 2026-09-14): positions from the NCES record layout
+lay <- tempfile(fileext = ".txt")
+writeLines(c("Variable\tStart\tEnd\tField\t\tData", "NCESSCH\t        0001\t0012\t12\t\tAN\t\tid",
+             "+LEAID\t        0001\t0007\t7\t\tAN\t\tagency", "SCHNAM06\t0013\t0016\t4\t\tAN\t\tname \x97 dash",
+             "G0906   \t0017\t0020\t4\t\tN\t\tgrade 9", "HI09M06 \t0021\t0024\t4\t\tN\t\tx", "HI09F06 \t0025\t0028\t4\t\tN\t\tx",
+             "BL09M06 \t0029\t0032\t4\t\tN\t\tx", "BL09F06 \t0033\t0036\t4\t\tN\t\tx", "WH09M06 \t0037\t0040\t4\t\tN\t\tx",
+             "WH09F06 \t0041\t0044\t4\t\tN\t\tx"), lay, useBytes = TRUE)
+dat1 <- tempfile(fileext = ".dat"); dat2 <- tempfile(fileext = ".dat")
+writeLines("010000100001Caf\xe9  30   1   2   3   4   5   6", dat1, useBytes = TRUE)
+writeLines(c("010000100002ABCD  -2  -2  -2  -2  -2  -2  -2", "010000200003ABCD  20  -1   1   2   2   3   3"), dat2)
+gf <- ccd_grade9_district(c(dat1, dat2), 2007L, layout = lay)
+stopifnot(identical(gf$leaid, c("0100001", "0100002")), identical(gf$g9_all, c(30, 20)),
+          identical(gf$g9_bl, c(7, 4)), identical(gf$g9_hi, c(3, NA)))
+stopifnot(LEE_FIRST_CCD == 2007L, identical(ACH_WINDOW[ACH_WINDOW - LEE_LAG >= LEE_FIRST_CCD], ACH_WINDOW))
+
 # ---- tested shares --------------------------------------------------------------------------------
 base <- data.frame(id = 1:2, leaid = c("0100001", "0100002"), state = c("S1", "S2"), sy_end = 2013L, y = 0, g = c(2016L, 2013L),
                    log_member_2009 = 1, saipe_pov_rate_2009 = 0.1, black_share_2009 = 0.1, hisp_share_2009 = 0.1)
@@ -90,6 +114,9 @@ writeLines(c('"STATE","NCESID","V33","TSTREV","TLOCREV"', '"01","0100001",100,50
              '"01","N",10,1,1,'), file.path(fdir, "f33-fy2015.csv"))
 fr <- read_f33_revenue(2015L, fdir)
 stopifnot(identical(fr$leaid, "0100001"), near(fr$rev_pp, 8))                  # thousands per pupil
+# revenue exclusions (data correction 2026-09-14): enrollment below 30, or above $100,000 per pupil
+rx <- data.frame(v33 = c(29, 30, 500, 500), rev_pp_real = c(10, 10, 100, 100.01))
+stopifnot(identical(revenue_excluded(rx), c(TRUE, FALSE, FALSE, TRUE)))
 
 # ---- gap (a) revenue ---------------------------------------------------------------------------------
 dd <- data.frame(leaid = c("A1", "A2", "A3", "B1"), state = c("S1", "S1", "S1", "S1"), sy_end = 2015L, retained = 1L,
@@ -135,6 +162,30 @@ for (o in c("achievement", "graduation")) {
   stopifnot(nrow(ds) == 3L * length(outcome_gaps(o)), all(near(ds$dose_scaled, ds$att_outcome / ds$att_revenue) | is.na(ds$dose_scaled)),
             all(is.na(ds$ci_lo) == startsWith(ds$status, "unbounded") | !startsWith(ds$status, "ok")))
 }
+# no reported bound set sits on its search grid's edge (code correction 2026-09-14)
+edge_ok <- function(f) {
+  if (!file.exists(f)) return(TRUE)
+  h <- utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
+  if (!"grid_points" %in% names(h)) return(FALSE)
+  k <- h$status == "ok" & !is.na(h$mbar)
+  half <- (h$grid_ub - h$grid_lb) / (h$grid_points - 1) / 2
+  all(h$lb[k] > h$grid_lb[k] + half[k]) && all(h$ub[k] < h$grid_ub[k] - half[k]) &&
+    all(is.na(h$lb[h$status != "ok"]))
+}
+stopifnot(edge_ok("outputs/07_inference/honestdid_overall.csv"), edge_ok("outputs/07_inference/graduation/honestdid_overall.csv"),
+          edge_ok("outputs/10_run_all/variants/achievement/honestdid_overall.csv"),
+          edge_ok("outputs/10_run_all/variants/graduation/honestdid_overall.csv"))
+for (o in c("achievement", "graduation")) {
+  xf <- file.path("outputs/10_run_all/dose", o, "revenue_exclusions.csv")
+  if (!file.exists(xf)) next
+  xr <- utils::read.csv(xf, stringsAsFactors = FALSE, na.strings = "")
+  stopifnot(nrow(xr) == 1L + 3L * length(outcome_gaps(o)),
+            all(xr$excluded_total <= xr$excluded_enrollment_below_30 + xr$excluded_revenue_above_100k),
+            all(xr$excluded_total >= pmax(xr$excluded_enrollment_below_30, xr$excluded_revenue_above_100k)),
+            all(xr$excluded_total <= xr$district_years_with_revenue))
+}
+lsf <- "outputs/10_run_all/lee/lee_share_models.csv"
+if (file.exists(lsf)) stopifnot(all(utils::read.csv(lsf)$share_years_from == min(ACH_WINDOW)))   # 2010 on, from the 2006-07 CCD file
 lf <- "outputs/10_run_all/lee/lee_bounds.csv"
 if (file.exists(lf)) {
   lb <- utils::read.csv(lf, stringsAsFactors = FALSE, na.strings = "")

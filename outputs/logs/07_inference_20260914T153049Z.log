@@ -1,0 +1,324 @@
+Step 7 inference (achievement), run 20260914T153049Z; stage 2; blinding PERMUTED; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference and outputs/logs/07_inference_20260914T153049Z.log
+
+30 step 5 models: 21 fitted
+Overall estimates agree with outputs/05_primary/overall_estimates.csv
+Webb draws for event set primary 40 states x 9999 replications
+Webb draws for event set r1      40 states x 9999 replications
+Webb draws for event set r2      45 states x 9999 replications
+Wild cluster bootstrap: 21 models, 0.3 s
+Romano-Wolf: 8 families of 3 gaps
+HonestDiD relative magnitudes: 21 models x 5 M-bar values, 1096.3 s; grid widened for 32 M-bar rows
+
+== HonestDiD relative magnitudes (recomputed, --honest-only)
+              gap event_set       weighting      panel mbar           lb
+        a_poverty   primary      unweighted unbalanced   NA -0.086869843
+        a_poverty   primary      unweighted unbalanced  0.0 -0.086572278
+        a_poverty   primary      unweighted unbalanced  0.5 -0.323756600
+        a_poverty   primary      unweighted unbalanced  1.0 -0.617865159
+        a_poverty   primary      unweighted unbalanced  1.5 -0.914345562
+        a_poverty   primary      unweighted unbalanced  2.0 -1.213197808
+        a_poverty   primary      unweighted   balanced   NA  0.037579657
+        a_poverty   primary      unweighted   balanced  0.0  0.037470256
+        a_poverty   primary      unweighted   balanced  0.5 -0.311506458
+        a_poverty   primary      unweighted   balanced  1.0 -0.705223777
+        a_poverty   primary      unweighted   balanced  1.5 -1.096704066
+        a_poverty   primary      unweighted   balanced  2.0 -1.490421385
+    b_black_white   primary      unweighted unbalanced   NA -0.134117138
+    b_black_white   primary      unweighted unbalanced  0.0 -0.133698548
+    b_black_white   primary      unweighted unbalanced  0.5 -0.957247433
+    b_black_white   primary      unweighted unbalanced  1.0 -1.808988345
+    b_black_white   primary      unweighted unbalanced  1.5 -2.657312041
+    b_black_white   primary      unweighted unbalanced  2.0 -3.504781433
+    b_black_white   primary tested_weighted unbalanced   NA  0.478719089
+    b_black_white   primary tested_weighted unbalanced  0.0           NA
+    b_black_white   primary tested_weighted unbalanced  0.5 -0.806214626
+    b_black_white   primary tested_weighted unbalanced  1.0 -2.113130966
+    b_black_white   primary tested_weighted unbalanced  1.5 -3.425950937
+    b_black_white   primary tested_weighted unbalanced  2.0 -4.740246817
+    b_black_white   primary      unweighted   balanced   NA           NA
+    b_black_white   primary tested_weighted   balanced   NA           NA
+ c_hispanic_white   primary      unweighted unbalanced   NA -0.084201664
+ c_hispanic_white   primary      unweighted unbalanced  0.0 -0.082991955
+ c_hispanic_white   primary      unweighted unbalanced  0.5 -0.679528068
+ c_hispanic_white   primary      unweighted unbalanced  1.0 -1.311272889
+ c_hispanic_white   primary      unweighted unbalanced  1.5 -1.933964042
+ c_hispanic_white   primary      unweighted unbalanced  2.0 -2.556655195
+ c_hispanic_white   primary tested_weighted unbalanced   NA -0.103844708
+ c_hispanic_white   primary tested_weighted unbalanced  0.0 -0.103565331
+ c_hispanic_white   primary tested_weighted unbalanced  0.5 -1.740585915
+ c_hispanic_white   primary tested_weighted unbalanced  1.0 -3.363839506
+ c_hispanic_white   primary tested_weighted unbalanced  1.5 -5.008369358
+ c_hispanic_white   primary tested_weighted unbalanced  2.0 -6.654150756
+ c_hispanic_white   primary      unweighted   balanced   NA  0.033445650
+ c_hispanic_white   primary      unweighted   balanced  0.0  0.034166824
+ c_hispanic_white   primary      unweighted   balanced  0.5 -0.887235261
+ c_hispanic_white   primary      unweighted   balanced  1.0 -1.815985051
+ c_hispanic_white   primary      unweighted   balanced  1.5 -2.743265299
+ c_hispanic_white   primary      unweighted   balanced  2.0 -3.673484629
+ c_hispanic_white   primary tested_weighted   balanced   NA  0.127578915
+ c_hispanic_white   primary tested_weighted   balanced  0.0  0.127994654
+ c_hispanic_white   primary tested_weighted   balanced  0.5 -0.751432727
+ c_hispanic_white   primary tested_weighted   balanced  1.0 -1.649232546
+ c_hispanic_white   primary tested_weighted   balanced  1.5 -2.544582707
+ c_hispanic_white   primary tested_weighted   balanced  2.0 -3.439932868
+        a_poverty        r1      unweighted unbalanced   NA -0.007654907
+        a_poverty        r1      unweighted unbalanced  0.0 -0.007204286
+        a_poverty        r1      unweighted unbalanced  0.5 -0.128014615
+        a_poverty        r1      unweighted unbalanced  1.0 -0.263233515
+        a_poverty        r1      unweighted unbalanced  1.5 -0.399560767
+        a_poverty        r1      unweighted unbalanced  2.0 -0.538104722
+        a_poverty        r1      unweighted   balanced   NA           NA
+    b_black_white        r1      unweighted unbalanced   NA           NA
+    b_black_white        r1 tested_weighted unbalanced   NA           NA
+ c_hispanic_white        r1      unweighted unbalanced   NA  0.045897630
+ c_hispanic_white        r1      unweighted unbalanced  0.0  0.046524567
+ c_hispanic_white        r1      unweighted unbalanced  0.5 -0.181724165
+ c_hispanic_white        r1      unweighted unbalanced  1.0 -0.444170442
+ c_hispanic_white        r1      unweighted unbalanced  1.5 -0.710593178
+ c_hispanic_white        r1      unweighted unbalanced  2.0 -0.977811206
+ c_hispanic_white        r1 tested_weighted unbalanced   NA -0.080751988
+ c_hispanic_white        r1 tested_weighted unbalanced  0.0 -0.080263259
+ c_hispanic_white        r1 tested_weighted unbalanced  0.5 -0.243421359
+ c_hispanic_white        r1 tested_weighted unbalanced  1.0 -0.422368953
+ c_hispanic_white        r1 tested_weighted unbalanced  1.5 -0.611842876
+ c_hispanic_white        r1 tested_weighted unbalanced  2.0 -0.806579963
+        a_poverty        r2      unweighted unbalanced   NA           NA
+    b_black_white        r2      unweighted unbalanced   NA           NA
+    b_black_white        r2 tested_weighted unbalanced   NA           NA
+ c_hispanic_white        r2      unweighted unbalanced   NA           NA
+ c_hispanic_white        r2 tested_weighted unbalanced   NA           NA
+          ub   method
+  0.14533409 original
+  0.14586836     C-LF
+  0.35696240     C-LF
+  0.64869912     C-LF
+  0.94517952     C-LF
+  1.24403177     C-LF
+  0.14708251 original
+  0.14708474     C-LF
+  0.49158739     C-LF
+  0.88418619     C-LF
+  1.27678500     C-LF
+  1.67050232     C-LF
+ -0.05048062 original
+ -0.05083108     C-LF
+  0.78894958     C-LF
+  1.64069049     C-LF
+  2.48815988     C-LF
+  3.33562928     C-LF
+  0.55096492 original
+          NA     C-LF
+  1.84082598     C-LF
+  3.14774232     C-LF
+  4.46056229     C-LF
+  5.77412022     C-LF
+          NA     <NA>
+          NA     <NA>
+  0.01428232 original
+  0.01358050     C-LF
+  0.59502717     C-LF
+  1.22677199     C-LF
+  1.85147507     C-LF
+  2.47416622     C-LF
+ -0.04258146 original
+ -0.04286541     C-LF
+  1.56849851     C-LF
+  3.19300364     C-LF
+  4.83690772     C-LF
+  6.48268912     C-LF
+  0.10537982 original
+  0.10470478     C-LF
+  0.97981633     C-LF
+  1.90856612     C-LF
+  2.83584637     C-LF
+  3.76606570     C-LF
+  0.24748994 original
+  0.24680309     C-LF
+  1.05764003     C-LF
+  1.95666468     C-LF
+  2.85201484     C-LF
+  3.74736500     C-LF
+  0.10085294 original
+  0.10030582     C-LF
+  0.17345703     C-LF
+  0.30867593     C-LF
+  0.44611154     C-LF
+  0.58465549     C-LF
+          NA     <NA>
+          NA     <NA>
+          NA     <NA>
+  0.12375685 original
+  0.12366787     C-LF
+  0.37259418     C-LF
+  0.63742634     C-LF
+  0.90464437     C-LF
+  1.17186239     C-LF
+  0.17688044 original
+  0.17763180     C-LF
+  0.34342148     C-LF
+  0.52500066     C-LF
+  0.71710617     C-LF
+  0.91184325     C-LF
+          NA     <NA>
+          NA     <NA>
+          NA     <NA>
+          NA     <NA>
+          NA     <NA>
+                                                           status num_pre
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+               empty bound set: no value on the grid was accepted       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+      event times are not consecutive around the reference period      NA
+      event times are not consecutive around the reference period      NA
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+ no estimated pre-reform event time: relative magnitudes need one      NA
+      event times are not consecutive around the reference period      NA
+      event times are not consecutive around the reference period      NA
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+                                                               ok       1
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ num_post    grid_lb   grid_ub grid_points
+        9         NA        NA          NA
+        9 -1.1847357 1.1847357        1000
+        9 -1.1847357 1.1847357        1000
+        9 -1.1847357 1.1847357        1000
+        9 -1.1847357 1.1847357        1000
+        9 -3.5542071 3.5542071        2998
+        8         NA        NA          NA
+        8 -0.5586983 0.5586983        1000
+        8 -0.5586983 0.5586983        1000
+        8 -1.6760949 1.6760949        2998
+        8 -1.6760949 1.6760949        2998
+        8 -1.6760949 1.6760949        2998
+        9         NA        NA          NA
+        9 -0.4267248 0.4267248        1000
+        9 -1.2801743 1.2801743        2998
+        9 -3.8405228 3.8405228        8992
+        9 -3.8405228 3.8405228        8992
+        9 -3.8405228 3.8405228        8992
+        9         NA        NA          NA
+        9 -0.3686080 0.3686080        1000
+        9 -1.1058239 3.3174717        5995
+        9 -3.3174717 3.3174717        8992
+        9 -9.9524151 9.9524151       26974
+        9 -9.9524151 9.9524151       26974
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+        9         NA        NA          NA
+        9 -0.5024786 0.5024786        1000
+        9 -1.5074357 1.5074357        2998
+        9 -1.5074357 1.5074357        2998
+        9 -4.5223071 4.5223071        8992
+        9 -4.5223071 4.5223071        8992
+        9         NA        NA          NA
+        9 -0.3125733 0.3125733        1000
+        9 -2.8131598 2.8131598        8992
+        9 -8.4394794 8.4394794       26974
+        9 -8.4394794 8.4394794       26974
+        9 -8.4394794 8.4394794       26974
+        4         NA        NA          NA
+        4 -0.3670178 0.3670178        1000
+        4 -1.1010534 1.1010534        2998
+        4 -3.3031603 3.3031603        8992
+        4 -3.3031603 3.3031603        8992
+        4 -9.9094810 9.9094810       26974
+        4         NA        NA          NA
+        4 -0.6118022 0.6118022        1000
+        4 -1.8354066 1.8354066        2998
+        4 -1.8354066 5.5062198        5995
+        4 -5.5062198 5.5062198        8992
+        4 -5.5062198 5.5062198        8992
+        9         NA        NA          NA
+        9 -0.5536216 0.5536216        1000
+        9 -0.5536216 0.5536216        1000
+        9 -0.5536216 0.5536216        1000
+        9 -0.5536216 0.5536216        1000
+        9 -0.5536216 1.6608649        1999
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+        9         NA        NA          NA
+        9 -0.3972482 0.3972482        1000
+        9 -0.3972482 0.3972482        1000
+        9 -1.1917447 1.1917447        2998
+        9 -1.1917447 1.1917447        2998
+        9 -1.1917447 1.1917447        2998
+        9         NA        NA          NA
+        9 -1.3144753 1.3144753        1000
+        9 -1.3144753 1.3144753        1000
+        9 -1.3144753 1.3144753        1000
+        9 -1.3144753 1.3144753        1000
+        9 -1.3144753 1.3144753        1000
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+       NA         NA        NA          NA
+Wrote outputs/07_inference/honestdid_overall.csv, outputs/07_inference/honestdid_grid_change.csv; updated model_status.csv notes and inference_settings.csv
+Bootstrap, Romano-Wolf and randomization files unchanged. Log: outputs/logs/07_inference_20260914T153049Z.log

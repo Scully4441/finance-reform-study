@@ -215,11 +215,23 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
 # ref: the reference event time. -1 in the registered models; -2 under anticipation = 1
 # (step 10), where event time -1 enters HonestDiD as a post-reference period with zero
 # weight in l_vec, so the bounded quantity is still the mean of event times 0..+8.
+# Search grid (code correction 2026-09-14, docs/deviations.md). HonestDiD reports a bound
+# set as the lowest and highest accepted point of a grid it builds, by default 1,000 points
+# over +/- 20 standard deviations of the bounded quantity, so a set wider than the grid
+# comes back cut at the grid edge. Each Mbar therefore starts on that default grid and, while
+# its lower (upper) bound sits within half a step of the grid's lower (upper) edge, the grid
+# is widened on that side by its current width, with points added to keep the step
+# unchanged, up to HONEST_GRID_MAX_WIDEN times. A set still at an edge after that is
+# recorded with a status and no bound. Every Mbar row carries the grid it was read from.
+HONEST_GRID_SD <- 20
+HONEST_GRID_POINTS <- 1000L
+HONEST_GRID_MAX_WIDEN <- 6L
 # Returns one row per Mbar plus the unadjusted confidence set (mbar NA, method original).
 honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
   fail <- function(status) data.frame(mbar = NA_real_, lb = NA_real_, ub = NA_real_,
                                       method = NA_character_, status = status,
                                       num_pre = NA_integer_, num_post = NA_integer_,
+                                      grid_lb = NA_real_, grid_ub = NA_real_, grid_points = NA_integer_,
                                       stringsAsFactors = FALSE)
   if (is.null(inf)) return(fail("no influence function"))
   ref <- as.integer(ref)
@@ -238,23 +250,43 @@ honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
   dimnames(sigma) <- NULL
   post_e <- e[e > ref]
   l_vec <- matrix(ifelse(post_e >= 0L, 1 / sum(post_e >= 0L), 0), ncol = 1)
-  row <- function(mbar, lb, ub, method, status)
+  row <- function(mbar, lb, ub, method, status, grid = c(NA_real_, NA_real_, NA_real_))
     data.frame(mbar = mbar, lb = lb, ub = ub, method = method, status = status,
-               num_pre = as.integer(num_pre), num_post = as.integer(num_post), stringsAsFactors = FALSE)
+               num_pre = as.integer(num_pre), num_post = as.integer(num_post),
+               grid_lb = grid[1], grid_ub = grid[2], grid_points = as.integer(grid[3]), stringsAsFactors = FALSE)
   # HonestDiD searches a grid and returns an empty interval (lower bound Inf, upper
   # bound -Inf, with a warning from min() and max() on an empty set) when no value on
   # the grid is accepted. That is an empty bound set, not a bound, so it is recorded as
   # one rather than passed on as a pair of infinities.
-  bounded <- function(m, lb, ub, method) {
+  bounded <- function(m, lb, ub, method, grid = c(NA_real_, NA_real_, NA_real_)) {
     if (!is.finite(lb) || !is.finite(ub) || lb > ub)
-      return(row(m, NA_real_, NA_real_, method, "empty bound set: no value on the grid was accepted"))
-    row(m, lb, ub, method, "ok")
+      return(row(m, NA_real_, NA_real_, method, "empty bound set: no value on the grid was accepted", grid))
+    row(m, lb, ub, method, "ok", grid)
   }
+  # HonestDiD's default grid: +/- HONEST_GRID_SD standard deviations of l_vec' betahat_post
+  post <- seq.int(num_pre + 1L, num_pre + num_post)
+  sd_theta <- sqrt(as.numeric(t(l_vec) %*% sigma[post, post, drop = FALSE] %*% l_vec))
+  step <- 2 * HONEST_GRID_SD * sd_theta / (HONEST_GRID_POINTS - 1L)
   out <- lapply(mbarvec, function(m) tryCatch({
-    r <- HonestDiD::createSensitivityResults_relativeMagnitudes(
-      betahat = betahat, sigma = sigma, numPrePeriods = num_pre, numPostPeriods = num_post,
-      l_vec = l_vec, Mbarvec = m, alpha = alpha)
-    bounded(m, as.numeric(r$lb)[1], as.numeric(r$ub)[1], as.character(r$method)[1])
+    glb <- -HONEST_GRID_SD * sd_theta; gub <- HONEST_GRID_SD * sd_theta
+    for (k in 0:HONEST_GRID_MAX_WIDEN) {
+      pts <- as.integer(round((gub - glb) / step)) + 1L
+      grid <- c(glb, gub, pts)
+      r <- HonestDiD::createSensitivityResults_relativeMagnitudes(
+        betahat = betahat, sigma = sigma, numPrePeriods = num_pre, numPostPeriods = num_post,
+        l_vec = l_vec, Mbarvec = m, alpha = alpha, gridPoints = pts, grid.lb = glb, grid.ub = gub)
+      res <- bounded(m, as.numeric(r$lb)[1], as.numeric(r$ub)[1], as.character(r$method)[1], grid)
+      if (res$status != "ok") return(res)
+      tol <- (gub - glb) / (pts - 1L) / 2
+      lo_edge <- res$lb <= glb + tol; hi_edge <- res$ub >= gub - tol
+      if (!lo_edge && !hi_edge) return(res)
+      if (k == HONEST_GRID_MAX_WIDEN)
+        return(row(m, NA_real_, NA_real_, res$method,
+                   sprintf("bound set reaches the grid edge after %d widenings (grid %.4g to %.4g)", k, glb, gub), grid))
+      w <- gub - glb
+      if (lo_edge) glb <- glb - w
+      if (hi_edge) gub <- gub + w
+    }
   }, error = function(e) row(m, NA_real_, NA_real_, NA_character_, paste("error:", conditionMessage(e)))))
   orig <- tryCatch({
     r <- HonestDiD::constructOriginalCS(betahat = betahat, sigma = sigma, numPrePeriods = num_pre,

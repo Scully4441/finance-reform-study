@@ -37,6 +37,7 @@ HEADLINE_MBAR <- 1                       # Section 13 headline (author decision 
 MIN_PRE_YEARS <- 3L                      # Section 5 rule 6 robustness
 RI_REPS_VARIANT <- 1000L                 # compute deviation 2026-09-13
 LEE_LAG <- 3L                            # grade 9 membership three years before the tested year
+LEE_FIRST_CCD <- 2007L                   # first archived CCD school file for the shares (data addition 2026-09-14)
 DOSE_BASE_YEAR <- 2021L                  # last window year of both outcomes
 
 # The robustness variants, one departure each from the primary specification.
@@ -160,8 +161,15 @@ infer_fits <- function(fits, seed_step, reps, mbarvec = MBAR_GRID) {
       ev[ev$e == e, names(r)] <- r
     }
     out$event[[k]] <- ev
-    out$honest[[k]] <- honest_rm(inf, mbarvec, ref = ref)
   }
+  # HonestDiD one fit per worker under the caller's future plan (deterministic; the grid
+  # widening of honest_rm() makes wide bound sets slow)
+  ks <- names(fits)[ok]
+  jobs <- lapply(ks, function(k) list(inf = infs[[k]], ref = fits[[k]]$ref))   # not the fits: they are large
+  one <- function(j, mbarvec) suppressWarnings(honest_rm(j$inf, mbarvec, ref = j$ref))
+  environment(one) <- globalenv()        # so the workers are not sent this frame, fits included
+  hs <- furrr::future_map(jobs, one, mbarvec = mbarvec, .options = furrr::furrr_options(seed = NULL))
+  out$honest[ks] <- hs
   out
 }
 
@@ -190,18 +198,12 @@ LONG_RACE <- c(bl = "Black or African American", wh = "White", hi = "Hispanic/La
 # codes and blank counts are not reported. g9_all is the sum of the reported school counts
 # (NA if none is reported). A race count is NA ("unavailable") when any school with a
 # reported all-students grade 9 count above zero lacks that race's male or female count.
-ccd_grade9_district <- function(path, sy_end) {
+# 2006-07 is published as three fixed-width state-group files (sc061c{ai,kn,ow}.dat) with a
+# separate record layout (psu061clay.txt): pass the .dat paths and the layout, and the
+# fields are cut at the layout's start and end positions (data addition 2026-09-14).
+ccd_grade9_district <- function(path, sy_end, layout = NULL) {
+  if (!is.null(layout)) return(ccd_grade9_fixed(path, sy_end, layout))
   hdr <- names(data.table::fread(path, nrows = 0L, colClasses = "character"))
-  agg <- function(sch) {                 # sch: leaid, all, bl, wh, hi per school (NA = not reported)
-    offers <- !is.na(sch$all) & sch$all > 0
-    by <- split(seq_len(nrow(sch)), sch$leaid)
-    data.frame(leaid = names(by), sy_end = as.integer(sy_end),
-               g9_all = vapply(by, function(i) if (all(is.na(sch$all[i]))) NA_real_ else sum(sch$all[i], na.rm = TRUE), 0),
-               g9_bl = vapply(by, function(i) if (any(offers[i] & is.na(sch$bl[i]))) NA_real_ else sum(sch$bl[i][offers[i]]), 0),
-               g9_wh = vapply(by, function(i) if (any(offers[i] & is.na(sch$wh[i]))) NA_real_ else sum(sch$wh[i][offers[i]]), 0),
-               g9_hi = vapply(by, function(i) if (any(offers[i] & is.na(sch$hi[i]))) NA_real_ else sum(sch$hi[i][offers[i]]), 0),
-               row.names = NULL, stringsAsFactors = FALSE)
-  }
   if ("GRADE" %in% hdr) {
     d <- data.table::fread(path, select = c("NCESSCH", "LEAID", "GRADE", "RACE_ETHNICITY", "SEX", "STUDENT_COUNT", "TOTAL_INDICATOR"),
                            colClasses = "character", data.table = FALSE, showProgress = FALSE)
@@ -240,12 +242,53 @@ ccd_grade9_district <- function(path, sy_end) {
     for (s in c("bl", "wh", "hi")) sch[[s]] <- ccd_count(d[[paste0(toupper(s), "09M")]]) + ccd_count(d[[paste0(toupper(s), "09F")]])
   }
   sch <- sch[grepl("^[0-9]{7}$", sch$leaid), , drop = FALSE]
-  agg(sch)
+  ccd_grade9_agg(sch, sy_end)
+}
+
+# District sums of school grade 9 counts (rules in the comment above ccd_grade9_district()).
+ccd_grade9_agg <- function(sch, sy_end) {
+  offers <- !is.na(sch$all) & sch$all > 0
+  by <- split(seq_len(nrow(sch)), sch$leaid)
+  race <- function(v) vapply(by, function(i) if (any(offers[i] & is.na(v[i]))) NA_real_ else sum(v[i][offers[i]]), 0)
+  data.frame(leaid = names(by), sy_end = as.integer(sy_end),
+             g9_all = vapply(by, function(i) if (all(is.na(sch$all[i]))) NA_real_ else sum(sch$all[i], na.rm = TRUE), 0),
+             g9_bl = race(sch$bl), g9_wh = race(sch$wh), g9_hi = race(sch$hi), row.names = NULL, stringsAsFactors = FALSE)
+}
+
+# Fixed-width school files and their NCES record layout: variable lines read
+# "NAME  start  end  length  type  description", a leading "+" marking a subfield.
+ccd_grade9_fixed <- function(paths, sy_end, layout) {
+  lay <- readLines(layout, warn = FALSE, encoding = "latin1")    # descriptions carry Windows-1252 bytes
+  lay <- iconv(lay, "latin1", "ASCII", sub = " ")
+  m <- regmatches(lay, regexec("^\\+?([A-Z][A-Z0-9_]*)[ \t]+([0-9]{4})[ \t]+([0-9]{4})[ \t]+[0-9]+[ \t]+(AN|N)[ \t]", lay))
+  m <- do.call(rbind, m[lengths(m) == 5L])
+  pos <- data.frame(name = m[, 2], start = as.integer(m[, 3]), end = as.integer(m[, 4]), stringsAsFactors = FALSE)
+  sfx <- sprintf("%02d", (sy_end - 1L) %% 100L)
+  need <- c("LEAID", paste0("G09", sfx), paste0(as.vector(outer(c("BL", "WH", "HI"), c("09M", "09F"), paste0)), sfx))
+  if (!all(need %in% pos$name)) stop(basename(layout), " lacks ", paste(setdiff(need, pos$name), collapse = ", "))
+  cut <- function(x, v) { k <- match(v, pos$name); trimws(substr(x, pos$start[k], pos$end[k])) }
+  # school names carry single-byte accented characters: read as latin1, so one character is
+  # one byte and the layout's byte positions hold
+  lines <- unlist(lapply(paths, readLines, warn = FALSE, encoding = "latin1"))
+  lines <- lines[nchar(lines, type = "bytes") >= max(pos$end[pos$name %in% need])]
+  sch <- data.frame(leaid = cut(lines, "LEAID"), all = ccd_count(cut(lines, need[2])), stringsAsFactors = FALSE)
+  for (s in c("bl", "wh", "hi"))
+    sch[[s]] <- ccd_count(cut(lines, paste0(toupper(s), "09M", sfx))) + ccd_count(cut(lines, paste0(toupper(s), "09F", sfx)))
+  sch <- sch[grepl("^[0-9]{7}$", sch$leaid), , drop = FALSE]
+  ccd_grade9_agg(sch, sy_end)
 }
 
 # The membership zip of a school year (end year) and the data file inside it; a zip inside
 # the zip (2017-18) is opened too.
+# 2006-07: the three state-group zips, extracted, with the layout path as attribute "layout".
 ccd_membership_file <- function(sy_end, exdir) {
+  if (sy_end == 2007L) {
+    zips <- sprintf("data/raw/ccd/membership-sy2006-07-%s.zip", c("ai", "kn", "ow"))
+    lay <- "data/raw/ccd/membership-sy2006-07-layout.txt"
+    if (!all(file.exists(c(zips, lay)))) stop("2006-07 CCD school files or layout not found; run R/02_download.R")
+    out <- unlist(lapply(zips, function(z) utils::unzip(z, exdir = exdir)))
+    return(structure(out, layout = lay))
+  }
   zip <- sprintf("data/raw/ccd/membership-sy%d-%02d.zip", sy_end - 1L, sy_end %% 100L)
   if (!file.exists(zip)) stop(zip, " not found")
   inner <- utils::unzip(zip, list = TRUE)$Name
@@ -341,6 +384,14 @@ real_revenue <- function(rev, cpi_file = "data/raw/cpi/cuur0000sa0.csv", base = 
   rev$rev_pp_real <- deflate_to_base(rev$rev_pp, rev$sy_end, cpi, base)
   rev
 }
+
+# Revenue exclusions for the dose first stage (data correction 2026-09-14, docs/deviations.md):
+# a district-year with F-33 fall enrollment (V33) below REV_MIN_ENROLL, or with state-plus-
+# local revenue per pupil above REV_MAX_PP thousand DOSE_BASE_YEAR dollars, is left out.
+# Such values come from tiny enrollment denominators, not from school finance.
+REV_MIN_ENROLL <- 30
+REV_MAX_PP <- 100            # thousands of 2021 dollars, i.e. $100,000 per pupil
+revenue_excluded <- function(rev) rev$v33 < REV_MIN_ENROLL | rev$rev_pp_real > REV_MAX_PP
 
 # Revenue panel on the units of a district model: every window year with a revenue value.
 dist_revenue_panel <- function(base, rev, window) {
