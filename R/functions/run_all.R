@@ -335,7 +335,10 @@ lee_share_panel <- function(base, smp, g9, sg, window) {
   out
 }
 
-# Relative trimming fraction (operationalization correction 2026-09-14, docs/deviations.md).
+# Differential trimming fraction (operationalization correction 2026-09-14, docs/deviations.md).
+# For each group g of a gap, p_g = 1 - q_C,g / q_T,g; the trimming fraction is |p_1 - p_2|,
+# bounded to [0, 1], applied to the treated post-reform district-years (Section 9's
+# "differential change").
 # q_T: the treated post-reform tested share, aggregated as did aggregates the overall effect:
 # within each estimated event time 0..max_e, the mean share of each cohort's district-years
 # in that cell weighted by the cohort's unit count, then the equal-weight mean over event
@@ -355,39 +358,25 @@ lee_share_levels <- function(fs, panel) {
   c(q_T = q_T, q_C = q_T - fs$overall$att)
 }
 
-# p = 1 - q_C / q_T. p >= 0: the treated group retained more, so its post-reform district-years
-# are trimmed by p; p < 0: the controls retained more and their district-years are trimmed by
-# 1 - q_T / q_C (Lee trims whichever group retained more). The fraction is bounded to [0, 1].
-lee_fraction <- function(q_T, q_C) {
-  if (!is.finite(q_T) || !is.finite(q_C) || q_T <= 0)
-    return(list(p = NA_real_, group = NA_character_, fraction = NA_real_))
-  p <- 1 - q_C / q_T
-  if (p >= 0) return(list(p = p, group = "treated", fraction = min(p, 1)))
-  list(p = p, group = "control", fraction = min(max(1 - q_T / q_C, 0), 1))
-}
+# p = 1 - q_C / q_T for one group (NA when q_T is not a positive number).
+lee_p <- function(q_T, q_C) if (!is.finite(q_T) || !is.finite(q_C) || q_T <= 0) NA_real_ else 1 - q_C / q_T
 
-# The district-years a trim applies to. treated: treated units' post-reform district-years
-# (g > 0, sy_end >= g). control: district-years not yet treated (g = 0 or sy_end < g) in the
-# calendar years from the first cohort year on, the comparisons for the treated cells.
-lee_group_rows <- function(panel, group = c("treated", "control")) {
-  group <- match.arg(group)
-  if (group == "treated") return(which(panel$g > 0 & panel$sy_end >= panel$g))
-  first <- if (any(panel$g > 0)) min(panel$g[panel$g > 0]) else Inf
-  which((panel$g == 0 | panel$sy_end < panel$g) & panel$sy_end >= first)
-}
+# The trimming fraction: the absolute difference between the two groups' p, bounded to [0, 1].
+lee_differential_fraction <- function(p1, p2) if (is.na(p1) || is.na(p2)) NA_real_ else min(abs(p1 - p2), 1)
 
-# Remove the share `frac` of the group's district-years with the highest (side "top") or
-# lowest ("bottom") outcome. Returns the trimmed panel, the count removed and the group size.
-lee_trim <- function(panel, frac, side = c("top", "bottom"), group = c("treated", "control")) {
-  side <- match.arg(side); group <- match.arg(group)
-  tp <- lee_group_rows(panel, group)
+# Remove the share `frac` of the treated post-reform district-years (g > 0, sy_end >= g) with
+# the highest (side "top") or lowest ("bottom") outcome. Returns the trimmed panel, the count
+# removed and the number of treated post-reform district-years.
+lee_trim <- function(panel, frac, side = c("top", "bottom")) {
+  side <- match.arg(side)
+  tp <- which(panel$g > 0 & panel$sy_end >= panel$g)
   k <- round(min(max(frac, 0), 1) * length(tp))
-  if (k == 0L) return(list(panel = panel, removed = 0L, group_rows = length(tp), treated_post = length(tp)))
+  if (k == 0L) return(list(panel = panel, removed = 0L, treated_post = length(tp)))
   o <- order(panel$y[tp], decreasing = side == "top")
   drop <- tp[o[seq_len(k)]]
   p <- panel[-drop, , drop = FALSE]
   rownames(p) <- NULL
-  list(panel = p, removed = as.integer(k), group_rows = length(tp), treated_post = length(tp))
+  list(panel = p, removed = as.integer(k), treated_post = length(tp))
 }
 
 # ---- dose scaling ---------------------------------------------------------------------------

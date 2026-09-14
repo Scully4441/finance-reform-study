@@ -1,0 +1,29 @@
+15:18:54  Step 10 run-all, run 20260913T164910Z (resumed); stage 2; blinding PERMUTED
+15:18:54  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+15:18:54  skip step 03_sample (finished in run 20260913T164910Z)
+15:18:54  skip step 04_outcomes (finished in run 20260913T164910Z)
+15:18:54  skip step 03g_graduation_sample (finished in run 20260913T164910Z)
+15:18:54  skip step 04g_graduation_outcomes (finished in run 20260913T164910Z)
+15:18:54  skip step 05_primary (finished in run 20260913T164910Z)
+15:18:54  skip step 05_primary_graduation (finished in run 20260913T164910Z)
+15:18:54  skip step 06_secondary (finished in run 20260913T164910Z)
+15:18:54  skip step 06_secondary_graduation (finished in run 20260913T164910Z)
+15:18:54  skip step 07_inference (finished in run 20260913T164910Z)
+15:18:54  skip step 07_inference_graduation (finished in run 20260913T164910Z)
+15:19:07  skip variants achievement (finished in run 20260913T164910Z)
+15:19:07  skip variants graduation (finished in run 20260913T164910Z)
+15:19:07  start lee bounds
+15:19:15    Lee share model b_black_white     bl: 1577 districts, ok
+15:19:17    Lee share model b_black_white     wh: 1577 districts, ok
+15:19:20    Lee trim b_black_white     treated post-reform district-years: 7 of 455, ok
+15:19:22    Lee share model c_hispanic_white  hi: 1901 districts, ok
+15:19:23    Lee share model c_hispanic_white  wh: 1901 districts, ok
+15:19:26    Lee trim c_hispanic_white  treated post-reform district-years: 64 of 767, ok
+15:19:26  done  lee bounds  0.3 min
+15:19:26  skip dose achievement (finished in run 20260913T164910Z)
+15:19:26  skip dose graduation (finished in run 20260913T164910Z)
+15:19:26  start report
+15:19:27  Report: outputs/13_report/report.md (5 plots, 42 tables)
+15:19:27  done  report  0.0 min
+15:19:27  Run 20260913T164910Z finished. Total run time over parts: 4.43 h (wall clock since start: 26.50 h)
+15:19:27  Run times per part: outputs/10_run_all/run_times.csv; log: outputs/logs/10_run_all_20260914T191854Z.log

@@ -224,45 +224,41 @@ run_lee <- function() {
     mp <- cs_model_panel(inp, gap, "primary")
     base <- mp$panel
     sgs <- RACE_GAPS[[race_key("achievement", gap)]]
-    effects <- c(); lev <- list(); fr <- list()
+    effects <- c(); lev <- list(); pg <- c()
     for (sg in sgs) {
       sp <- lee_share_panel(base, smp, g9, sg, share_years)
       fs <- run_cs(sp, xformla = mp$xformla, seed_step = paste("10_run_all lee share", gap, sg), allow_unbalanced_panel = TRUE)
       effects[sg] <- if (fs$status == "ok") fs$overall$att else NA_real_
       lev[[sg]] <- lee_share_levels(fs, sp)
-      fr[[sg]] <- lee_fraction(lev[[sg]][["q_T"]], lev[[sg]][["q_C"]])
+      pg[sg] <- lee_p(lev[[sg]][["q_T"]], lev[[sg]][["q_C"]])
       share_rows[[paste(gap, sg)]] <- data.frame(gap = gap, subgroup = sg, status = fs$status, att_share = fs$overall$att,
-        se = fs$overall$se, q_T = lev[[sg]][["q_T"]], q_C = lev[[sg]][["q_C"]], p = fr[[sg]]$p,
-        trim_group = fr[[sg]]$group, trim_fraction = fr[[sg]]$fraction,
+        se = fs$overall$se, q_T = lev[[sg]][["q_T"]], q_C = lev[[sg]][["q_C"]], p = unname(pg[sg]),
         units = length(unique(sp$id)), unit_years = nrow(sp), share_years_from = min(sp$sy_end),
         fallback_share = mean(sp$fallback), mean_share = mean(sp$y), notes = paste(unique(fs$notes), collapse = " | "),
         stringsAsFactors = FALSE)
       say(sprintf("  Lee share model %-17s %s: %d districts, %s", gap, sg, length(unique(sp$id)), fs$status))
     }
-    # the subgroup with the larger trimming fraction sets the trim (the larger-effect rule of 2026-09-13)
-    fx <- vapply(fr, function(z) if (is.na(z$fraction)) -Inf else z$fraction, 0)
-    pick <- if (all(!is.finite(fx))) NA_character_ else names(fx)[which.max(fx)]
-    frac <- if (is.na(pick)) NA_real_ else fr[[pick]]$fraction
-    grp <- if (is.na(pick)) "treated" else fr[[pick]]$group
+    # Section 9's differential change: |p_minority - p_white|, bounded to [0, 1], on the treated post-reform district-years
+    frac <- lee_differential_fraction(pg[[sgs[1]]], pg[["wh"]])
     prim <- run_cs(base, xformla = mp$xformla, seed_step = paste("10_run_all lee primary", gap), allow_unbalanced_panel = TRUE)
     k5 <- ov5$gap == gap & ov5$event_set == "primary" & ov5$weighting == "unweighted" & ov5$panel == "unbalanced"
     stopifnot(isTRUE(all.equal(prim$overall$att, ov5$att[k5])))   # the rebuilt panel is step 5's
     trims <- lapply(c(top = "top", bottom = "bottom"), function(side) {
-      tr <- lee_trim(base, if (is.na(frac)) 0 else frac, side, grp)
+      tr <- lee_trim(base, if (is.na(frac)) 0 else frac, side)
       ft <- run_cs(tr$panel, xformla = mp$xformla, seed_step = paste("10_run_all lee trim", gap, side), allow_unbalanced_panel = TRUE)
-      list(att = ft$overall$att, status = ft$status, removed = tr$removed, group_rows = tr$group_rows)
+      list(att = ft$overall$att, status = ft$status, removed = tr$removed, treated_post = tr$treated_post)
     })
     est <- c(trims$top$att, trims$bottom$att)
     rows[[gap]] <- data.frame(gap = gap, event_set = "primary", weighting = "unweighted", panel = "unbalanced",
       att_primary = prim$overall$att, effect_share_minority = unname(effects[sgs[1]]), effect_share_white = unname(effects["wh"]),
-      p_minority = fr[[sgs[1]]]$p, p_white = fr[["wh"]]$p, fraction_subgroup = pick,
-      trim_group = grp, trim_fraction = frac, trim_group_unit_years = trims$top$group_rows,
-      trimmed_unit_years = trims$top$removed,
+      p_minority = unname(pg[sgs[1]]), p_white = unname(pg["wh"]), trim_fraction = frac,
+      treated_post_unit_years = trims$top$treated_post, trimmed_unit_years = trims$top$removed,
       att_trim_top = trims$top$att, att_trim_bottom = trims$bottom$att,
       lee_lower = if (all(is.na(est))) NA_real_ else min(est, na.rm = TRUE), lee_upper = if (all(is.na(est))) NA_real_ else max(est, na.rm = TRUE),
       status = if (is.na(frac)) "no share effect estimated" else if (trims$top$status == "ok" && trims$bottom$status == "ok") "ok" else
         paste("trim refit:", trims$top$status, "/", trims$bottom$status), stringsAsFactors = FALSE)
-    say(sprintf("  Lee trim %-17s %s district-years: %d of %d, %s", gap, grp, trims$top$removed, trims$top$group_rows, rows[[gap]]$status))
+    say(sprintf("  Lee trim %-17s treated post-reform district-years: %d of %d, %s", gap, trims$top$removed,
+                trims$top$treated_post, rows[[gap]]$status))
   }
   wcsv(bind(rows), file.path(ldir, "lee_bounds.csv"))
   wcsv(bind(share_rows), file.path(ldir, "lee_share_models.csv"))
@@ -452,13 +448,12 @@ build_report <- function() {
       # 5. Lee bounds
       if (gap %in% lee$gap) {
         l <- lee[lee$gap == gap, ]
-        lt <- data.frame(p_minority = fmt(l$p_minority, 4), p_white = fmt(l$p_white, 4), fraction_from = l$fraction_subgroup,
-          trimmed_group = l$trim_group, trim_fraction = fmt(l$trim_fraction, 4),
-          trimmed_district_years = paste0(l$trimmed_unit_years, " of ", l$trim_group_unit_years),
+        lt <- data.frame(p_minority = fmt(l$p_minority, 4), p_white = fmt(l$p_white, 4), trim_fraction = fmt(l$trim_fraction, 4),
+          trimmed_treated_post_district_years = paste0(l$trimmed_unit_years, " of ", l$treated_post_unit_years),
           estimate_trim_top = fmt(l$att_trim_top), estimate_trim_bottom = fmt(l$att_trim_bottom),
           lee_bracket = paste0("[", fmt(l$lee_lower), ", ", fmt(l$lee_upper), "]"), status = l$status)
         wcsv(l, file.path(REP, "tables", paste0(gap, "_5_lee.csv")))
-        md <- c(md, "### 5. Lee bounds", "", "Tested share = the subgroup's tested count (mean of math and RLA) over its CCD grade 9 membership three years earlier, all-students counts where race-by-grade membership is unavailable; every window year (grade 9 membership from the CCD school files for 2006-07 on). For each subgroup, q_T is the treated post-reform share (aggregated as the overall effect) and q_C = q_T minus the Callaway–Sant'Anna effect on the share, and p = 1 − q_C / q_T. When p ≥ 0 the treated post-reform district-years are trimmed by p; when p < 0 the not-yet-treated district-years from the first cohort year on are trimmed by 1 − q_T / q_C; the fraction is bounded to [0, 1] and taken from the subgroup with the larger fraction (operationalization correction 2026-09-14). The trimmed group loses that share of its district-years from the top and, separately, from the bottom, and the primary model is refitted each way. The bracket assumes monotone selection.", "", md_table(lt))
+        md <- c(md, "### 5. Lee bounds", "", "Tested share = the subgroup's tested count (mean of math and RLA) over its CCD grade 9 membership three years earlier, all-students counts where race-by-grade membership is unavailable; every window year (grade 9 membership from the CCD school files for 2006-07 on). For each of the gap's two groups, q_T is the treated post-reform share (aggregated as the overall effect), q_C = q_T minus the Callaway–Sant'Anna effect on the share, and p = 1 − q_C / q_T. The trimming fraction is the differential change of Section 9, |p_minority − p_white|, bounded to [0, 1] (operationalization correction 2026-09-14). The treated post-reform district-years lose that share from the top and, separately, from the bottom of the outcome distribution, and the primary model is refitted each way. The bracket assumes monotone selection.", "", md_table(lt))
       } else md <- c(md, "### 5. Lee bounds", "", if (outcome == "graduation") "Not computed for the graduation gaps: dropout is part of the outcome itself (author decision 2026-09-13)." else
         "Not computed for gap (a) (author decision 2026-09-13).", "")
       # 6. estimator agreement
