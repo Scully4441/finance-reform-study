@@ -1,0 +1,22 @@
+Step 5 primary estimator (graduation), run 20260913T165145Z; stage 2; blinding PERMUTED; did 2.5.1
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/05_primary/graduation and outputs/logs/05_primary_graduation_20260913T165145Z.log
+Covariates for the 2909 districts in the district gap file; missing: log_member_2009 1, saipe_pov_rate_2009 0, black_share_2009 0, hisp_share_2009 0
+
+== Panels (graduation gaps with all covariates), primary suppression sample, end years 2011-2021
+   unbalanced = the primary rule (any window year); balanced = the robustness rule (every window year)
+grad_black_white    primary unbalanced  1555 districts in 40 states
+grad_black_white    primary balanced     658 districts in 27 states
+grad_hispanic_white primary unbalanced  1795 districts in 39 states
+grad_hispanic_white primary balanced     462 districts in 28 states
+grad_black_white    r1      unbalanced  1555 districts in 40 states
+grad_black_white    r1      balanced     658 districts in 27 states
+grad_hispanic_white r1      unbalanced  1795 districts in 39 states
+grad_hispanic_white r1      balanced     462 districts in 28 states
+grad_black_white    r2      unbalanced  1871 districts in 45 states
+grad_black_white    r2      balanced     747 districts in 31 states
+grad_hispanic_white r2      unbalanced  2319 districts in 44 states
+grad_hispanic_white r2      balanced     543 districts in 31 states
+
+Wrote outputs/05_primary/graduation/event_time_estimates.csv, outputs/05_primary/graduation/overall_estimates.csv, outputs/05_primary/graduation/group_time_estimates.csv, outputs/05_primary/graduation/model_status.csv, outputs/05_primary/graduation/panel_counts.csv, outputs/05_primary/graduation/cs_models.rds
+24 graduation models (3 event sets x 2 panel rules); models that stopped with an error: 2. Status per model: outputs/05_primary/graduation/model_status.csv
+Log: outputs/logs/05_primary_graduation_20260913T165145Z.log

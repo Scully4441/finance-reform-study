@@ -1,0 +1,26 @@
+Step 6 secondary estimators (graduation), run 20260913T165459Z; stage 2; blinding PERMUTED; fixest 0.14.2, didimputation 0.5.1, synthdid 0.0.9
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/06_secondary/graduation (unbalanced), outputs/06_secondary/appendix/graduation (balanced, appendix) and outputs/logs/06_secondary_graduation_20260913T165459Z.log
+Covariates for the 2909 districts in the graduation gap file; district-year flags: 206995 district-years (cep)
+
+== Panels (the step 5 unbalanced panels), primary suppression sample, graduation
+grad_black_white    primary unbalanced  1532 districts in 39 states
+grad_hispanic_white primary unbalanced  1776 districts in 38 states
+grad_black_white    r1      unbalanced  1513 districts in 39 states
+grad_hispanic_white r1      unbalanced  1722 districts in 38 states
+grad_black_white    r2      unbalanced  1840 districts in 44 states
+grad_hispanic_white r2      unbalanced  2215 districts in 43 states
+
+Wrote outputs/06_secondary/graduation/event_time_estimates.csv, outputs/06_secondary/graduation/overall_estimates.csv, outputs/06_secondary/graduation/group_time_estimates.csv, outputs/06_secondary/graduation/model_status.csv, outputs/06_secondary/graduation/panel_counts.csv, outputs/06_secondary/graduation/synthdid_pooled.csv, outputs/06_secondary/graduation/secondary_models.rds
+36 graduation models on the unbalanced panel (6 estimators, 2 gaps, 3 event set(s)); models that stopped with an error: 0. Status per model: outputs/06_secondary/graduation/model_status.csv
+
+== Panels (the step 5 balanced panels, appendix), primary suppression sample, graduation
+grad_black_white    primary balanced     649 districts in 26 states
+grad_hispanic_white primary balanced     456 districts in 27 states
+grad_black_white    r1      balanced     629 districts in 26 states
+grad_hispanic_white r1      balanced     431 districts in 27 states
+grad_black_white    r2      balanced     747 districts in 31 states
+grad_hispanic_white r2      balanced     543 districts in 31 states
+
+Wrote outputs/06_secondary/appendix/graduation/event_time_estimates.csv, outputs/06_secondary/appendix/graduation/overall_estimates.csv, outputs/06_secondary/appendix/graduation/group_time_estimates.csv, outputs/06_secondary/appendix/graduation/model_status.csv, outputs/06_secondary/appendix/graduation/panel_counts.csv, outputs/06_secondary/appendix/graduation/synthdid_pooled.csv, outputs/06_secondary/appendix/graduation/secondary_models.rds
+36 graduation models on the balanced panel (6 estimators, 2 gaps, 3 event set(s)); models that stopped with an error: 0. Status per model: outputs/06_secondary/appendix/graduation/model_status.csv
+Log: outputs/logs/06_secondary_graduation_20260913T165459Z.log

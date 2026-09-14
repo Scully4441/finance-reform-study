@@ -1,0 +1,23 @@
+Warning messages:
+1: In base::min(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to min; returning Inf
+2: In base::max(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to max; returning -Inf
+3: In base::min(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to min; returning Inf
+4: In base::max(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to max; returning -Inf
+5: In base::min(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to min; returning Inf
+6: In base::max(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to max; returning -Inf
+7: In base::min(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to min; returning Inf
+8: In base::max(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to max; returning -Inf
+9: In base::min(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to min; returning Inf
+10: In base::max(temp$grid[temp$accept == 1]) :
+  no non-missing arguments to max; returning -Inf
+There were 42 warnings (use warnings() to see them)
+All tests passed.

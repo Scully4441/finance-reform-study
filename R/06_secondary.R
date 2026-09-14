@@ -25,8 +25,8 @@
 # unbalanced panel its state-year means are taken over the panel's districts and the
 # states with a mean in every window year enter (run_sdid(complete_states = TRUE)); the
 # states left out are counted in the notes and in panel_counts.csv.
-# Event set: the primary set (event_table.csv), as the step 6 instruction asked;
-# EVENT_SETS takes r1 and r2 when they are wanted.
+# Event sets: all three (event_table.csv, _r1, _r2) for both outcomes. The achievement pass
+# ran the primary set alone until step 10 (2026-09-13), which asked for all three.
 # Estimators (R/functions/secondary.R), all unweighted (Section 7: the weighted
 # robustness check is a did model, step 5):
 #   sun_abraham   fixest, the sunab cohort-by-period indicators with never-treated
@@ -75,7 +75,8 @@ PANEL_DIRS <- c(unbalanced = "", balanced = "appendix")
 if (OUTCOME == "achievement") {
   if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
   WINDOW <- ACH_WINDOW   # end years 2010-2019 and 2021 (design Section 3)
-  EVENT_SETS <- c(primary = "event_table.csv")
+  # all three event sets, as the graduation pass (step 10 instruction, 2026-09-13)
+  EVENT_SETS <- c(primary = "event_table.csv", r1 = "event_table_r1.csv", r2 = "event_table_r2.csv")
   GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
   CONTROLS <- SEC_FLAGS
 } else {

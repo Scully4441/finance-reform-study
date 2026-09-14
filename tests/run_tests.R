@@ -154,4 +154,7 @@ source("tests/test_power.R")
 
 # secondary graduation outcome: loaders, gaps and the graduation pass of steps 5-7
 source("tests/test_graduation.R")
+
+# step 10: variants, Lee bounds, dose scaling and the Section 13 report
+source("tests/test_run_all.R")
 cat("All tests passed.\n")

@@ -1,0 +1,19 @@
+12:49:10  Step 10 run-all, run 20260913T164910Z; stage 2; blinding PERMUTED
+12:49:11  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+12:49:11  start step 03_sample
+12:50:30  done  step 03_sample  1.3 min
+12:50:30  start step 04_outcomes
+12:50:40  done  step 04_outcomes  0.2 min
+12:50:40  start step 03g_graduation_sample
+12:51:21  done  step 03g_graduation_sample  0.7 min
+12:51:21  start step 04g_graduation_outcomes
+12:51:26  done  step 04g_graduation_outcomes  0.1 min
+12:51:26  start step 05_primary
+12:51:43  done  step 05_primary  0.3 min
+12:51:43  start step 05_primary_graduation
+12:52:01  done  step 05_primary_graduation  0.3 min
+12:52:01  start step 06_secondary
+12:54:57  done  step 06_secondary  2.9 min
+12:54:57  start step 06_secondary_graduation
+12:59:08  done  step 06_secondary_graduation  4.2 min
+12:59:08  start step 07_inference

@@ -1,0 +1,32 @@
+Step 6 secondary estimators (achievement), run 20260913T165204Z; stage 2; blinding PERMUTED; fixest 0.14.2, didimputation 0.5.1, synthdid 0.0.9
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/06_secondary (unbalanced), outputs/06_secondary/appendix (balanced, appendix) and outputs/logs/06_secondary_20260913T165204Z.log
+Covariates for the 3255 districts in the gap (b)/(c) file; district-year flags: 205570 district-years (test_replaced, cep); gap (a): state-year test_replaced and CEP share
+
+== Panels (the step 5 unbalanced panels), primary suppression sample, achievement
+a_poverty           primary unbalanced    38 states    in 38 states
+b_black_white       primary unbalanced  1577 districts in 40 states
+c_hispanic_white    primary unbalanced  1901 districts in 39 states
+a_poverty           r1      unbalanced    38 states    in 38 states
+b_black_white       r1      unbalanced  1577 districts in 40 states
+c_hispanic_white    r1      unbalanced  1901 districts in 39 states
+a_poverty           r2      unbalanced    43 states    in 43 states
+b_black_white       r2      unbalanced  1920 districts in 45 states
+c_hispanic_white    r2      unbalanced  2476 districts in 44 states
+
+Wrote outputs/06_secondary/event_time_estimates.csv, outputs/06_secondary/overall_estimates.csv, outputs/06_secondary/group_time_estimates.csv, outputs/06_secondary/model_status.csv, outputs/06_secondary/panel_counts.csv, outputs/06_secondary/synthdid_pooled.csv, outputs/06_secondary/secondary_models.rds
+54 achievement models on the unbalanced panel (6 estimators, 3 gaps, 3 event set(s)); models that stopped with an error: 0. Status per model: outputs/06_secondary/model_status.csv
+
+== Panels (the step 5 balanced panels, appendix), primary suppression sample, achievement
+a_poverty           primary balanced      20 states    in 20 states
+b_black_white       primary balanced      69 districts in  9 states
+c_hispanic_white    primary balanced      35 districts in 12 states
+a_poverty           r1      balanced      20 states    in 20 states
+b_black_white       r1      balanced      69 districts in  9 states
+c_hispanic_white    r1      balanced      35 districts in 12 states
+a_poverty           r2      balanced      23 states    in 23 states
+b_black_white       r2      balanced      69 districts in  9 states
+c_hispanic_white    r2      balanced      36 districts in 13 states
+
+Wrote outputs/06_secondary/appendix/event_time_estimates.csv, outputs/06_secondary/appendix/overall_estimates.csv, outputs/06_secondary/appendix/group_time_estimates.csv, outputs/06_secondary/appendix/model_status.csv, outputs/06_secondary/appendix/panel_counts.csv, outputs/06_secondary/appendix/synthdid_pooled.csv, outputs/06_secondary/appendix/secondary_models.rds
+54 achievement models on the balanced panel (6 estimators, 3 gaps, 3 event set(s)); models that stopped with an error: 0. Status per model: outputs/06_secondary/appendix/model_status.csv
+Log: outputs/logs/06_secondary_20260913T165204Z.log

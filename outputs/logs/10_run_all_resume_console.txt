@@ -1,0 +1,186 @@
+04:59:38  Step 10 run-all, run 20260913T164910Z (resumed); stage 2; blinding PERMUTED
+04:59:38  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+04:59:38  skip step 03_sample (finished in run 20260913T164910Z)
+04:59:38  skip step 04_outcomes (finished in run 20260913T164910Z)
+04:59:38  skip step 03g_graduation_sample (finished in run 20260913T164910Z)
+04:59:38  skip step 04g_graduation_outcomes (finished in run 20260913T164910Z)
+04:59:38  skip step 05_primary (finished in run 20260913T164910Z)
+04:59:38  skip step 05_primary_graduation (finished in run 20260913T164910Z)
+04:59:38  skip step 06_secondary (finished in run 20260913T164910Z)
+04:59:38  skip step 06_secondary_graduation (finished in run 20260913T164910Z)
+04:59:38  start step 07_inference
+05:05:40  done  step 07_inference  6.0 min
+05:05:40  start step 07_inference_graduation
+08:33:59  done  step 07_inference_graduation  208.3 min
+08:34:13  start variants achievement
+08:34:15  achievement variants: 75 models (5 variants x 3 event sets x gaps and weightings)
+08:34:20    fit a_poverty           primary unweighted      sample_r5                   38 units 38 states  ok
+08:34:20    fit b_black_white       primary unweighted      sample_r5                 1041 units 39 states  ok
+08:34:21    fit b_black_white       primary tested_weighted sample_r5                  780 units 37 states  ok
+08:34:22    fit c_hispanic_white    primary unweighted      sample_r5                 1201 units 38 states  ok
+08:34:22    fit c_hispanic_white    primary tested_weighted sample_r5                  673 units 34 states  ok
+08:34:23    fit a_poverty           r1      unweighted      sample_r5                   38 units 38 states  ok
+08:34:23    fit b_black_white       r1      unweighted      sample_r5                 1041 units 39 states  ok
+08:34:24    fit b_black_white       r1      tested_weighted sample_r5                  780 units 37 states  ok
+08:34:24    fit c_hispanic_white    r1      unweighted      sample_r5                 1201 units 38 states  ok
+08:34:25    fit c_hispanic_white    r1      tested_weighted sample_r5                  673 units 34 states  ok
+08:34:25    fit a_poverty           r2      unweighted      sample_r5                   43 units 43 states  ok
+08:34:25    fit b_black_white       r2      unweighted      sample_r5                 1248 units 44 states  ok
+08:34:26    fit b_black_white       r2      tested_weighted sample_r5                  928 units 41 states  ok
+08:34:26    fit c_hispanic_white    r2      unweighted      sample_r5                 1616 units 42 states  ok
+08:34:27    fit c_hispanic_white    r2      tested_weighted sample_r5                  946 units 38 states  ok
+08:34:27    fit a_poverty           primary unweighted      sample_exact                35 units 35 states  ok
+08:34:28    fit b_black_white       primary unweighted      sample_exact               248 units 30 states  ok
+08:34:28    fit b_black_white       primary tested_weighted sample_exact               176 units 27 states  ok
+08:34:29    fit c_hispanic_white    primary unweighted      sample_exact               308 units 30 states  ok
+08:34:29    fit c_hispanic_white    primary tested_weighted sample_exact               159 units 26 states  ok
+08:34:29    fit a_poverty           r1      unweighted      sample_exact                35 units 35 states  ok
+08:34:29    fit b_black_white       r1      unweighted      sample_exact               248 units 30 states  ok
+08:34:30    fit b_black_white       r1      tested_weighted sample_exact               176 units 27 states  ok
+08:34:30    fit c_hispanic_white    r1      unweighted      sample_exact               308 units 30 states  not ok (status in files)
+08:34:30    fit c_hispanic_white    r1      tested_weighted sample_exact               159 units 26 states  not ok (status in files)
+08:34:30    fit a_poverty           r2      unweighted      sample_exact                39 units 39 states  ok
+08:34:30    fit b_black_white       r2      unweighted      sample_exact               274 units 33 states  not ok (status in files)
+08:34:30    fit b_black_white       r2      tested_weighted sample_exact               197 units 29 states  not ok (status in files)
+08:34:30    fit c_hispanic_white    r2      unweighted      sample_exact               409 units 32 states  not ok (status in files)
+08:34:31    fit c_hispanic_white    r2      tested_weighted sample_exact               240 units 28 states  not ok (status in files)
+08:34:31    fit a_poverty           primary unweighted      participation_from_2013     36 units 36 states  ok
+08:34:32    fit b_black_white       primary unweighted      participation_from_2013   1398 units 38 states  ok
+08:34:32    fit b_black_white       primary tested_weighted participation_from_2013   1056 units 35 states  ok
+08:34:33    fit c_hispanic_white    primary unweighted      participation_from_2013   1714 units 37 states  ok
+08:34:34    fit c_hispanic_white    primary tested_weighted participation_from_2013    934 units 34 states  ok
+08:34:34    fit a_poverty           r1      unweighted      participation_from_2013     36 units 36 states  not ok (status in files)
+08:34:34    fit b_black_white       r1      unweighted      participation_from_2013   1393 units 38 states  not ok (status in files)
+08:34:34    fit b_black_white       r1      tested_weighted participation_from_2013   1067 units 35 states  not ok (status in files)
+08:34:34    fit c_hispanic_white    r1      unweighted      participation_from_2013   1693 units 37 states  not ok (status in files)
+08:34:34    fit c_hispanic_white    r1      tested_weighted participation_from_2013    953 units 34 states  not ok (status in files)
+08:34:34    fit a_poverty           r2      unweighted      participation_from_2013     42 units 42 states  not ok (status in files)
+08:34:34    fit b_black_white       r2      unweighted      participation_from_2013   1740 units 44 states  not ok (status in files)
+08:34:35    fit b_black_white       r2      tested_weighted participation_from_2013   1331 units 41 states  not ok (status in files)
+08:34:35    fit c_hispanic_white    r2      unweighted      participation_from_2013   2307 units 43 states  not ok (status in files)
+08:34:35    fit c_hispanic_white    r2      tested_weighted participation_from_2013   1362 units 39 states  not ok (status in files)
+08:34:36    fit a_poverty           primary unweighted      drop_few_pre                36 units 36 states  ok
+08:34:36    fit b_black_white       primary unweighted      drop_few_pre              1531 units 38 states  ok
+08:34:37    fit b_black_white       primary tested_weighted drop_few_pre              1158 units 35 states  ok
+08:34:38    fit c_hispanic_white    primary unweighted      drop_few_pre              1807 units 37 states  ok
+08:34:39    fit c_hispanic_white    primary tested_weighted drop_few_pre              1014 units 34 states  ok
+08:34:39    fit a_poverty           r1      unweighted      drop_few_pre                36 units 36 states  not ok (status in files)
+08:34:39    fit b_black_white       r1      unweighted      drop_few_pre              1503 units 38 states  not ok (status in files)
+08:34:39    fit b_black_white       r1      tested_weighted drop_few_pre              1145 units 35 states  not ok (status in files)
+08:34:39    fit c_hispanic_white    r1      unweighted      drop_few_pre              1738 units 37 states  not ok (status in files)
+08:34:39    fit c_hispanic_white    r1      tested_weighted drop_few_pre               993 units 34 states  not ok (status in files)
+08:34:39    fit a_poverty           r2      unweighted      drop_few_pre                42 units 42 states  not ok (status in files)
+08:34:40    fit b_black_white       r2      unweighted      drop_few_pre              1889 units 44 states  not ok (status in files)
+08:34:40    fit b_black_white       r2      tested_weighted drop_few_pre              1435 units 41 states  not ok (status in files)
+08:34:40    fit c_hispanic_white    r2      unweighted      drop_few_pre              2381 units 43 states  not ok (status in files)
+08:34:41    fit c_hispanic_white    r2      tested_weighted drop_few_pre              1419 units 39 states  not ok (status in files)
+08:34:41    fit a_poverty           primary unweighted      anticipation_1              38 units 38 states  ok
+08:34:42    fit b_black_white       primary unweighted      anticipation_1            1577 units 40 states  ok
+08:34:43    fit b_black_white       primary tested_weighted anticipation_1            1202 units 37 states  ok
+08:34:44    fit c_hispanic_white    primary unweighted      anticipation_1            1901 units 39 states  ok
+08:34:44    fit c_hispanic_white    primary tested_weighted anticipation_1            1090 units 36 states  ok
+08:34:45    fit a_poverty           r1      unweighted      anticipation_1              38 units 38 states  ok
+08:34:45    fit b_black_white       r1      unweighted      anticipation_1            1577 units 40 states  ok
+08:34:46    fit b_black_white       r1      tested_weighted anticipation_1            1202 units 37 states  ok
+08:34:47    fit c_hispanic_white    r1      unweighted      anticipation_1            1901 units 39 states  ok
+08:34:47    fit c_hispanic_white    r1      tested_weighted anticipation_1            1090 units 36 states  ok
+08:34:47    fit a_poverty           r2      unweighted      anticipation_1              43 units 43 states  ok
+08:34:48    fit b_black_white       r2      unweighted      anticipation_1            1920 units 45 states  ok
+08:34:48    fit b_black_white       r2      tested_weighted anticipation_1            1463 units 42 states  not ok (status in files)
+08:34:49    fit c_hispanic_white    r2      unweighted      anticipation_1            2476 units 44 states  ok
+08:34:50    fit c_hispanic_white    r2      tested_weighted anticipation_1            1481 units 40 states  ok
+08:44:39  achievement variants: bootstrap, Romano-Wolf and HonestDiD done for 48 fitted models
+09:26:32  achievement variants: randomization inference (1000 reassignments) on 48 models, 41.9 min
+09:26:33  done  variants achievement  52.3 min
+09:26:33  start variants graduation
+09:26:35  graduation variants: 48 models (4 variants x 3 event sets x gaps and weightings)
+09:26:35    fit grad_black_white    primary unweighted      sample_r5                 1006 units 37 states  ok
+09:26:36    fit grad_black_white    primary tested_weighted sample_r5                  843 units 35 states  ok
+09:26:37    fit grad_hispanic_white primary unweighted      sample_r5                 1078 units 37 states  ok
+09:26:37    fit grad_hispanic_white primary tested_weighted sample_r5                  687 units 34 states  ok
+09:26:38    fit grad_black_white    r1      unweighted      sample_r5                  993 units 37 states  ok
+09:26:38    fit grad_black_white    r1      tested_weighted sample_r5                  841 units 35 states  ok
+09:26:38    fit grad_hispanic_white r1      unweighted      sample_r5                 1056 units 37 states  ok
+09:26:39    fit grad_hispanic_white r1      tested_weighted sample_r5                  681 units 34 states  ok
+09:26:39    fit grad_black_white    r2      unweighted      sample_r5                 1201 units 42 states  not ok (status in files)
+09:26:39    fit grad_black_white    r2      tested_weighted sample_r5                 1016 units 39 states  not ok (status in files)
+09:26:40    fit grad_hispanic_white r2      unweighted      sample_r5                 1386 units 41 states  ok
+09:26:40    fit grad_hispanic_white r2      tested_weighted sample_r5                  953 units 38 states  ok
+09:26:41    fit grad_black_white    primary unweighted      sample_exact               208 units 29 states  ok
+09:26:41    fit grad_black_white    primary tested_weighted sample_exact               176 units 27 states  ok
+09:26:41    fit grad_hispanic_white primary unweighted      sample_exact               240 units 28 states  ok
+09:26:41    fit grad_hispanic_white primary tested_weighted sample_exact               166 units 25 states  ok
+09:26:42    fit grad_black_white    r1      unweighted      sample_exact               211 units 29 states  not ok (status in files)
+09:26:42    fit grad_black_white    r1      tested_weighted sample_exact               179 units 27 states  not ok (status in files)
+09:26:42    fit grad_hispanic_white r1      unweighted      sample_exact               244 units 28 states  not ok (status in files)
+09:26:42    fit grad_hispanic_white r1      tested_weighted sample_exact               171 units 26 states  not ok (status in files)
+09:26:42    fit grad_black_white    r2      unweighted      sample_exact               238 units 31 states  not ok (status in files)
+09:26:42    fit grad_black_white    r2      tested_weighted sample_exact               205 units 29 states  not ok (status in files)
+09:26:42    fit grad_hispanic_white r2      unweighted      sample_exact               329 units 30 states  not ok (status in files)
+09:26:42    fit grad_hispanic_white r2      tested_weighted sample_exact               252 units 27 states  not ok (status in files)
+09:26:43    fit grad_black_white    primary unweighted      drop_few_pre              1516 units 38 states  ok
+09:26:44    fit grad_black_white    primary tested_weighted drop_few_pre              1270 units 35 states  ok
+09:26:44    fit grad_hispanic_white primary unweighted      drop_few_pre              1714 units 37 states  ok
+09:26:45    fit grad_hispanic_white primary tested_weighted drop_few_pre              1076 units 34 states  ok
+09:26:45    fit grad_black_white    r1      unweighted      drop_few_pre              1482 units 38 states  not ok (status in files)
+09:26:45    fit grad_black_white    r1      tested_weighted drop_few_pre              1248 units 35 states  not ok (status in files)
+09:26:45    fit grad_hispanic_white r1      unweighted      drop_few_pre              1618 units 37 states  not ok (status in files)
+09:26:45    fit grad_hispanic_white r1      tested_weighted drop_few_pre              1041 units 34 states  not ok (status in files)
+09:26:46    fit grad_black_white    r2      unweighted      drop_few_pre              1840 units 44 states  ok
+09:26:47    fit grad_black_white    r2      tested_weighted drop_few_pre              1555 units 41 states  ok
+09:26:48    fit grad_hispanic_white r2      unweighted      drop_few_pre              2215 units 43 states  ok
+09:26:48    fit grad_hispanic_white r2      tested_weighted drop_few_pre              1490 units 39 states  ok
+09:26:49    fit grad_black_white    primary unweighted      anticipation_1            1532 units 39 states  ok
+09:26:50    fit grad_black_white    primary tested_weighted anticipation_1            1285 units 36 states  ok
+09:26:50    fit grad_hispanic_white primary unweighted      anticipation_1            1776 units 38 states  ok
+09:26:51    fit grad_hispanic_white primary tested_weighted anticipation_1            1130 units 35 states  ok
+09:26:51    fit grad_black_white    r1      unweighted      anticipation_1            1513 units 39 states  not ok (status in files)
+09:26:51    fit grad_black_white    r1      tested_weighted anticipation_1            1274 units 36 states  not ok (status in files)
+09:26:51    fit grad_hispanic_white r1      unweighted      anticipation_1            1722 units 38 states  not ok (status in files)
+09:26:51    fit grad_hispanic_white r1      tested_weighted anticipation_1            1107 units 35 states  not ok (status in files)
+09:26:52    fit grad_black_white    r2      unweighted      anticipation_1            1840 units 44 states  ok
+09:26:53    fit grad_black_white    r2      tested_weighted anticipation_1            1555 units 41 states  ok
+09:26:53    fit grad_hispanic_white r2      unweighted      anticipation_1            2215 units 43 states  ok
+09:26:54    fit grad_hispanic_white r2      tested_weighted anticipation_1            1490 units 39 states  ok
+09:34:33  graduation variants: bootstrap, Romano-Wolf and HonestDiD done for 30 fitted models
+10:12:09  graduation variants: randomization inference (1000 reassignments) on 30 models, 37.6 min
+10:12:10  done  variants graduation  45.6 min
+10:12:10  start lee bounds
+10:12:11    CCD grade 9 membership, end year 2010: 17177 districts, 0.0 min
+10:12:12    CCD grade 9 membership, end year 2011: 17329 districts, 0.0 min
+10:12:13    CCD grade 9 membership, end year 2012: 17396 districts, 0.0 min
+10:12:14    CCD grade 9 membership, end year 2013: 17476 districts, 0.0 min
+10:12:14    CCD grade 9 membership, end year 2014: 17606 districts, 0.0 min
+10:12:15    CCD grade 9 membership, end year 2015: 17396 districts, 0.0 min
+10:12:16    CCD grade 9 membership, end year 2016: 17246 districts, 0.0 min
+10:12:28    CCD grade 9 membership, end year 2018: 13410 districts, 0.2 min
+10:12:32    Lee share model b_black_white     bl: 1531 districts, ok
+10:12:32    Lee share model b_black_white     wh: 1531 districts, ok
+10:12:35    Lee share model c_hispanic_white  hi: 1807 districts, ok
+10:12:36    Lee share model c_hispanic_white  wh: 1807 districts, ok
+10:12:38  done  lee bounds  0.5 min
+10:12:38  start dose achievement
+10:12:41    revenue first stage a_poverty           primary    38 units, ok
+10:12:42    revenue first stage b_black_white       primary  1577 units, ok
+10:12:44    revenue first stage c_hispanic_white    primary  1901 units, ok
+10:12:44    revenue first stage a_poverty           r1         38 units, ok
+10:12:44    revenue first stage b_black_white       r1       1577 units, ok
+10:12:45    revenue first stage c_hispanic_white    r1       1901 units, ok
+10:12:45    revenue first stage a_poverty           r2         43 units, ok
+10:12:46    revenue first stage b_black_white       r2       1918 units, ok
+10:12:47    revenue first stage c_hispanic_white    r2       2473 units, ok
+10:12:47  done  dose achievement  0.2 min
+10:12:47  start dose graduation
+10:12:51    revenue first stage grad_black_white    primary  1532 units, ok
+10:12:52    revenue first stage grad_hispanic_white primary  1776 units, ok
+10:12:52    revenue first stage grad_black_white    r1       1513 units, ok
+10:12:53    revenue first stage grad_hispanic_white r1       1722 units, ok
+10:12:53    revenue first stage grad_black_white    r2       1838 units, ok
+10:12:54    revenue first stage grad_hispanic_white r2       2212 units, ok
+10:12:54  done  dose graduation  0.1 min
+There were 50 or more warnings (use warnings() to see the first 50)
+10:12:54  start report
+10:12:54  Report: outputs/13_report/report.md (5 plots, 42 tables)
+10:12:54  done  report  0.0 min
+10:12:54  Run 20260913T164910Z finished. Total run time over parts: 5.38 h (wall clock since start: 21.40 h)
+10:12:54  Run times per part: outputs/10_run_all/run_times.csv; log: outputs/logs/10_run_all_20260914T085938Z.log

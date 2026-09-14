@@ -1,0 +1,38 @@
+Step 7 inference (graduation), run 20260914T090542Z; stage 2; blinding PERMUTED; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference/graduation and outputs/logs/07_inference_graduation_20260914T090542Z.log
+
+24 step 5 models: 18 fitted
+Overall estimates agree with outputs/05_primary/graduation/overall_estimates.csv
+Webb draws for event set primary 39 states x 9999 replications
+Webb draws for event set r1      39 states x 9999 replications
+Webb draws for event set r2      44 states x 9999 replications
+Wild cluster bootstrap: 18 models, 0.3 s
+Romano-Wolf: 8 families of 2 gaps
+There were 50 or more warnings (use warnings() to see the first 50)
+HonestDiD relative magnitudes: 18 models x 5 M-bar values, 416.2 s
+
+Randomization inference: 10000 reassignments per model on 12 workers
+Randomization results cached per model in outputs/10_run_all/cache/07_inference_graduation
+  grad_black_white    primary unweighted      unbalanced  9998/10000 reassignments estimated, 1369.6 s
+  grad_black_white    primary tested_weighted unbalanced  9998/10000 reassignments estimated, 1297.6 s
+  grad_black_white    primary unweighted      balanced   10000/10000 reassignments estimated,  276.4 s
+  grad_black_white    primary tested_weighted balanced   10000/10000 reassignments estimated,  287.7 s
+  grad_hispanic_white primary unweighted      unbalanced 10000/10000 reassignments estimated, 1462.0 s
+  grad_hispanic_white primary tested_weighted unbalanced  9999/10000 reassignments estimated, 1170.4 s
+  grad_hispanic_white primary unweighted      balanced   10000/10000 reassignments estimated,  232.0 s
+  grad_hispanic_white primary tested_weighted balanced   10000/10000 reassignments estimated,  241.5 s
+  grad_black_white    r1      unweighted      unbalanced  7392/10000 reassignments estimated,  646.2 s
+  grad_black_white    r1      tested_weighted unbalanced  8127/10000 reassignments estimated,  599.2 s
+  grad_hispanic_white r1      unweighted      unbalanced  7603/10000 reassignments estimated,  699.2 s
+  grad_hispanic_white r1      tested_weighted unbalanced  8214/10000 reassignments estimated,  535.6 s
+  grad_black_white    r2      unweighted      unbalanced  7350/10000 reassignments estimated,  780.5 s
+  grad_black_white    r2      tested_weighted unbalanced  7373/10000 reassignments estimated,  692.8 s
+  grad_hispanic_white r2      unweighted      unbalanced  7693/10000 reassignments estimated,  895.2 s
+  grad_hispanic_white r2      tested_weighted unbalanced  7697/10000 reassignments estimated,  661.2 s
+  grad_hispanic_white r2      unweighted      balanced   10000/10000 reassignments estimated,  109.0 s
+  grad_hispanic_white r2      tested_weighted balanced   10000/10000 reassignments estimated,  114.0 s
+
+Wrote outputs/07_inference/graduation/bootstrap_overall.csv, outputs/07_inference/graduation/bootstrap_event_time.csv, outputs/07_inference/graduation/randomization_overall.csv, outputs/07_inference/graduation/randomization_draws.csv, outputs/07_inference/graduation/romano_wolf.csv, outputs/07_inference/graduation/honestdid_overall.csv, outputs/07_inference/graduation/model_status.csv, outputs/07_inference/graduation/inference_settings.csv
+18 of 24 models carried through all four procedures. Status per model: outputs/07_inference/graduation/model_status.csv
+Log: outputs/logs/07_inference_graduation_20260914T090542Z.log

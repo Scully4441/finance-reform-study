@@ -192,17 +192,19 @@ if (all(file.exists(of6))) {
   stopifnot(all(ms$panel == pname), all(ee$panel == pname), all(oo$panel == pname), all(pc6$panel == pname))
   ests <- c("sun_abraham", "imputation", "synthdid", "stacked", "twfe", "twfe_static")
   gps <- c("a_poverty", "b_black_white", "c_hispanic_white")
-  models <- as.vector(outer(ests, gps, paste))
-  key <- function(x) paste(x$estimator, x$gap)
-  stopifnot(nrow(ms) == 18, setequal(key(ms), models), !anyDuplicated(key(ms)), !any(startsWith(ms$status, "error")),
-            all(ms$event_set == "primary"), all(ms$weighting == "unweighted"))
-  stopifnot(nrow(ee) == 15 * 14, all(table(key(ee)) == 14), !"twfe_static" %in% ee$estimator,
-            all(ee$e %in% EVENT_MIN:EVENT_MAX), nrow(oo) == 18, setequal(key(oo), models))
+  # all three event sets from step 10 (2026-09-13); a model on a narrower set may stop with
+  # a package error on a small panel, every primary-set model must fit
+  models <- as.vector(outer(as.vector(outer(ests, gps, paste)), c("primary", "r1", "r2"), paste))
+  key <- function(x) paste(x$estimator, x$gap, x$event_set)
+  stopifnot(nrow(ms) == 54, setequal(key(ms), models), !anyDuplicated(key(ms)),
+            !any(startsWith(ms$status[ms$event_set == "primary"], "error")), all(ms$weighting == "unweighted"))
+  stopifnot(nrow(ee) == 3 * 15 * 14, all(table(key(ee)) == 14), !"twfe_static" %in% ee$estimator,
+            all(ee$e %in% EVENT_MIN:EVENT_MAX), nrow(oo) == 54, setequal(key(oo), models))
   ok <- key(ee) %in% key(ms)[ms$status == "ok"]
   stopifnot(all(is.na(ee$att) == (ee$cohorts == 0L)), all(ee$treated_units >= ee$treated_states),
             all(ee$att[ok & ee$reference] == 0), !any(ee$reference[ee$estimator == "synthdid"]),
             all(is.na(ee$att[ee$estimator == "synthdid" & ee$e < 0])))
-  for (m in setdiff(key(ms)[ms$status == "ok"], paste("twfe_static", gps))) {      # overall = mean of e = 0..+8
+  for (m in setdiff(key(ms)[ms$status == "ok"], key(ms)[ms$estimator == "twfe_static"])) {   # overall = mean of e = 0..+8
     x <- ee[key(ee) == m & ee$e >= 0 & !is.na(ee$att), ]
     stopifnot(near(oo$att[key(oo) == m], mean(x$att), 1e-8))
   }
@@ -210,7 +212,7 @@ if (all(file.exists(of6))) {
   if (all(file.exists(s5)))                                                        # the step 5 layout, estimator first
     stopifnot(identical(names(ee)[-1], names(rd(s5[1]))), identical(names(oo)[-1], names(rd(s5[2]))),
               identical(names(gt)[-1], names(rd(s5[3]))))
-  stopifnot(nrow(pc6) == 18, all(pc6$units_in_model == pc6$treated_units + pc6$control_units |
+  stopifnot(nrow(pc6) <= 54, sum(pc6$event_set == "primary") == 18, all(pc6$units_in_model == pc6$treated_units + pc6$control_units |
                                    pc6$estimator == "stacked"),
             nrow(sdp) == sum(ms$estimator == "synthdid" & ms$status == "ok"))
 }

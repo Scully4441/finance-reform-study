@@ -1,0 +1,7 @@
+10:15:06  Step 10 run-all, run 20260913T164910Z; stage 2; blinding PERMUTED
+10:15:06  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+10:15:06  start report
+10:15:07  Report: outputs/13_report/report.md (5 plots, 42 tables)
+10:15:07  done  report  0.0 min
+10:15:07  Run 20260913T164910Z finished. Total run time over parts: 5.38 h (wall clock since start: 21.43 h)
+10:15:07  Run times per part: outputs/10_run_all/run_times.csv; log: outputs/logs/10_run_all_20260914T141506Z.log

@@ -140,18 +140,21 @@ cs_panel <- function(fit) {
   }
   d$.w <- NULL
   list(panel = d, xformla = dp$xformla, weightsname = wn, allow_unbalanced = allow_unbalanced,
-       min_e = fit$aggte$min_e, max_e = fit$aggte$max_e)
+       min_e = fit$aggte$min_e, max_e = fit$aggte$max_e,
+       anticipation = if (is.null(dp$anticipation)) 0L else as.integer(dp$anticipation))
 }
 
 # One Callaway-Sant'Anna overall post-reform average, refit on a panel whose cohort
 # variable has been replaced. Point estimate only: randomization inference needs no
 # standard error, so the multiplier bootstrap is switched off.
-cs_overall <- function(panel, xformla, weightsname, min_e, max_e, allow_unbalanced = FALSE) {
+cs_overall <- function(panel, xformla, weightsname, min_e, max_e, allow_unbalanced = FALSE,
+                       anticipation = 0L) {
   suppressWarnings(suppressMessages(tryCatch({
     gt <- did::att_gt(yname = "y", tname = "sy_end", idname = "id", gname = "g", data = panel,
                       xformla = xformla, weightsname = weightsname, control_group = "notyettreated",
                       est_method = "dr", base_period = "universal", clustervars = "state",
-                      bstrap = FALSE, cband = FALSE, allow_unbalanced_panel = allow_unbalanced)
+                      bstrap = FALSE, cband = FALSE, allow_unbalanced_panel = allow_unbalanced,
+                      anticipation = anticipation)
     es <- did::aggte(gt, type = "dynamic", min_e = min_e, max_e = max_e, na.rm = TRUE,
                      bstrap = FALSE, cband = FALSE)
     as.numeric(es$overall.att)
@@ -192,7 +195,7 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
     g[pick] <- gs
     p <- panel
     p$g <- unname(g[p$state])
-    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e, cp$allow_unbalanced)
+    cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e, cp$allow_unbalanced, cp$anticipation)
   }
   vals <- if (parallel && requireNamespace("furrr", quietly = TRUE))
     furrr::future_map_dbl(picks, one, .options = furrr::furrr_options(seed = seed_for(paste(seed_step, "workers"))))
@@ -209,27 +212,32 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
 # estimated post-reform event time, so the bounded quantity is the step 5 overall.
 # Mbar = 0 allows no post-reform violation of parallel trends and is the tightest bound;
 # each Mbar is called on its own so that one failure does not lose the others.
+# ref: the reference event time. -1 in the registered models; -2 under anticipation = 1
+# (step 10), where event time -1 enters HonestDiD as a post-reference period with zero
+# weight in l_vec, so the bounded quantity is still the mean of event times 0..+8.
 # Returns one row per Mbar plus the unadjusted confidence set (mbar NA, method original).
-honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL) {
+honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
   fail <- function(status) data.frame(mbar = NA_real_, lb = NA_real_, ub = NA_real_,
                                       method = NA_character_, status = status,
                                       num_pre = NA_integer_, num_post = NA_integer_,
                                       stringsAsFactors = FALSE)
   if (is.null(inf)) return(fail("no influence function"))
-  keep <- inf$egt != -1L & is.finite(inf$att_egt) & is.finite(inf$se_egt)
+  ref <- as.integer(ref)
+  keep <- inf$egt != ref & is.finite(inf$att_egt) & is.finite(inf$se_egt)
   e <- inf$egt[keep]
-  num_pre <- sum(e < 0L); num_post <- sum(e >= 0L)
-  if (!num_post) return(fail("no estimated post-reform event time"))
+  num_pre <- sum(e < ref); num_post <- sum(e > ref)
+  if (!sum(e >= 0L)) return(fail("no estimated post-reform event time"))
   if (!num_pre) return(fail("no estimated pre-reform event time: relative magnitudes need one"))
   # HonestDiD reads betahat as consecutive periods with the reference period left out,
-  # so the pre-reform event times run to -2 and the post-reform ones from 0.
-  if (!identical(e, c(seq.int(-num_pre - 1L, -2L), seq.int(0L, num_post - 1L))))
+  # so the pre-reform event times run to ref - 1 and the later ones from ref + 1.
+  if (!identical(e, c(seq.int(ref - num_pre, ref - 1L), seq.int(ref + 1L, ref + num_post))))
     return(fail("event times are not consecutive around the reference period"))
   betahat <- as.numeric(inf$att_egt[keep])
   sigma <- crossprod(inf$scores[, which(keep), drop = FALSE]) / inf$n^2
   sigma <- (sigma + t(sigma)) / 2                      # symmetric up to rounding
   dimnames(sigma) <- NULL
-  l_vec <- matrix(rep(1 / num_post, num_post), ncol = 1)
+  post_e <- e[e > ref]
+  l_vec <- matrix(ifelse(post_e >= 0L, 1 / sum(post_e >= 0L), 0), ncol = 1)
   row <- function(mbar, lb, ub, method, status)
     data.frame(mbar = mbar, lb = lb, ub = ub, method = method, status = status,
                num_pre = as.integer(num_pre), num_post = as.integer(num_post), stringsAsFactors = FALSE)

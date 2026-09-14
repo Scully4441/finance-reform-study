@@ -224,9 +224,25 @@ say("\nRandomization inference: ", reps$randomization, " reassignments per model
 future::plan(future::multisession, workers = WORKERS)
 on.exit(future::plan(future::sequential), add = TRUE)
 ri <- list(); ri_draws <- list()
+# --cache-dir <dir> (R/10_run_all.R): each model's reassignment result is saved there as it
+# finishes and reused by a rerun when the model's estimate, count and seed step match, so an
+# interrupted run resumes at the model it stopped in. Without it nothing is cached.
+cache_dir <- local({ a <- commandArgs(trailingOnly = TRUE); k <- which(a == "--cache-dir")
+  if (length(k) && k[1] < length(a)) a[k[1] + 1L] else NULL })
+if (!is.null(cache_dir)) { dir.create(cache_dir, recursive = TRUE, showWarnings = FALSE)
+  say("Randomization results cached per model in ", cache_dir) }
 for (i in which(usable)) {
   t0 <- Sys.time()
-  r <- ri_overall(models[[i]], reps$randomization, paste(seed_tag, "randomization", keys[i]))
+  seed_step <- paste(seed_tag, "randomization", keys[i])
+  cf <- if (!is.null(cache_dir)) file.path(cache_dir, paste0(keys[i], ".rds"))
+  r <- if (!is.null(cf) && file.exists(cf)) readRDS(cf)
+  if (!is.null(r) && !(identical(r$seed_step, seed_step) && identical(r$reps, reps$randomization) &&
+                       identical(r$att, infs[[i]]$overall_att))) r <- NULL
+  if (is.null(r)) {
+    r <- ri_overall(models[[i]], reps$randomization, seed_step)
+    r$seed_step <- seed_step; r$att <- infs[[i]]$overall_att
+    if (!is.null(cf)) saveRDS(r, cf)
+  }
   secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
   att <- infs[[i]]$overall_att
   v <- r$values[is.finite(r$values)]
@@ -252,6 +268,8 @@ for (i in which(usable)) {
 
 # ---- outputs -------------------------------------------------------------------------
 bind <- function(x) { y <- do.call(rbind, x); if (!is.null(y)) rownames(y) <- NULL; y }
+pkg_version_or_none <- function(p)
+  if (requireNamespace(p, quietly = TRUE)) as.character(utils::packageVersion(p)) else "not installed"
 bo <- bind(boot_overall); be <- bind(boot_event); rwt <- bind(rw); hd <- bind(honest)
 rit <- bind(ri); rid <- bind(ri_draws)
 status$notes <- trimws(sub("^ \\| ", "", status$notes))
@@ -266,8 +284,8 @@ settings <- data.frame(setting = c("run", "outcome", "stage", "blinding", "quick
                                  paste(MBARVEC, collapse = " "), MASTER_SEED, WORKERS, BOOT_LEVEL,
                                  R.version.string, as.character(utils::packageVersion("did")),
                                  as.character(utils::packageVersion("HonestDiD")),
-                                 as.character(utils::packageVersion("fwildclusterboot")),
-                                 as.character(utils::packageVersion("wildrwolf"))),
+                                 # not used, and not in renv.lock (author, 2026-09-13)
+                                 pkg_version_or_none("fwildclusterboot"), pkg_version_or_none("wildrwolf")),
                        stringsAsFactors = FALSE)
 
 files <- list(bootstrap_overall = bo, bootstrap_event_time = be, randomization_overall = rit,

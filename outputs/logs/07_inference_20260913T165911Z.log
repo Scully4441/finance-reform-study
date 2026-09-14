@@ -1,0 +1,14 @@
+Step 7 inference (achievement), run 20260913T165911Z; stage 2; blinding PERMUTED; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference and outputs/logs/07_inference_20260913T165911Z.log
+
+30 step 5 models: 21 fitted
+Overall estimates agree with outputs/05_primary/overall_estimates.csv
+Webb draws for event set primary 40 states x 9999 replications
+Webb draws for event set r1      40 states x 9999 replications
+Webb draws for event set r2      45 states x 9999 replications
+Wild cluster bootstrap: 21 models, 0.3 s
+Romano-Wolf: 8 families of 3 gaps
+HonestDiD relative magnitudes: 21 models x 5 M-bar values, 490.9 s
+
+Randomization inference: 10000 reassignments per model on 12 workers

@@ -177,11 +177,16 @@ attach_cohorts <- function(panel, coding, unit) {
 # panel: id (integer), state, sy_end, y, g (0 = not treated within the window) and
 # any covariates or weight column. A model without an estimable cohort, or one that
 # did cannot fit, returns a status instead of stopping.
+# anticipation is did's anticipation argument (step 10 robustness, docs/deviations.md
+# 2026-09-13): 1 dates treatment a year before the coded reform year, so the universal
+# base period, and the reference row of `event`, is event time -2. did 2.5.1 still
+# averages the coded event times 0..max_e into the overall.
 # Returns status, notes (did's warnings and messages), event (one row per event time
 # with the cohorts, treated states and treated units behind it), overall, cells
 # (ATT(g, t)) and fit (the att_gt and aggte objects).
 run_cs <- function(panel, xformla = ~1, weightsname = NULL, seed_step,
-                   min_e = EVENT_MIN, max_e = EVENT_MAX, allow_unbalanced_panel = FALSE) {
+                   min_e = EVENT_MIN, max_e = EVENT_MAX, allow_unbalanced_panel = FALSE,
+                   anticipation = 0L) {
   stopifnot(all(c("id", "state", "sy_end", "y", "g") %in% names(panel)), is.integer(panel$id),
             !anyNA(panel[c("id", "sy_end", "y", "g")]), !anyDuplicated(panel[c("id", "sy_end")]))
   if (!is.null(weightsname))
@@ -190,7 +195,7 @@ run_cs <- function(panel, xformla = ~1, weightsname = NULL, seed_step,
   notes <- character()
   ev <- data.frame(e = min_e:max_e, att = NA_real_, se = NA_real_, crit_val = NA_real_,
                    ci_lo = NA_real_, ci_hi = NA_real_, cohorts = 0L, treated_states = 0L,
-                   treated_units = 0L, reference = (min_e:max_e) == -1L)
+                   treated_units = 0L, reference = (min_e:max_e) == -1L - as.integer(anticipation))
   overall <- data.frame(att = NA_real_, se = NA_real_, ci_lo = NA_real_, ci_hi = NA_real_,
                         cohorts = 0L, treated_states = 0L, treated_units = 0L)
   cells <- data.frame(g = integer(), t = integer(), e = integer(), att = numeric(), se = numeric())
@@ -204,7 +209,7 @@ run_cs <- function(panel, xformla = ~1, weightsname = NULL, seed_step,
     gt <- did::att_gt(yname = "y", tname = "sy_end", idname = "id", gname = "g", data = panel,
                       xformla = xformla, weightsname = weightsname, control_group = "notyettreated",
                       est_method = "dr", base_period = "universal", clustervars = "state", bstrap = TRUE,
-                      allow_unbalanced_panel = allow_unbalanced_panel)
+                      allow_unbalanced_panel = allow_unbalanced_panel, anticipation = anticipation)
     es <- did::aggte(gt, type = "dynamic", min_e = min_e, max_e = max_e, na.rm = TRUE)
     list(att_gt = gt, aggte = es)
   }, warning = function(w) {
