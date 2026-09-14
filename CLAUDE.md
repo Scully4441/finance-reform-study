@@ -310,8 +310,11 @@ Update the Status column as steps finish.
   sets and both weightings (`VARIANTS`, `R/functions/run_all.R`), with bootstrap and
   Romano–Wolf at 9,999, HonestDiD at every M̄, randomization inference at 1,000 (compute
   deviation; step 5 models keep 10,000 in step 7); Lee bounds for gaps (b) and (c) only,
-  tested share over CCD grade 9 membership three years earlier, trim fraction = the larger
-  subgroup share effect, share years from 2010 (CCD school files for end years 2007–2009
+  tested share over CCD grade 9 membership three years earlier, relative trim fraction
+  p = 1 − q_C / q_T (q_C = q_T − the CS effect on the share): treated post-reform
+  district-years trimmed by p when p ≥ 0, not-yet-treated district-years from the first
+  cohort year on trimmed by 1 − q_T / q_C when p < 0, bounded to [0, 1], the subgroup with
+  the larger fraction setting the trim (2026-09-14), share years from 2010 (CCD school files for end years 2007–2009
   added 2026-09-14; 2006-07 is fixed-width with a separate layout); dose scaling = ratio of
   the CS overall effect on the gap to that on (TSTREV + TLOCREV) / V33 in thousands of 2021
   dollars (gap (a): the quintile 5 − quintile 1 revenue gap), excluding district-years with

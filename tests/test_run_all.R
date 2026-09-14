@@ -60,6 +60,26 @@ stopifnot(tt$treated_post == 5L, tt$removed == 2L, identical(sort(tt$panel$y[tt$
           identical(sort(tb$panel$y[tb$panel$g > 0 & tb$panel$sy_end >= 2012]), c(3, 4, 5)),
           100 %in% tt$panel$y, all(c(50, 60, 70, 80) %in% tb$panel$y),         # pre-reform and control rows stay
           lee_trim(lp, 0, "top")$removed == 0L, lee_trim(lp, 2, "top")$removed == 5L)
+# control group: not-yet-treated district-years from the first cohort year on (rows 7-10 here)
+tc <- lee_trim(lp, 0.5, "top", "control")
+stopifnot(tc$group_rows == 4L, tc$removed == 2L, identical(sort(tc$panel$y[tc$panel$g == 0]), c(50, 60)),
+          all(c(100, 1:5) %in% tc$panel$y))
+lp2 <- rbind(lp, data.frame(id = 11L, state = "S", g = 0L, sy_end = 2011L, y = 999))   # before the first cohort year
+stopifnot(lee_trim(lp2, 1, "top", "control")$group_rows == 4L, 999 %in% lee_trim(lp2, 1, "top", "control")$panel$y)
+
+# relative trimming fraction (operationalization correction 2026-09-14)
+f1 <- lee_fraction(0.8, 0.6); f2 <- lee_fraction(0.6, 0.8); f3 <- lee_fraction(0.5, -0.1)
+stopifnot(f1$group == "treated", near(f1$p, 0.25), near(f1$fraction, 0.25),
+          f2$group == "control", near(f2$p, 1 - 0.8 / 0.6), near(f2$fraction, 0.25),       # 1 - q_T / q_C
+          f3$group == "treated", f3$fraction == 1, is.na(lee_fraction(0, 0.5)$fraction), is.na(lee_fraction(NA, 0.5)$group))
+# share levels: q_T weights cohorts by unit count within an event time, then averages event times
+lvp <- data.frame(id = c(1L, 2L, 3L, 1L, 2L, 3L), g = c(2012L, 2012L, 2013L, 2012L, 2012L, 2013L),
+                  sy_end = c(2012L, 2012L, 2013L, 2013L, 2013L, 2014L), y = c(0.5, 0.7, 0.9, 0.6, 0.8, 1.0))
+lvf <- list(status = "ok", overall = data.frame(att = 0.1),
+            cells = data.frame(g = c(2012L, 2013L, 2012L, 2013L), t = c(2012L, 2013L, 2013L, 2014L), e = c(0L, 0L, 1L, 1L),
+                               att = c(0.1, 0.1, 0.1, NA)))
+lv <- lee_share_levels(lvf, lvp)
+stopifnot(near(lv[["q_T"]], mean(c((0.6 * 2 + 0.9 * 1) / 3, 0.7))), near(lv[["q_C"]], lv[["q_T"]] - 0.1))
 
 # ---- CCD grade 9 membership readers ---------------------------------------------------------------
 wide <- tempfile(fileext = ".txt")
@@ -190,7 +210,16 @@ lf <- "outputs/10_run_all/lee/lee_bounds.csv"
 if (file.exists(lf)) {
   lb <- utils::read.csv(lf, stringsAsFactors = FALSE, na.strings = "")
   stopifnot(identical(lb$gap, c("b_black_white", "c_hispanic_white")),
-            all(lb$lee_lower <= lb$lee_upper | lb$status != "ok"), all(lb$trim_fraction >= 0 & lb$trim_fraction <= 1 | is.na(lb$trim_fraction)))
+            all(lb$lee_lower <= lb$lee_upper | lb$status != "ok"), all(lb$trim_fraction >= 0 & lb$trim_fraction <= 1 | is.na(lb$trim_fraction)),
+            all(lb$trim_group %in% c("treated", "control")),
+            all(lb$trimmed_unit_years == round(lb$trim_fraction * lb$trim_group_unit_years) | is.na(lb$trim_fraction)))
+  ls2 <- utils::read.csv("outputs/10_run_all/lee/lee_share_models.csv", stringsAsFactors = FALSE, na.strings = "")
+  stopifnot(all(near(ls2$p, 1 - ls2$q_C / ls2$q_T) | is.na(ls2$p)),
+            all(ls2$trim_group == ifelse(ls2$p >= 0, "treated", "control") | is.na(ls2$p)))
+  for (i in seq_len(nrow(lb))) {                                             # the larger subgroup fraction sets the trim
+    s <- ls2[ls2$gap == lb$gap[i], ]
+    stopifnot(near(lb$trim_fraction[i], max(s$trim_fraction, na.rm = TRUE)))
+  }
 }
 rf <- "outputs/13_report/report.md"
 if (file.exists(rf)) {
