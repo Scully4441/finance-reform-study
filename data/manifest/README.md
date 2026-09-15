@@ -1,7 +1,8 @@
 # Download manifest
 
 One row per file. `url` is filled in when the current download location is
-located on data.ed.gov, nces.ed.gov, census.gov, or bls.gov. `sha256` and
+located on data.ed.gov, nces.ed.gov, census.gov, bls.gov, or, for the Run 2
+SEDA rows, stacks.stanford.edu. `sha256` and
 `downloaded_utc` are written by `R/02_download.R` on first download and
 verified on every later run. A blank `url` means the file is **not published**:
 the row records that the study looked for it and the source has none. Six rows
@@ -110,11 +111,43 @@ row points:
   (`ai`, `kn`, `ow`), so it has three rows, plus a `ccd_membership_layout` row
   for its NCES record layout `psu061clay.txt`, which gives the field positions.
   Not yet in an OSF deposit.
+- **SEDA 2025.2 (`seda_admindist_long_cs`, `seda_codebook_admindist`,
+  `seda_documentation`), added 2026-09-15.** The first Run 2 rows
+  (`docs/design_extension.md`, Section 4; `data/stage_run2.txt` = 2). Source:
+  the Stanford Digital Repository, DOI 10.25740/np279jm6134 (PURL
+  `https://purl.stanford.edu/np279jm6134`), release SEDA 2025.2, which
+  supersedes 2025.1. Each row's url is the repository's direct file path
+  `https://stacks.stanford.edu/file/np279jm6134/<file name>`, recorded in
+  `docs/recon_run2.md`. The three files are the administrative-district
+  cohort-standardized long file (`seda_admindist_long_cs_2025.2.csv`), its
+  codebook (`seda_codebook_admindist_2025.2.xlsx`) and the release
+  documentation (`SEDA_documentation_2025.2.pdf`). The author accepted the SEDA
+  data use agreement at edopportunity.org on 2026-09-01, before the download
+  (`docs/decision_log_run2.md`). The agreement forbids publishing the files in
+  full or in part, so they are never deposited; see the next section. They have
+  no `sy_end`: one file covers every SEDA year (school years ending 2009-2019
+  and 2022-2025), as the two CPI rows cover every month. They are not EDFacts
+  outcome files, so the Run 1 stage gate in `R/02_download.R` does not apply to
+  them.
 - **F-33, FY2022.** `elsec22.txt` holds only 1,730 of the 14,106 unit records
   Census published for that fiscal year (17 Alabama systems against 138 in the
   companion flag file `elsec22f.txt`), so the FY2022 row archives
   `elsec22.xlsx`, which carries all 14,106. It is the only F-33 row that is not
   the comma-delimited text file.
+
+Never deposited
+
+These paths are not uploaded to OSF, in any deposit, in full or in part. Their
+manifest rows carry the url and the checksum, which is what a reader needs to
+obtain the same bytes from the source under the source's own terms.
+
+- `data/raw/seda/` — the SEDA 2025.2 files above, and any file derived from them
+  that reproduces their district-level estimates. The SEDA data use agreement
+  the author accepted on 2026-09-01 forbids publishing them in full or in part
+  (`docs/design_extension.md`, Section 4). A reader must accept the same
+  agreement at edopportunity.org and download the files from DOI
+  10.25740/np279jm6134. Run 2's OSF deposits hold the report-card data, the
+  manifest, the checksums and the outputs, not these files.
 
 Deposits
 Stage 1: https://doi.org/10.17605/OSF.IO/6FDVY, deposited 2026-09-11, containing stage1_raw.zip
