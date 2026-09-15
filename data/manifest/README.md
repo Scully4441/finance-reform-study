@@ -128,3 +128,7 @@ Stage 2 supplement: added to the stage 2 component on 2026-09-13, containing sta
 859709c1a787e448b03774723d7400233bb93b3bf41e3c4478137e9297ee7ecb
 Stage 2 CCD supplement: added to the stage 2 component on 2026-09-14, containing the CCD school universe files for school years ending 2007, 2008, and 2009 used for the Lee-bounds tested shares
 b3a3cadb7279b870025d02e48be55e83d9e8bd0b010cbfe327e92a06bccc58d1
+
+Outputs
+run 1 Outputs
+c90871524bf5f3e8b8a281f5ab77711b1e31d56d1433ee62121f046832514d79
