@@ -199,3 +199,39 @@ Support summary:
 
 The design's reference estimators (CLAUDE.md rule 6) do not include this package. Using it
 would be a design decision for the author.
+
+## 4. High school report cards: summary, 2021-22 through 2024-25
+
+State-year detail is in `docs/recon_run2_hs.csv`, with one row per state and end year:
+51 states × 4 years (2022–2025) = 204 rows. It merges the four part files, which are removed.
+
+**Rule.** A state-year counts as having a district-level subgroup file when its `usable`
+verdict begins with *yes* or *probable*. That means a statewide file, or one export
+covering every district, with district rows and Black, Hispanic and White rows seen or
+expected. Other verdicts count as missing: *no*, *no file found*, *possible*, *unclear*
+and *unverified*. Years whose verdict is *possible*, *unclear* or *unverified* are marked
+unresolved below. Opening one file could move them. Most rows are *probable*: no file was
+opened in this reconnaissance.
+
+| Group | Count | States (years missing; unresolved years marked †) |
+|---|---|---|
+| All four years | 37 | AL, AZ, CA, CO, CT, DE, GA, ID, IL, IN, KS, KY, MA, MI, MN, MO, NC, ND, NE, NH, NJ, NM, NV, NY, OH, OR, PA, RI, SC, SD, TN, TX, UT, VT, WA, WI, WY |
+| Some years | 2 | DC (2025†), LA (2024) |
+| No year | 12 | AK, AR (2022†), FL, HI, IA (2022–2025†), MD, ME, MS, MT, OK, VA (2024†, 2025†), WV |
+
+- Of the 37, 17 are *yes* in all four years: AL, CA, CO, CT, DE, GA, KS, MA, MI, MO, NC, NV,
+  NY, OR, RI, TX, WA. The other 20 are *probable* in at least one year. For most of them, one
+  file needs to be opened to confirm the district × race rows.
+- CT, MI, NV, RI, SD and WY have no posted static file. Their data come from an export or a
+  generated report that covers every district.
+- No-year reasons (from `usable` and `notes`):
+  - HI is one district.
+  - OK has no high school ELA/math file.
+  - MS pools grades in its gap report.
+  - MD's download has no student-group rows.
+  - AK posts one file per district.
+  - FL has subgroups only in Tableau.
+  - ME, MT and WV have dashboards only.
+  - AR posts all-students summaries; its 2022 Demographics sheet was not opened.
+  - IA's race rows are unverified.
+  - VA has no division file with student groups; the 2024 and 2025 full reports were not opened.
