@@ -1,0 +1,55 @@
+Step 4g graduation gaps, run 20260914T211137Z; stage 2; blinding REAL
+District-years retained under at least one event set: 121143 (11013 districts, 45 states)
+Wrote data/derived/gaps_graduation_district_year.csv: 43826 rows.
+
+== District-years with a usable graduation gap, by end year
+Samples: primary = exact or range <= 10 points; r5 = <= 5 points; exact = exact values only. Event set = districts retained under rules 1, 2 and 6 with that table.
+  sample                 gap event_set sy2011 sy2012 sy2013 sy2014 sy2015
+ primary    grad_black_white   primary   1307   1284   1293   1289   1142
+ primary    grad_black_white        r1   1307   1284   1293   1289   1142
+ primary    grad_black_white        r2   1581   1553   1557   1550   1268
+ primary grad_hispanic_white   primary   1145   1190   1225   1267   1017
+ primary grad_hispanic_white        r1   1145   1190   1225   1267   1017
+ primary grad_hispanic_white        r2   1557   1607   1648   1689   1153
+      r5    grad_black_white   primary    863    831    846    836    729
+      r5    grad_black_white        r1    863    831    846    836    729
+      r5    grad_black_white        r2   1035    999   1003    987    800
+      r5 grad_hispanic_white   primary    698    729    766    783    627
+      r5 grad_hispanic_white        r1    698    729    766    783    627
+      r5 grad_hispanic_white        r2    987   1013   1057   1073    685
+   exact    grad_black_white   primary    186    184    180    180    153
+   exact    grad_black_white        r1    186    184    180    180    153
+   exact    grad_black_white        r2    207    203    197    194    154
+   exact grad_hispanic_white   primary    171    170    179    177    131
+   exact grad_hispanic_white        r1    171    170    179    177    131
+   exact grad_hispanic_white        r2    254    252    258    255    131
+ sy2016 sy2017 sy2018 sy2019 sy2020 sy2021 total
+   1287   1271   1293   1207    887   1165 13425
+   1287   1271   1293   1207    887   1165 13425
+   1544   1525   1544   1449   1103   1391 16065
+   1338   1356   1435   1370    992   1380 13715
+   1338   1356   1435   1370    992   1380 13715
+   1766   1794   1876   1817   1358   1843 18108
+    824    823    817    766    519    738  8592
+    824    823    817    766    519    738  8592
+    980    972    969    909    643    870 10167
+    836    840    893    850    548    837  8407
+    836    840    893    850    548    837  8407
+   1125   1126   1189   1145    779   1140 11319
+    178    178    181    172     53    167  1812
+    178    178    181    172     53    167  1812
+    188    188    191    182     59    176  1939
+    184    183    195    181     49    198  1818
+    184    183    195    181     49    198  1818
+    257    254    269    252     83    269  2534
+
+== Distribution of V, primary event set, pooled over end years (probit units; negative = Black or Hispanic rate lower)
+                 gap  sample     n   mean    sd    p10 median    p90
+    grad_black_white primary 13425 -0.219 0.379 -0.666 -0.240  0.240
+ grad_hispanic_white primary 13715 -0.261 0.374 -0.735 -0.276  0.240
+    grad_black_white      r5  8592 -0.234 0.336 -0.637 -0.241  0.182
+ grad_hispanic_white      r5  8407 -0.284 0.340 -0.689 -0.279  0.124
+    grad_black_white   exact  1812 -0.307 0.237 -0.605 -0.304  0.000
+ grad_hispanic_white   exact  1818 -0.357 0.261 -0.678 -0.337 -0.055
+Primary-sample rates clamped at 1/(2n) before the probit (a rate of 0 or 100): wh 0, bl 0, hi 0
+Log: outputs/logs/04g_graduation_outcomes_20260914T211137Z.log

@@ -1,0 +1,10 @@
+02:21:33  Step 10 run-all, run 20260914T210951Z; stage 2; blinding REAL
+02:21:33  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+02:21:42  honest block, achievement step 7: 6 models with 'event times are not consecutive around the reference period'
+02:21:43    b_black_white.primary.unweighted.unbalanced                  missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43    b_black_white.primary.tested_weighted.unbalanced             missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43    c_hispanic_white.primary.unweighted.balanced                 missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43    c_hispanic_white.primary.tested_weighted.balanced            missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43    b_black_white.r1.unweighted.unbalanced                       missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43    b_black_white.r1.tested_weighted.unbalanced                  missing              block none     status kept: no consecutive block through the reference period reaches event time 0
+02:21:43  honest block, achievement variants: 26 models with 'event times are not consecutive around the reference period'

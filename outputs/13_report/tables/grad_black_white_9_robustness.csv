@@ -1,0 +1,6 @@
+"check","estimate","boot_p","randomization_p","randomization_reps","bound_mbar1","status"
+"Balanced panel (Section 7)","-0.114","0.0001","0.1263","10000","no bound (no estimated pre-reform event time: relative magnitudes need one)","ok"
+"Ranges of 5 points or less (Section 5 rule 3)","-0.020","0.0615","0.6804","1000","[-0.690, 0.653]","ok"
+"Exact values only (Section 5 rule 3)","-1.798","0.0001","0.0050","1000","[-2.962, -0.236] (event times -5..+5)","ok"
+"Cohorts with fewer than three pre-reform years dropped (Section 5 rule 6)","-0.010","0.8562","0.8758","1000","[-0.508, 0.717] (event times -5..+0)","ok"
+"Anticipation = 1, reference period -2 (Section 7; replaces the filing-date version)","0.006","0.9068","0.9479","1000","[-1.053, 1.368] (event times -5..+0)","ok"

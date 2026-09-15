@@ -297,3 +297,87 @@ honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
   rownames(res) <- NULL
   res
 }
+
+# ---- reduced event-time block (post-freeze inference correction 2026-09-15, docs/deviations.md) ----
+# A model whose estimated event times have a hole around the reference period gets
+# "event times are not consecutive around the reference period" from honest_rm(). For such a
+# model the bound sets are computed on the largest consecutive block of estimated event times
+# that contains the reference period and event time 0, with the post-reform average over the
+# block's post-periods (honest_rm() on the influence function restricted to the block; the
+# estimates themselves are unchanged). No block with event time 0, or no pre-period in the
+# block beyond the reference, leaves the status.
+
+# The block: estimated event times (finite estimate and standard error) plus the reference,
+# the maximal run of consecutive integers through the reference. NULL when 0 is not in it.
+honest_block_range <- function(inf, ref = -1L) {
+  est <- inf$egt[inf$egt != ref & is.finite(inf$att_egt) & is.finite(inf$se_egt)]
+  have <- sort(unique(c(as.integer(est), as.integer(ref))))
+  lo <- ref; while ((lo - 1L) %in% have) lo <- lo - 1L
+  hi <- ref; while ((hi + 1L) %in% have) hi <- hi + 1L
+  if (hi < 0L) return(NULL)
+  c(lo, hi)
+}
+
+# The influence function restricted to the event times lo..hi (the overall column is kept
+# but not used by honest_rm()).
+honest_block_inf <- function(inf, lo, hi) {
+  j <- which(inf$egt >= lo & inf$egt <= hi)
+  out <- inf
+  out$egt <- inf$egt[j]; out$att_egt <- inf$att_egt[j]; out$se_egt <- inf$se_egt[j]
+  out$scores <- inf$scores[, c(j, which(colnames(inf$scores) == "overall")), drop = FALSE]
+  out
+}
+
+# Bound sets on the block. Returns the honest_rm() rows with the block recorded, or the
+# original status row with the block and the reason no bound was computed.
+honest_block <- function(inf, mbarvec, ref = -1L,
+                         status = "event times are not consecutive around the reference period") {
+  keep_status <- function(block, why) data.frame(mbar = NA_real_, lb = NA_real_, ub = NA_real_, method = NA_character_,
+    status = status, num_pre = NA_integer_, num_post = NA_integer_, grid_lb = NA_real_, grid_ub = NA_real_,
+    grid_points = NA_integer_, event_block = block, event_block_note = why, stringsAsFactors = FALSE)
+  if (is.null(inf)) stop("honest_block: no influence function")
+  b <- honest_block_range(inf, ref)
+  if (is.null(b)) return(keep_status(NA_character_, "no consecutive block through the reference period reaches event time 0"))
+  blk <- sprintf("%+d..%+d", b[1], b[2])
+  if (b[1] >= ref) return(keep_status(blk, "the block has no pre-reform event time beyond the reference period"))
+  h <- honest_rm(honest_block_inf(inf, b[1], b[2]), mbarvec, ref = ref)
+  h$event_block <- blk
+  h$event_block_note <- sprintf("bound on event times %s; post-reform average over event times 0..%+d", blk, b[2])
+  h
+}
+
+# Why each event time inside the estimated span (and not estimated) is missing. fit: a step 5
+# or step 10 did fit; window: the outcome's window end years; ref: the reference period.
+# For event time e: the model's treated cohorts g with g + e inside the window's calendar span;
+# "no cohort" when none; "no district-year" when those cohorts have no row in the estimation
+# panel at year g + e (a year outside the window, such as 2020 for achievement, counts here);
+# otherwise the group-time cells exist but are not estimable (the base-period year g - 1 - anticipation
+# has no row, or no comparison units), recorded with the cohort cells.
+event_time_gaps <- function(fit, window, ref = -1L) {
+  inf <- cs_influence(fit)
+  if (is.null(inf)) return(NULL)
+  est <- sort(unique(c(inf$egt[is.finite(inf$att_egt) & is.finite(inf$se_egt)], ref)))
+  span <- seq.int(max(EVENT_MIN, min(est)), min(EVENT_MAX, max(est)))
+  miss <- setdiff(span, est)
+  if (!length(miss)) return(NULL)
+  cp <- cs_panel(fit); p <- cp$panel
+  unit_word <- if (length(unique(p$id)) == length(unique(p$state))) "state-year" else "district-year"
+  cohorts <- sort(unique(p$g[p$g > 0]))
+  gt <- fit$att_gt
+  do.call(rbind, lapply(miss, function(e) {
+    cg <- cohorts[(cohorts + e) >= min(window) & (cohorts + e) <= max(window)]
+    if (!length(cg)) return(data.frame(event_time = e, reason = "no cohort",
+      detail = "no treated cohort reaches this event time within the window", stringsAsFactors = FALSE))
+    rows <- vapply(cg, function(g) sum(p$g == g & p$sy_end == g + e), 0)
+    if (!any(rows > 0)) return(data.frame(event_time = e, reason = paste("no", unit_word),
+      detail = paste0("cohort-years with no ", unit_word, " in the panel: ",
+                      paste0(cg, " at ", cg + e, ifelse((cg + e) %in% window, "", " (outside the window)"), collapse = "; ")),
+      stringsAsFactors = FALSE))
+    base <- cg - 1L - cp$anticipation
+    base_rows <- vapply(seq_along(cg), function(i) sum(p$g == cg[i] & p$sy_end == base[i]), 0)
+    data.frame(event_time = e, reason = "not estimable",
+      detail = paste0(unit_word, "s present but no estimable group-time cell: ",
+        paste0("cohort ", cg, " at ", cg + e, " (", rows, " rows; base year ", base, ": ", base_rows, " rows)", collapse = "; ")),
+      stringsAsFactors = FALSE)
+  }))
+}

@@ -1,0 +1,4 @@
+"event_set","estimate","boot_ci","boot_p","randomization_p","bound_mbar1","sd_per_1000","status"
+"primary","-0.088","[-0.115, -0.061]","0.0001","0.1827","[-3.055, 2.895]","0.140","ok"
+"r1","-0.100","[-0.123, -0.077]","0.0001","0.2461","no bound (no estimated pre-reform event time: relative magnitudes need one)","0.144","ok"
+"r2","0.537","[0.432, 0.643]","0.0001","0.0653","[-1.769, 3.776] (event times -5..+0)","-2.994","ok"

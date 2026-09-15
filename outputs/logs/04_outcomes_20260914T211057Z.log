@@ -1,0 +1,211 @@
+Step 4 outcomes, run 20260914T211057Z; stage 2; blinding REAL
+District-years retained under at least one event set: 121154 (11014 districts, 45 states)
+Quintile 1 and 5 districts without a valid 2009-10 membership, left out of gap (a): 4 (CA 0609810 q5; CA 0623160 q5; CA 0626760 q5; CA 0691134 q5)
+Wrote data/derived/gaps_race_district_year.csv: 75407 rows.
+Wrote data/derived/gap_poverty_state_year.csv: 2455 rows.
+
+== Gap counts by suppression sample and event set (end years 2010-2021)
+Samples: primary = exact or range <= 10 points; r5 = <= 5 points; exact = exact values only. Event set = districts retained under rules 1, 2 and 6 with that table.
+
+Gap (b) Black-White: district-year-subject gaps
+  sample event_set  math   rla total
+ primary   primary 11062 11393 22455
+ primary        r1 11062 11393 22455
+ primary        r2 13028 13392 26420
+      r5   primary  6990  7157 14147
+      r5        r1  6990  7157 14147
+      r5        r2  8152  8346 16498
+   exact   primary  1628  1642  3270
+   exact        r1  1628  1642  3270
+   exact        r2  1730  1747  3477
+
+Gap (c) Hispanic-White: district-year-subject gaps
+  sample event_set  math   rla total
+ primary   primary 12019 12162 24181
+ primary        r1 12019 12162 24181
+ primary        r2 15472 15597 31069
+      r5   primary  7240  7376 14616
+      r5        r1  7240  7376 14616
+      r5        r2  9559  9717 19276
+   exact   primary  1729  1845  3574
+   exact        r1  1729  1845  3574
+   exact        r2  2318  2444  4762
+
+Gap (a) poverty quintile 5 minus 1: state-year-subject gaps
+  sample event_set math rla total
+ primary   primary  390 392   782
+ primary        r1  390 392   782
+ primary        r2  444 446   890
+      r5   primary  382 387   769
+      r5        r1  382 387   769
+      r5        r2  435 440   875
+   exact   primary  308 309   617
+   exact        r1  308 309   617
+   exact        r2  344 346   690
+
+== Gaps by end year, primary event set
+              gap  sample subject sy2010 sy2011 sy2012 sy2013 sy2014 sy2015
+        a_poverty primary    math     36     38     38     38     36     34
+        a_poverty primary     rla     36     38     38     38     37     34
+        a_poverty      r5    math     36     38     38     38     36     34
+        a_poverty      r5     rla     36     38     38     38     37     34
+        a_poverty   exact    math     32     34     33     30     29     26
+        a_poverty   exact     rla     32     34     33     30     32     24
+    b_black_white primary    math   1255   1296   1279   1201   1016    864
+    b_black_white primary     rla   1220   1289   1255   1181   1162    917
+    b_black_white      r5    math    832    844    828    786    649    539
+    b_black_white      r5     rla    794    831    817    765    750    560
+    b_black_white   exact    math    202    193    196    189    155    133
+    b_black_white   exact     rla    184    182    178    190    186    140
+ c_hispanic_white primary    math   1139   1218   1259   1363   1142    991
+ c_hispanic_white primary     rla   1107   1197   1224   1332   1253   1089
+ c_hispanic_white      r5    math    721    754    778    865    698    604
+ c_hispanic_white      r5     rla    688    745    768    867    760    681
+ c_hispanic_white   exact    math    180    184    187    243    171    149
+ c_hispanic_white   exact     rla    165    184    182    257    216    180
+ sy2016 sy2017 sy2018 sy2019 sy2021
+     36     37     33     35     29
+     36     36     34     35     30
+     34     37     32     35     24
+     35     36     34     35     26
+     27     29     25     29     14
+     27     28     26     29     14
+    998   1018    821    996    318
+   1080   1060    920    958    351
+    608    638    498    619    149
+    672    652    567    584    165
+    145    151    106    138     20
+    162    137    130    130     23
+   1038   1154   1020   1216    479
+   1164   1168   1064   1187    377
+    627    683    581    710    219
+    712    693    611    686    165
+    150    161    126    150     28
+    186    165    140    150     20
+
+== Gap (a) coverage, primary event set, primary sample
+States with quintile districts: 40
+State-year-subjects with no gap (a) row (no usable district in quintile 1 or 5):
+ subject state sy_end usable_q1 usable_q5
+    math    AK   2016         0         0
+    math    AL   2010         0         0
+    math    AL   2014         0         0
+    math    AL   2015         0         0
+    math    AZ   2016         0         0
+    math    CT   2021        12         0
+    math    DC   2010         0         1
+    math    DC   2011         0         1
+    math    DC   2012         0         1
+    math    DC   2013         0         1
+    math    DC   2014         0         1
+    math    DC   2015         0         0
+    math    DC   2016         0         0
+    math    DC   2017         0         0
+    math    DC   2018         0         0
+    math    DC   2019         0         0
+    math    DC   2021         0         0
+    math    DE   2019         0         0
+    math    DE   2021         0         0
+    math    FL   2021         0         0
+    math    HI   2010         0         1
+    math    HI   2011         0         1
+    math    HI   2012         0         1
+    math    HI   2013         0         1
+    math    HI   2014         0         1
+    math    HI   2015         0         0
+    math    HI   2016         0         0
+    math    HI   2017         0         0
+    math    HI   2018         0         0
+    math    HI   2019         0         0
+    math    HI   2021         0         0
+    math    MD   2018         0         0
+    math    MI   2018         0         0
+    math    NM   2018         0         0
+    math    NM   2021         0         0
+    math    NV   2015         0         0
+    math    OR   2021         0         2
+    math    RI   2015         2         0
+    math    RI   2019         5         0
+    math    RI   2021         1         0
+    math    SD   2014         0         0
+    math    UT   2021         0         1
+    math    VA   2018         0         0
+    math    VT   2018         0         0
+    math    VT   2019         0         0
+    math    VT   2021         0         0
+    math    WA   2015         0         0
+    math    WA   2017         0         1
+    math    WA   2021         0         0
+    math    WY   2010         0         0
+     rla    AK   2016         0         0
+     rla    AL   2010         0         0
+     rla    AL   2015         0         0
+     rla    CT   2021        12         0
+     rla    DC   2010         0         1
+     rla    DC   2011         0         1
+     rla    DC   2012         0         1
+     rla    DC   2013         0         1
+     rla    DC   2014         0         1
+     rla    DC   2015         0         0
+     rla    DC   2016         0         0
+     rla    DC   2017         0         0
+     rla    DC   2018         0         0
+     rla    DC   2019         0         0
+     rla    DC   2021         0         0
+     rla    DE   2019         0         0
+     rla    DE   2021         0         0
+     rla    HI   2010         0         1
+     rla    HI   2011         0         1
+     rla    HI   2012         0         1
+     rla    HI   2013         0         1
+     rla    HI   2014         0         1
+     rla    HI   2015         0         0
+     rla    HI   2016         0         0
+     rla    HI   2017         0         0
+     rla    HI   2018         0         0
+     rla    HI   2019         0         0
+     rla    HI   2021         0         0
+     rla    MD   2018         0         0
+     rla    MI   2018         0         0
+     rla    NM   2018         0         0
+     rla    NM   2021         0         0
+     rla    NV   2015         0         0
+     rla    OR   2021         0         3
+     rla    RI   2015         1         0
+     rla    RI   2019         5         0
+     rla    RI   2021         1         0
+     rla    SD   2014         0         0
+     rla    UT   2017         0         3
+     rla    UT   2021         0         1
+     rla    VT   2018         0         0
+     rla    VT   2019         0         0
+     rla    VT   2021         0         0
+     rla    WA   2015         0         0
+     rla    WA   2016         0         4
+     rla    WA   2017         0         1
+     rla    WA   2021         0         0
+     rla    WY   2010         0         0
+Districts per quintile-5 and quintile-1 mean (primary sample, primary set): median 16.5 and 24; minimum 1 and 1.
+
+== Distribution of V, primary event set, pooled over end years (SD units; negative = disadvantaged group lower)
+              gap  sample subject     n   mean    sd    p10 median    p90
+    b_black_white primary    math 11062 -0.680 0.352 -1.130 -0.665 -0.264
+    b_black_white primary     rla 11393 -0.680 0.333 -1.087 -0.666 -0.279
+    b_black_white      r5    math  6990 -0.686 0.319 -1.100 -0.664 -0.311
+    b_black_white      r5     rla  7157 -0.691 0.308 -1.076 -0.670 -0.311
+    b_black_white   exact    math  1628 -0.700 0.261 -1.030 -0.681 -0.392
+    b_black_white   exact     rla  1642 -0.710 0.250 -1.018 -0.706 -0.404
+ c_hispanic_white primary    math 12019 -0.460 0.344 -0.902 -0.449 -0.025
+ c_hispanic_white primary     rla 12162 -0.507 0.328 -0.921 -0.490 -0.111
+ c_hispanic_white      r5    math  7240 -0.476 0.309 -0.876 -0.460 -0.117
+ c_hispanic_white      r5     rla  7376 -0.523 0.296 -0.907 -0.508 -0.162
+ c_hispanic_white   exact    math  1729 -0.524 0.248 -0.866 -0.500 -0.229
+ c_hispanic_white   exact     rla  1845 -0.550 0.237 -0.866 -0.532 -0.258
+        a_poverty primary    math   390 -0.666 0.375 -1.193 -0.637 -0.218
+        a_poverty primary     rla   392 -0.610 0.345 -1.051 -0.584 -0.229
+        a_poverty      r5    math   382 -0.668 0.381 -1.207 -0.635 -0.211
+        a_poverty      r5     rla   387 -0.618 0.344 -1.089 -0.595 -0.230
+        a_poverty   exact    math   308 -0.697 0.415 -1.276 -0.681 -0.181
+        a_poverty   exact     rla   309 -0.625 0.343 -1.077 -0.611 -0.246
+Median binomial standard error, primary sample: Black-White 0.183, Hispanic-White 0.178 (excludes range-midpoint error).
+Log: outputs/logs/04_outcomes_20260914T211057Z.log

@@ -1,0 +1,51 @@
+02:22:47  Step 10 run-all, run 20260914T210951Z; stage 2; blinding REAL
+02:22:47  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+02:22:57  honest block, achievement step 7: 6 models with 'event times are not consecutive around the reference period'
+02:24:42    b_black_white.primary.unweighted.unbalanced                  missing 4            block -5..+3   bound sets on the reduced block
+02:24:42    b_black_white.primary.tested_weighted.unbalanced             missing 2 4          block -5..+1   bound sets on the reduced block
+02:24:42    c_hispanic_white.primary.unweighted.balanced                 missing 2            block -5..+1   bound sets on the reduced block
+02:24:42    c_hispanic_white.primary.tested_weighted.balanced            missing 2            block -5..+1   bound sets on the reduced block
+02:24:42    b_black_white.r1.unweighted.unbalanced                       missing 4            block -2..+3   bound sets on the reduced block
+02:24:42    b_black_white.r1.tested_weighted.unbalanced                  missing 2 3 4        block -2..+1   bound sets on the reduced block
+02:24:42  honest block, achievement variants: 26 models with 'event times are not consecutive around the reference period'
+02:32:11    sample_r5.b_black_white.primary.unweighted.unbalanced        missing -3 2 3 4     block -2..+1   bound sets on the reduced block
+02:32:11    sample_r5.b_black_white.primary.tested_weighted.unbalanced   missing -3 2 3 4     block -2..+1   bound sets on the reduced block
+02:32:11    sample_r5.c_hispanic_white.primary.unweighted.unbalanced     missing 4            block -5..+3   bound sets on the reduced block
+02:32:11    sample_r5.c_hispanic_white.primary.tested_weighted.unbalanced missing 2 4          block -5..+1   bound sets on the reduced block
+02:32:11    sample_r5.b_black_white.r1.unweighted.unbalanced             missing 2 3 4        block -2..+1   bound sets on the reduced block
+02:32:11    sample_r5.b_black_white.r1.tested_weighted.unbalanced        missing 2 3 4        block -2..+1   bound sets on the reduced block
+02:32:11    sample_r5.c_hispanic_white.r1.unweighted.unbalanced          missing 4            block -2..+3   bound sets on the reduced block
+02:32:11    sample_r5.c_hispanic_white.r1.tested_weighted.unbalanced     missing 2 3 4        block -2..+1   bound sets on the reduced block
+02:32:11    sample_exact.a_poverty.primary.unweighted.unbalanced         missing 4            block -5..+3   bound sets on the reduced block
+02:32:11    sample_exact.c_hispanic_white.primary.unweighted.unbalanced  missing -3 2         block -2..+1   bound sets on the reduced block
+02:32:11    sample_exact.c_hispanic_white.primary.tested_weighted.unbalanced missing -3 -2        block -1..+1   status kept: the block has no pre-reform event time beyond the reference period
+02:32:11    sample_exact.a_poverty.r1.unweighted.unbalanced              missing 4            block -2..+3   bound sets on the reduced block
+02:32:11    participation_from_2013.b_black_white.primary.unweighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    participation_from_2013.b_black_white.primary.tested_weighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    participation_from_2013.c_hispanic_white.primary.unweighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    participation_from_2013.c_hispanic_white.primary.tested_weighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    drop_few_pre.b_black_white.primary.unweighted.unbalanced     missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    drop_few_pre.b_black_white.primary.tested_weighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    drop_few_pre.c_hispanic_white.primary.unweighted.unbalanced  missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    drop_few_pre.c_hispanic_white.primary.tested_weighted.unbalanced missing 2            block -5..+1   bound sets on the reduced block
+02:32:11    anticipation_1.b_black_white.primary.unweighted.unbalanced   missing 4            block -5..+3   bound sets on the reduced block
+02:32:11    anticipation_1.b_black_white.primary.tested_weighted.unbalanced missing 2 4          block -5..+1   bound sets on the reduced block
+02:32:11    anticipation_1.a_poverty.r2.unweighted.unbalanced            missing -1           block none     status kept: no consecutive block through the reference period reaches event time 0
+02:32:11    anticipation_1.b_black_white.r2.unweighted.unbalanced        missing -1           block none     status kept: no consecutive block through the reference period reaches event time 0
+02:32:11    anticipation_1.c_hispanic_white.r2.unweighted.unbalanced     missing -1           block none     status kept: no consecutive block through the reference period reaches event time 0
+02:32:11    anticipation_1.c_hispanic_white.r2.tested_weighted.unbalanced missing -1           block none     status kept: no consecutive block through the reference period reaches event time 0
+02:32:11  honest block, graduation step 7: 2 models with 'event times are not consecutive around the reference period'
+02:32:24    grad_black_white.r2.unweighted.unbalanced                    missing 1            block -5..+0   bound sets on the reduced block
+02:32:24    grad_black_white.r2.tested_weighted.unbalanced               missing 1            block -5..+0   bound sets on the reduced block
+02:32:24  honest block, graduation variants: 10 models with 'event times are not consecutive around the reference period'
+02:35:37    sample_exact.grad_black_white.primary.unweighted.unbalanced  missing 6            block -5..+5   bound sets on the reduced block
+02:35:37    sample_exact.grad_black_white.primary.tested_weighted.unbalanced missing 6            block -5..+5   bound sets on the reduced block
+02:35:37    drop_few_pre.grad_black_white.primary.unweighted.unbalanced  missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    drop_few_pre.grad_black_white.primary.tested_weighted.unbalanced missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    drop_few_pre.grad_black_white.r2.unweighted.unbalanced       missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    drop_few_pre.grad_black_white.r2.tested_weighted.unbalanced  missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    anticipation_1.grad_black_white.primary.unweighted.unbalanced missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    anticipation_1.grad_black_white.primary.tested_weighted.unbalanced missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    anticipation_1.grad_black_white.r2.unweighted.unbalanced     missing 1            block -5..+0   bound sets on the reduced block
+02:35:37    anticipation_1.grad_black_white.r2.tested_weighted.unbalanced missing 1            block -5..+0   bound sets on the reduced block
+02:35:37  honest block done; rebuild the report with --report

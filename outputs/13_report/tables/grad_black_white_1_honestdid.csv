@@ -1,0 +1,7 @@
+"gap","event_set","weighting","panel","mbar","lb","ub","method","status","num_pre","num_post","grid_lb","grid_ub","grid_points","event_block","event_block_note"
+"grad_black_white","primary","unweighted","unbalanced",,-0.114528911946561,-0.0613617724340313,"original","ok",4,9,,,,,
+"grad_black_white","primary","unweighted","unbalanced",0,-0.114317261352837,-0.0616389984016486,"C-LF","ok",4,9,-0.271265900454833,0.271265900454833,1000,,
+"grad_black_white","primary","unweighted","unbalanced",0.5,-1.56324102994842,1.4035770164675,"C-LF","ok",4,9,-2.44139310409349,2.44139310409349,8992,,
+"grad_black_white","primary","unweighted","unbalanced",1,-3.05452463885527,2.89486062537434,"C-LF","ok",4,9,-7.32417931228048,7.32417931228048,26974,,
+"grad_black_white","primary","unweighted","unbalanced",1.5,-4.54526517288633,4.38614423428119,"C-LF","ok",4,9,-7.32417931228048,7.32417931228048,26974,,
+"grad_black_white","primary","unweighted","unbalanced",2,-6.03600570691739,5.87688476831225,"C-LF","ok",4,9,-7.32417931228048,7.32417931228048,26974,,

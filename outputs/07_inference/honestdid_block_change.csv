@@ -1,0 +1,7 @@
+"outcome","gap","event_set","weighting","panel","ref","missing_event_times","missing_reasons","status_before","event_block","result","mbar_rows_ok"
+"achievement","b_black_white","primary","unweighted","unbalanced",-1,"4","4: not estimable","event times are not consecutive around the reference period","-5..+3","bound sets on the reduced block",5
+"achievement","b_black_white","primary","tested_weighted","unbalanced",-1,"2 4","2: not estimable; 4: no district-year","event times are not consecutive around the reference period","-5..+1","bound sets on the reduced block",5
+"achievement","c_hispanic_white","primary","unweighted","balanced",-1,"2","2: not estimable","event times are not consecutive around the reference period","-5..+1","bound sets on the reduced block",5
+"achievement","c_hispanic_white","primary","tested_weighted","balanced",-1,"2","2: not estimable","event times are not consecutive around the reference period","-5..+1","bound sets on the reduced block",5
+"achievement","b_black_white","r1","unweighted","unbalanced",-1,"4","4: not estimable","event times are not consecutive around the reference period","-2..+3","bound sets on the reduced block",5
+"achievement","b_black_white","r1","tested_weighted","unbalanced",-1,"2 3 4","2: not estimable; 3: not estimable; 4: no district-year","event times are not consecutive around the reference period","-2..+1","bound sets on the reduced block",5

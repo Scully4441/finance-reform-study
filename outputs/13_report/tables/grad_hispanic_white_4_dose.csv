@@ -1,0 +1,2 @@
+"gap","event_set","weighting","panel","att_outcome","att_revenue","revenue_ci_lo","revenue_ci_hi","dose_scaled","ci_lo","ci_hi","percentile_lo","percentile_hi","share_draws_revenue_sign_flip","reps","status","revenue_units"
+"grad_hispanic_white","primary","unweighted","unbalanced",-0.0243577143479542,-0.561784741757994,-0.836102938225909,-0.285335867600958,0.0433577356902423,-0.0182773166669056,0.100004757069569,-0.0182773166669056,0.100004757069569,0,9999,"ok","thousands of 2021 dollars per pupil"

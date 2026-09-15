@@ -1,0 +1,7 @@
+"gap","event_set","weighting","panel","mbar","lb","ub","method","status","num_pre","num_post","grid_lb","grid_ub","grid_points","event_block","event_block_note"
+"b_black_white","primary","unweighted","unbalanced",,0.104111312551519,0.311405463715672,"original","ok",4,4,,,,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"
+"b_black_white","primary","unweighted","unbalanced",0,0.106928836957339,0.308082094599858,"C-LF","ok",4,4,-1.05764265465724,1.05764265465724,1000,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"
+"b_black_white","primary","unweighted","unbalanced",0.5,-0.433008854609422,0.848019786166619,"C-LF","ok",4,4,-1.05764265465724,1.05764265465724,1000,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"
+"b_black_white","primary","unweighted","unbalanced",1,-1.01105979499266,1.42607072654986,"C-LF","ok",4,4,-1.05764265465724,3.17292796397173,1999,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"
+"b_black_white","primary","unweighted","unbalanced",1.5,-1.597580346224,2.0125912777812,"C-LF","ok",4,4,-3.17292796397173,3.17292796397173,2998,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"
+"b_black_white","primary","unweighted","unbalanced",2,-2.1883357028794,2.6033466344366,"C-LF","ok",4,4,-3.17292796397173,3.17292796397173,2998,"-5..+3","bound on event times -5..+3; post-reform average over event times 0..+3"

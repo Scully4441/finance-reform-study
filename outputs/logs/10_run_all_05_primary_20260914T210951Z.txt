@@ -1,0 +1,28 @@
+Step 5 primary estimator (achievement), run 20260914T211142Z; stage 2; blinding REAL; did 2.5.1
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/05_primary and outputs/logs/05_primary_20260914T211142Z.log
+Covariates for the 3255 districts in the district gap file; missing: log_member_2009 2, saipe_pov_rate_2009 0, black_share_2009 0, hisp_share_2009 0
+
+== Panels (both subjects; gaps (b) and (c) with all covariates), primary suppression sample, end years 2010-2021
+   unbalanced = the primary rule (any window year); balanced = the robustness rule (every window year)
+a_poverty           primary unbalanced    38 states    in 38 states
+a_poverty           primary balanced      20 states    in 20 states
+b_black_white       primary unbalanced  1577 districts in 40 states
+b_black_white       primary balanced      69 districts in  9 states
+c_hispanic_white    primary unbalanced  1901 districts in 39 states
+c_hispanic_white    primary balanced      35 districts in 12 states
+a_poverty           r1      unbalanced    38 states    in 38 states
+a_poverty           r1      balanced      20 states    in 20 states
+b_black_white       r1      unbalanced  1577 districts in 40 states
+b_black_white       r1      balanced      69 districts in  9 states
+c_hispanic_white    r1      unbalanced  1901 districts in 39 states
+c_hispanic_white    r1      balanced      35 districts in 12 states
+a_poverty           r2      unbalanced    43 states    in 43 states
+a_poverty           r2      balanced      23 states    in 23 states
+b_black_white       r2      unbalanced  1920 districts in 45 states
+b_black_white       r2      balanced      69 districts in  9 states
+c_hispanic_white    r2      unbalanced  2476 districts in 44 states
+c_hispanic_white    r2      balanced      36 districts in 13 states
+
+Wrote outputs/05_primary/event_time_estimates.csv, outputs/05_primary/overall_estimates.csv, outputs/05_primary/group_time_estimates.csv, outputs/05_primary/model_status.csv, outputs/05_primary/panel_counts.csv, outputs/05_primary/cs_models.rds
+30 achievement models (3 event sets x 2 panel rules); models that stopped with an error: 4. Status per model: outputs/05_primary/model_status.csv
+Log: outputs/logs/05_primary_20260914T211142Z.log

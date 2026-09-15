@@ -1,0 +1,3 @@
+"outcome","gap","event_set","weighting","panel","ref","missing_event_times","missing_reasons","status_before","event_block","result","mbar_rows_ok"
+"graduation","grad_black_white","r2","unweighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","grad_black_white","r2","tested_weighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5

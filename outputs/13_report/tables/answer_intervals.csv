@@ -1,0 +1,6 @@
+"gap","outcome","sd_interval_mbar1","per_1000_interval"
+"a_poverty","achievement","[-1.824, 1.917]","unbounded (the revenue effect's bootstrap interval includes zero)"
+"b_black_white","achievement","[-1.011, 1.426] (event times -5..+3)","unbounded (the revenue effect's bootstrap interval includes zero)"
+"c_hispanic_white","achievement","[-1.744, 1.968]","unbounded (the revenue effect's bootstrap interval includes zero)"
+"grad_black_white","graduation","[-3.055, 2.895]","[0.092, 0.207]"
+"grad_hispanic_white","graduation","[-0.523, 0.482]","[-0.018, 0.100]"

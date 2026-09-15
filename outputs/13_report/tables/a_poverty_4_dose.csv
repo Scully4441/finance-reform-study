@@ -1,0 +1,2 @@
+"gap","event_set","weighting","panel","att_outcome","att_revenue","revenue_ci_lo","revenue_ci_hi","dose_scaled","ci_lo","ci_hi","percentile_lo","percentile_hi","share_draws_revenue_sign_flip","reps","status","revenue_units"
+"a_poverty","primary","unweighted","unbalanced",0.0549557515260952,-0.0232697158823162,-0.63345885675826,0.606933812459842,-2.36168554029741,,,-2.64668754278079,2.4523516268826,0.471947194719472,9999,"unbounded: the revenue effect's bootstrap interval includes zero","thousands of 2021 dollars per pupil"

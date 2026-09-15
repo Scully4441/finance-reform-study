@@ -1,0 +1,11 @@
+"outcome","variant","gap","event_set","weighting","panel","ref","missing_event_times","missing_reasons","status_before","event_block","result","mbar_rows_ok"
+"graduation","sample_exact","grad_black_white","primary","unweighted","unbalanced",-1,"6","6: not estimable","event times are not consecutive around the reference period","-5..+5","bound sets on the reduced block",3
+"graduation","sample_exact","grad_black_white","primary","tested_weighted","unbalanced",-1,"6","6: not estimable","event times are not consecutive around the reference period","-5..+5","bound sets on the reduced block",2
+"graduation","drop_few_pre","grad_black_white","primary","unweighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","drop_few_pre","grad_black_white","primary","tested_weighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","drop_few_pre","grad_black_white","r2","unweighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","drop_few_pre","grad_black_white","r2","tested_weighted","unbalanced",-1,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","anticipation_1","grad_black_white","primary","unweighted","unbalanced",-2,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","anticipation_1","grad_black_white","primary","tested_weighted","unbalanced",-2,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","anticipation_1","grad_black_white","r2","unweighted","unbalanced",-2,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5
+"graduation","anticipation_1","grad_black_white","r2","tested_weighted","unbalanced",-2,"1","1: not estimable","event times are not consecutive around the reference period","-5..+0","bound sets on the reduced block",5

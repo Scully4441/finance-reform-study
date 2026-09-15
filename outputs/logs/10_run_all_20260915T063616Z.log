@@ -1,0 +1,8 @@
+02:36:16  Step 10 run-all, run 20260914T210951Z; stage 2; blinding REAL
+02:36:16  Console: parts, model and unit counts, timings. Estimates: outputs/10_run_all and outputs/13_report
+02:36:17  start report
+02:36:17  Report: outputs/13_report/report.md (5 plots, 42 tables)
+02:36:17  Report: 1 models shown with their recorded status in place of numbers: achievement.b_black_white.primary.unweighted.balanced.primary_specification
+02:36:17  done  report  0.0 min
+02:36:17  Run 20260914T210951Z finished. Total run time over parts: 7.83 h (wall clock since start: 9.44 h)
+02:36:17  Run times per part: outputs/10_run_all/run_times.csv; log: outputs/logs/10_run_all_20260915T063616Z.log

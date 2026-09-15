@@ -1,0 +1,7 @@
+"check","estimate","boot_p","randomization_p","randomization_reps","bound_mbar1","status"
+"Balanced panel (Section 7)","0.134","0.0001","0.2725","10000","[-0.581, 0.861]","ok"
+"Ranges of 5 points or less (Section 5 rule 3)","0.060","0.0725","0.5015","1000","[-4.385, 4.544]","ok"
+"Exact values only (Section 5 rule 3)","0.076","0.0089","0.4226","1000","[-0.454, 0.544] (event times -5..+3)","ok"
+"End years 2013 on, participation rule throughout (Section 5 rule 4)","0.018","0.6890","0.8152","1000","[-1.134, 1.108]","ok"
+"Cohorts with fewer than three pre-reform years dropped (Section 5 rule 6)","0.018","0.6863","0.8152","1000","[-1.134, 1.108]","ok"
+"Anticipation = 1, reference period -2 (Section 7; replaces the filing-date version)","0.047","0.2046","0.6154","1000","[-1.234, 1.300]","ok"

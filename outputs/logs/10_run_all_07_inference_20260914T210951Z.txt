@@ -1,0 +1,38 @@
+Step 7 inference (achievement), run 20260914T211628Z; stage 2; blinding REAL; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference and outputs/logs/07_inference_20260914T211628Z.log
+
+30 step 5 models: 19 fitted
+Overall estimates agree with outputs/05_primary/overall_estimates.csv
+Webb draws for event set primary 40 states x 9999 replications
+Webb draws for event set r1      40 states x 9999 replications
+Webb draws for event set r2      45 states x 9999 replications
+Wild cluster bootstrap: 19 models, 0.3 s
+Romano-Wolf: 8 families of 3 gaps
+HonestDiD relative magnitudes: 19 models x 5 M-bar values, 349.3 s; grid widened for 20 M-bar rows
+
+Randomization inference: 10000 reassignments per model on 12 workers
+Randomization results cached per model in outputs/10_run_all/cache/07_inference
+  a_poverty           primary unweighted      unbalanced 10000/10000 reassignments estimated,  199.4 s
+  a_poverty           primary unweighted      balanced   10000/10000 reassignments estimated,   63.3 s
+  b_black_white       primary unweighted      unbalanced  9977/10000 reassignments estimated, 1075.6 s
+  b_black_white       primary tested_weighted unbalanced  9983/10000 reassignments estimated,  951.2 s
+  c_hispanic_white    primary unweighted      unbalanced  9997/10000 reassignments estimated, 1236.5 s
+  c_hispanic_white    primary tested_weighted unbalanced  9992/10000 reassignments estimated,  909.4 s
+  c_hispanic_white    primary unweighted      balanced    6810/10000 reassignments estimated,   60.4 s
+  c_hispanic_white    primary tested_weighted balanced    6827/10000 reassignments estimated,   63.5 s
+  a_poverty           r1      unweighted      unbalanced 10000/10000 reassignments estimated,  105.8 s
+  a_poverty           r1      unweighted      balanced   10000/10000 reassignments estimated,   47.5 s
+  b_black_white       r1      unweighted      unbalanced  9415/10000 reassignments estimated,  664.0 s
+  b_black_white       r1      tested_weighted unbalanced  9576/10000 reassignments estimated,  577.4 s
+  c_hispanic_white    r1      unweighted      unbalanced  9627/10000 reassignments estimated,  750.3 s
+  c_hispanic_white    r1      tested_weighted unbalanced  9613/10000 reassignments estimated,  541.8 s
+  a_poverty           r2      unweighted      unbalanced  9907/10000 reassignments estimated,  106.9 s
+  b_black_white       r2      unweighted      unbalanced  8670/10000 reassignments estimated,  740.8 s
+  b_black_white       r2      tested_weighted unbalanced  8789/10000 reassignments estimated,  634.4 s
+  c_hispanic_white    r2      unweighted      unbalanced  9145/10000 reassignments estimated,  926.5 s
+  c_hispanic_white    r2      tested_weighted unbalanced  9187/10000 reassignments estimated,  658.4 s
+
+Wrote outputs/07_inference/bootstrap_overall.csv, outputs/07_inference/bootstrap_event_time.csv, outputs/07_inference/randomization_overall.csv, outputs/07_inference/randomization_draws.csv, outputs/07_inference/romano_wolf.csv, outputs/07_inference/honestdid_overall.csv, outputs/07_inference/model_status.csv, outputs/07_inference/inference_settings.csv
+19 of 30 models carried through all four procedures. Status per model: outputs/07_inference/model_status.csv
+Log: outputs/logs/07_inference_20260914T211628Z.log

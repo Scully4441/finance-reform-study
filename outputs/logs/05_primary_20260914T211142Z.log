@@ -1,0 +1,1096 @@
+Step 5 primary estimator (achievement), run 20260914T211142Z; stage 2; blinding REAL; did 2.5.1
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/05_primary and outputs/logs/05_primary_20260914T211142Z.log
+Covariates for the 3255 districts in the district gap file; missing: log_member_2009 2, saipe_pov_rate_2009 0, black_share_2009 0, hisp_share_2009 0
+
+== Panels (both subjects; gaps (b) and (c) with all covariates), primary suppression sample, end years 2010-2021
+   unbalanced = the primary rule (any window year); balanced = the robustness rule (every window year)
+
+== Event set primary (event_table.csv): states by cohort status
+ cohort_status states
+     estimable      6
+  after_window      6
+         never     28
+    first_year      0
+      excluded     11
+a_poverty           primary unbalanced    38 states    in 38 states
+a_poverty           primary balanced      20 states    in 20 states
+b_black_white       primary unbalanced  1577 districts in 40 states
+b_black_white       primary balanced      69 districts in  9 states
+c_hispanic_white    primary unbalanced  1901 districts in 39 states
+c_hispanic_white    primary balanced      35 districts in 12 states
+
+== Event set r1 (event_table_r1.csv): states by cohort status
+ cohort_status states
+     estimable      2
+  after_window      0
+         never     38
+    first_year      0
+      excluded     11
+a_poverty           r1      unbalanced    38 states    in 38 states
+a_poverty           r1      balanced      20 states    in 20 states
+b_black_white       r1      unbalanced  1577 districts in 40 states
+b_black_white       r1      balanced      69 districts in  9 states
+c_hispanic_white    r1      unbalanced  1901 districts in 39 states
+c_hispanic_white    r1      balanced      35 districts in 12 states
+
+== Event set r2 (event_table_r2.csv): states by cohort status
+ cohort_status states
+     estimable      2
+  after_window      2
+         never     41
+    first_year      0
+      excluded      6
+a_poverty           r2      unbalanced    43 states    in 43 states
+a_poverty           r2      balanced      23 states    in 23 states
+b_black_white       r2      unbalanced  1920 districts in 45 states
+b_black_white       r2      balanced      69 districts in  9 states
+c_hispanic_white    r2      unbalanced  2476 districts in 44 states
+c_hispanic_white    r2      balanced      36 districts in 13 states
+
+== Units and states entering each model (panel_counts.csv)
+              gap event_set      panel     unit units_with_outcome
+        a_poverty   primary unbalanced    state                 38
+        a_poverty   primary   balanced    state                 38
+    b_black_white   primary unbalanced district               1699
+    b_black_white   primary   balanced district               1699
+ c_hispanic_white   primary unbalanced district               2087
+ c_hispanic_white   primary   balanced district               2087
+        a_poverty        r1 unbalanced    state                 38
+        a_poverty        r1   balanced    state                 38
+    b_black_white        r1 unbalanced district               1699
+    b_black_white        r1   balanced district               1699
+ c_hispanic_white        r1 unbalanced district               2087
+ c_hispanic_white        r1   balanced district               2087
+        a_poverty        r2 unbalanced    state                 43
+        a_poverty        r2   balanced    state                 43
+    b_black_white        r2 unbalanced district               2054
+    b_black_white        r2   balanced district               2054
+ c_hispanic_white        r2 unbalanced district               2688
+ c_hispanic_white        r2   balanced district               2688
+ units_in_panel dropped_missing_covariates dropped_first_year_state
+             38                          0                        0
+             20                          0                        0
+           1577                          0                        0
+             69                          0                        0
+           1901                          0                        0
+             35                          0                        0
+             38                          0                        0
+             20                          0                        0
+           1577                          0                        0
+             69                          0                        0
+           1901                          0                        0
+             35                          0                        0
+             43                          0                        0
+             23                          0                        0
+           1921                          1                        0
+             69                          0                        0
+           2478                          2                        0
+             36                          0                        0
+ units_in_model states_in_model dropped_missing_weight unit_years
+             38              38                      0        388
+             20              20                      0        220
+           1577              40                    375      10119
+             69               9                      0        759
+           1901              39                    811      10658
+             35              12                      0        385
+             38              38                      0        388
+             20              20                      0        220
+           1577              40                    375      10119
+             69               9                      0        759
+           1901              39                    811      10658
+             35              12                      0        385
+             43              43                      0        441
+             23              23                      0        253
+           1920              45                    457      11973
+             69               9                      0        759
+           2476              44                    995      13883
+             36              13                      0        396
+ unit_years_per_unit units_estimable units_after_window units_never
+           10.210526               6                  6          26
+           11.000000               2                  5          13
+            6.416614             163                328        1086
+           11.000000               4                 23          42
+            5.606523             339                244        1318
+           11.000000               8                  2          25
+           10.210526               2                  0          36
+           11.000000               1                  0          19
+            6.416614              74                  0        1503
+           11.000000               0                  0          69
+            5.606523             163                  0        1738
+           11.000000               1                  0          34
+           10.255814               2                  2          39
+           11.000000               0                  2          21
+            6.235938              40                 78        1802
+           11.000000               0                  0          69
+            5.607027             142                 59        2275
+           11.000000               0                  0          36
+ states_estimable states_after_window states_never
+                6                   6           26
+                2                   5           13
+                6                   6           28
+                1                   2            6
+                6                   6           27
+                2                   1            9
+                2                   0           36
+                1                   0           19
+                2                   0           38
+                0                   0            9
+                2                   0           37
+                1                   0           11
+                2                   2           39
+                0                   2           21
+                2                   2           41
+                0                   0            9
+                2                   2           40
+                0                   0           13
+
+== a_poverty.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018,2012,2019,2020,2017,2011. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | No units in group 2017 in time period 2014 | No units in group 2019 in time period 2018 | No units in group 2020 in time period 2015 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 16 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5 -0.032510677 0.07047517 -0.19642637  0.13140502       2              2
+ -4  0.051576239 0.07738752 -0.12841664  0.23156912       3              3
+ -3 -0.140575506 0.07093289 -0.30555581  0.02440480       2              2
+ -2  0.032130960 0.03625225 -0.05218687  0.11644879       4              4
+ -1  0.000000000         NA          NA          NA       6              6
+  0 -0.004322146 0.03154109 -0.07768246  0.06903817       4              4
+  1 -0.024981539 0.05288834 -0.14799265  0.09802958       5              5
+  2  0.087826195 0.08830550 -0.11756043  0.29321282       3              3
+  3  0.080377460 0.10881231 -0.17270523  0.33346015       3              3
+  4  0.301303272 0.03727138  0.21461510  0.38799145       2              2
+  5  0.214303355 0.04313125  0.11398591  0.31462079       1              1
+  6  0.155970375 0.05094967  0.03746835  0.27447240       1              1
+  7 -0.046034757 0.09249960 -0.26117629  0.16910678       2              2
+  8 -0.269840451 0.04425746 -0.37277732 -0.16690358       1              1
+ treated_units
+             2
+             3
+             2
+             4
+             6
+             4
+             5
+             3
+             3
+             2
+             1
+             1
+             2
+             1
+overall post-reform average:
+        att         se       ci_lo     ci_hi cohorts treated_states
+ 0.05495575 0.03805023 -0.01962134 0.1295328       5              5
+ treated_units
+             5
+
+== a_poverty.primary.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018,2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e          att         se        ci_lo      ci_hi cohorts treated_states
+ -5 -0.068990460 0.04745021 -0.183113007 0.04513209       1              1
+ -4 -0.029525302 0.04750748 -0.143785585 0.08473498       1              1
+ -3  0.002106757 0.04306562 -0.101470399 0.10568391       1              1
+ -2  0.086690406 0.02465009  0.027404454 0.14597636       2              2
+ -1  0.000000000         NA           NA         NA       2              2
+  0  0.051538534 0.02277132 -0.003228796 0.10630586       2              2
+  1  0.098567137 0.02694664  0.033757752 0.16337652       2              2
+  2  0.209586512 0.03134043  0.134209616 0.28496341       1              1
+  3  0.122993544 0.13409649 -0.199522033 0.44550912       2              2
+  4  0.279263375 0.04769912  0.164542173 0.39398458       1              1
+  5  0.145780920 0.04744574  0.031669140 0.25989270       1              1
+  6  0.093119369 0.05224871 -0.032544055 0.21878279       1              1
+  7  0.067986793 0.04483854 -0.039854402 0.17582799       1              1
+  8           NA         NA           NA         NA       0              0
+ treated_units
+             1
+             1
+             1
+             2
+             2
+             2
+             2
+             1
+             2
+             1
+             1
+             1
+             1
+             0
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1336045 0.03490102 0.06519979 0.2020093       2              2             2
+
+== b_black_white.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2020,2019,2017,2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | Error computing internal 2x2 DiD for (g, t) = (2012, 2016): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2014 | Error computing internal 2x2 DiD for (g, t) = (2017, 2015): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2019): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2021 | No units in group 2019 in time period 2018 | fit_glm: fitted probabilities numerically 0 or 1 occurred | Error computing internal 2x2 DiD for (g, t) = (2020, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2014): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2020 in time period 2015 | Error computing internal 2x2 DiD for (g, t) = (2020, 2016): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2021): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 39 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5  0.006852838 0.02677231 -0.05588686 0.069592532       1              1
+ -4 -0.028405430 0.03869990 -0.11909690 0.062286037       1              1
+ -3  0.398897488 0.02594007  0.33810810 0.459686876       1              1
+ -2  0.212328518 0.03359992  0.13358862 0.291068420       2              2
+ -1  0.000000000         NA          NA          NA       6              6
+  0  0.001359525 0.02925417 -0.06719630 0.069915350       3              3
+  1  0.257092603 0.25641759 -0.34381045 0.857995655       3              3
+  2  0.670475670 0.02075965  0.62182636 0.719124977       1              1
+  3 -0.097894246 0.04229518 -0.19701109 0.001222601       2              2
+  4           NA         NA          NA          NA       0              0
+  5 -0.018458484 0.02860022 -0.08548182 0.048564849       1              1
+  6  0.050440115 0.04301209 -0.05035677 0.151236997       1              1
+  7  0.008371413 0.03777313 -0.08014820 0.096891030       1              1
+  8           NA         NA          NA          NA       0              0
+ treated_units
+            76
+            76
+            76
+           119
+           163
+           150
+           150
+            43
+           119
+             0
+            43
+            43
+            43
+             0
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1244838 0.03958085 0.04690676 0.2020608       3              3           150
+
+== b_black_white.primary.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2020,2019,2017,2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | Error computing internal 2x2 DiD for (g, t) = (2012, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2015): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2012 in time period 2016 | Error computing internal 2x2 DiD for (g, t) = (2012, 2021): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2014 | Error computing internal 2x2 DiD for (g, t) = (2017, 2015): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2019): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2021 | No units in group 2019 in time period 2018 | fit_glm: fitted probabilities numerically 0 or 1 occurred | Error computing internal 2x2 DiD for (g, t) = (2020, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2014): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2020 in time period 2015 | Error computing internal 2x2 DiD for (g, t) = (2020, 2016): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2020, 2021): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 43 group-time cells without an estimate, left out of the aggregation
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5 -0.01741809 0.06649593 -0.16999433 0.13515816       1              1
+ -4 -0.07255985 0.08613005 -0.27018695 0.12506726       1              1
+ -3  0.43257772 0.04038658  0.33990992 0.52524553       1              1
+ -2  0.22619498 0.02965195  0.15815798 0.29423198       2              2
+ -1  0.00000000         NA          NA         NA       6              6
+  0 -0.01909103 0.02934694 -0.08642817 0.04824611       3              3
+  1 -0.02797271 0.04477265 -0.13070445 0.07475903       2              2
+  2          NA         NA          NA         NA       0              0
+  3 -0.03210500 0.06487612 -0.18096454 0.11675454       1              1
+  4          NA         NA          NA         NA       0              0
+  5 -0.07725214 0.03839958 -0.16536073 0.01085646       1              1
+  6 -0.00633967 0.05258845 -0.12700492 0.11432558       1              1
+  7 -0.05303558 0.04353660 -0.15293117 0.04686002       1              1
+  8          NA         NA          NA         NA       0              0
+ treated_units
+            66
+            66
+            66
+            95
+           130
+           123
+            94
+             0
+            66
+             0
+            29
+            29
+            29
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.03596602 0.02844821 -0.09172348 0.01979144       3              3
+ treated_units
+           123
+
+== b_black_white.primary.unweighted.balanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2018 in time period 2010 | overlap condition violated for group 2018 in time period 2011 | overlap condition violated for group 2018 in time period 2012 | overlap condition violated for group 2018 in time period 2013 | overlap condition violated for group 2018 in time period 2014 | overlap condition violated for group 2018 in time period 2015 | overlap condition violated for group 2018 in time period 2016 | overlap condition violated for group 2018 in time period 2018 | overlap condition violated for group 2018 in time period 2019 | overlap condition violated for group 2018 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.primary.tested_weighted.balanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2018 in time period 2010 | overlap condition violated for group 2018 in time period 2011 | overlap condition violated for group 2018 in time period 2012 | overlap condition violated for group 2018 in time period 2013 | overlap condition violated for group 2018 in time period 2014 | overlap condition violated for group 2018 in time period 2015 | overlap condition violated for group 2018 in time period 2016 | overlap condition violated for group 2018 in time period 2018 | overlap condition violated for group 2018 in time period 2019 | overlap condition violated for group 2018 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== c_hispanic_white.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2020,2017. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | Error computing internal 2x2 DiD for (g, t) = (2011, 2017): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | fit_glm: fitted probabilities numerically 0 or 1 occurred | Error computing internal 2x2 DiD for (g, t) = (2017, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2014 | Error computing internal 2x2 DiD for (g, t) = (2017, 2015): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2019): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2021): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2019 in time period 2018 | No units in group 2020 in time period 2015 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 25 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5 -0.001824259 0.02406072 -0.07758061 0.073932094       1              1
+ -4  0.006897036 0.03474754 -0.10250730 0.116301375       2              2
+ -3  0.163148851 0.02144146  0.09563937 0.230658338       2              2
+ -2  0.159161969 0.21482015 -0.51720980 0.835533737       3              3
+ -1  0.000000000         NA          NA          NA       6              6
+  0  0.040620722 0.02427692 -0.03581633 0.117057779       3              3
+  1  0.084822819 0.03098698 -0.01274120 0.182386840       4              4
+  2  0.069611830 0.17293416 -0.47487984 0.614103501       2              2
+  3  0.136561546 0.09108243 -0.15021595 0.423339045       3              3
+  4  0.249488453 0.03482510  0.13983992 0.359136982       1              1
+  5 -0.085305015 0.03307280 -0.18943635 0.018826324       1              1
+  6 -0.096907639 0.03151239 -0.19612595 0.002310676       1              1
+  7  0.086545613 0.22994953 -0.63746174 0.810552966       2              2
+  8  0.345673740 0.03290952  0.24205651 0.449290967       1              1
+ treated_units
+           116
+           126
+           126
+           194
+           339
+           279
+           289
+           163
+           279
+            68
+            68
+            68
+           163
+            95
+overall post-reform average:
+        att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.09234579 0.05230289 -0.010166 0.1948576       4              4           289
+
+== c_hispanic_white.primary.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2020,2017. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | Error computing internal 2x2 DiD for (g, t) = (2017, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2017 in time period 2014 | Error computing internal 2x2 DiD for (g, t) = (2017, 2015): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2017): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2018): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2019): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2017, 2021): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2019 in time period 2018 | No units in group 2020 in time period 2015 | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is very large, suggesting it may be unreliable. This typically happens when the number of observations per group is small and/or there is not much variation in outcomes. Consider using pointwise confidence intervals instead (set `cband = FALSE`). | 25 group-time cells without an estimate, left out of the aggregation
+  e         att         se      ci_lo     ci_hi cohorts treated_states
+ -5  0.04415926 0.03157231 -0.2232254 0.3115439       1              1
+ -4  0.12393888 0.09450016 -0.6763791 0.9242568       2              2
+ -3  0.20576436 0.08853905 -0.5440692 0.9555979       2              2
+ -2  0.20543891 0.12763364 -0.8754851 1.2863630       3              3
+ -1  0.00000000         NA         NA        NA       6              6
+  0  0.04590121 0.01514387 -0.0823516 0.1741540       3              3
+  1  0.12595652 0.11095478 -0.8137149 1.0656280       4              4
+  2  0.22365854 0.29478225 -2.2728402 2.7201573       2              2
+  3 -0.45029409 0.53472543 -4.9788617 4.0782736       3              3
+  4  1.27586651 0.04715782  0.8764889 1.6752441       1              1
+  5 -0.09863983 0.02851125 -0.3401004 0.1428208       1              1
+  6 -0.11288419 0.03427675 -0.4031726 0.1774042       1              1
+  7 -0.19992121 0.04354417 -0.5686950 0.1688526       2              2
+  8  0.40350459 0.03298886  0.1241233 0.6828859       1              1
+ treated_units
+            82
+            91
+            91
+           126
+           217
+           179
+           188
+            97
+           179
+            35
+            35
+            35
+            97
+            62
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1347942 0.03719624 0.06189093 0.2076975       4              4           188
+
+== c_hispanic_white.primary.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018,2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2012 in time period 2010 | overlap condition violated for group 2012 in time period 2012 | overlap condition violated for group 2012 in time period 2013 | overlap condition violated for group 2012 in time period 2014 | overlap condition violated for group 2012 in time period 2015 | overlap condition violated for group 2012 in time period 2016 | overlap condition violated for group 2012 in time period 2017 | overlap condition violated for group 2012 in time period 2018 | overlap condition violated for group 2012 in time period 2019 | overlap condition violated for group 2012 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 10 group-time cells without an estimate, left out of the aggregation
+  e         att         se      ci_lo        ci_hi cohorts treated_states
+ -5 -0.03154617 0.04522491 -0.1259548  0.062862494       1              1
+ -4  0.20971173 0.07553602  0.0520275  0.367395957       1              1
+ -3  0.25977883 0.03352523  0.1897937  0.329763990       1              1
+ -2  0.61663664 0.05377723  0.5043747  0.728898600       1              1
+ -1  0.00000000         NA         NA           NA       2              2
+  0 -0.01579647 0.06644112 -0.1544948  0.122901815       1              1
+  1 -0.10608055 0.04954307 -0.2095035 -0.002657551       1              1
+  2          NA         NA         NA           NA       0              0
+  3  0.15448042 0.02955302  0.0927874  0.216173436       1              1
+  4          NA         NA         NA           NA       0              0
+  5          NA         NA         NA           NA       0              0
+  6          NA         NA         NA           NA       0              0
+  7          NA         NA         NA           NA       0              0
+  8          NA         NA         NA           NA       0              0
+ treated_units
+             7
+             7
+             7
+             7
+             8
+             7
+             7
+             0
+             7
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se       ci_lo      ci_hi cohorts treated_states
+ 0.0108678 0.02336368 -0.03492417 0.05665977       1              1
+ treated_units
+             7
+
+== c_hispanic_white.primary.tested_weighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2018,2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2012 in time period 2010 | overlap condition violated for group 2012 in time period 2012 | overlap condition violated for group 2012 in time period 2013 | overlap condition violated for group 2012 in time period 2014 | overlap condition violated for group 2012 in time period 2015 | overlap condition violated for group 2012 in time period 2016 | overlap condition violated for group 2012 in time period 2017 | overlap condition violated for group 2012 in time period 2018 | overlap condition violated for group 2012 in time period 2019 | overlap condition violated for group 2012 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 10 group-time cells without an estimate, left out of the aggregation
+  e         att         se      ci_lo      ci_hi cohorts treated_states
+ -5 -0.09077565 0.08415437 -0.2658602 0.08430889       1              1
+ -4  0.14531669 0.08145405 -0.0241498 0.31478318       1              1
+ -3  0.43034013 0.05206669  0.3220145 0.53866574       1              1
+ -2  0.61598253 0.09257951  0.4233693 0.80859574       1              1
+ -1  0.00000000         NA         NA         NA       2              2
+  0  0.03981839 0.11449930 -0.1983993 0.27803607       1              1
+  1 -0.01144625 0.08082024 -0.1795941 0.15670159       1              1
+  2          NA         NA         NA         NA       0              0
+  3  0.28152922 0.05632600  0.1643421 0.39871638       1              1
+  4          NA         NA         NA         NA       0              0
+  5          NA         NA         NA         NA       0              0
+  6          NA         NA         NA         NA       0              0
+  7          NA         NA         NA         NA       0              0
+  8          NA         NA         NA         NA       0              0
+ treated_units
+             7
+             7
+             7
+             7
+             8
+             7
+             7
+             0
+             7
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1033005 0.04818968 0.00885041 0.1977505       1              1             7
+
+== a_poverty.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012,2011. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 4 group-time cells without an estimate, left out of the aggregation
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.09270911 0.02873332  0.02401431  0.16140391       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0  0.01343582 0.02447768 -0.04508473  0.07195638       2              2
+  1  0.06370208 0.07326875 -0.11146675  0.23887092       2              2
+  2  0.16853050 0.05860161  0.02842744  0.30863355       2              2
+  3  0.14624942 0.08806533 -0.06429466  0.35679350       2              2
+  4  0.27947155 0.03567152  0.19418909  0.36475402       1              1
+  5  0.21838368 0.03933201  0.12434984  0.31241752       1              1
+  6  0.15697749 0.04644401  0.04594047  0.26801452       1              1
+  7 -0.04760700 0.09483346 -0.27433213  0.17911814       2              2
+  8 -0.27538600 0.03954237 -0.36992277 -0.18084923       1              1
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             2
+             2
+             1
+             1
+             1
+             2
+             1
+overall post-reform average:
+        att         se       ci_lo     ci_hi cohorts treated_states
+ 0.08041751 0.03948591 0.003026539 0.1578085       2              2
+ treated_units
+             2
+
+== a_poverty.r1.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e        att         se        ci_lo     ci_hi cohorts treated_states
+ -5         NA         NA           NA        NA       0              0
+ -4         NA         NA           NA        NA       0              0
+ -3         NA         NA           NA        NA       0              0
+ -2 0.06463410 0.02881292 -0.008444144 0.1377123       1              1
+ -1 0.00000000         NA           NA        NA       1              1
+  0 0.04638146 0.02210498 -0.009683417 0.1024463       1              1
+  1 0.12580561 0.02573587  0.060531699 0.1910795       1              1
+  2 0.20958651 0.02995915  0.133601079 0.2855719       1              1
+  3 0.28304451 0.04634150  0.165508524 0.4005805       1              1
+  4 0.27926337 0.04709279  0.159821886 0.3987049       1              1
+  5 0.14578092 0.05015649  0.018568966 0.2729929       1              1
+  6 0.08488344 0.04915342 -0.039784431 0.2095513       1              1
+  7 0.05898071 0.04538386 -0.056126429 0.1740878       1              1
+  8         NA         NA           NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             1
+             1
+             1
+             1
+             1
+             1
+             1
+             1
+             1
+             0
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1542158 0.03426098 0.08706553 0.2213661       1              1             1
+
+== b_black_white.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | Error computing internal 2x2 DiD for (g, t) = (2012, 2016): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is very large, suggesting it may be unreliable. This typically happens when the number of observations per group is small and/or there is not much variation in outcomes. Consider using pointwise confidence intervals instead (set `cband = FALSE`). | 9 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo     ci_hi cohorts treated_states
+ -5           NA         NA          NA        NA       0              0
+ -4           NA         NA          NA        NA       0              0
+ -3           NA         NA          NA        NA       0              0
+ -2  0.023104902 0.01528503 -0.11925194 0.1654617       1              1
+ -1  0.000000000         NA          NA        NA       2              2
+  0  0.023875170 0.02342822 -0.19432315 0.2420735       2              2
+  1  0.480423945 0.04352640  0.07504155 0.8858063       2              2
+  2  0.670475670 0.02008056  0.48345573 0.8574956       1              1
+  3 -0.169169474 0.04390976 -0.57812225 0.2397833       1              1
+  4           NA         NA          NA        NA       0              0
+  5 -0.018729550 0.03018789 -0.29988398 0.2624249       1              1
+  6  0.057944129 0.03874183 -0.30287723 0.4187655       1              1
+  7  0.006973306 0.03555186 -0.32413829 0.3380849       1              1
+  8           NA         NA          NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+            43
+            74
+            74
+            74
+            43
+            43
+             0
+            43
+            43
+            43
+             0
+overall post-reform average:
+       att        se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1502562 0.0568606 0.03881143 0.2617009       2              2            74
+
+== b_black_white.r1.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | Error computing internal 2x2 DiD for (g, t) = (2012, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2015): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2012 in time period 2016 | Error computing internal 2x2 DiD for (g, t) = (2012, 2021): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 13 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5           NA         NA          NA          NA       0              0
+ -4           NA         NA          NA          NA       0              0
+ -3           NA         NA          NA          NA       0              0
+ -2 -0.003409580 0.01321908 -0.03094018 0.024121023       1              1
+ -1  0.000000000         NA          NA          NA       2              2
+  0  0.022167281 0.02275882 -0.02523118 0.069565745       2              2
+  1 -0.027193834 0.04284104 -0.11641636 0.062028695       1              1
+  2           NA         NA          NA          NA       0              0
+  3           NA         NA          NA          NA       0              0
+  4           NA         NA          NA          NA       0              0
+  5 -0.077328481 0.03888234 -0.15830646 0.003649497       1              1
+  6  0.006546792 0.04747672 -0.09233020 0.105423782       1              1
+  7 -0.051289036 0.04059791 -0.13583993 0.033261856       1              1
+  8           NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            29
+            57
+            57
+            28
+             0
+             0
+             0
+            29
+            29
+            29
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.02541946 0.03421291 -0.09247552 0.04163661       2              2
+ treated_units
+            57
+
+== b_black_white.r1.unweighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.r1.tested_weighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== c_hispanic_white.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | Error computing internal 2x2 DiD for (g, t) = (2011, 2017): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 4 group-time cells without an estimate, left out of the aggregation
+  e         att         se        ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA           NA          NA       0              0
+ -4          NA         NA           NA          NA       0              0
+ -3          NA         NA           NA          NA       0              0
+ -2 -0.06941667 0.01285089 -0.096688447 -0.04214490       1              1
+ -1  0.00000000         NA           NA          NA       2              2
+  0  0.04271187 0.02339523 -0.006936792  0.09236054       2              2
+  1  0.12621588 0.01665110  0.090879404  0.16155236       2              2
+  2  0.06961183 0.17851077 -0.309218455  0.44844212       2              2
+  3  0.17503269 0.12900365 -0.098735051  0.44880043       2              2
+  4  0.24948845 0.03332989  0.178756744  0.32022016       1              1
+  5 -0.08555154 0.03215468 -0.153789246 -0.01731384       1              1
+  6 -0.09313423 0.02893414 -0.154537403 -0.03173105       1              1
+  7  0.08723176 0.07072068 -0.062849585  0.23731311       2              2
+  8  0.34495552 0.02705680  0.287536385  0.40237465       1              1
+ treated_units
+             0
+             0
+             0
+            68
+           163
+           163
+           163
+           163
+           163
+            68
+            68
+            68
+           163
+            95
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1018402 0.05865932 -0.0131299 0.2168104       2              2           163
+
+== c_hispanic_white.r1.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 4 group-time cells without an estimate, left out of the aggregation
+  e         att         se        ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA           NA          NA       0              0
+ -4          NA         NA           NA          NA       0              0
+ -3          NA         NA           NA          NA       0              0
+ -2 -0.07419342 0.01072110 -0.097467185 -0.05091966       1              1
+ -1  0.00000000         NA           NA          NA       2              2
+  0  0.04635004 0.02507265 -0.008078588  0.10077867       2              2
+  1  0.28060002 0.21608719 -0.188490028  0.74969007       2              2
+  2  0.22365854 0.28846686 -0.402555965  0.84987305       2              2
+  3 -1.09049782 0.05104219 -1.201302102 -0.97969354       2              2
+  4  1.27586651 0.04739389  1.172982099  1.37875092       1              1
+  5 -0.09897202 0.02818067 -0.160147656 -0.03779638       1              1
+  6 -0.09870070 0.02893878 -0.161522079 -0.03587932       1              1
+  7 -0.18493623 0.03731535 -0.265941765 -0.10393070       2              2
+  8  0.42121137 0.03083788  0.354267361  0.48815538       1              1
+ treated_units
+             0
+             0
+             0
+            35
+            97
+            97
+            97
+            97
+            97
+            35
+            35
+            35
+            97
+            62
+overall post-reform average:
+        att         se       ci_lo     ci_hi cohorts treated_states
+ 0.08606441 0.04272566 0.002323652 0.1698052       2              2
+ treated_units
+            97
+
+== c_hispanic_white.r1.unweighted.balanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2012 in time period 2010 | overlap condition violated for group 2012 in time period 2012 | overlap condition violated for group 2012 in time period 2013 | overlap condition violated for group 2012 in time period 2014 | overlap condition violated for group 2012 in time period 2015 | overlap condition violated for group 2012 in time period 2016 | overlap condition violated for group 2012 in time period 2017 | overlap condition violated for group 2012 in time period 2018 | overlap condition violated for group 2012 in time period 2019 | overlap condition violated for group 2012 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== c_hispanic_white.r1.tested_weighted.balanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | overlap condition violated for group 2012 in time period 2010 | overlap condition violated for group 2012 in time period 2012 | overlap condition violated for group 2012 in time period 2013 | overlap condition violated for group 2012 in time period 2014 | overlap condition violated for group 2012 in time period 2015 | overlap condition violated for group 2012 in time period 2016 | overlap condition violated for group 2012 in time period 2017 | overlap condition violated for group 2012 in time period 2018 | overlap condition violated for group 2012 in time period 2019 | overlap condition violated for group 2012 in time period 2021 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== a_poverty.r2.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2019,2011. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | No units in group 2019 in time period 2018 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 14 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo       ci_hi cohorts treated_states
+ -5           NA         NA          NA          NA       0              0
+ -4           NA         NA          NA          NA       0              0
+ -3           NA         NA          NA          NA       0              0
+ -2           NA         NA          NA          NA       0              0
+ -1  0.000000000         NA          NA          NA       2              2
+  0 -0.013415562 0.02480027 -0.06944579  0.04261467       1              1
+  1 -0.008558028 0.02186511 -0.05795698  0.04084092       1              1
+  2  0.108085343 0.02639094  0.04846137  0.16770932       1              1
+  3 -0.014296328 0.04051147 -0.10582223  0.07722958       1              1
+  4           NA         NA          NA          NA       0              0
+  5           NA         NA          NA          NA       0              0
+  6           NA         NA          NA          NA       0              0
+  7 -0.168426582 0.04648173 -0.27344085 -0.06341232       1              1
+  8 -0.264924646 0.03695031 -0.34840498 -0.18144431       1              1
+ treated_units
+             0
+             0
+             0
+             0
+             2
+             1
+             1
+             1
+             1
+             0
+             0
+             0
+             1
+             1
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.06025597 0.02622273 -0.1116516 -0.00886037       1              1
+ treated_units
+             1
+
+== a_poverty.r2.unweighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.r2.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2019,2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | No units in group 2019 in time period 2018 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 18 group-time cells without an estimate, left out of the aggregation
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2          NA         NA          NA           NA       0              0
+ -1  0.00000000         NA          NA           NA       2              2
+  0 -0.02010367 0.01420422 -0.04829947  0.008092135       1              1
+  1 -0.05748862 0.02309475 -0.10333238 -0.011644855       1              1
+  2          NA         NA          NA           NA       0              0
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            40
+            31
+            31
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo        ci_hi cohorts treated_states
+ -0.03879614 0.01646303 -0.07106308 -0.006529201       1              1
+ treated_units
+            31
+
+== b_black_white.r2.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2019,2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2014): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | Error computing internal 2x2 DiD for (g, t) = (2011, 2018): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2019): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | No units in group 2019 in time period 2018 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals. | 18 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA          NA         NA       0              0
+ -4           NA         NA          NA         NA       0              0
+ -3           NA         NA          NA         NA       0              0
+ -2           NA         NA          NA         NA       0              0
+ -1  0.000000000         NA          NA         NA       2              2
+  0 -0.001562115 0.01981742 -0.04040354 0.03727931       1              1
+  1 -0.040205033 0.04076933 -0.12011145 0.03970139       1              1
+  2           NA         NA          NA         NA       0              0
+  3           NA         NA          NA         NA       0              0
+  4           NA         NA          NA         NA       0              0
+  5           NA         NA          NA         NA       0              0
+  6           NA         NA          NA         NA       0              0
+  7           NA         NA          NA         NA       0              0
+  8           NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            32
+            28
+            28
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.02088357 0.02658159 -0.07298253 0.03121539       1              1
+ treated_units
+            28
+
+== b_black_white.r2.unweighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.r2.tested_weighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== c_hispanic_white.r2.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | Error computing internal 2x2 DiD for (g, t) = (2011, 2017): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | No units in group 2011 in time period 2021 | No units in group 2019 in time period 2018 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 14 group-time cells without an estimate, left out of the aggregation
+  e        att         se      ci_lo     ci_hi cohorts treated_states
+ -5         NA         NA         NA        NA       0              0
+ -4         NA         NA         NA        NA       0              0
+ -3         NA         NA         NA        NA       0              0
+ -2         NA         NA         NA        NA       0              0
+ -1 0.00000000         NA         NA        NA       2              2
+  0 0.08447898 0.01200922 0.05755752 0.1114004       1              1
+  1 0.12874501 0.01406292 0.09721971 0.1602703       1              1
+  2 0.27420645 0.01295991 0.24515380 0.3032591       1              1
+  3 0.30830114 0.01745131 0.26917998 0.3474223       1              1
+  4         NA         NA         NA        NA       0              0
+  5         NA         NA         NA        NA       0              0
+  6         NA         NA         NA        NA       0              0
+  7 0.24224872 0.02177446 0.19343621 0.2910612       1              1
+  8 0.31824959 0.02583025 0.26034508 0.3761541       1              1
+ treated_units
+             0
+             0
+             0
+             0
+           142
+            95
+            95
+            95
+            95
+             0
+             0
+             0
+            95
+            95
+overall post-reform average:
+       att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.2260383 0.01379271 0.1990051 0.2530715       1              1            95
+
+== c_hispanic_white.r2.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | No units in group 2011 in time period 2015 | No units in group 2011 in time period 2016 | No units in group 2011 in time period 2017 | No units in group 2011 in time period 2021 | No units in group 2019 in time period 2018 | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 14 group-time cells without an estimate, left out of the aggregation
+  e         att          se       ci_lo       ci_hi cohorts treated_states
+ -5          NA          NA          NA          NA       0              0
+ -4          NA          NA          NA          NA       0              0
+ -3          NA          NA          NA          NA       0              0
+ -2          NA          NA          NA          NA       0              0
+ -1  0.00000000          NA          NA          NA       2              2
+  0  0.06490721 0.007629128  0.04743914  0.08237529       1              1
+  1  0.06363626 0.013378373  0.03300440  0.09426813       1              1
+  2  0.50050619 0.018796680  0.45746827  0.54354411       1              1
+  3 -1.50922529 0.018898681 -1.55249676 -1.46595382       1              1
+  4          NA          NA          NA          NA       0              0
+  5          NA          NA          NA          NA       0              0
+  6          NA          NA          NA          NA       0              0
+  7 -0.22950746 0.028712551 -0.29524931 -0.16376561       1              1
+  8  0.39100459 0.030100860  0.32208399  0.45992519       1              1
+ treated_units
+             0
+             0
+             0
+             0
+            90
+            62
+            62
+            62
+            62
+             0
+             0
+             0
+            62
+            62
+overall post-reform average:
+        att         se      ci_lo       ci_hi cohorts treated_states
+ -0.1197797 0.01346423 -0.1461692 -0.09339034       1              1
+ treated_units
+            62
+
+== c_hispanic_white.r2.unweighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== c_hispanic_white.r2.tested_weighted.balanced: no estimable cohort
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+Wrote outputs/05_primary/event_time_estimates.csv, outputs/05_primary/overall_estimates.csv, outputs/05_primary/group_time_estimates.csv, outputs/05_primary/model_status.csv, outputs/05_primary/panel_counts.csv, outputs/05_primary/cs_models.rds
+30 achievement models (3 event sets x 2 panel rules); models that stopped with an error: 4. Status per model: outputs/05_primary/model_status.csv
+Log: outputs/logs/05_primary_20260914T211142Z.log
