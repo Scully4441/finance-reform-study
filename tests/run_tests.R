@@ -157,4 +157,7 @@ source("tests/test_graduation.R")
 
 # step 10: variants, Lee bounds, dose scaling and the Section 13 report
 source("tests/test_run_all.R")
+
+# Run 2 step 11: SEDA grades 3-8 outcomes
+source("tests/test_seda.R")
 cat("All tests passed.\n")

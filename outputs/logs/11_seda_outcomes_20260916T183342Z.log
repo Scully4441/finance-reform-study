@@ -1,0 +1,73 @@
+Step 11 SEDA outcomes, run 20260916T183342Z; stage_run2 2; blinding REAL
+SEDA long file: 1827973 district-subject-grade-years, 15601 units
+Units outside the 50 states and DC (e.g. BIE), dropped: 122
+Grade means with no unadjusted standard error, left out of the pool: all 0, wh 0, bl 0, hi 0
+Pooled district-year-subjects: 364000
+
+== SEDA districts (50 states and DC) by rule; rules 1-2 tested in end years 2010-2019 and 2022-2024
+                                       reason districts in_ccd_rules_window
+                   no SAIPE 2009 poverty rate        25                  25
+                                     retained      8026                8026
+               rule 1: agency type not 1 or 2      3777                3777
+       rule 2: boundary change (BOUND 5 or 8)        55                  55
+ rule 2: not operational in every window year       154                 142
+ rule 6: state excluded (reform in 2005-2009)      3442                3442
+     set retained
+ primary     8026
+      r1     8026
+      r2     9971
+Quintile districts (rules 1-2, SAIPE 2009 rate, 2009-10 span including a grade 3-8), primary set: 8533; of those with 2009-10 membership > 0: 8532; in SEDA: 8025
+Districts in the quintile set that Run 1's rule (span reaching 12) left out: 2092
+
+Wrote data/derived/seda_gaps.csv: 75801 rows (a_poverty 590, b_black_white 30850, c_hispanic_white 44361).
+
+== Unit-years with a usable gap (both subjects), by end year and gap
+Gaps (b) and (c): district-years. Gap (a): state-years. Event set = retained under that set.
+
+Event set primary:
+              gap 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2022
+        a_poverty   35   34   36   36   36   29   35   35   36   33   34   33
+    b_black_white 1730 1802 1820 1827 1809 1538 1685 1661 1725 1644 1763 1444
+ c_hispanic_white 1774 1879 2073 2207 2242 1924 2166 2285 2436 2366 2510 2215
+ 2023 2024 2025 total
+   33   33   28   506
+ 1480 1485 1212 24625
+ 2286 2311 1940 32614
+
+Event set r1:
+              gap 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2022
+        a_poverty   35   34   36   36   36   29   35   35   36   33   34   33
+    b_black_white 1730 1802 1820 1827 1809 1538 1685 1661 1725 1644 1763 1444
+ c_hispanic_white 1774 1879 2073 2207 2242 1924 2166 2285 2436 2366 2510 2215
+ 2023 2024 2025 total
+   33   33   28   506
+ 1480 1485 1212 24625
+ 2286 2311 1940 32614
+
+Event set r2:
+              gap 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2022
+        a_poverty   40   39   41   41   41   33   39   40   41   38   39   37
+    b_black_white 2069 2164 2170 2221 2198 1724 1988 2006 2084 2006 2130 1755
+ c_hispanic_white 2341 2499 2722 2903 2952 2191 2770 2994 3182 3121 3268 2945
+ 2023 2024 2025 total
+   37   37   32   575
+ 1798 1795 1530 29638
+ 3034 3062 2709 42693
+
+== Unit-years with one subject gap only (v missing), primary set
+              gap only units
+        a_poverty math     7
+    b_black_white math   342
+ c_hispanic_white math   662
+        a_poverty  rla     7
+    b_black_white  rla   702
+ c_hispanic_white  rla   755
+
+== District-year-subjects entering gaps (b) and (c) whose group and White grade sets differ, primary set
+              gap subject_gaps grade_sets_differ median_grades_group
+    b_black_white        50294             15209                   6
+ c_hispanic_white        66645             24092                   5
+ median_grades_wh
+                6
+                6
+Log: outputs/logs/11_seda_outcomes_20260916T183342Z.log
