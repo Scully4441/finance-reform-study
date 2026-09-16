@@ -9,17 +9,19 @@ written by `R/02_download.R` on first download and verified on every later run.
 `status` says what the study holds for the row:
 
 - `archived` — the file is in `data/raw/` under `filename` and carries a
-  checksum. 380 rows.
+  checksum. 391 rows.
 - `hand_download` — the source publishes the data but not as a fetchable file,
   so it is still to be exported by hand. `url`, `filename`, `sha256` and
   `downloaded_utc` are blank and `notes` carries the steps. 0 rows: the 37 Run 2
-  report-card rows that carried this status were exported on 2026-09-15 and
-  2026-09-16 and are now `archived`, `requested` or `unavailable`.
+  report-card rows that carried this status were exported or requested on
+  2026-09-15 and 2026-09-16 and are now `archived` or `unavailable`.
 - `requested` — added 2026-09-16. The source builds the file on request and
   sends it, rather than serving it, so there is nothing to fetch and nothing to
   export: the request has been submitted and the file has not arrived. `url`,
   `filename`, `sha256` and `downloaded_utc` are blank and `notes` carries the
-  request as submitted. 3 rows, MI 2023-2025.
+  request as submitted. 0 rows: MI 2023-2025, the three rows that carried it,
+  were delivered and archived on 2026-09-16, and the eight Michigan SAT
+  cross-tabulated requests arrived with them.
 - `unavailable` — added 2026-09-16. The source was worked through and publishes
   nothing that meets the design's matching rule for that state-year, so no file
   can be archived. `url`, `filename`, `sha256` and `downloaded_utc` are blank and
@@ -165,7 +167,7 @@ row points:
 - **High school report cards (`hs_reportcard_*`), end years 2022-2025**, added
   2026-09-15. The second set of Run 2 rows (`docs/design_extension.md`,
   Section 4; `data/stage_run2.txt` = 2), one state education agency file per
-  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 225
+  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 233
   rows over 41 states and DC. A state whose agency publishes mathematics and
   reading separately, or several high school tests, has one row per file, so
   rows outnumber state-years: `hs_reportcard_al_math` and `hs_reportcard_al_rla`,
@@ -176,7 +178,7 @@ row points:
   grade or course that matches the state's EDFacts high school result, and the
   suppression symbols. Coverage follows the reconnaissance verdicts fixed in
   Section 4 and recorded in `docs/recon_run2_hs.csv`.
-  - 218 rows are `archived`, holding 217 distinct files: the Virginia 2024 and
+  - 229 rows are `archived`, holding 228 distinct files: the Virginia 2024 and
     2025 rows share one workbook, whose sheet carries both years, so they carry
     the same checksum.
   - **The interactive-tool exports, run 2026-09-15 and 2026-09-16.** The 37 rows
@@ -185,14 +187,15 @@ row points:
     interactive tool (EdSight, the Idaho Report Card downloads modal, MI School
     Data, the NEP download API, Data Interaction, the Assessment Data Portal, a
     MicroStrategy document, the TAPR SAS broker, a WebFOCUS report) rather than
-    as a file. The exports were driven and the 37 rows became 61: a state whose
+    as a file. The exports were driven and the 37 rows became 69: a state whose
     tool exports one subject at a time now has one row per subject (CT, NE, NV,
-    RI, TX and WY: eight rows each), while SD, ND and MI export every subject in
-    one file (`hs_<ST>_<sy_end>_all.csv`). 54 of the 61 are `archived`, with the
-    export steps, the layout and the district-by-race row counts in each row's
-    `notes`; the tools serve no url, so `url` stays blank and the files are
-    checksummed in place. The remaining 7 are ID 2022-2025 (`unavailable`) and
-    MI 2023-2025 (`requested`), in the two bullets below.
+    RI, TX and WY: eight rows each), while SD and ND export every subject in
+    one file (`hs_<ST>_<sy_end>_all.csv`), and MI has three rows a year, its
+    all-subjects file beside the SAT mathematics and SAT reading files (bullet
+    below). 65 of the 69 are `archived`, with the export or request steps, the
+    layout and the district-by-race row counts in each row's `notes`; the tools
+    serve no url, so `url` stays blank and the files are checksummed in place.
+    The remaining 4 are ID 2022-2025 (`unavailable`), in the bullet below.
   - **Idaho publishes nothing that meets the matching rule.** The Idaho Report
     Card export does carry district-by-race rows, but `Student Group` is a single
     dimension: the race groups pool every tested grade (ISAT is given in grades
@@ -217,21 +220,34 @@ row points:
     2025 stays `unavailable` with no alternative: its legacy workbook lists race
     groups and grades as alternatives in one `PopulationName` column, never
     crossed.
-  - **Michigan is requested, and the one delivered file fails the matching
-    rule.** MI School Data builds the file on the server and emails it, so there
-    is no url; the four school years were requested on 2026-09-16. The 2021-22
-    file arrived and is archived, and 2023-2025 are `requested`. **The delivered
-    2021-22 file does not carry the rows Section 4 names**: its `TestType` takes
-    only the values M-STEP and MI-Access, M-STEP carrying Science and Social
-    Studies alone, so grade-11 ELA and mathematics appear under MI-Access — the
-    alternate assessment — only, and there are no SAT rows in the file at all.
-    Run 1's Michigan high school result is grade 11 SAT Mathematics and SAT
-    Evidence-Based Reading and Writing, which EDFacts pools with the alternate;
-    this file is the alternate side with nothing to pool it with. Whether to
-    request one of the page's other files instead is **an author decision, open
-    for 2022 and for the three years still undelivered**; the delivered file
-    stays archived as the record of the check, its row's `notes` holding the
-    counts.
+  - **Michigan: every requested file has arrived; the SAT rows are cross-tabulated
+    only.** MI School Data builds each file on the server and emails it, so there
+    is no url. Twelve files were requested on 2026-09-16 — the High School
+    Assessments file (`hs_reportcard_mi`, `hs_MI_<sy_end>_all.csv`) and the SAT
+    Math and SAT EBRW Proficiency Cross-tabulated Data files
+    (`hs_reportcard_mi_math`, `hs_MI_<sy_end>_math.csv`; `hs_reportcard_mi_rla`,
+    `hs_MI_<sy_end>_ela.csv`) for each of 2022-2025 — and the author saved all
+    twelve by hand from the emails on 2026-09-16. All are archived and
+    checksummed.
+    - **The High School Assessments files do not carry the rows Section 4
+      names.** In every year M-STEP carries Science and Social Studies alone and
+      grade-11 ELA and mathematics appear under MI-Access — the alternate
+      assessment — only, with no SAT rows. Run 1's Michigan high school result is
+      grade 11 SAT Mathematics and SAT Evidence-Based Reading and Writing, which
+      EDFacts pools with the alternate; these files are the alternate side alone.
+      They are archived as the record of the check, not as outcome data. The
+      2024-25 file also carries PSAT 9 and PSAT 10 rows (grades 9 and 10, ELA and
+      mathematics, by district and race), which are not the grade 11 SAT; whether
+      they bear on Section 9's test-replacement flag is not decided here.
+    - **The SAT cross-tabulated files carry grade-11 SAT rows by district and
+      race, but not a race-alone row.** Every row is a cell of `Subgroup_1` by
+      `Subgroup_2`: race appears only crossed with sex, English learner status or
+      disability, neither column has an all-students value, and the files carry
+      percent proficient (exact to one decimal, banded, or `*`) with no tested
+      count, so rule 3 cannot be applied and a race-alone rate cannot be rebuilt
+      from the cells. They are also SAT only, with no alternate to pool. Whether
+      they enter is **an author decision, open for all four years**; each row's
+      `notes` holds the layout and the row counts.
   - **Iowa carries no district-by-race rows.** The ISASP proficiency workbook
     for each of 2022-2025 was opened: it reports district by grade for all
     students only, with no race or ethnicity subgroup anywhere in the workbook.
