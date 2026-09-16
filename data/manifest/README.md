@@ -9,7 +9,7 @@ written by `R/02_download.R` on first download and verified on every later run.
 `status` says what the study holds for the row:
 
 - `archived` — the file is in `data/raw/` under `filename` and carries a
-  checksum. 322 rows.
+  checksum. 323 rows.
 - `hand_download` — the source publishes the data but not as a fetchable file,
   so it is still to be exported by hand. `url`, `filename`, `sha256` and
   `downloaded_utc` are blank and `notes` carries the steps. 37 rows, all Run 2
@@ -148,7 +148,7 @@ row points:
 - **High school report cards (`hs_reportcard_*`), end years 2022-2025**, added
   2026-09-15. The second set of Run 2 rows (`docs/design_extension.md`,
   Section 4; `data/stage_run2.txt` = 2), one state education agency file per
-  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 197
+  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 198
   rows over 41 states and DC. A state whose agency publishes mathematics and
   reading separately, or several high school tests, has one row per file, so
   rows outnumber state-years: `hs_reportcard_al_math` and `hs_reportcard_al_rla`,
@@ -159,7 +159,7 @@ row points:
   grade or course that matches the state's EDFacts high school result, and the
   suppression symbols. Coverage follows the reconnaissance verdicts fixed in
   Section 4 and recorded in `docs/recon_run2_hs.csv`.
-  - 160 rows are `archived`, holding 159 distinct files: the Virginia 2024 and
+  - 161 rows are `archived`, holding 160 distinct files: the Virginia 2024 and
     2025 rows share one workbook, whose sheet carries both years, so they carry
     the same checksum.
   - 37 rows are `hand_download`, in nine states: **CT, ID, MI, NE, NV, RI, SD,
@@ -177,11 +177,19 @@ row points:
     students only, with no race or ethnicity subgroup anywhere in the workbook.
     IA is a conditional state under Section 4, so those four state-years do not
     enter; the files stay archived as the record of the check.
-  - **Arkansas 2022 has no row.** Section 4 makes AR 2022 a conditional
-    state-year to be downloaded after registration and either entered or
-    recorded as unavailable with the reason. `docs/recon_run2_hs.csv` leaves it
-    `usable: unclear (open the Demographics sheet to check)`. Neither was done,
-    so the manifest is silent on it. Still to be resolved by the author.
+  - **Arkansas 2022 carries no district-by-race rows either.** AR 2022 is the
+    other Section 4 conditional state-year; its row was added and the file
+    downloaded on 2026-09-15. The 2021-22 "Reporting Categories, Avg Scale
+    Scores, and Demographics" workbook is the only ACT Aspire file for that
+    year that carries race at all, and only at state level: its Demographics
+    sheet is 131 rows whose unit reads `Arkansas State` throughout, by grade,
+    subject and readiness level, with a column per group. Its Districts sheet
+    is district by grade for all students, with no subgroup, and the companion
+    post-appeals summary file has no race string anywhere. AR 2022 therefore
+    does not enter, and the file stays archived as the record of the check.
+    AR 2023-2025 are outside the design's coverage: Section 4 makes only 2022
+    conditional, and `docs/recon_run2_hs.csv` records `no subgroup file found`
+    for the other three years.
   - Some agencies refuse a scripted request. AZ (Cloudflare, needs a browser
     user agent and the page as referer), CO (302 to resources.finalsite.net,
     name from Content-Disposition), DC (Box download endpoint, needs the cookie
