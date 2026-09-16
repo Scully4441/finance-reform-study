@@ -176,9 +176,17 @@ if (file.exists(out)) {
   q <- s$pov_quintile_2009[s$retained == 1 & !is.na(s$pov_quintile_2009)]
   stopifnot(all(q %in% 1:5))
   trr <- utils::read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
+  # a row whose coding was corrected after the Run 1 sample was built says so in its notes and
+  # is logged in docs/deviations_run2.md, Section 5; the Run 1 sample keeps the earlier coding
+  corrected <- grepl("(docs/deviations_run2.md, Section 5): corrected from", trr$notes, fixed = TRUE)
+  dev <- readLines("docs/deviations_run2.md", warn = FALSE)
+  stopifnot(all(vapply(paste("Run 1 row", trr$state[corrected], trr$sy_end[corrected]),
+                       function(x) any(grepl(x, dev, fixed = TRUE)), logical(1))))
   k <- match(paste(s$state, s$sy_end), paste(trr$state, trr$sy_end))
-  stopifnot(!anyNA(k), all(s$test_replaced == trr$replaced[k]), all(s$test_replaced_math == trr$replaced_math[k]),
-            all(s$test_replaced_rla == trr$replaced_rla[k]))
+  stopifnot(!anyNA(k))
+  ok <- !corrected[k]
+  stopifnot(all(s$test_replaced[ok] == trr$replaced[k][ok]), all(s$test_replaced_math[ok] == trr$replaced_math[k][ok]),
+            all(s$test_replaced_rla[ok] == trr$replaced_rla[k][ok]))
   # CEP: the state phase-in table before end year 2014, the district's own CCD
   # NSLPSTATUS from 2014 on (data acquisition 2.5)
   cp <- utils::read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FALSE)
