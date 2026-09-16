@@ -1,13 +1,29 @@
 # Download manifest
 
-One row per file. `url` is filled in when the current download location is
-located on data.ed.gov, nces.ed.gov, census.gov, bls.gov, or, for the Run 2
-SEDA rows, stacks.stanford.edu. `sha256` and
-`downloaded_utc` are written by `R/02_download.R` on first download and
-verified on every later run. A blank `url` means the file is **not published**:
-the row records that the study looked for it and the source has none. Six rows
-are in that state, all listed under the graduation bullet below;
-`R/02_download.R` skips them and every other row carries a checksum.
+One row per file. Columns: `dataset`, `sy_end`, `url`, `filename`, `sha256`,
+`downloaded_utc`, and, added with the Run 2 report-card rows on 2026-09-15,
+`state`, `page_url`, `status`, `source` and `notes`. The five added columns are
+blank on every row written before that date. `sha256` and `downloaded_utc` are
+written by `R/02_download.R` on first download and verified on every later run.
+
+`status` says what the study holds for the row:
+
+- `archived` — the file is in `data/raw/` under `filename` and carries a
+  checksum. 322 rows.
+- `hand_download` — the source publishes the data but not as a fetchable file,
+  so it is still to be exported by hand. `url`, `filename`, `sha256` and
+  `downloaded_utc` are blank and `notes` carries the steps. 37 rows, all Run 2
+  report-card rows, listed under the report-card section below.
+- `not_published` — the source has no such file at all: the row records that the
+  study looked and found none. 6 rows, all listed under the graduation bullet
+  below. They carry a placeholder `filename` and no checksum.
+
+A blank `url` therefore means only that there is no url to fetch from; `status`
+says which of the two reasons applies. `R/02_download.R` skips every blank-`url`
+row and checksums the rest. Run 1 rows take their `url` from data.ed.gov,
+nces.ed.gov, census.gov or bls.gov, the Run 2 SEDA rows from
+stacks.stanford.edu, and the Run 2 report-card rows from the publishing state
+education agency, recorded per row in `page_url` or `source`.
 
 Files are archived as the source publishes them, so `filename` carries the
 source format: CCD rows are the NCES tab-delimited `.zip`, SAIPE rows are the
@@ -129,6 +145,56 @@ row points:
   and 2022-2025), as the two CPI rows cover every month. They are not EDFacts
   outcome files, so the Run 1 stage gate in `R/02_download.R` does not apply to
   them.
+- **High school report cards (`hs_reportcard_*`), end years 2022-2025**, added
+  2026-09-15. The second set of Run 2 rows (`docs/design_extension.md`,
+  Section 4; `data/stage_run2.txt` = 2), one state education agency file per
+  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 197
+  rows over 41 states and DC. A state whose agency publishes mathematics and
+  reading separately, or several high school tests, has one row per file, so
+  rows outnumber state-years: `hs_reportcard_al_math` and `hs_reportcard_al_rla`,
+  the four `hs_reportcard_nj_*` tests, `hs_reportcard_ca_entities` beside
+  `hs_reportcard_ca`, and so on. `state` carries the postal code, `page_url` or
+  `source` the publishing page, and `notes` the per-file layout the Section 6
+  loaders need: which column or row holds the district, the subgroup labels, the
+  grade or course that matches the state's EDFacts high school result, and the
+  suppression symbols. Coverage follows the reconnaissance verdicts fixed in
+  Section 4 and recorded in `docs/recon_run2_hs.csv`.
+  - 160 rows are `archived`, holding 159 distinct files: the Virginia 2024 and
+    2025 rows share one workbook, whose sheet carries both years, so they carry
+    the same checksum.
+  - 37 rows are `hand_download`, in nine states: **CT, ID, MI, NE, NV, RI, SD,
+    TX and WY for all four end years, and ND 2025.** Each publishes the data
+    through an interactive tool — EdSight, the Idaho Report Card downloads
+    modal, MI School Data, the NEP download API, Data Interaction, the
+    Assessment Data Portal, a MicroStrategy document, the TAPR SAS broker, a
+    WebFOCUS report — rather than as a file, and the export was not attempted.
+    The steps are in each row's `notes`. ND 2022-2024 are archived; only 2025 is
+    outstanding, because its Insights `ShowFile` url returns an empty 153-byte
+    shell (the url is quoted in that row's note, and the `url` column is blank so
+    `R/02_download.R` skips the row).
+  - **Iowa carries no district-by-race rows.** The ISASP proficiency workbook
+    for each of 2022-2025 was opened: it reports district by grade for all
+    students only, with no race or ethnicity subgroup anywhere in the workbook.
+    IA is a conditional state under Section 4, so those four state-years do not
+    enter; the files stay archived as the record of the check.
+  - **Arkansas 2022 has no row.** Section 4 makes AR 2022 a conditional
+    state-year to be downloaded after registration and either entered or
+    recorded as unavailable with the reason. `docs/recon_run2_hs.csv` leaves it
+    `usable: unclear (open the Demographics sheet to check)`. Neither was done,
+    so the manifest is silent on it. Still to be resolved by the author.
+  - Some agencies refuse a scripted request. AZ (Cloudflare, needs a browser
+    user agent and the page as referer), CO (302 to resources.finalsite.net,
+    name from Content-Disposition), DC (Box download endpoint, needs the cookie
+    the share page sets), KY and NM (403 without a browser user agent), MN
+    (Radware JavaScript challenge), NH and VA (403 to any scripted client) were
+    fetched through a browser and moved into place. `R/02_download.R` verifies
+    their checksums but cannot re-fetch them as written; a reader working from
+    an empty `data/raw/` needs the browser for those rows.
+  - Three states publish percentages without a tested count by group, which Run
+    1 rule 3 requires: UT (all four years), VA (both years) and LA (all three).
+    Their `notes` carry the caution; whether they can enter is Section 5's
+    question, not the manifest's.
+  - Not yet in an OSF deposit.
 - **F-33, FY2022.** `elsec22.txt` holds only 1,730 of the 14,106 unit records
   Census published for that fiscal year (17 Alabama systems against 138 in the
   companion flag file `elsec22f.txt`), so the FY2022 row archives
