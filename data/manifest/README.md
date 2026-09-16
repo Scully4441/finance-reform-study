@@ -215,8 +215,10 @@ row points:
     grade" with no number (the grade 11 in the export notes is not in that table).
     The 2022 workbook carries rates only, with no tested count; 2023 and 2024
     carry `ProficiencyDenominator`, blank where the SDE omits a small count.
-    Whether these rows enter is **an author decision, not taken here**; the
-    `hs_reportcard_id` rows for 2022-2024 stay `unavailable` for the export. ID
+    **By author decision these rows enter for 2022-2024** (`docs/deviations_run2.md`,
+    2026-09-16): the 30-student floor applies to `ProficiencyDenominator` where
+    it is printed and Idaho's own minimum group size stands in where it is not.
+    The `hs_reportcard_id` rows for 2022-2024 stay `unavailable` for the export. ID
     2025 stays `unavailable` with no alternative: its legacy workbook lists race
     groups and grades as alternatives in one `PopulationName` column, never
     crossed.
@@ -245,8 +247,10 @@ row points:
       disability, neither column has an all-students value, and the files carry
       percent proficient (exact to one decimal, banded, or `*`) with no tested
       count, so rule 3 cannot be applied and a race-alone rate cannot be rebuilt
-      from the cells. They are also SAT only, with no alternate to pool. Whether
-      they enter is **an author decision, open for all four years**; each row's
+      from the cells. They are also SAT only, with no alternate to pool. **By
+      author decision Michigan 2022-2025 are unavailable** (`docs/deviations_run2.md`,
+      2026-09-16): district-by-race rates cannot be formed, so all twelve files
+      are archived as the record of the check, not as outcome data. Each row's
       `notes` holds the layout and the row counts.
   - **Iowa carries no district-by-race rows.** The ISASP proficiency workbook
     for each of 2022-2025 was opened: it reports district by grade for all
