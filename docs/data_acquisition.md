@@ -313,6 +313,24 @@ Drafting conventions (Claude Code, 2026-09-11; author to confirm):
   year-specific citation; `MIXED:` marks the years in which a state's high
   school result can come from more than one instrument (NY 2014-2015, ND from
   2019, OK from 2018, SC 2017).
+- Run 2 draft (Claude Code, 2026-09-16; end years 2022-2025, author to
+  confirm; design_extension.md Section 9): 204 further rows, 816 in all, under
+  the Run 1 rules above, for every state including those the high school
+  extension does not cover (noted in `notes`); `author_check` is blank on all
+  204. Sources were accessed 2026-09-16; 62 rows are `documented` and 142
+  `inferred`. The Section 9 table is applied as written (AZ 2022, IN 2022,
+  KY 2022, VT 2023, TX 2023, GA 2024 math, TN 2024 math, NY 2024 math, VA 2025,
+  ND 2025 and AR 2024 are 1; the digital SAT in CO, CT, DE, MI, RI and WV,
+  DC CAPE and the WI cut scores are 0), with KS 2025 coded 1 on KSDE's
+  description of revised tests. Changes found that the table does not list,
+  coded under the Run 1 rules: IL 2025 (the ACT replaces the SAT, 1 both);
+  NJ 2022 (NJSLA-ELA given only in grade 9, rla 1); UT 2025 (English test
+  removed from Utah Aspire Plus, rla 1); the digital SAT in IL, IN, NH and NM
+  2024 (0); and, in states outside the extension, AK 2022, FL 2023 and ME 2023
+  (1 both). `MIXED:` marks GA 2024, NY 2024, ND 2022-2024 and OK 2022-2025.
+  Rows whose Run 1 predecessor names a different grade or test are flagged
+  `CHECK:` (ME, VT). Where a state's report-card files are read is recorded in
+  `data/reference/hs_reportcard_harmonization.csv`.
 
 The author checks every row before it is used.
 

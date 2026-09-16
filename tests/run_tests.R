@@ -56,8 +56,8 @@ tr <- read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, 
 tr_cols <- c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
              "assessment_math", "assessment_rla", "source", "evidence", "notes")
 stopifnot(identical(names(tr), tr_cols) || identical(names(tr), c(tr_cols, "author_check")))  # author_check optional, last
-stopifnot(nrow(tr) == 612, !anyDuplicated(tr[c("state", "sy_end")]))   # 51 states x end years 2010-2021
-stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 12), setequal(tr$sy_end, 2010:2021))
+stopifnot(nrow(tr) == 816, !anyDuplicated(tr[c("state", "sy_end")]))   # 51 states x end years 2010-2025 (Run 2 extension)
+stopifnot(setequal(tr$state, c(state.abb, "DC")), all(table(tr$state) == 16), setequal(tr$sy_end, 2010:2025))
 stopifnot(all(unlist(tr[c("replaced_math", "replaced_rla", "replaced")]) %in% 0:1))
 stopifnot(all(tr$replaced == pmax(tr$replaced_math, tr$replaced_rla)))
 stopifnot(all(tr$evidence %in% c("documented", "inferred")), all(tr$replaced[tr$evidence == "inferred"] == 0))
