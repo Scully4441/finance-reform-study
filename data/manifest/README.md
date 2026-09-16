@@ -9,18 +9,35 @@ written by `R/02_download.R` on first download and verified on every later run.
 `status` says what the study holds for the row:
 
 - `archived` — the file is in `data/raw/` under `filename` and carries a
-  checksum. 323 rows.
+  checksum. 377 rows.
 - `hand_download` — the source publishes the data but not as a fetchable file,
   so it is still to be exported by hand. `url`, `filename`, `sha256` and
-  `downloaded_utc` are blank and `notes` carries the steps. 37 rows, all Run 2
-  report-card rows, listed under the report-card section below.
+  `downloaded_utc` are blank and `notes` carries the steps. 0 rows: the 37 Run 2
+  report-card rows that carried this status were exported on 2026-09-15 and
+  2026-09-16 and are now `archived`, `requested` or `unavailable`.
+- `requested` — added 2026-09-16. The source builds the file on request and
+  sends it, rather than serving it, so there is nothing to fetch and nothing to
+  export: the request has been submitted and the file has not arrived. `url`,
+  `filename`, `sha256` and `downloaded_utc` are blank and `notes` carries the
+  request as submitted. 3 rows, MI 2023-2025.
+- `unavailable` — added 2026-09-16. The source was worked through and publishes
+  nothing that meets the design's matching rule for that state-year, so no file
+  can be archived. `url`, `filename`, `sha256` and `downloaded_utc` are blank and
+  `notes` carries what was found and what was rejected. 4 rows, ID 2022-2025.
+  Distinct from `not_published`, which records a file the publisher never issued
+  at all rather than a source that fails the matching rule.
 - `not_published` — the source has no such file at all: the row records that the
   study looked and found none. 6 rows, all listed under the graduation bullet
   below. They carry a placeholder `filename` and no checksum.
 
 A blank `url` therefore means only that there is no url to fetch from; `status`
-says which of the two reasons applies. `R/02_download.R` skips every blank-`url`
-row and checksums the rest. Run 1 rows take their `url` from data.ed.gov,
+says which of the reasons applies. `R/02_download.R` checksums every row whose
+`filename` names a file that is in `data/raw/`, whether or not the row has a
+`url`, and verifies it against `sha256` when one is recorded; a blank `url` is
+not a reason to skip a row, since the Run 2 report-card files are exported by
+hand and have no url. It skips a row with a blank `filename`, and a row whose
+file is not in `data/raw/` and has no `url` to fetch it from. Run 1 rows take
+their `url` from data.ed.gov,
 nces.ed.gov, census.gov or bls.gov, the Run 2 SEDA rows from
 stacks.stanford.edu, and the Run 2 report-card rows from the publishing state
 education agency, recorded per row in `page_url` or `source`.
@@ -148,7 +165,7 @@ row points:
 - **High school report cards (`hs_reportcard_*`), end years 2022-2025**, added
   2026-09-15. The second set of Run 2 rows (`docs/design_extension.md`,
   Section 4; `data/stage_run2.txt` = 2), one state education agency file per
-  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 198
+  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 222
   rows over 41 states and DC. A state whose agency publishes mathematics and
   reading separately, or several high school tests, has one row per file, so
   rows outnumber state-years: `hs_reportcard_al_math` and `hs_reportcard_al_rla`,
@@ -159,19 +176,50 @@ row points:
   grade or course that matches the state's EDFacts high school result, and the
   suppression symbols. Coverage follows the reconnaissance verdicts fixed in
   Section 4 and recorded in `docs/recon_run2_hs.csv`.
-  - 161 rows are `archived`, holding 160 distinct files: the Virginia 2024 and
+  - 215 rows are `archived`, holding 214 distinct files: the Virginia 2024 and
     2025 rows share one workbook, whose sheet carries both years, so they carry
     the same checksum.
-  - 37 rows are `hand_download`, in nine states: **CT, ID, MI, NE, NV, RI, SD,
-    TX and WY for all four end years, and ND 2025.** Each publishes the data
-    through an interactive tool — EdSight, the Idaho Report Card downloads
-    modal, MI School Data, the NEP download API, Data Interaction, the
-    Assessment Data Portal, a MicroStrategy document, the TAPR SAS broker, a
-    WebFOCUS report — rather than as a file, and the export was not attempted.
-    The steps are in each row's `notes`. ND 2022-2024 are archived; only 2025 is
-    outstanding, because its Insights `ShowFile` url returns an empty 153-byte
-    shell (the url is quoted in that row's note, and the `url` column is blank so
-    `R/02_download.R` skips the row).
+  - **The interactive-tool exports, run 2026-09-15 and 2026-09-16.** The 37 rows
+    that were `hand_download` covered nine states — **CT, ID, MI, NE, NV, RI, SD,
+    TX and WY for all four end years, and ND 2025** — each publishing through an
+    interactive tool (EdSight, the Idaho Report Card downloads modal, MI School
+    Data, the NEP download API, Data Interaction, the Assessment Data Portal, a
+    MicroStrategy document, the TAPR SAS broker, a WebFOCUS report) rather than
+    as a file. The exports were driven and the 37 rows became 61: a state whose
+    tool exports one subject at a time now has one row per subject (CT, NE, NV,
+    RI, TX and WY: eight rows each), while SD, ND and MI export every subject in
+    one file (`hs_<ST>_<sy_end>_all.csv`). 54 of the 61 are `archived`, with the
+    export steps, the layout and the district-by-race row counts in each row's
+    `notes`; the tools serve no url, so `url` stays blank and the files are
+    checksummed in place. The remaining 7 are ID 2022-2025 (`unavailable`) and
+    MI 2023-2025 (`requested`), in the two bullets below.
+  - **Idaho publishes nothing that meets the matching rule.** The Idaho Report
+    Card export does carry district-by-race rows, but `Student Group` is a single
+    dimension: the race groups pool every tested grade (ISAT is given in grades
+    3-8 and 11) and `High School` is a separate group pooling every race, so
+    grade and race are alternatives and never crossed. Run 1 reported Idaho's
+    high school ISAT at grade 11, so Section 4's matching rule cannot be met from
+    that source, and the export was not archived. The four rows are `unavailable`
+    and each one's `notes` records the export as driven and the archived legacy
+    SDE workbook that does cross grade and race for 2022-2024, with its Wayback
+    url, capture date and checksum — **an author decision, not taken here**,
+    since the 2022 workbook carries rates with no tested count and 2025 has no
+    such workbook at all.
+  - **Michigan is requested, and the one delivered file fails the matching
+    rule.** MI School Data builds the file on the server and emails it, so there
+    is no url; the four school years were requested on 2026-09-16. The 2021-22
+    file arrived and is archived, and 2023-2025 are `requested`. **The delivered
+    2021-22 file does not carry the rows Section 4 names**: its `TestType` takes
+    only the values M-STEP and MI-Access, M-STEP carrying Science and Social
+    Studies alone, so grade-11 ELA and mathematics appear under MI-Access — the
+    alternate assessment — only, and there are no SAT rows in the file at all.
+    Run 1's Michigan high school result is grade 11 SAT Mathematics and SAT
+    Evidence-Based Reading and Writing, which EDFacts pools with the alternate;
+    this file is the alternate side with nothing to pool it with. Whether to
+    request one of the page's other files instead is **an author decision, open
+    for 2022 and for the three years still undelivered**; the delivered file
+    stays archived as the record of the check, its row's `notes` holding the
+    counts.
   - **Iowa carries no district-by-race rows.** The ISASP proficiency workbook
     for each of 2022-2025 was opened: it reports district by grade for all
     students only, with no race or ethnicity subgroup anywhere in the workbook.

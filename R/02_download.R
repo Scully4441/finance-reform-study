@@ -22,12 +22,17 @@ is_outcome <- grepl("^edfacts_", man$dataset)
 
 for (i in seq_len(nrow(man))) {
   label <- paste(man$dataset[i], man$sy_end[i])
-  if (blank(man$url[i])) { message("no url yet: ", label); next }
   if (stage == 1L && is_outcome[i] && !is.na(man$sy_end[i]) && man$sy_end[i] > 2013L) {
     message("stage 1 gate: skipping outcome file ", label); next
   }
+  # A blank url is not a reason to skip the row: the Run 2 report-card rows are
+  # exported by hand from an interactive tool and have no url to fetch from, but
+  # the file is in data/raw all the same and its checksum is verified here like
+  # any other. A blank filename means there is nothing on disk yet.
+  if (blank(man$filename[i])) { message("nothing archived yet: ", label); next }
   dest <- file.path("data", "raw", man$filename[i])
   if (!file.exists(dest)) {
+    if (blank(man$url[i])) { message("not in data/raw and no url: ", label); next }
     dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
     message("downloading ", label)
     # Download under a temporary name so a failed transfer never leaves a
