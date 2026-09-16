@@ -9,7 +9,7 @@ written by `R/02_download.R` on first download and verified on every later run.
 `status` says what the study holds for the row:
 
 - `archived` — the file is in `data/raw/` under `filename` and carries a
-  checksum. 377 rows.
+  checksum. 380 rows.
 - `hand_download` — the source publishes the data but not as a fetchable file,
   so it is still to be exported by hand. `url`, `filename`, `sha256` and
   `downloaded_utc` are blank and `notes` carries the steps. 0 rows: the 37 Run 2
@@ -165,7 +165,7 @@ row points:
 - **High school report cards (`hs_reportcard_*`), end years 2022-2025**, added
   2026-09-15. The second set of Run 2 rows (`docs/design_extension.md`,
   Section 4; `data/stage_run2.txt` = 2), one state education agency file per
-  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 222
+  state-year-subject, archived under `data/raw/hs_reportcards/<STATE>/`. 225
   rows over 41 states and DC. A state whose agency publishes mathematics and
   reading separately, or several high school tests, has one row per file, so
   rows outnumber state-years: `hs_reportcard_al_math` and `hs_reportcard_al_rla`,
@@ -176,7 +176,7 @@ row points:
   grade or course that matches the state's EDFacts high school result, and the
   suppression symbols. Coverage follows the reconnaissance verdicts fixed in
   Section 4 and recorded in `docs/recon_run2_hs.csv`.
-  - 215 rows are `archived`, holding 214 distinct files: the Virginia 2024 and
+  - 218 rows are `archived`, holding 217 distinct files: the Virginia 2024 and
     2025 rows share one workbook, whose sheet carries both years, so they carry
     the same checksum.
   - **The interactive-tool exports, run 2026-09-15 and 2026-09-16.** The 37 rows
@@ -198,13 +198,25 @@ row points:
     dimension: the race groups pool every tested grade (ISAT is given in grades
     3-8 and 11) and `High School` is a separate group pooling every race, so
     grade and race are alternatives and never crossed. Run 1 reported Idaho's
-    high school ISAT at grade 11, so Section 4's matching rule cannot be met from
+    high school ISAT, so Section 4's matching rule cannot be met from
     that source, and the export was not archived. The four rows are `unavailable`
-    and each one's `notes` records the export as driven and the archived legacy
-    SDE workbook that does cross grade and race for 2022-2024, with its Wayback
-    url, capture date and checksum — **an author decision, not taken here**,
-    since the 2022 workbook carries rates with no tested count and 2025 has no
-    such workbook at all.
+    and each one's `notes` records the export as driven and the legacy SDE
+    workbook for that year, with its Wayback url, capture date and checksum.
+    **The 2022-2024 legacy workbooks were archived on 2026-09-16** as
+    `hs_reportcard_id_sde`, one row per year, from those Wayback replay urls, the
+    archived url and capture date in `source`; each checksum matches the one
+    recorded on 2026-09-15. Each district sheet crosses `Grade` with `Population`,
+    so district rows by Black, Hispanic and White exist for the high school
+    result, but **no row is labelled grade 11**: the grade is `High School`, and
+    `data/reference/test_replacement.csv` names Idaho's Run 1 test by "high school
+    grade" with no number (the grade 11 in the export notes is not in that table).
+    The 2022 workbook carries rates only, with no tested count; 2023 and 2024
+    carry `ProficiencyDenominator`, blank where the SDE omits a small count.
+    Whether these rows enter is **an author decision, not taken here**; the
+    `hs_reportcard_id` rows for 2022-2024 stay `unavailable` for the export. ID
+    2025 stays `unavailable` with no alternative: its legacy workbook lists race
+    groups and grades as alternatives in one `PopulationName` column, never
+    crossed.
   - **Michigan is requested, and the one delivered file fails the matching
     rule.** MI School Data builds the file on the server and emails it, so there
     is no url; the four school years were requested on 2026-09-16. The 2021-22
