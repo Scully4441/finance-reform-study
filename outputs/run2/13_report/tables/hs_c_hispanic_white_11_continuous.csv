@@ -1,0 +1,29 @@
+"family","gap","bin","row_type","package_label","index","event_time","switchers","stayers","stayer_states","stayer_cells","estimable","status","estimate","se","ci_lo","ci_hi","n_package","switchers_package","switchers_match_package","n_match_package"
+"hs","c_hispanic_white","bin_1000","placebo","Placebo_5",5,-6,0,0,0,0,FALSE,"not estimable: 0 stayers in 0 states (need 20 in 3)",,,,,0,0,TRUE,
+"hs","c_hispanic_white","bin_1000","placebo","Placebo_4",4,-5,16,6,3,6,FALSE,"not estimable: 6 stayers in 3 states (need 20 in 3)",,,,,21,16,TRUE,
+"hs","c_hispanic_white","bin_1000","placebo","Placebo_3",3,-4,56,17,7,28,FALSE,"not estimable: 17 stayers in 7 states (need 20 in 3)",,,,,81,56,TRUE,
+"hs","c_hispanic_white","bin_1000","placebo","Placebo_2",2,-3,124,67,18,107,TRUE,"ok",0.0358519533161402,0.040974236842123,-0.0444560751884352,0.116159981820716,177,124,TRUE,
+"hs","c_hispanic_white","bin_1000","placebo","Placebo_1",1,-2,354,262,29,470,TRUE,"ok",-0.0167436578892217,0.0208967554783162,-0.0577005460204616,0.0242132302420182,584,354,TRUE,
+"hs","c_hispanic_white","bin_1000","effect","Effect_1",1,0,932,506,34,983,TRUE,"ok",0.00230584679472455,0.00995166297277895,-0.017199054218203,0.0218107478076521,1915,932,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_2",2,1,799,275,29,508,TRUE,"ok",0.00098746953145794,0.0129446875985785,-0.0243836519528781,0.026358591015794,1307,799,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_3",3,2,551,140,21,267,TRUE,"ok",0.00943293372137126,0.0158554244568439,-0.0216431271736383,0.0405089946163808,818,551,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_4",4,3,448,82,19,145,TRUE,"ok",0.00501374249483276,0.0280869377541337,-0.0500356439392875,0.060063128928953,593,448,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_5",5,4,311,47,14,77,TRUE,"ok",0.0086447357503455,0.0337531473569401,-0.0575102174341303,0.0747996889348213,388,311,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_6",6,5,194,22,8,38,TRUE,"ok",0.0568701209997594,0.0561897223012282,-0.0532597110119551,0.166999953011474,232,194,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_7",7,6,145,15,5,21,FALSE,"not estimable: 15 stayers in 5 states (need 20 in 3)",,,,,166,145,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_8",8,7,88,10,4,11,FALSE,"not estimable: 10 stayers in 4 states (need 20 in 3)",,,,,99,88,TRUE,TRUE
+"hs","c_hispanic_white","bin_1000","effect","Effect_9",9,8,27,1,1,1,FALSE,"not estimable: 1 stayers in 1 states (need 20 in 3)",,,,,28,27,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","placebo","Placebo_5",5,-6,40,13,7,27,FALSE,"not estimable: 13 stayers in 7 states (need 20 in 3)",,,,,67,40,TRUE,
+"hs","c_hispanic_white","bin_2000","placebo","Placebo_4",4,-5,77,62,17,102,TRUE,"ok",-0.0589126761994053,0.0447237304822904,-0.146569577198971,0.02874422480016,177,77,TRUE,
+"hs","c_hispanic_white","bin_2000","placebo","Placebo_3",3,-4,125,118,22,258,TRUE,"ok",-0.0354389351257704,0.0191257587552657,-0.0729247334630928,0.00204686321155211,362,125,TRUE,
+"hs","c_hispanic_white","bin_2000","placebo","Placebo_2",2,-3,227,263,28,611,TRUE,"ok",0.016272035497289,0.0139809600180149,-0.0111301426073146,0.0436742136018927,773,227,TRUE,
+"hs","c_hispanic_white","bin_2000","placebo","Placebo_1",1,-2,420,551,36,1425,TRUE,"ok",0.00485941794958981,0.00782017695121976,-0.0104678472275311,0.0201866831267108,1632,420,TRUE,
+"hs","c_hispanic_white","bin_2000","effect","Effect_1",1,0,837,783,37,2254,TRUE,"ok",-0.000149293414220263,0.0112691462912797,-0.0222364142816415,0.021937827453201,3091,837,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_2",2,1,755,575,35,1524,TRUE,"ok",0.00925109592978671,0.0092659616892762,-0.00890985526332256,0.027412047122896,2279,755,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_3",3,2,623,399,32,1029,TRUE,"ok",0.0176196590023708,0.0102806844882842,-0.00253011233108572,0.0377694303358274,1652,623,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_4",4,3,543,299,29,709,TRUE,"ok",0.000931947934329465,0.013312995408391,-0.0251610435924641,0.027024939461123,1252,543,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_5",5,4,443,211,23,508,TRUE,"ok",-0.0104737868856762,0.0133595753446137,-0.0366580734098682,0.0157104996385159,951,443,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_6",6,5,366,149,23,342,TRUE,"ok",0.0145188127330142,0.0127665805293666,-0.0105032253102747,0.0395408507763031,708,366,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_7",7,6,347,120,22,237,TRUE,"ok",0.00834987317346455,0.01741982642566,-0.0257923592377682,0.0424921055846973,584,347,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_8",8,7,273,84,19,141,TRUE,"ok",0.0268080085607267,0.013833178216596,-0.000304522535525487,0.0539205396569789,414,273,TRUE,TRUE
+"hs","c_hispanic_white","bin_2000","effect","Effect_9",9,8,238,49,16,78,TRUE,"ok",0.0254964238786045,0.024323569762753,-0.0221768968318388,0.0731697445890478,316,238,TRUE,TRUE

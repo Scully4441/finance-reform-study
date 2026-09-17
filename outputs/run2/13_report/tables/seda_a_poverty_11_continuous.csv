@@ -1,0 +1,29 @@
+"family","gap","bin","row_type","package_label","index","event_time","switchers","stayers","stayer_states","stayer_cells","estimable","status","estimate","se","ci_lo","ci_hi","n_package","switchers_package","switchers_match_package","n_match_package"
+"seda","a_poverty","bin_1000","placebo","Placebo_5",5,-6,1,1,1,1,FALSE,"not estimable: 1 stayers in 1 states (need 20 in 3)",,,,,0,1,TRUE,
+"seda","a_poverty","bin_1000","placebo","Placebo_4",4,-5,3,4,4,5,FALSE,"not estimable: 4 stayers in 4 states (need 20 in 3)",,,,,8,3,TRUE,
+"seda","a_poverty","bin_1000","placebo","Placebo_3",3,-4,4,6,6,9,FALSE,"not estimable: 6 stayers in 6 states (need 20 in 3)",,,,,13,4,TRUE,
+"seda","a_poverty","bin_1000","placebo","Placebo_2",2,-3,7,9,9,15,FALSE,"not estimable: 9 stayers in 9 states (need 20 in 3)",,,,,17,7,TRUE,
+"seda","a_poverty","bin_1000","placebo","Placebo_1",1,-2,16,14,14,32,FALSE,"not estimable: 14 stayers in 14 states (need 20 in 3)",,,,,33,16,TRUE,
+"seda","a_poverty","bin_1000","effect","Effect_1",1,0,23,22,22,53,TRUE,"ok",-0.00453583916334971,0.0105710189505911,-0.0252546555863987,0.0161829772596992,76,23,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_2",2,1,19,16,16,41,FALSE,"not estimable: 16 stayers in 16 states (need 20 in 3)",,,,,60,19,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_3",3,2,17,13,13,31,FALSE,"not estimable: 13 stayers in 13 states (need 20 in 3)",,,,,48,17,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_4",4,3,12,9,9,20,FALSE,"not estimable: 9 stayers in 9 states (need 20 in 3)",,,,,32,12,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_5",5,4,13,8,8,19,FALSE,"not estimable: 8 stayers in 8 states (need 20 in 3)",,,,,32,13,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_6",6,5,11,7,7,15,FALSE,"not estimable: 7 stayers in 7 states (need 20 in 3)",,,,,26,11,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_7",7,6,10,6,6,13,FALSE,"not estimable: 6 stayers in 6 states (need 20 in 3)",,,,,23,10,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_8",8,7,6,4,4,9,FALSE,"not estimable: 4 stayers in 4 states (need 20 in 3)",,,,,15,6,TRUE,TRUE
+"seda","a_poverty","bin_1000","effect","Effect_9",9,8,4,4,4,6,FALSE,"not estimable: 4 stayers in 4 states (need 20 in 3)",,,,,10,4,TRUE,TRUE
+"seda","a_poverty","bin_2000","placebo","Placebo_5",5,-6,5,8,8,14,FALSE,"not estimable: 8 stayers in 8 states (need 20 in 3)",,,,,17,5,TRUE,
+"seda","a_poverty","bin_2000","placebo","Placebo_4",4,-5,6,10,10,17,FALSE,"not estimable: 10 stayers in 10 states (need 20 in 3)",,,,,19,6,TRUE,
+"seda","a_poverty","bin_2000","placebo","Placebo_3",3,-4,3,12,12,13,FALSE,"not estimable: 12 stayers in 12 states (need 20 in 3)",,,,,14,3,TRUE,
+"seda","a_poverty","bin_2000","placebo","Placebo_2",2,-3,8,19,19,30,FALSE,"not estimable: 19 stayers in 19 states (need 20 in 3)",,,,,30,8,TRUE,
+"seda","a_poverty","bin_2000","placebo","Placebo_1",1,-2,15,22,22,75,TRUE,"ok",0.000628913935758842,0.0152073888675038,-0.029177020543444,0.0304348484149617,60,15,TRUE,
+"seda","a_poverty","bin_2000","effect","Effect_1",1,0,21,26,26,107,TRUE,"ok",0.00482100002899739,0.00820499428648104,-0.0112604932658624,0.0209024933238572,128,21,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_2",2,1,18,22,22,77,TRUE,"ok",0.0199220565196697,0.0114505201761527,-0.00252055062983884,0.0423646636691782,95,18,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_3",3,2,13,20,20,50,TRUE,"ok",0.0130165783047228,0.0194064034025722,-0.0250192734337742,0.0510524300432198,63,13,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_4",4,3,12,18,18,48,FALSE,"not estimable: 18 stayers in 18 states (need 20 in 3)",,,,,60,12,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_5",5,4,16,18,18,56,FALSE,"not estimable: 18 stayers in 18 states (need 20 in 3)",,,,,72,16,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_6",6,5,15,16,16,52,FALSE,"not estimable: 16 stayers in 16 states (need 20 in 3)",,,,,67,15,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_7",7,6,14,15,15,42,FALSE,"not estimable: 15 stayers in 15 states (need 20 in 3)",,,,,56,14,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_8",8,7,8,12,12,28,FALSE,"not estimable: 12 stayers in 12 states (need 20 in 3)",,,,,36,8,TRUE,TRUE
+"seda","a_poverty","bin_2000","effect","Effect_9",9,8,6,10,10,12,FALSE,"not estimable: 10 stayers in 10 states (need 20 in 3)",,,,,18,6,TRUE,TRUE

@@ -1,0 +1,15 @@
+"gap","event_set","weighting","panel","e","att","se","boot_se","t_stat","crit_val","ci_lo","ci_hi","p_value","reps","clusters","reference","cohorts","treated_states","treated_units"
+"c_hispanic_white","primary","unweighted","unbalanced",-5,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",-4,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",-3,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",-2,-0.15864523515444,0.0145618313348256,0.0146445690268751,-10.8945936473683,1.91275225483741,-0.18649841087469,-0.130792059434191,1e-04,9999,39,FALSE,1,1,90
+"c_hispanic_white","primary","unweighted","unbalanced",-1,0,,,,,,,,9999,39,TRUE,10,12,837
+"c_hispanic_white","primary","unweighted","unbalanced",0,0.0254605732024645,0.0290964766288752,0.0288916822283197,0.875039735127157,1.70058894174618,-0.024020573196377,0.0749417196013059,0.4816,9999,39,FALSE,2,2,131
+"c_hispanic_white","primary","unweighted","unbalanced",1,0.00887720054354924,0.0372168158280256,0.0369683615658368,0.238526600033966,1.9144958399292,-0.0623742385346171,0.0801286396217156,0.8167,9999,39,FALSE,2,2,131
+"c_hispanic_white","primary","unweighted","unbalanced",2,0.02935827122824,0.0326860077154986,0.0323441643525539,0.898190794170294,1.89753342789253,-0.0326645210362717,0.0913810634927518,0.3879,9999,39,FALSE,1,1,41
+"c_hispanic_white","primary","unweighted","unbalanced",3,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",4,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",5,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",6,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",7,,,,,,,,,9999,39,FALSE,0,0,0
+"c_hispanic_white","primary","unweighted","unbalanced",8,,,,,,,,,9999,39,FALSE,0,0,0

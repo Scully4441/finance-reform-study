@@ -1,0 +1,4 @@
+"check","estimate","boot_p","randomization_p","randomization_reps","bound_mbar1","status"
+"Balanced panel (Run 1 Section 7)","-0.000","0.9731","0.9929",10000,"[-0.405, 0.389] (event times -3..+7)","ok"
+"Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6)","0.002","0.9353","0.9560",1000,"[-0.333, 0.348]","ok"
+"Anticipation = 1, reference period -2 (Run 1 step 10)","-0.000","0.9877","0.9920",1000,"[-0.346, 0.353]","ok"

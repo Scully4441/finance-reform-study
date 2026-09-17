@@ -1,0 +1,3 @@
+"weighting","estimate","boot_p","randomization_p","bound_mbar1","units","status"
+"unweighted","-0.016","0.3941","0.5321","[-0.190, 0.172]",648,"ok"
+"tested_weighted","-0.012","0.3174","0.6614","[-0.209, 0.183]",489,"ok"
