@@ -1,0 +1,85 @@
+Step 12 high school report-card outcomes, run 20260916T211713Z; stage_run2 2; blinding REAL
+Harmonization table: 162 state-years, 152 mapped (39 states), 10 unavailable
+Loaded 152 state-years (152 reused from data/derived/hs_reportcard_long_parts with --reuse-long): 283126 rows after pooling; wrote data/derived/hs_reportcard_long.csv
+Crosswalk: drafted 10591 new keys into data/reference/hs_reportcard_leaid_crosswalk.csv (author_check blank)
+
+== Crosswalk keys by method (all report-card district keys)
+    method  keys
+ ambiguous     1
+      name   306
+  st_leaid 10221
+ unmatched    63
+Report-card rows without an NCES LEAID (dropped): 1181 in 64 district keys
+District-year-subject-subgroup keys with conflicting duplicate rows (dropped): 10
+
+Wrote data/derived/hs_panel_run2.csv: 246213 district-years (205570 EDFacts, 40643 report card)
+Wrote data/derived/hs_gaps_run2.csv: 176657 rows (72700 report card)
+
+== Unit-years with a usable gap (math and RLA both), primary sample, primary event set
+Gaps (b) and (c): district-years; gap (a): state-years. 2010-2021 EDFacts (Run 1), 2022-2025 report cards.
+              gap 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2021 2022
+        a_poverty   36   38   38   38   36   34   35   36   33   35   29   22
+    b_black_white 1202 1256 1220 1091  921  758  892  933  743  853  250  770
+ c_hispanic_white 1090 1175 1206 1252  985  850  906  994  877 1009  314 1144
+ 2023 2024 2025
+   21   21   23
+  831  925 1007
+ 1250 1381 1421
+Report-card unit-years usable in both subjects, event set r1: a_poverty 87, b_black_white 3533, c_hispanic_white 5196
+Report-card unit-years usable in both subjects, event set r2: a_poverty 107, b_black_white 4179, c_hispanic_white 6846
+
+== States covered by the report-card years (primary sample, primary event set, both subjects)
+ sy_end mapped states_any_gap states_gap_b states_gap_c states_gap_a
+   2022     38             26           23           26           22
+   2023     38             27           22           27           21
+   2024     38             28           24           28           21
+   2025     38             29           26           28           23
+                                                                                 states
+          AL AZ CO CT DE GA IL IN KY LA MA MN NE NM NV OH PA RI SC SD TN TX UT WA WI WY
+       AL AZ CO CT DC DE GA IL IN KY LA MA MN NE NM NV OH PA RI SC SD TN TX UT WA WI WY
+    AL AZ CO CT DC DE GA IL IN KY MA MN NE NM NV OH OR PA RI SC SD TN TX UT VA WA WI WY
+ AL AZ CO CT DC DE GA IL IN KY LA MA MN NE NM NV OH OR PA RI SC SD TN TX UT VA WA WI WY
+Mapped states with no usable report-card gap in any year: CA ID KS MO NC ND NH NJ NY VT
+
+== Report-card district-years by reason (primary event set)
+                                                      reason district_years
+                                  no SAIPE 2009 poverty rate            265
+                                                    retained          25027
+                              rule 1: agency type not 1 or 2           4520
+           rule 1: agency type not 1 or 2 (report-card year)             11
+                      rule 2: boundary change (BOUND 5 or 8)             57
+ rule 2: not in the Run 1 sample file (no CCD row 2010-2021)            132
+                rule 2: not operational in every window year            299
+                rule 6: state excluded (reform in 2005-2009)          10332
+
+== Report-card cells (retained districts, primary set) by status and floor basis, Black, Hispanic, White, all
+ subject subgroup
+    math      all
+    math       wh
+    math       bl
+    math       hi
+     rla      all
+     rla       wh
+     rla       bl
+     rla       hi
+                                                                  table_status
+  below_30 2926; not_reported 5558; suppressed 32; usable 16468; wide_range 43
+ below_30 4084; not_reported 3368; suppressed 102; usable 17432; wide_range 41
+ below_30 5232; not_reported 14842; suppressed 101; usable 4833; wide_range 19
+   below_30 7239; not_reported 9983; suppressed 87; usable 7670; wide_range 48
+   below_30 2853; not_reported 5538; suppressed 10; usable 16620; wide_range 6
+   below_30 3922; not_reported 3344; suppressed 61; usable 17697; wide_range 3
+   below_30 5300; not_reported 14637; suppressed 55; usable 5026; wide_range 9
+   below_30 7369; not_reported 9681; suppressed 101; usable 7868; wide_range 8
+                             usable_by_basis
+ band_lower 153; exact 13349; min_group 2966
+ band_lower 124; exact 12101; min_group 5207
+                  exact 2827; min_group 2006
+   band_lower 33; exact 5373; min_group 2264
+ band_lower 153; exact 13497; min_group 2970
+ band_lower 124; exact 12345; min_group 5228
+                  exact 2984; min_group 2042
+   band_lower 32; exact 5560; min_group 2276
+Participation-rule failures among cells usable under rule 3 (states printing participation): 9517
+CEP: report-card district-years with cep = 1: 12550; 2025 rows carrying 2024's value: 10192
+Log: outputs/logs/12_hs_reportcard_outcomes_20260916T211713Z.log

@@ -160,4 +160,7 @@ source("tests/test_run_all.R")
 
 # Run 2 step 11: SEDA grades 3-8 outcomes
 source("tests/test_seda.R")
+
+# Run 2 step 12: high school report-card outcomes
+source("tests/test_hs_reportcard.R")
 cat("All tests passed.\n")

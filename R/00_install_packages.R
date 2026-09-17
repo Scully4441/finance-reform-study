@@ -8,14 +8,16 @@ options(repos = c(CRAN = "https://cloud.r-project.org"), Ncpus = 4)
 
 cran <- c("data.table", "digest", "future", "furrr", "testthat", "remotes",
           "renv", "did", "fixest", "didimputation", "fwildclusterboot",
-          "wildrwolf", "HonestDiD")
+          "wildrwolf", "HonestDiD", "readxl")
 # summclust is a dependency of fwildclusterboot that is not on CRAN for
 # current R releases, so it is installed from GitHub first.
 github <- c(synthdid = "synth-inference/synthdid",
             summclust = "s3alfisc/summclust",
             fwildclusterboot = "s3alfisc/fwildclusterboot",
             wildrwolf = "s3alfisc/wildrwolf",
-            HonestDiD = "asheshrambachan/HonestDiD")
+            HonestDiD = "asheshrambachan/HonestDiD",
+            # Run 2 step 12, Alabama .xlsb files: archived on CRAN, and 0.1.6 no longer compiles
+            readxlsb = "velofrog/readxlsb@644ef7aefd4b1342d6754db7bab3dc9310137da7")
 
 for (p in cran) {
   if (!requireNamespace(p, quietly = TRUE)) try(install.packages(p))

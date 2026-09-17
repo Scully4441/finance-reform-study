@@ -282,6 +282,18 @@ row points:
     1 rule 3 requires: UT (all four years), VA (both years) and LA (all three).
     Their `notes` carry the caution; whether they can enter is Section 5's
     question, not the manifest's.
+  - **New York's Access tables as CSV (`hs_reportcard_ny_src_csv`, end years
+    2022-2025)**, added 2026-09-16 (`docs/deviations_run2.md`, step 12 decision
+    7). The table `[Annual Regents Exams]` of each `SRC<yyyy>.zip`'s `.mdb`
+    member, exported whole by `R/02a_ny_access_export.R` in the project container
+    with mdbtools 1.0.0 and archived beside the zip as
+    `SRC<yyyy>_annual_regents_exams.csv` (749k to 880k rows each). The rows have no
+    url; `source` names the zip they come from and `notes` holds the command.
+    Step 12 reads these copies in place of the databases.
+- **CCD school Characteristics, end years 2022-2024** (`ccd_school_characteristics`,
+  added 2026-09-16) for CEP in the report-card years (`NSLP_STATUS`); 2024-25 has
+  no file and step 12 carries each district's 2023-24 value (`docs/deviations_run2.md`,
+  step 12 decision 8).
   - Not yet in an OSF deposit.
 - **F-33, FY2022.** `elsec22.txt` holds only 1,730 of the 14,106 unit records
   Census published for that fiscal year (17 Alabama systems against 138 in the
