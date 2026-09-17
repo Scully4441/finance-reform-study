@@ -1,0 +1,548 @@
+Step 13 continuous treatment, run 20260917T021950Z; stage_run2 2; estimation on
+DIDmultiplegtDYN 2.4.0; polars 1.9000.9000.9000 (RemoteSha 08ba07909a0b4968eaa3d77103c9585849a6f35d)
+
+== F-33 revenue per pupil, thousands of 2025 dollars (Run 1 floor)
+ sy_end district_years enrollment_below_30 revenue_above_100k excluded
+   2010          13515                 229                 44      258
+   2011          13487                 258                 67      299
+   2012          13507                 247                 77      295
+   2013          13566                 296                 84      353
+   2014          13517                 298                 80      355
+   2015          13474                 269                 88      333
+   2016          13467                 276                 71      326
+   2017          13459                 306                 72      349
+   2018          13345                 256                 62      290
+   2019          13268                 251                 93      315
+   2020          13203                 232                 78      295
+   2021          13189                 233                 84      295
+   2022          13238                 249                 90      306
+   2023          13237                 242                111      316
+   2024          13252                 266                123      342
+ median_revenue_pp_thousands
+                       15.16
+                       15.38
+                       15.26
+                       15.19
+                       15.52
+                       15.88
+                       16.47
+                       16.76
+                       17.06
+                       17.47
+                       17.73
+                       18.23
+                       17.51
+                       17.99
+                       18.68
+
+High school: end year 2025 left out (F-33 ends at fiscal year 2024): 5400 retained gap-subject rows, primary sample
+SEDA: end years 2009 and 2025 left out (no F-33 year): 6719 retained gap rows
+SEDA gap (a) quintile set rebuilt: 8533 districts (primary set; step 11 log: 8533), with 2009-10 membership > 0: 8532 (8532)
+
+== hs.a_poverty.bin_1000: 38 units with an outcome, 9 baseline bins; switchers 37, used 25, dropped for no stayer in their bin 9
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0        25      22            22
+      Effect_2          1        21      17            17
+      Effect_3          2        19      13            13
+      Effect_4          3        16       9             9
+      Effect_5          4        11       8             8
+      Effect_6          5        12       7             7
+      Effect_7          6        10       5             5
+      Effect_8          7         4       2             2
+      Effect_9          8         4       2             2
+     Placebo_1         -2        16      17            17
+     Placebo_2         -3         7       8             8
+     Placebo_3         -4         5       4             4
+     Placebo_4         -5         3       2             2
+     Placebo_5         -6         1       1             1
+                                                status
+                                             estimable
+ not estimable: 17 stayers in 17 states (need 20 in 3)
+ not estimable: 13 stayers in 13 states (need 20 in 3)
+   not estimable: 9 stayers in 9 states (need 20 in 3)
+   not estimable: 8 stayers in 8 states (need 20 in 3)
+   not estimable: 7 stayers in 7 states (need 20 in 3)
+   not estimable: 5 stayers in 5 states (need 20 in 3)
+   not estimable: 2 stayers in 2 states (need 20 in 3)
+   not estimable: 2 stayers in 2 states (need 20 in 3)
+ not estimable: 17 stayers in 17 states (need 20 in 3)
+   not estimable: 8 stayers in 8 states (need 20 in 3)
+   not estimable: 4 stayers in 4 states (need 20 in 3)
+   not estimable: 2 stayers in 2 states (need 20 in 3)
+   not estimable: 1 stayers in 1 states (need 20 in 3)
+  fit: ok (8 s); package messages: Placebo_5 cannot be estimated. There is no switcher or no control for this placebo.
+
+== hs.a_poverty.bin_2000: 38 units with an outcome, 7 baseline bins; switchers 31, used 25, dropped for no stayer in their bin 3
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0        23      27            27
+      Effect_2          1        20      24            24
+      Effect_3          2        21      23            23
+      Effect_4          3        21      21            21
+      Effect_5          4        14      19            19
+      Effect_6          5        15      18            18
+      Effect_7          6        12      15            15
+      Effect_8          7         7      10            10
+      Effect_9          8         7       7             7
+     Placebo_1         -2        19      24            24
+     Placebo_2         -3        12      16            16
+     Placebo_3         -4        11      10            10
+     Placebo_4         -5        11       8             8
+     Placebo_5         -6         4       5             5
+                                                status
+                                             estimable
+                                             estimable
+                                             estimable
+                                             estimable
+ not estimable: 19 stayers in 19 states (need 20 in 3)
+ not estimable: 18 stayers in 18 states (need 20 in 3)
+ not estimable: 15 stayers in 15 states (need 20 in 3)
+ not estimable: 10 stayers in 10 states (need 20 in 3)
+   not estimable: 7 stayers in 7 states (need 20 in 3)
+                                             estimable
+ not estimable: 16 stayers in 16 states (need 20 in 3)
+ not estimable: 10 stayers in 10 states (need 20 in 3)
+   not estimable: 8 stayers in 8 states (need 20 in 3)
+   not estimable: 5 stayers in 5 states (need 20 in 3)
+  fit: ok (8 s)
+
+== hs.b_black_white.bin_1000: 1766 units with an outcome, 33 baseline bins; switchers 1766, used 1071, dropped for no stayer in their bin 60
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0       987     540            34
+      Effect_2          1       866     301            27
+      Effect_3          2       621     172            18
+      Effect_4          3       531     120            18
+      Effect_5          4       412      60            18
+      Effect_6          5       336      35            12
+      Effect_7          6       269      26            10
+      Effect_8          7       118      12             7
+      Effect_9          8        85       6             3
+     Placebo_1         -2       353     283            27
+     Placebo_2         -3       150     102            16
+     Placebo_3         -4        65      27            11
+     Placebo_4         -5        22       9             6
+     Placebo_5         -6         0       0             0
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 12 stayers in 7 states (need 20 in 3)
+  not estimable: 6 stayers in 3 states (need 20 in 3)
+                                            estimable
+                                            estimable
+                                            estimable
+  not estimable: 9 stayers in 6 states (need 20 in 3)
+  not estimable: 0 stayers in 0 states (need 20 in 3)
+  fit: ok (11 s); package messages: Placebo_5 cannot be estimated. There is no switcher or no control for this placebo. | Some placebos could not be estimated. Therefore, the test of joint nullity of the placebos could not be computed.
+
+== hs.b_black_white.bin_2000: 1766 units with an outcome, 19 baseline bins; switchers 1732, used 987, dropped for no stayer in their bin 14
+ package_label event_time switchers stayers stayer_states    status
+      Effect_1          0       839     813            37 estimable
+      Effect_2          1       766     608            32 estimable
+      Effect_3          2       625     435            29 estimable
+      Effect_4          3       577     369            28 estimable
+      Effect_5          4       498     282            22 estimable
+      Effect_6          5       418     223            21 estimable
+      Effect_7          6       399     175            20 estimable
+      Effect_8          7       293     119            18 estimable
+      Effect_9          8       257      79            19 estimable
+     Placebo_1         -2       412     580            32 estimable
+     Placebo_2         -3       230     299            26 estimable
+     Placebo_3         -4       136     182            20 estimable
+     Placebo_4         -5        94      93            14 estimable
+     Placebo_5         -6        47      20             9 estimable
+  fit: ok (12 s)
+
+== hs.c_hispanic_white.bin_1000: 2373 units with an outcome, 40 baseline bins; switchers 2373, used 1000, dropped for no stayer in their bin 89
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0       932     506            34
+      Effect_2          1       799     275            29
+      Effect_3          2       551     140            21
+      Effect_4          3       448      82            19
+      Effect_5          4       311      47            14
+      Effect_6          5       194      22             8
+      Effect_7          6       145      15             5
+      Effect_8          7        88      10             4
+      Effect_9          8        27       1             1
+     Placebo_1         -2       354     262            29
+     Placebo_2         -3       124      67            18
+     Placebo_3         -4        56      17             7
+     Placebo_4         -5        16       6             3
+     Placebo_5         -6         0       0             0
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 15 stayers in 5 states (need 20 in 3)
+ not estimable: 10 stayers in 4 states (need 20 in 3)
+  not estimable: 1 stayers in 1 states (need 20 in 3)
+                                            estimable
+                                            estimable
+ not estimable: 17 stayers in 7 states (need 20 in 3)
+  not estimable: 6 stayers in 3 states (need 20 in 3)
+  not estimable: 0 stayers in 0 states (need 20 in 3)
+  fit: ok (12 s); package messages: Placebo_5 cannot be estimated. There is no switcher or no control for this placebo. | Some placebos could not be estimated. Therefore, the test of joint nullity of the placebos could not be computed.
+
+== hs.c_hispanic_white.bin_2000: 2373 units with an outcome, 23 baseline bins; switchers 2342, used 957, dropped for no stayer in their bin 32
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0       837     783            37
+      Effect_2          1       755     575            35
+      Effect_3          2       623     399            32
+      Effect_4          3       543     299            29
+      Effect_5          4       443     211            23
+      Effect_6          5       366     149            23
+      Effect_7          6       347     120            22
+      Effect_8          7       273      84            19
+      Effect_9          8       238      49            16
+     Placebo_1         -2       420     551            36
+     Placebo_2         -3       227     263            28
+     Placebo_3         -4       125     118            22
+     Placebo_4         -5        77      62            17
+     Placebo_5         -6        40      13             7
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 13 stayers in 7 states (need 20 in 3)
+  fit: ok (12 s)
+
+== seda.a_poverty.bin_1000: 37 units with an outcome, 9 baseline bins; switchers 35, used 23, dropped for no stayer in their bin 8
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0        23      22            22
+      Effect_2          1        19      16            16
+      Effect_3          2        17      13            13
+      Effect_4          3        12       9             9
+      Effect_5          4        13       8             8
+      Effect_6          5        11       7             7
+      Effect_7          6        10       6             6
+      Effect_8          7         6       4             4
+      Effect_9          8         4       4             4
+     Placebo_1         -2        16      14            14
+     Placebo_2         -3         7       9             9
+     Placebo_3         -4         4       6             6
+     Placebo_4         -5         3       4             4
+     Placebo_5         -6         1       1             1
+                                                status
+                                             estimable
+ not estimable: 16 stayers in 16 states (need 20 in 3)
+ not estimable: 13 stayers in 13 states (need 20 in 3)
+   not estimable: 9 stayers in 9 states (need 20 in 3)
+   not estimable: 8 stayers in 8 states (need 20 in 3)
+   not estimable: 7 stayers in 7 states (need 20 in 3)
+   not estimable: 6 stayers in 6 states (need 20 in 3)
+   not estimable: 4 stayers in 4 states (need 20 in 3)
+   not estimable: 4 stayers in 4 states (need 20 in 3)
+ not estimable: 14 stayers in 14 states (need 20 in 3)
+   not estimable: 9 stayers in 9 states (need 20 in 3)
+   not estimable: 6 stayers in 6 states (need 20 in 3)
+   not estimable: 4 stayers in 4 states (need 20 in 3)
+   not estimable: 1 stayers in 1 states (need 20 in 3)
+  fit: ok (8 s); package messages: Placebo_5 cannot be estimated. There is no switcher or no control for this placebo.
+
+== seda.a_poverty.bin_2000: 37 units with an outcome, 6 baseline bins; switchers 29, used 22, dropped for no stayer in their bin 3
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0        21      26            26
+      Effect_2          1        18      22            22
+      Effect_3          2        13      20            20
+      Effect_4          3        12      18            18
+      Effect_5          4        16      18            18
+      Effect_6          5        15      16            16
+      Effect_7          6        14      15            15
+      Effect_8          7         8      12            12
+      Effect_9          8         6      10            10
+     Placebo_1         -2        15      22            22
+     Placebo_2         -3         8      19            19
+     Placebo_3         -4         3      12            12
+     Placebo_4         -5         6      10            10
+     Placebo_5         -6         5       8             8
+                                                status
+                                             estimable
+                                             estimable
+                                             estimable
+ not estimable: 18 stayers in 18 states (need 20 in 3)
+ not estimable: 18 stayers in 18 states (need 20 in 3)
+ not estimable: 16 stayers in 16 states (need 20 in 3)
+ not estimable: 15 stayers in 15 states (need 20 in 3)
+ not estimable: 12 stayers in 12 states (need 20 in 3)
+ not estimable: 10 stayers in 10 states (need 20 in 3)
+                                             estimable
+ not estimable: 19 stayers in 19 states (need 20 in 3)
+ not estimable: 12 stayers in 12 states (need 20 in 3)
+ not estimable: 10 stayers in 10 states (need 20 in 3)
+   not estimable: 8 stayers in 8 states (need 20 in 3)
+  fit: ok (8 s)
+
+== seda.b_black_white.bin_1000: 2135 units with an outcome, 34 baseline bins; switchers 2135, used 1697, dropped for no stayer in their bin 44
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0      1639     793            35
+      Effect_2          1      1515     453            28
+      Effect_3          2      1331     281            23
+      Effect_4          3      1120     189            20
+      Effect_5          4      1013     114            16
+      Effect_6          5       814      56            13
+      Effect_7          6       621      40            12
+      Effect_8          7       425      24            10
+      Effect_9          8       364      12             7
+     Placebo_1         -2       679     447            28
+     Placebo_2         -3       322     179            20
+     Placebo_3         -4       162      52            13
+     Placebo_4         -5        94      24            10
+     Placebo_5         -6         3       2             2
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 12 stayers in 7 states (need 20 in 3)
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+  not estimable: 2 stayers in 2 states (need 20 in 3)
+  fit: ok (12 s)
+
+== seda.b_black_white.bin_2000: 2135 units with an outcome, 20 baseline bins; switchers 2099, used 1587, dropped for no stayer in their bin 19
+ package_label event_time switchers stayers stayer_states    status
+      Effect_1          0      1497    1173            36 estimable
+      Effect_2          1      1379     895            33 estimable
+      Effect_3          2      1247     714            32 estimable
+      Effect_4          3      1150     575            29 estimable
+      Effect_5          4      1107     451            26 estimable
+      Effect_6          5       961     344            26 estimable
+      Effect_7          6       870     276            23 estimable
+      Effect_8          7       751     218            21 estimable
+      Effect_9          8       615     160            19 estimable
+     Placebo_1         -2       841     882            32 estimable
+     Placebo_2         -3       520     552            29 estimable
+     Placebo_3         -4       352     336            26 estimable
+     Placebo_4         -5       230     209            21 estimable
+     Placebo_5         -6        90      43            13 estimable
+  fit: ok (12 s)
+
+== seda.c_hispanic_white.bin_1000: 3008 units with an outcome, 41 baseline bins; switchers 3008, used 1916, dropped for no stayer in their bin 67
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0      1831     894            33
+      Effect_2          1      1690     516            32
+      Effect_3          2      1514     319            27
+      Effect_4          3      1205     186            23
+      Effect_5          4      1050     111            17
+      Effect_6          5       668      52            11
+      Effect_7          6       528      36            10
+      Effect_8          7       341      21             6
+      Effect_9          8       151       6             3
+     Placebo_1         -2       754     505            31
+     Placebo_2         -3       359     173            23
+     Placebo_3         -4       184      48            11
+     Placebo_4         -5        62      21             6
+     Placebo_5         -6         3       1             1
+                                              status
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+ not estimable: 6 stayers in 3 states (need 20 in 3)
+                                           estimable
+                                           estimable
+                                           estimable
+                                           estimable
+ not estimable: 1 stayers in 1 states (need 20 in 3)
+  fit: ok (12 s)
+
+== seda.c_hispanic_white.bin_2000: 3008 units with an outcome, 25 baseline bins; switchers 2974, used 1917, dropped for no stayer in their bin 37
+ package_label event_time switchers stayers stayer_states    status
+      Effect_1          0      1786    1400            36 estimable
+      Effect_2          1      1666    1053            35 estimable
+      Effect_3          2      1548     820            35 estimable
+      Effect_4          3      1449     613            33 estimable
+      Effect_5          4      1381     462            32 estimable
+      Effect_6          5      1200     329            32 estimable
+      Effect_7          6      1078     257            29 estimable
+      Effect_8          7       874     196            25 estimable
+      Effect_9          8       720     126            23 estimable
+     Placebo_1         -2      1035    1029            34 estimable
+     Placebo_2         -3       650     586            30 estimable
+     Placebo_3         -4       450     318            31 estimable
+     Placebo_4         -5       289     188            24 estimable
+     Placebo_5         -6       114      42            16 estimable
+  fit: ok (12 s)
+
+== graduation.grad_black_white.bin_1000: 1555 units with an outcome, 34 baseline bins; switchers 1552, used 1206, dropped for no stayer in their bin 61
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0      1138     621            36
+      Effect_2          1      1066     372            34
+      Effect_3          2       941     246            29
+      Effect_4          3       765     125            25
+      Effect_5          4       664      64            17
+      Effect_6          5       510      40            13
+      Effect_7          6       346      23            10
+      Effect_8          7       258      16             8
+      Effect_9          8       148       9             6
+     Placebo_1         -2       499     352            33
+     Placebo_2         -3       257     114            24
+     Placebo_3         -4       145      40            13
+     Placebo_4         -5        45      15             8
+     Placebo_5         -6         4       2             2
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 16 stayers in 8 states (need 20 in 3)
+  not estimable: 9 stayers in 6 states (need 20 in 3)
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 15 stayers in 8 states (need 20 in 3)
+  not estimable: 2 stayers in 2 states (need 20 in 3)
+  fit: ok (10 s)
+
+== graduation.grad_black_white.bin_2000: 1555 units with an outcome, 20 baseline bins; switchers 1471, used 1156, dropped for no stayer in their bin 19
+ package_label event_time switchers stayers stayer_states    status
+      Effect_1          0      1071     907            38 estimable
+      Effect_2          1      1022     703            37 estimable
+      Effect_3          2       924     571            34 estimable
+      Effect_4          3       847     423            29 estimable
+      Effect_5          4       759     322            27 estimable
+      Effect_6          5       640     258            25 estimable
+      Effect_7          6       534     200            23 estimable
+      Effect_8          7       386     148            22 estimable
+      Effect_9          8       253      97            17 estimable
+     Placebo_1         -2       676     672            35 estimable
+     Placebo_2         -3       464     412            29 estimable
+     Placebo_3         -4       307     252            25 estimable
+     Placebo_4         -5       167     135            22 estimable
+     Placebo_5         -6        44      56            15 estimable
+  fit: ok (11 s)
+
+== graduation.grad_hispanic_white.bin_1000: 1795 units with an outcome, 36 baseline bins; switchers 1792, used 1109, dropped for no stayer in their bin 73
+ package_label event_time switchers stayers stayer_states
+      Effect_1          0      1043     606            35
+      Effect_2          1       945     336            34
+      Effect_3          2       767     183            31
+      Effect_4          3       588      84            27
+      Effect_5          4       502      49            19
+      Effect_6          5       352      24            11
+      Effect_7          6       187      14             8
+      Effect_8          7       119       9             6
+      Effect_9          8        18       2             1
+     Placebo_1         -2       499     323            34
+     Placebo_2         -3       216      77            27
+     Placebo_3         -4        92      23            11
+     Placebo_4         -5        18       9             6
+     Placebo_5         -6         1       1             1
+                                               status
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+                                            estimable
+ not estimable: 14 stayers in 8 states (need 20 in 3)
+  not estimable: 9 stayers in 6 states (need 20 in 3)
+  not estimable: 2 stayers in 1 states (need 20 in 3)
+                                            estimable
+                                            estimable
+                                            estimable
+  not estimable: 9 stayers in 6 states (need 20 in 3)
+  not estimable: 1 stayers in 1 states (need 20 in 3)
+  fit: ok (11 s)
+
+== graduation.grad_hispanic_white.bin_2000: 1795 units with an outcome, 21 baseline bins; switchers 1725, used 1115, dropped for no stayer in their bin 30
+ package_label event_time switchers stayers stayer_states    status
+      Effect_1          0      1011     880            37 estimable
+      Effect_2          1       985     684            36 estimable
+      Effect_3          2       868     519            35 estimable
+      Effect_4          3       751     340            30 estimable
+      Effect_5          4       721     245            28 estimable
+      Effect_6          5       586     185            26 estimable
+      Effect_7          6       468     142            24 estimable
+      Effect_8          7       300      91            21 estimable
+      Effect_9          8       166      50            15 estimable
+     Placebo_1         -2       652     633            36 estimable
+     Placebo_2         -3       426     325            30 estimable
+     Placebo_3         -4       284     177            26 estimable
+     Placebo_4         -5       129      74            21 estimable
+     Placebo_5         -6        38      41            14 estimable
+  fit: ok (11 s)
+
+== Models
+     family                 gap      bin units_with_outcome switcher_units
+         hs           a_poverty bin_1000                 38             37
+         hs           a_poverty bin_2000                 38             31
+         hs       b_black_white bin_1000               1766           1766
+         hs       b_black_white bin_2000               1766           1732
+         hs    c_hispanic_white bin_1000               2373           2373
+         hs    c_hispanic_white bin_2000               2373           2342
+       seda           a_poverty bin_1000                 37             35
+       seda           a_poverty bin_2000                 37             29
+       seda       b_black_white bin_1000               2135           2135
+       seda       b_black_white bin_2000               2135           2099
+       seda    c_hispanic_white bin_1000               3008           3008
+       seda    c_hispanic_white bin_2000               3008           2974
+ graduation    grad_black_white bin_1000               1555           1552
+ graduation    grad_black_white bin_2000               1555           1471
+ graduation grad_hispanic_white bin_1000               1795           1792
+ graduation grad_hispanic_white bin_2000               1795           1725
+ switchers_used switchers_dropped_no_stayer_in_bin effects_estimable
+             25                                  9                 1
+             25                                  3                 4
+           1071                                 60                 7
+            987                                 14                 9
+           1000                                 89                 6
+            957                                 32                 9
+             23                                  8                 1
+             22                                  3                 3
+           1697                                 44                 8
+           1587                                 19                 9
+           1916                                 67                 8
+           1917                                 37                 9
+           1206                                 61                 7
+           1156                                 19                 9
+           1109                                 73                 6
+           1115                                 30                 9
+ placebos_estimable estimation
+                  0         ok
+                  1         ok
+                  3         ok
+                  5         ok
+                  2         ok
+                  4         ok
+                  0         ok
+                  1         ok
+                  4         ok
+                  5         ok
+                  4         ok
+                  5         ok
+                  3         ok
+                  5         ok
+                  3         ok
+                  5         ok
+
+Wrote outputs/run2/13_continuous; log outputs/logs/13_continuous_did_20260917T021950Z.log
