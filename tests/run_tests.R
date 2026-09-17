@@ -166,4 +166,7 @@ source("tests/test_hs_reportcard.R")
 
 # Run 2 step 13: continuous treatment
 source("tests/test_continuous_did.R")
+
+# Run 2 step 14: run-all panels, controls, variants, block rule and the report
+source("tests/test_run_all_run2.R")
 cat("All tests passed.\n")
