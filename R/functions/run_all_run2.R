@@ -6,13 +6,17 @@
 # run_all.R) on these panels.
 #
 # Author decisions 2026-09-16 (docs/deviations_run2.md):
-#   Source indicator (extended high school panel, Section 7). The Callaway-Sant'Anna models take
-#   rc_first, a fixed unit covariate = 1 when the unit's first year in the model panel is a
-#   report-card year; it enters only when it varies within the panel (a constant covariate is
-#   collinear with the intercept) and the panel counts record whether it entered. The regression
-#   estimators take the year-varying indicator rc (1 in report-card years) as a control; report-card
-#   rows are exactly the end years 2022-2025, so the year fixed effects absorb it and fixest notes
-#   it as collinear.
+#   Source indicator (extended high school panel, Section 7). The regression estimators take the
+#   year-varying indicator rc (1 in report-card years) as a control; report-card rows are exactly the
+#   end years 2022-2025, so the year fixed effects absorb it and fixest notes it as collinear.
+#   Post-freeze correction 2026-09-17 (docs/deviations_run2.md): the Callaway-Sant'Anna models take no
+#   source covariate. rc_first (a fixed unit covariate = 1 when the unit's first year in the panel is a
+#   report-card year) is still computed and its status recorded in the panel counts, but it never enters
+#   the covariate formula. A unit with rc_first = 1 has no row before 2022, so in every 2x2 whose base
+#   period precedes 2022 the covariate is constant among the units observed in both periods, and in the
+#   2x2s lying inside 2022-2025 it separates treatment (in gap (b) no treated unit has rc_first = 1).
+#   The doubly robust propensity score and outcome regression are singular there and did returns NA,
+#   which left gap (b) with no estimable cell at all and gap (c) with two cohorts.
 #   SEDA controls (regression estimators). CEP by district-year (the phase-in table before 2014, the
 #   district's CCD status 2014-2024, 2025 carrying 2024's value) and, for gaps (b) and (c), the four
 #   2009 covariates by year; gap (a) takes the CEP share of its quintile 1 and 5 districts retained
@@ -225,10 +229,11 @@ run2_outcome_rows <- function(inp, gap, flag, sample = "primary") {
 
 # The estimation panel of one model, built as step 5 builds Run 1's (cs_model_panel()), with a
 # variant's changes: years (window years kept), from_year, states (states kept), balanced (every kept
-# window year), drop_few_pre. Cohorts are coded over the kept years. High school: rc_first enters the
-# covariate formula when it varies within the final panel. events: an event table in place of the
-# file (tests). Returns the panel, unit, covariate formula, weight column, counts, the kept years and
-# the source covariate's status (NA for SEDA).
+# window year), drop_few_pre. Cohorts are coded over the kept years. High school: rc_first is added to
+# the panel and its status recorded, but no source covariate enters the formula (correction
+# 2026-09-17, header). events: an event table in place of the file (tests). Returns the panel, unit,
+# covariate formula, weight column, counts, the kept years and the source covariate's status (NA for
+# SEDA).
 run2_model_panel <- function(inp, gap, set, sample = "primary", balanced = FALSE, from_year = NULL, years = NULL,
                              states = NULL, drop_few_pre = FALSE, weighting = "unweighted", events = NULL) {
   unit <- if (gap == "a_poverty") "state" else "leaid"
@@ -269,9 +274,8 @@ run2_model_panel <- function(inp, gap, set, sample = "primary", balanced = FALSE
     first <- p[order(p$id, p$sy_end), , drop = FALSE]
     first <- first[!duplicated(first$id), c("id", "rc")]
     p$rc_first <- as.integer(first$rc[match(p$id, first$id)] == 1)
-    if (length(unique(p$rc_first)) > 1L) {
-      covs <- c(covs, RUN2_SOURCE_COV); src <- "entered"
-    } else src <- "not entered: constant in this panel"
+    src <- if (length(unique(p$rc_first)) > 1L)
+      "not entered: report-card-only units have no pre-2022 rows" else "not entered: constant in this panel"
   }
   rownames(p) <- NULL
   list(panel = p, unit = unit, xformla = if (length(covs)) stats::reformulate(covs) else ~1,

@@ -1,0 +1,8 @@
+03:13:08  Step 14 run-all (Run 2), run 20260917T041717Z; stage_run2 2; blinding REAL
+03:13:08  Console: parts, model and unit counts, timings. Estimates: outputs/run2/14_run_all and outputs/run2/13_report; model objects: data/derived/run2_14_fits
+03:13:08  start report
+03:13:09  Report: outputs/run2/13_report/report.md (6 plots, 62 tables)
+03:13:09  Report: 0 models shown with their recorded status in place of numbers
+03:13:09  done  report  0.0 min
+03:13:09  Run 20260917T041717Z finished. Total run time over parts: 19.32 h (wall clock since start: 26.93 h)
+03:13:09  Run times per part: outputs/run2/14_run_all/run_times.csv; log: outputs/logs/14_run_all_run2_20260918T071308Z.log

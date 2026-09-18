@@ -3,5 +3,5 @@
 "seda","b_black_white","[-0.190, 0.172]","unbounded (the revenue effect's bootstrap interval includes zero)"
 "seda","c_hispanic_white","[-0.207, 0.200]","unbounded (the revenue effect's bootstrap interval includes zero)"
 "hs","a_poverty","[-1.768, 1.847]","unbounded (the revenue effect's bootstrap interval includes zero)"
-"hs","b_black_white","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","none (no step 5 influence function)"
-"hs","c_hispanic_white","[-0.371, 0.396]","unbounded (the revenue effect's bootstrap interval includes zero)"
+"hs","b_black_white","[-1.702, 1.796]","unbounded (the revenue effect's bootstrap interval includes zero)"
+"hs","c_hispanic_white","[-44.277, 44.478]","unbounded (the revenue effect's bootstrap interval includes zero)"

@@ -14,8 +14,8 @@ Primary specification: Callaway–Sant'Anna, not-yet-treated controls, doubly ro
 | seda | b_black_white | [-0.190, 0.172] | unbounded (the revenue effect's bootstrap interval includes zero) |
 | seda | c_hispanic_white | [-0.207, 0.200] | unbounded (the revenue effect's bootstrap interval includes zero) |
 | hs | a_poverty | [-1.768, 1.847] | unbounded (the revenue effect's bootstrap interval includes zero) |
-| hs | b_black_white | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | none (no step 5 influence function) |
-| hs | c_hispanic_white | [-0.371, 0.396] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| hs | b_black_white | [-1.702, 1.796] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| hs | c_hispanic_white | [-44.277, 44.478] | unbounded (the revenue effect's bootstrap interval includes zero) |
 
 # SEDA grades 3–8 gaps (end years 2009–2019 and 2022–2025)
 
@@ -572,11 +572,11 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | 0.039 | 0.5204 | 0.6517 | 10000 | [-0.531, 0.666] | ok |
-| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.147 | 0.3874 | 0.0859 | 1000 | [-2.411, 3.106] | ok |
-| Exact values only (Run 1 Section 5 rule 3) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | -0.016 | 0.8361 | 0.9021 | 1000 | [-1.762, 1.776] | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | -0.016 | 0.8303 | 0.8851 | 1000 | [-1.762, 1.776] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.022 | 0.6897 | 0.8152 | 1000 | [-0.997, 0.960] | ok |
+| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.147 | 0.3874 | 0.0859 |  1000 | [-2.411, 3.106] | ok |
+| Exact values only (Run 1 Section 5 rule 3) | -0.062 | 0.3395 | 0.4845 |  1000 | [-1.910, 1.877] | ok |
+| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | -0.016 | 0.8361 | 0.9021 |  1000 | [-1.762, 1.776] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | -0.016 | 0.8303 | 0.8851 |  1000 | [-1.762, 1.776] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.022 | 0.6897 | 0.8152 |  1000 | [-0.997, 0.960] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -638,21 +638,41 @@ SD units: honest-DiD bound set at M̄ = 1, [-1.768, 1.847]. Per $1,000 of per-pu
 
 Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the overall estimate, 1,000 points), widened on a side its bound set reaches. Where the estimated event times are not consecutive around the reference period, the bound sets are computed on the largest consecutive block through the reference period and event time 0 (the block rule), named in the event_block column.
 
-| M̄ | status |
-|---|---|
-| all | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| M̄ | lower | upper | width | status | grid | headline |
+|---|---|---|---|---|---|---|
+| original CS (no restriction) | -0.035 | 0.088 | 0.122 | ok | – |  |
+| 0 | -0.032 | 0.084 | 0.116 | ok | [-0.625, 0.625], 1000 points |  |
+| 0.5 | -0.834 | 0.925 | 1.759 | ok | [-1.875, 1.875], 2998 points |  |
+| 1 | -1.702 | 1.796 | 3.498 | ok | [-1.875, 1.875], 2998 points | **headline** |
+| 1.5 | -2.568 | 2.662 | 5.230 | ok | [-5.625, 5.625], 8992 points |  |
+| 2 | -3.433 | 3.527 | 6.959 | ok | [-5.625, 5.625], 8992 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
-| event_time | status |
-|---|---|
-| all | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+![event study](plots/hs_b_black_white_event_study.png)
+
+| event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
+|---|---|---|---|---|---|---|---|
+| -5 | -0.024 | [-0.084, 0.036] | 0.4646 |  4 |  5 | 415 |  |
+| -4 | 0.042 | [-0.026, 0.110] | 0.2677 |  3 |  4 | 334 |  |
+| -3 | 0.171 | [-0.047, 0.390] | 0.2411 |  2 |  3 | 286 |  |
+| -2 | 0.121 | [-0.058, 0.299] | 0.3482 |  4 |  4 | 295 |  |
+| -1 | 0.000 | – | – | 10 | 12 | 617 | ref |
+|  0 | -0.011 | [-0.054, 0.032] | 0.6791 |  6 |  7 | 503 |  |
+|  1 | 0.095 | [-0.067, 0.257] | 0.4132 |  6 |  7 | 503 |  |
+|  2 | 0.062 | [-0.236, 0.361] | 0.6833 |  3 |  4 | 282 |  |
+|  3 | -0.051 | [-0.122, 0.020] | 0.1717 |  3 |  4 | 343 |  |
+|  4 | -0.068 | [-0.140, 0.004] | 0.0693 |  1 |  1 | 109 |  |
+|  5 | 0.037 | [-0.034, 0.109] | 0.3228 |  2 |  2 | 166 |  |
+|  6 | 0.136 | [0.018, 0.254] | 0.0210 |  2 |  2 | 166 |  |
+|  7 | 0.012 | [-0.085, 0.109] | 0.8812 |  2 |  2 | 166 |  |
+|  8 | – | – | – |  0 |  0 |   0 |  |
 
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | – | 0 | 0 | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| 0.027 | 0.031 | [-0.034, 0.087] | 0.4135 | 0.6890 | 10000 | 0.6578 | 6 | 7 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
@@ -660,7 +680,7 @@ Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV)
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| – | – | – | – | unbounded or none | no step 5 influence function |
+| 0.027 | 0.269 | [-0.237, 0.764] | 0.099 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -668,7 +688,7 @@ Tested share = the subgroup's exact tested count (mean of math and RLA) over its
 
 | p_minority | p_white | trim_fraction | trimmed_treated_post_district_years | estimate_trim_top | estimate_trim_bottom | lee_bracket | status |
 |---|---|---|---|---|---|---|---|
-| 0.0942 | -0.0539 | 0.1481 | 214 of 1445 | – | – | [–, –] | trim refit: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. / error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| 0.0681 | -0.0462 | 0.1143 | 165 of 1445 | -0.015 | 0.110 | [-0.015, 0.110] | ok |
 
 ### 6. Estimator agreement (unbalanced panel, primary event set)
 
@@ -676,7 +696,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| callaway_santanna (primary) | 0.027 | 0.031 | [-0.034, 0.087] | ok |
 | sun_abraham | 0.009 | 0.023 | [-0.037, 0.055] | ok |
 | imputation | 0.047 | 0.022 | [0.005, 0.090] | ok |
 | synthdid | -0.009 | 0.078 | [-0.161, 0.143] | ok |
@@ -690,7 +710,7 @@ tested_weighted: students tested in the gap's two groups in 2009-10, mean of mat
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |   0 | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| unweighted | 0.027 | 0.4135 | 0.6890 | [-1.702, 1.796] | 503 | ok |
 | tested_weighted | 0.047 | 0.0754 | 0.5805 | [-2.036, 2.118] | 303 | ok |
 
 ### 8. Narrower event definitions
@@ -699,9 +719,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | – | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| r1 | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | – | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| r2 | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | – | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| primary | 0.027 | [-0.034, 0.087] | 0.4135 | 0.6890 | [-1.702, 1.796] | 0.099 | ok |
+| r1 | 0.159 | [0.068, 0.251] | 0.0001 | 0.1082 | [0.005, 0.533] (event times -2..+3) | 0.439 | ok |
+| r2 | -0.035 | [-0.081, 0.012] | 0.2199 | 0.5982 | [-0.238, 0.166] (event times -2..+1) | -0.038 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -710,11 +730,11 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | -0.006 | 0.8907 | 0.9047 | 10000 | [-1.089, 1.129] | ok |
-| Ranges of 5 points or less (Run 1 Section 5 rule 3) | -0.010 | 0.8922 | 0.8922 | 1000 | [-0.347, 0.336] | ok |
-| Exact values only (Run 1 Section 5 rule 3) | -0.019 | 0.7823 | 0.8245 | 1000 | [-0.409, 0.364] | ok |
-| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | -0.079 | 0.2311 | 0.3473 | 1000 | [-0.364, 0.213] | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.078 | 0.0500 | 0.3846 |  1000 | [-1.218, 1.438] | ok |
+| Exact values only (Run 1 Section 5 rule 3) | -0.020 | 0.7497 | 0.8938 |  1000 | [-0.379, 0.351] | ok |
+| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.007 | 0.8093 | 0.9391 |  1000 | [-1.720, 1.733] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.007 | 0.8212 | 0.9289 |  1000 | [-1.734, 1.747] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.131 | 0.0164 | 0.1758 |  1000 | [-2.161, 1.789] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -722,9 +742,9 @@ The EDFacts-years split is Run 1's window; beside the extended panel it shows th
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Extended panel with the report-card years, 2010–2025 (primary specification) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.124 | 0.0001 | 0.1690 | 1000 | [-1.011, 1.426] (event times -5..+3) | ok |
-| The seventeen confirmed states only, every year (Section 10 coverage split) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.027 | 0.4135 | 0.6890 | 10000 | [-1.702, 1.796] | ok |
+| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.124 | 0.0001 | 0.1690 |  1000 | [-1.011, 1.426] (event times -5..+3) | ok |
+| The seventeen confirmed states only, every year (Section 10 coverage split) | -0.070 | 0.0001 | 0.5203 |  1000 | no bound (no estimated pre-reform event time: relative magnitudes need one) | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
 
@@ -768,7 +788,7 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.. Per $1,000 of per-pupil revenue (2025 dollars): none (no step 5 influence function) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-1.702, 1.796]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
 
 ## High school gap (c): within-district Hispanic–White gap
 
@@ -778,12 +798,12 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | M̄ | lower | upper | width | status | grid | headline |
 |---|---|---|---|---|---|---|
-| original CS (no restriction) | -0.034 | 0.076 | 0.110 | ok | – |  |
-| 0 | -0.033 | 0.076 | 0.109 | ok | [-0.559, 0.559], 1000 points |  |
-| 0.5 | -0.195 | 0.227 | 0.422 | ok | [-0.559, 0.559], 1000 points |  |
-| 1 | -0.371 | 0.396 | 0.767 | ok | [-0.559, 0.559], 1000 points | **headline** |
-| 1.5 | -0.550 | 0.572 | 1.123 | ok | [-0.559, 1.677], 1999 points |  |
-| 2 | -0.730 | 0.752 | 1.482 | ok | [-1.677, 1.677], 2998 points |  |
+| original CS (no restriction) | 0.021 | 0.151 | 0.130 | ok | – |  |
+| 0 | 0.022 | 0.151 | 0.129 | ok | [-0.663, 0.663], 1000 points |  |
+| 0.5 | -22.092 | 22.293 | 44.385 | ok | [-53.671, 53.671], 80920 points |  |
+| 1 | -44.277 | 44.478 | 88.755 | ok | [-53.671, 53.671], 80920 points | **headline** |
+| 1.5 | -66.462 | 66.663 | 133.125 | ok | [-161.014, 161.014], 242758 points |  |
+| 2 | -88.647 | 88.848 | 177.495 | ok | [-161.014, 161.014], 242758 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
@@ -791,26 +811,26 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
 |---|---|---|---|---|---|---|---|
-| -5 | – | – | – |  0 |  0 |   0 |  |
-| -4 | – | – | – |  0 |  0 |   0 |  |
-| -3 | – | – | – |  0 |  0 |   0 |  |
-| -2 | -0.159 | [-0.186, -0.131] | 0.0001 |  1 |  1 |  90 |  |
+| -5 | -0.026 | [-0.100, 0.048] | 0.5119 |  4 |  5 | 495 |  |
+| -4 | 3.868 | [-2.163, 9.898] | 0.2017 |  5 |  7 | 502 |  |
+| -3 | 0.046 | [-0.089, 0.182] | 0.5340 |  3 |  4 | 374 |  |
+| -2 | 0.138 | [-0.054, 0.330] | 0.1620 |  6 |  7 | 482 |  |
 | -1 | 0.000 | – | – | 10 | 12 | 837 | ref |
-|  0 | 0.025 | [-0.024, 0.075] | 0.4816 |  2 |  2 | 131 |  |
-|  1 | 0.009 | [-0.062, 0.080] | 0.8167 |  2 |  2 | 131 |  |
-|  2 | 0.029 | [-0.033, 0.091] | 0.3879 |  1 |  1 |  41 |  |
-|  3 | – | – | – |  0 |  0 |   0 |  |
-|  4 | – | – | – |  0 |  0 |   0 |  |
-|  5 | – | – | – |  0 |  0 |   0 |  |
-|  6 | – | – | – |  0 |  0 |   0 |  |
-|  7 | – | – | – |  0 |  0 |   0 |  |
-|  8 | – | – | – |  0 |  0 |   0 |  |
+|  0 | 0.115 | [-0.050, 0.281] | 0.2823 |  7 |  9 | 773 |  |
+|  1 | 0.057 | [0.007, 0.107] | 0.0233 |  7 |  8 | 696 |  |
+|  2 | -0.039 | [-0.223, 0.144] | 0.7252 |  5 |  6 | 440 |  |
+|  3 | 0.061 | [-0.064, 0.185] | 0.4074 |  4 |  5 | 555 |  |
+|  4 | 0.104 | [-0.029, 0.237] | 0.2781 |  2 |  2 | 254 |  |
+|  5 | 0.003 | [-0.081, 0.086] | 0.9434 |  2 |  2 | 254 |  |
+|  6 | 0.034 | [-0.095, 0.164] | 0.6244 |  2 |  2 | 254 |  |
+|  7 | 0.093 | [-0.050, 0.237] | 0.3446 |  3 |  3 | 357 |  |
+|  8 | 0.346 | [0.300, 0.391] | 0.0001 |  1 |  1 | 103 |  |
 
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| 0.021 | 0.028 | [-0.031, 0.073] | 0.4799 | 0.6188 | 10000 | 0.7254 | 2 | 2 | ok |
+| 0.086 | 0.033 | [0.021, 0.150] | 0.0046 | 0.2065 | 10000 | 0.0124 | 8 | 10 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
@@ -818,7 +838,7 @@ Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV)
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| 0.021 | 0.631 | [-0.125, 1.368] | 0.034 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
+| 0.086 | 0.623 | [-0.116, 1.344] | 0.138 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -826,7 +846,7 @@ Tested share = the subgroup's exact tested count (mean of math and RLA) over its
 
 | p_minority | p_white | trim_fraction | trimmed_treated_post_district_years | estimate_trim_top | estimate_trim_bottom | lee_bracket | status |
 |---|---|---|---|---|---|---|---|
-| 0.0140 | -0.0727 | 0.0866 | 216 of 2497 | -0.007 | 0.063 | [-0.007, 0.063] | ok |
+| 0.0151 | -0.0719 | 0.0869 | 217 of 2497 | 0.055 | 0.147 | [0.055, 0.147] | ok |
 
 ### 6. Estimator agreement (unbalanced panel, primary event set)
 
@@ -834,7 +854,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | 0.021 | 0.028 | [-0.031, 0.073] | ok |
+| callaway_santanna (primary) | 0.086 | 0.033 | [0.021, 0.150] | ok |
 | sun_abraham | 0.046 | 0.010 | [0.026, 0.067] | ok |
 | imputation | 0.079 | 0.008 | [0.064, 0.094] | ok |
 | synthdid | 0.030 | 0.050 | [-0.067, 0.128] | ok |
@@ -848,7 +868,7 @@ tested_weighted: students tested in the gap's two groups in 2009-10, mean of mat
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | 0.021 | 0.4799 | 0.6188 | [-0.371, 0.396] | 131 | ok |
+| unweighted | 0.086 | 0.0046 | 0.2065 | [-44.277, 44.478] | 783 | ok |
 | tested_weighted | 0.152 | 0.0007 | 0.2793 | [-3.670, 3.854] | 310 | ok |
 
 ### 8. Narrower event definitions
@@ -857,9 +877,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | 0.021 | [-0.031, 0.073] | 0.4799 | 0.6188 | [-0.371, 0.396] | 0.034 | ok |
-| r1 | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | – | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
-| r2 | 0.046 | [0.001, 0.090] | 0.0375 | 0.2219 | [-0.197, 0.276] | 0.038 | ok |
+| primary | 0.086 | [0.021, 0.150] | 0.0046 | 0.2065 | [-44.277, 44.478] | 0.138 | ok |
+| r1 | 0.095 | [-0.001, 0.191] | 0.0529 | 0.2169 | [-0.388, 0.583] | 0.167 | ok |
+| r2 | 0.215 | [0.184, 0.246] | 0.0001 | 0.0487 | [-0.203, 0.567] (event times -2..+3) | 0.180 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -868,11 +888,11 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | 0.145 | 0.0001 | 0.2820 | 10000 | [-2.605, 2.924] | ok |
-| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.016 | 0.6716 | 0.7425 |  1000 | [-0.371, 0.403] | ok |
-| Exact values only (Run 1 Section 5 rule 3) | 0.026 | 0.4430 | 0.5450 |  1000 | [-0.357, 0.410] | ok |
-| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.017 | 0.6186 | 0.7030 |  1000 | [-0.374, 0.386] | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.021 | 0.4860 | 0.5948 |  1000 | [-0.371, 0.396] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | 0.121 | 0.0014 | 0.0523 |  1000 | no bound (no estimated pre-reform event time: relative magnitudes need one) | ok |
+| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.171 | 0.0001 | 0.2108 |  1000 | [-2.473, 2.824] | ok |
+| Exact values only (Run 1 Section 5 rule 3) | 0.104 | 0.0029 | 0.3286 |  1000 | [-2.284, 2.492] (event times -2..+7) | ok |
+| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.046 | 0.1478 | 0.5594 |  1000 | [-38.883, 39.008] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.047 | 0.1427 | 0.5534 |  1000 | [-40.246, 40.373] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.041 | 0.7574 | 0.5724 |  1000 | [-1.077, 0.871] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -880,9 +900,9 @@ The EDFacts-years split is Run 1's window; beside the extended panel it shows th
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.021 | 0.4799 | 0.6188 | 10000 | [-0.371, 0.396] | ok |
-| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.092 | 0.0218 | 0.2028 | 1000 | [-1.744, 1.968] | ok |
-| The seventeen confirmed states only, every year (Section 10 coverage split) | – | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. | error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA. |
+| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.086 | 0.0046 | 0.2065 | 10000 | [-44.277, 44.478] | ok |
+| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.092 | 0.0218 | 0.2028 |  1000 | [-1.744, 1.968] | ok |
+| The seventeen confirmed states only, every year (Section 10 coverage split) | 0.270 | 0.0001 | 0.0959 |  1000 | [-0.761, 1.458] (event times -4..+3) | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
 
@@ -926,5 +946,5 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, [-0.371, 0.396]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-44.277, 44.478]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
 

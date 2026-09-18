@@ -1,5 +1,5 @@
 "estimator","estimate","se","ci","status"
-"callaway_santanna (primary)","–","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA."
+"callaway_santanna (primary)","0.027","0.031","[-0.034, 0.087]","ok"
 "sun_abraham","0.009","0.023","[-0.037, 0.055]","ok"
 "imputation","0.047","0.022","[0.005, 0.090]","ok"
 "synthdid","-0.009","0.078","[-0.161, 0.143]","ok"

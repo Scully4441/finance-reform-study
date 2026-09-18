@@ -59,7 +59,9 @@ stopifnot(!anyDuplicated(hr[c("leaid", "sy_end")]), near(hr$y, -0.4), identical(
           near(hr$tested_2010[hr$leaid == "A1"], (140 + 150) / 2), all(is.na(hr$tested_2010[hr$leaid %in% c("C2", "D1")])),
           !any(hr$leaid == "D1" & hr$sy_end == 2010))                                      # the r5 row stays out
 mp <- run2_model_panel(hinp, "b_black_white", "primary", events = hev)
-stopifnot(identical(mp$source_covariate, "entered"), identical(all.vars(mp$xformla), c(CS_COVARIATES, "rc_first")),
+# rc_first is recorded but never enters the CS formula (post-freeze correction 2026-09-17).
+stopifnot(identical(mp$source_covariate, "not entered: report-card-only units have no pre-2022 rows"),
+          identical(all.vars(mp$xformla), CS_COVARIATES),
           all(mp$panel$rc_first[mp$panel$leaid == "C2"] == 1L), all(mp$panel$rc_first[mp$panel$leaid != "C2"] == 0L),
           all(mp$panel$g[mp$panel$state == "A"] == 2012L), all(mp$panel$g[mp$panel$state == "B"] == 2022L), mp$units == 5L)
 mw <- run2_model_panel(hinp, "b_black_white", "primary", weighting = "tested_weighted", events = hev)

@@ -15,7 +15,8 @@
 #         2010-2019 and 2021-2025
 # What runs, per family, through the Run 1 functions (primary.R, secondary.R, inference.R, run_all.R):
 #   1. Step 5: Callaway-Sant'Anna, 3 gaps x 3 event sets x weightings x both panel rules (30 models).
-#      High school: the source covariate rc_first where it varies (Section 7).
+#      High school: no source covariate (post-freeze correction 2026-09-17, docs/deviations_run2.md;
+#      rc_first is recorded in the panel counts but never enters).
 #   2. Step 6: Sun-Abraham, imputation, synthdid, stacked, TWFE, all three event sets, on the unbalanced
 #      panel (main) and the balanced panel (appendix/). Controls: high school test_replaced, cep and the
 #      source indicator rc; SEDA cep; gaps (b) and (c) also the 2009 covariates by year.

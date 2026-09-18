@@ -1,4 +1,4 @@
 "event_set","estimate","boot_ci","boot_p","randomization_p","bound_mbar1","sd_per_1000","status"
-"primary","0.021","[-0.031, 0.073]","0.4799","0.6188","[-0.371, 0.396]","0.034","ok"
-"r1","–","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","not estimable: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.","–","error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA."
-"r2","0.046","[0.001, 0.090]","0.0375","0.2219","[-0.197, 0.276]","0.038","ok"
+"primary","0.086","[0.021, 0.150]","0.0046","0.2065","[-44.277, 44.478]","0.138","ok"
+"r1","0.095","[-0.001, 0.191]","0.0529","0.2169","[-0.388, 0.583]","0.167","ok"
+"r2","0.215","[0.184, 0.246]","0.0001","0.0487","[-0.203, 0.567] (event times -2..+3)","0.180","ok"
