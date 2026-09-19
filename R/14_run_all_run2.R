@@ -16,7 +16,11 @@
 # What runs, per family, through the Run 1 functions (primary.R, secondary.R, inference.R, run_all.R):
 #   1. Step 5: Callaway-Sant'Anna, 3 gaps x 3 event sets x weightings x both panel rules (30 models).
 #      High school: no source covariate (post-freeze correction 2026-09-17, docs/deviations_run2.md;
-#      rc_first is recorded in the panel counts but never enters).
+#      rc_first is recorded in the panel counts but never enters). Treated-unit floor (post-freeze
+#      correction 2026-09-18): in gaps (b) and (c) a cohort with fewer than 20 treated units at its base
+#      period in the primary panel is left out of every Callaway-Sant'Anna model of its gap and event set
+#      (step 5, variants and splits, Lee, dose) and fitted without covariates (05_primary/cohort_floor.csv,
+#      thin_cohorts.csv; the report's appendix/).
 #   2. Step 6: Sun-Abraham, imputation, synthdid, stacked, TWFE, all three event sets, on the unbalanced
 #      panel (main) and the balanced panel (appendix/). Controls: high school test_replaced, cep and the
 #      source indicator rc; SEDA cep; gaps (b) and (c) also the 2009 covariates by year.
@@ -140,7 +144,9 @@ panel_size <- function(mp) data.frame(units_in_model = mp$units, states_in_model
   first_year = if (nrow(mp$panel)) min(mp$panel$sy_end) else NA_integer_,
   last_year = if (nrow(mp$panel)) max(mp$panel$sy_end) else NA_integer_,
   report_card_unit_years = if ("rc" %in% names(mp$panel)) sum(mp$panel$rc == 1) else NA_integer_,
-  source_covariate = mp$source_covariate, stringsAsFactors = FALSE)
+  source_covariate = mp$source_covariate,
+  cohorts_removed_by_floor = if (nrow(mp$floor_removed)) paste(sprintf("%d (%s; %d treated units at the base period)", mp$floor_removed$cohort,
+    mp$floor_removed$states, mp$floor_removed$treated_units_base), collapse = "; ") else "none", stringsAsFactors = FALSE)
 no_panel <- function(msg) list(status = paste("panel error:", msg), notes = "", event = NULL, overall = NULL, cells = NULL,
                                fit = NULL, size = NULL)
 
@@ -172,7 +178,7 @@ run_step5 <- function(family) {
     k <- g$key[i]; f <- file.path(fd, paste0(k, ".rds"))
     if (file.exists(f)) { res[[k]] <- readRDS(f); next }
     r <- fit_cs(function() run2_model_panel(inp, g$gap[i], g$event_set[i], balanced = g$panel[i] == "balanced",
-                                           weighting = g$weighting[i]),
+                                           weighting = g$weighting[i], cohort_floor = TRUE),
                 paste("14_run_all", family, "05_primary", k), PANEL_TYPES[[g$panel[i]]])
     r <- c(as.list(g[i, KEYS]), r)
     saveRDS(r, f)
@@ -189,6 +195,60 @@ run_step5 <- function(family) {
   wcsv(bind(lapply(res, function(r) data.frame(meta(r), status = r$status, notes = r$notes, stringsAsFactors = FALSE))),
        file.path(od, "model_status.csv"))
   wcsv(bind(lapply(res, function(r) tagk(meta(r), r$size))), file.path(od, "panel_counts.csv"))
+  run_thin_cohorts(family, inp)
+}
+
+# The treated-unit floor (correction 2026-09-18): every cohort's count per gap and event set
+# (cohort_floor.csv), and each removed cohort fitted without covariates on its gap's primary panel (primary
+# suppression sample, unbalanced, unweighted, every cohort present, so its not-yet-treated controls are
+# those of the primary model): its ATT(g, t) and did's group aggregate over its post-reform years
+# (thin_cohorts.csv, copied to the report appendix).
+run_thin_cohorts <- function(family, inp) {
+  fd <- fdir(family, "05_primary_thin")
+  floor_rows <- list(); rows <- list()
+  for (s in SETS) for (gap in setdiff(RUN2_GAPS, "a_poverty")) {
+    fl <- run2_cohort_floor(inp, gap, s)
+    floor_rows[[paste(gap, s)]] <- fl
+    thin <- fl[fl$below_floor, , drop = FALSE]
+    if (!nrow(thin)) next
+    f <- file.path(fd, paste0(gap, ".", s, ".rds"))
+    fit <- if (file.exists(f)) readRDS(f) else {
+      mp <- run2_model_panel(inp, gap, s)
+      step <- paste("14_run_all", family, "05_primary thin cohorts", gap, s)
+      r <- run_cs(mp$panel, xformla = ~1, seed_step = step, allow_unbalanced_panel = TRUE)
+      grp <- NULL
+      if (!is.null(r$fit)) {
+        set.seed(seed_for(paste(step, "group")))
+        grp <- tryCatch(suppressWarnings(did::aggte(r$fit$att_gt, type = "group", na.rm = TRUE)), error = function(e) NULL)
+      }
+      x <- list(status = r$status, cells = r$cells,
+                group = if (is.null(grp)) NULL else data.frame(g = as.integer(grp$egt), att = grp$att.egt, se = grp$se.egt))
+      saveRDS(x, f)
+      x
+    }
+    for (i in seq_len(nrow(thin))) {
+      cg <- thin$cohort[i]
+      id <- data.frame(family = family, gap = gap, event_set = s, weighting = "unweighted", panel = "unbalanced", cohort = cg,
+                       states = thin$states[i], base_year = thin$base_year[i], treated_units_base = thin$treated_units_base[i],
+                       treated_units = thin$treated_units[i], stringsAsFactors = FALSE)
+      ce <- fit$cells[fit$cells$g == cg, , drop = FALSE]
+      gr <- if (is.null(fit$group)) NULL else fit$group[fit$group$g == cg, , drop = FALSE]
+      est <- sum(!is.na(ce$att) & ce$t != thin$base_year[i])
+      rows[[paste(gap, s, cg)]] <- rbind(
+        data.frame(id, row = "cohort post-reform average (did aggte, group)", year = NA_integer_, event_time = NA_integer_,
+                   att = if (!is.null(gr) && nrow(gr)) gr$att else NA_real_, se = if (!is.null(gr) && nrow(gr)) gr$se else NA_real_,
+                   status = if (fit$status != "ok") fit$status else if (est == 0L) "no estimable cell (no treated unit at the base period)" else "ok",
+                   stringsAsFactors = FALSE),
+        if (nrow(ce)) data.frame(id, row = "group-time cell", year = ce$t, event_time = ce$e, att = ce$att, se = ce$se,
+                                 status = ifelse(ce$t == thin$base_year[i], "reference (base period)", ifelse(is.na(ce$att), "not estimable", "ok")),
+                                 stringsAsFactors = FALSE))
+    }
+    say(sprintf("  %s floor %-17s %-7s removed cohorts: %s", family, gap, s,
+                paste(sprintf("%d (%s, %d at base)", thin$cohort, thin$states, thin$treated_units_base), collapse = "; ")))
+  }
+  od <- odir(family, "05_primary")
+  wcsv(bind(floor_rows), file.path(od, "cohort_floor.csv"))
+  if (length(rows)) wcsv(bind(rows), file.path(od, "thin_cohorts.csv")) else unlink(file.path(od, "thin_cohorts.csv"))
 }
 
 # ---- 2. step 6 ------------------------------------------------------------------------------------------
@@ -355,7 +415,7 @@ run_variants <- function(family) {
     vs <- RUN2_VARIANTS[[grid$variant[i]]]
     r <- fit_cs(function() run2_model_panel(inp, grid$gap[i], grid$event_set[i], sample = vs$sample, from_year = vs$from_year,
                                            years = vs$years, states = vs$states, drop_few_pre = vs$drop_few_pre,
-                                           weighting = grid$weighting[i]),
+                                           weighting = grid$weighting[i], cohort_floor = TRUE),
                 paste("14_run_all", family, "variants", k), TRUE, vs$anticipation)
     r <- c(list(meta = as.data.frame(grid[i, vk], stringsAsFactors = FALSE), ref = -1L - vs$anticipation), r)
     saveRDS(r, f)
@@ -441,7 +501,7 @@ run_lee <- function() {
   ov5 <- rcsv(odir("hs", "05_primary", "overall_estimates.csv"))
   rows <- list(); share_rows <- list()
   for (gap in c("b_black_white", "c_hispanic_white")) {
-    mp <- run2_model_panel(inp, gap, "primary")
+    mp <- run2_model_panel(inp, gap, "primary", cohort_floor = TRUE)
     base <- mp$panel
     sgs <- RACE_GAPS[[race_key("achievement", gap)]]
     xv <- all.vars(mp$xformla)
@@ -531,7 +591,7 @@ run_dose <- function(family) {
   for (s in SETS) for (gap in RUN2_GAPS) {
     key <- paste(gap, s, "unweighted", "unbalanced", sep = ".")
     inf_y <- s7$infs[[key]]
-    mp <- tryCatch(run2_model_panel(inp, gap, s), error = function(e) e)
+    mp <- tryCatch(run2_model_panel(inp, gap, s, cohort_floor = TRUE), error = function(e) e)
     if (inherits(mp, "error")) {
       rows[[key]] <- data.frame(gap = gap, event_set = s, weighting = "unweighted", panel = "unbalanced", status = paste("panel error:", conditionMessage(mp)))
       next
@@ -634,7 +694,7 @@ build_report <- function() {
           "",
           "Run 1 Section 13 applies to each Run 2 outcome family. For each gap the honest-DiD bound sets come first; the headline is the bound set at M̄ = 1, and all five M̄ values are shown. Point estimates, p-values and intervals are reported as quantities, and no result is described as statistically significant.",
           "",
-          "Primary specification: Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school), reference period −1, primary event set, unweighted; high school models add the source covariate where it varies (Section 7). Event-time and overall intervals are Webb wild cluster bootstrap intervals (9,999 draws, state clusters).",
+          paste0("Primary specification: Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school), reference period −1, primary event set, unweighted; the high school models take no source covariate (post-freeze correction 2026-09-17). Treated-unit floor (post-freeze correction 2026-09-18, Section 7): in gaps (b) and (c), whose models adjust for the 2009 covariates, a cohort with fewer than ", RUN2_COHORT_FLOOR, " treated units at its base period in the primary model's panel is left out of every Callaway–Sant'Anna model of its gap and event set and fitted without covariates in appendix/thin_cohorts.csv (listed at the end of this report). In the event-study tables, † marks a coefficient resting on a single treated state. Event-time and overall intervals are Webb wild cluster bootstrap intervals (9,999 draws, state clusters)."),
           "")
   n_head <- length(md)
   ans <- list()
@@ -697,10 +757,13 @@ build_report <- function() {
         o <- sel(ov5, gap)
         png_name <- paste0(family, "_", gap, "_event_study.png")
         plot_event_study(file.path(REP, "plots", png_name), ev, if (nrow(o)) o$att else NA_real_, h, title)
-        et <- data.frame(event_time = ev$e, estimate = fmt(ev$att), boot_ci = ci(ev$ci_lo, ev$ci_hi), boot_p = fmt_p(ev$p_value),
+        ev$single_treated_state <- !ev$reference & ev$treated_states %in% 1L
+        et <- data.frame(event_time = ev$e, estimate = paste0(fmt(ev$att), ifelse(ev$single_treated_state, " †", "")),
+                         boot_ci = ci(ev$ci_lo, ev$ci_hi), boot_p = fmt_p(ev$p_value),
                          cohorts = ev$cohorts, treated_states = ev$treated_states, treated_units = ev$treated_units,
                          reference = ifelse(ev$reference, "ref", ""))
-        md <- c(md, paste0("![event study](plots/", png_name, ")"), "", md_table(et))
+        md <- c(md, paste0("![event study](plots/", png_name, ")"), "", md_table(et),
+                if (any(ev$single_treated_state)) c("", "† The coefficient rests on a single treated state.") else character())
       } else md <- c(md, md_table(data.frame(event_time = "all", status = gone(st0, id0))))
       names(ev)[names(ev) == "t"] <- "t_stat"
       wcsv(ev, tf(2, "event_study"))
@@ -846,6 +909,25 @@ build_report <- function() {
               "", md_table(mt))
     }
   }
+  # Appendix: the treated-unit floor (correction 2026-09-18) and the removed cohorts fitted without covariates.
+  fl <- bind(lapply(RUN2_FAMILIES, function(fm) { x <- rd0(odir(fm, "05_primary", "cohort_floor.csv"))
+    if (nrow(x) && "cohort" %in% names(x)) data.frame(family = fm, x, stringsAsFactors = FALSE) }))
+  thin <- bind(lapply(RUN2_FAMILIES, function(fm) { f <- odir(fm, "05_primary", "thin_cohorts.csv"); if (file.exists(f)) rcsv(f) }))
+  dir.create(file.path(REP, "appendix"), showWarnings = FALSE)
+  md <- c(md, "# Appendix: cohorts below the treated-unit floor", "",
+          paste0("Post-freeze correction 2026-09-18 (docs/deviations_run2.md, Section 7). A cohort with fewer than ", RUN2_COHORT_FLOOR,
+                 " treated units at its base period (the last window year before the cohort year) in the primary model's panel of its gap and event set (primary suppression sample, unbalanced, unweighted) is left out of every covariate-adjusted Callaway–Sant'Anna model of that gap and event set: step 5 under both weightings and panel rules, the variants and splits, and the Lee and dose refits. Each removed cohort is fitted without covariates on its gap's primary panel, all cohorts present; its group-time cells and did's group aggregate are in appendix/thin_cohorts.csv, with the cohort's treated units at the base period and in any year. Gap (a) has no covariates and no floor."), "")
+  if (!is.null(fl) && nrow(fl)) {
+    wcsv(fl, file.path(REP, "appendix", "cohort_floor.csv"))
+    rmv <- fl[fl$below_floor, , drop = FALSE]
+    kept <- stats::aggregate(list(cohorts_kept = !fl$below_floor), fl[c("family", "gap", "event_set")], sum)
+    rmt <- if (nrow(rmv)) data.frame(family = rmv$family, gap = rmv$gap, event_set = rmv$event_set, cohort = rmv$cohort, states = rmv$states,
+                                    base_year = rmv$base_year, treated_units_base = rmv$treated_units_base, treated_units = rmv$treated_units) else
+      data.frame(status = "no cohort below the floor")
+    md <- c(md, "Removed cohorts:", "", md_table(rmt), "", "Cohorts remaining in the primary panel of each gap and event set:", "",
+            md_table(kept[order(kept$family, kept$gap, kept$event_set), ]), "")
+  } else md <- c(md, "No cohort_floor.csv in the step 5 outputs.", "")
+  if (!is.null(thin) && nrow(thin)) wcsv(thin, file.path(REP, "appendix", "thin_cohorts.csv"))
   at <- bind(ans)
   wcsv(at, file.path(REP, "tables", "answer_intervals.csv"))
   md <- c(md[seq_len(n_head)], "## Answer to the research question, by family and gap", "", md_table(at), md[-seq_len(n_head)])

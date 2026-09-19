@@ -78,6 +78,20 @@ mb <- run2_model_panel(hinp, "b_black_white", "primary", balanced = TRUE, events
 stopifnot(identical(sort(unique(mb$panel$leaid)), c("A1", "B1", "C1")))
 mf <- run2_model_panel(hinp, "b_black_white", "primary", from_year = 2013L, events = hev)
 stopifnot(all(mf$panel$sy_end >= 2021), !"A" %in% mf$panel$state)                        # A treated before 2013: no pre-period
+# Treated-unit floor (post-freeze correction 2026-09-18): counts at the base period of the primary panel.
+fl <- run2_cohort_floor(hinp, "b_black_white", "primary", events = hev)
+stopifnot(identical(fl$cohort, c(2012L, 2022L)), identical(fl$base_year, c(2011L, 2021L)), identical(fl$treated_units_base, c(1L, 1L)),
+          all(fl$below_floor), !any(run2_cohort_floor(hinp, "b_black_white", "primary", events = hev, floor = 1L)$below_floor),
+          nrow(run2_cohort_floor(hinp, "a_poverty", "primary", events = hev)) == 0L, RUN2_COHORT_FLOOR == 20L)
+mfl <- run2_model_panel(hinp, "b_black_white", "primary", events = hev, cohort_floor = TRUE)
+stopifnot(identical(sort(unique(mfl$panel$state)), c("C", "D")), identical(mfl$floor_removed$cohort, c(2012L, 2022L)),
+          nrow(mp$floor_removed) == 0L, identical(all.vars(mfl$xformla), CS_COVARIATES))
+mfe <- run2_model_panel(hinp, "b_black_white", "primary", years = RUN2_EDFACTS_YEARS, events = hev, cohort_floor = TRUE)
+stopifnot(identical(mfe$floor_removed$cohort, 2012L), all(mfe$panel$g[mfe$panel$state == "B"] == 0L))   # B after the window: a control
+mfw <- run2_model_panel(hinp, "b_black_white", "primary", weighting = "tested_weighted", events = hev, cohort_floor = TRUE)
+stopifnot(!any(mfw$panel$state %in% c("A", "B")))
+stopifnot(identical(run2_model_panel(hinp, "a_poverty", "primary", events = hev, cohort_floor = TRUE)$panel,
+                    run2_model_panel(hinp, "a_poverty", "primary", events = hev)$panel))                 # no covariates, no floor
 ma <- run2_model_panel(hinp, "a_poverty", "primary", events = hev)
 stopifnot(identical(ma$unit, "state"), identical(sort(unique(ma$panel$state)), c("A", "C")), near(ma$panel$y, -0.3),
           identical(all.vars(ma$xformla), character()), identical(ma$source_covariate, "not entered: constant in this panel"))
@@ -139,6 +153,13 @@ for (fam in RUN2_FAMILIES) {
   st <- rd(file.path(s7, "inference_settings.csv")); r7 <- rd(file.path(s7, "randomization_overall.csv"))
   stopifnot(st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "10000",
             all(r7$reps == RUN2_RI_REPS), nrow(rd(file.path(o14, fam, "05_primary", "model_status.csv"))) == 30L)
+  cf <- file.path(o14, fam, "05_primary", "cohort_floor.csv")
+  if (file.exists(cf)) {                                         # treated-unit floor (correction 2026-09-18)
+    fl14 <- rd(cf); pc14 <- rd(file.path(o14, fam, "05_primary", "panel_counts.csv"))
+    stopifnot(identical(fl14$below_floor, fl14$treated_units_base < RUN2_COHORT_FLOOR), "cohorts_removed_by_floor" %in% names(pc14),
+              all(pc14$cohorts_removed_by_floor[pc14$gap == "a_poverty"] == "none"))
+    if (any(fl14$below_floor)) stopifnot(file.exists(file.path(o14, fam, "05_primary", "thin_cohorts.csv")))
+  }
   for (hf in c(file.path(s7, "honestdid_overall.csv"), file.path(vd, "honestdid_overall.csv"))) {
     h <- rd(hf)
     k <- h$status == "ok" & !is.na(h$mbar)

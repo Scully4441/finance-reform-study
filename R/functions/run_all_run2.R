@@ -17,6 +17,15 @@
 #   2x2s lying inside 2022-2025 it separates treatment (in gap (b) no treated unit has rc_first = 1).
 #   The doubly robust propensity score and outcome regression are singular there and did returns NA,
 #   which left gap (b) with no estimable cell at all and gap (c) with two cohorts.
+#   Post-freeze correction 2026-09-18 (docs/deviations_run2.md, Section 7): treated-unit floor. A cohort
+#   with fewer than RUN2_COHORT_FLOOR treated units at its base period (the last window year before the
+#   cohort year, did's universal base period) in the primary model's panel (primary suppression sample,
+#   unbalanced, unweighted) of its gap and event set is left out of every covariate-adjusted
+#   Callaway-Sant'Anna model of that gap and event set (step 5, the variants and splits, and the Lee and
+#   dose refits that reproduce step 5), its states dropped as rule 6 drops a state. The list is fixed per
+#   gap and event set, and a cohort is dropped from a model only where it is a treated cohort in that
+#   model's window. Step 14 fits the removed cohorts without covariates for the report appendix. Gap (a)
+#   has no covariates and no floor; the regression estimators of step 6 are unchanged.
 #   SEDA controls (regression estimators). CEP by district-year (the phase-in table before 2014, the
 #   district's CCD status 2014-2024, 2025 carrying 2024's value) and, for gaps (b) and (c), the four
 #   2009 covariates by year; gap (a) takes the CEP share of its quintile 1 and 5 districts retained
@@ -54,6 +63,7 @@ RUN2_HS_CONTROLS <- c("test_replaced", "cep", "rc")
 RUN2_SEDA_CONTROLS <- "cep"
 RUN2_BOOT_REPS <- 9999L                                         # Section 8
 RUN2_RI_REPS <- 10000L                                          # Section 8: the step 5 models of each family
+RUN2_COHORT_FLOOR <- 20L                                        # treated units at the base period (correction 2026-09-18)
 # Section 4: the seventeen states confirmed from the file description.
 RUN2_CONFIRMED_STATES <- c("AL", "CA", "CO", "CT", "DE", "GA", "KS", "MA", "MI", "MO", "NC", "NV", "NY", "OR",
                            "RI", "TX", "WA")
@@ -231,11 +241,14 @@ run2_outcome_rows <- function(inp, gap, flag, sample = "primary") {
 # variant's changes: years (window years kept), from_year, states (states kept), balanced (every kept
 # window year), drop_few_pre. Cohorts are coded over the kept years. High school: rc_first is added to
 # the panel and its status recorded, but no source covariate enters the formula (correction
-# 2026-09-17, header). events: an event table in place of the file (tests). Returns the panel, unit,
-# covariate formula, weight column, counts, the kept years and the source covariate's status (NA for
-# SEDA).
+# 2026-09-17, header). cohort_floor = TRUE (the Callaway-Sant'Anna models) applies the treated-unit
+# floor (correction 2026-09-18, header) to a covariate-adjusted gap. events: an event table in place of
+# the file (tests). Returns the panel, unit, covariate formula, weight column, counts, the kept years,
+# the source covariate's status (NA for SEDA) and the cohorts the floor removed (floor_removed: cohort,
+# states, treated units at the base period; none when the floor did not apply).
 run2_model_panel <- function(inp, gap, set, sample = "primary", balanced = FALSE, from_year = NULL, years = NULL,
-                             states = NULL, drop_few_pre = FALSE, weighting = "unweighted", events = NULL) {
+                             states = NULL, drop_few_pre = FALSE, weighting = "unweighted", events = NULL,
+                             cohort_floor = FALSE) {
   unit <- if (gap == "a_poverty") "state" else "leaid"
   p <- run2_outcome_rows(inp, gap, RETAIN_FLAGS[[set]], sample)
   cw <- sort(inp$window)
@@ -264,6 +277,15 @@ run2_model_panel <- function(inp, gap, set, sample = "primary", balanced = FALSE
     coding$cohort_status[few] <- "excluded"
     coding$g[few] <- NA_integer_
   }
+  removed <- data.frame(cohort = integer(), states = character(), treated_units_base = integer(), stringsAsFactors = FALSE)
+  if (cohort_floor && length(covs)) {
+    fl <- run2_cohort_floor(inp, gap, set, events = events)
+    fl <- fl[fl$below_floor, , drop = FALSE]
+    thin <- coding$cohort_status == "estimable" & coding$g %in% fl$cohort
+    removed <- fl[fl$cohort %in% coding$g[thin], c("cohort", "states", "treated_units_base"), drop = FALSE]
+    coding$cohort_status[thin] <- "excluded"
+    coding$g[thin] <- NA_integer_
+  }
   p <- attach_cohorts(p, coding, unit)$panel
   if (weighting == "tested_weighted") {
     p <- p[!is.na(p$tested_2010), , drop = FALSE]
@@ -281,7 +303,28 @@ run2_model_panel <- function(inp, gap, set, sample = "primary", balanced = FALSE
   list(panel = p, unit = unit, xformla = if (length(covs)) stats::reformulate(covs) else ~1,
        weightsname = if (weighting == "tested_weighted") "tested_2010" else NULL,
        units = length(unique(p$id)), states = length(unique(p$state)), states_dropped_few_pre = as.integer(n_few),
-       window = cw, source_covariate = src)
+       window = cw, source_covariate = src, floor_removed = removed)
+}
+
+# The treated-unit floor of one gap and event set (correction 2026-09-18, header): one row per estimable
+# cohort of the primary model's panel (primary suppression sample, unbalanced, unweighted, the family
+# window), with its states, base period (the last window year before the cohort year), treated units
+# with an outcome in the base period and in any year, and below_floor. Gap (a): no rows (no covariates).
+run2_cohort_floor <- function(inp, gap, set, events = NULL, floor = RUN2_COHORT_FLOOR) {
+  out <- data.frame(gap = character(), event_set = character(), cohort = integer(), states = character(), base_year = integer(),
+                    treated_units_base = integer(), treated_units = integer(), below_floor = logical(), stringsAsFactors = FALSE)
+  if (gap == "a_poverty") return(out)
+  p <- run2_model_panel(inp, gap, set, events = events)$panel
+  cw <- sort(inp$window)
+  gs <- sort(unique(p$g[p$g > 0]))
+  if (!length(gs)) return(out)
+  base <- vapply(gs, function(g) max(cw[cw < g]), 0)
+  nb <- vapply(seq_along(gs), function(i) length(unique(p$id[p$g == gs[i] & p$sy_end == base[i]])), 0L)
+  data.frame(gap = gap, event_set = set, cohort = as.integer(gs),
+             states = vapply(gs, function(g) paste(sort(unique(p$state[p$g == g])), collapse = " "), ""),
+             base_year = as.integer(base), treated_units_base = as.integer(nb),
+             treated_units = vapply(gs, function(g) length(unique(p$id[p$g == g])), 0L),
+             below_floor = nb < floor, stringsAsFactors = FALSE)
 }
 
 # ---- controls of the regression estimators ----------------------------------------------------------

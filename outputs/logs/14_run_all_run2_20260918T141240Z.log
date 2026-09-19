@@ -1,0 +1,251 @@
+10:12:40  Step 14 run-all (Run 2), run 20260917T041717Z (resumed); stage_run2 2; blinding REAL
+10:12:40  Console: parts, model and unit counts, timings. Estimates: outputs/run2/14_run_all and outputs/run2/13_report; model objects: data/derived/run2_14_fits
+10:12:40  start 05_primary seda
+10:12:52    seda fit b_black_white     primary unweighted      unbalanced   2030 units 33 states  ok
+10:12:54    seda fit b_black_white     primary unweighted      balanced      540 units 12 states  ok
+10:12:57    seda fit b_black_white     primary tested_weighted unbalanced   1697 units 31 states  ok
+10:12:58    seda fit b_black_white     primary tested_weighted balanced      540 units 12 states  ok
+10:13:02    seda fit c_hispanic_white  primary unweighted      unbalanced   2876 units 33 states  ok
+10:13:04    seda fit c_hispanic_white  primary unweighted      balanced      752 units 12 states  ok
+10:13:07    seda fit c_hispanic_white  primary tested_weighted unbalanced   1812 units 31 states  ok
+10:13:09    seda fit c_hispanic_white  primary tested_weighted balanced      752 units 12 states  ok
+10:13:20    seda fit b_black_white     r2      unweighted      unbalanced   2632 units 42 states  ok
+10:13:22    seda fit b_black_white     r2      unweighted      balanced      621 units 14 states  ok
+10:13:25    seda fit b_black_white     r2      tested_weighted unbalanced   2156 units 39 states  ok
+10:13:26    seda fit b_black_white     r2      tested_weighted balanced      621 units 14 states  ok
+10:13:30    seda fit c_hispanic_white  r2      unweighted      unbalanced   3903 units 42 states  ok
+10:13:32    seda fit c_hispanic_white  r2      unweighted      balanced      843 units 14 states  ok
+10:13:35    seda fit c_hispanic_white  r2      tested_weighted unbalanced   2462 units 39 states  ok
+10:13:37    seda fit c_hispanic_white  r2      tested_weighted balanced      843 units 14 states  ok
+10:13:38    seda floor b_black_white     primary removed cohorts: 2017 (SD, 1 at base); 2019 (NM, 0 at base); 2020 (NV, 2 at base); 2025 (CO MS, 0 at base)
+10:13:41    seda floor c_hispanic_white  primary removed cohorts: 2017 (SD, 4 at base); 2019 (NM, 0 at base); 2020 (NV, 12 at base); 2025 (CO MS, 0 at base)
+10:13:42    seda floor b_black_white     r2      removed cohorts: 2019 (NM, 0 at base)
+10:13:43    seda floor c_hispanic_white  r2      removed cohorts: 2019 (NM, 0 at base)
+10:13:44  done  05_primary seda  1.1 min
+10:13:44  skip 06_secondary seda (finished in run 20260917T041717Z)
+10:13:56  start 07_inference seda
+10:19:29    seda step 7 primary bootstrap, Romano-Wolf draws and HonestDiD: 10 fitted models
+10:21:22    seda step 7 r1      bootstrap, Romano-Wolf draws and HonestDiD: 10 fitted models
+10:21:47    seda step 7 r2      bootstrap, Romano-Wolf draws and HonestDiD: 10 fitted models
+10:21:47    seda randomization a_poverty.primary.unweighted.unbalanced       10000/10000 reassignments estimated
+10:21:47    seda randomization a_poverty.primary.unweighted.balanced         10000/10000 reassignments estimated
+10:53:10    seda randomization b_black_white.primary.unweighted.unbalanced   10000/10000 reassignments estimated
+10:56:00    seda randomization b_black_white.primary.unweighted.balanced     10000/10000 reassignments estimated
+11:25:17    seda randomization b_black_white.primary.tested_weighted.unbalanced 10000/10000 reassignments estimated
+11:28:15    seda randomization b_black_white.primary.tested_weighted.balanced 10000/10000 reassignments estimated
+12:17:56    seda randomization c_hispanic_white.primary.unweighted.unbalanced 10000/10000 reassignments estimated
+12:22:30    seda randomization c_hispanic_white.primary.unweighted.balanced  10000/10000 reassignments estimated
+13:08:24    seda randomization c_hispanic_white.primary.tested_weighted.unbalanced 10000/10000 reassignments estimated
+13:12:42    seda randomization c_hispanic_white.primary.tested_weighted.balanced 10000/10000 reassignments estimated
+13:12:42    seda randomization a_poverty.r1.unweighted.unbalanced             9984/10000 reassignments estimated
+13:12:42    seda randomization a_poverty.r1.unweighted.balanced              10000/10000 reassignments estimated
+13:12:42    seda randomization b_black_white.r1.unweighted.unbalanced         9700/10000 reassignments estimated
+13:12:42    seda randomization b_black_white.r1.unweighted.balanced          10000/10000 reassignments estimated
+13:12:42    seda randomization b_black_white.r1.tested_weighted.unbalanced    9833/10000 reassignments estimated
+13:12:42    seda randomization b_black_white.r1.tested_weighted.balanced     10000/10000 reassignments estimated
+13:12:42    seda randomization c_hispanic_white.r1.unweighted.unbalanced      9812/10000 reassignments estimated
+13:12:42    seda randomization c_hispanic_white.r1.unweighted.balanced       10000/10000 reassignments estimated
+13:12:42    seda randomization c_hispanic_white.r1.tested_weighted.unbalanced  9911/10000 reassignments estimated
+13:12:42    seda randomization c_hispanic_white.r1.tested_weighted.balanced  10000/10000 reassignments estimated
+13:12:42    seda randomization a_poverty.r2.unweighted.unbalanced             9991/10000 reassignments estimated
+13:12:42    seda randomization a_poverty.r2.unweighted.balanced              10000/10000 reassignments estimated
+13:36:12    seda randomization b_black_white.r2.unweighted.unbalanced         9278/10000 reassignments estimated
+13:38:39    seda randomization b_black_white.r2.unweighted.balanced          10000/10000 reassignments estimated
+14:03:05    seda randomization b_black_white.r2.tested_weighted.unbalanced    9539/10000 reassignments estimated
+14:05:40    seda randomization b_black_white.r2.tested_weighted.balanced     10000/10000 reassignments estimated
+14:43:53    seda randomization c_hispanic_white.r2.unweighted.unbalanced      9567/10000 reassignments estimated
+14:46:43    seda randomization c_hispanic_white.r2.unweighted.balanced       10000/10000 reassignments estimated
+15:16:18    seda randomization c_hispanic_white.r2.tested_weighted.unbalanced  9594/10000 reassignments estimated
+15:19:14    seda randomization c_hispanic_white.r2.tested_weighted.balanced  10000/10000 reassignments estimated
+15:19:14    seda randomization inference: 30 models, 297.4 min
+15:19:16  done  07_inference seda  305.3 min
+15:19:16  start variants seda
+15:19:21  seda variants: 60 models (4 variants and splits x 3 event sets x gaps and weightings)
+15:19:25    seda variant b_black_white     primary unweighted      drop_few_pre               1986 units 32 states  ok
+15:19:29    seda variant b_black_white     primary tested_weighted drop_few_pre               1658 units 30 states  ok
+15:19:32    seda variant c_hispanic_white  primary unweighted      drop_few_pre               2735 units 32 states  ok
+15:19:36    seda variant c_hispanic_white  primary tested_weighted drop_few_pre               1702 units 30 states  ok
+15:19:42    seda variant b_black_white     r2      unweighted      drop_few_pre               2588 units 41 states  ok
+15:19:45    seda variant b_black_white     r2      tested_weighted drop_few_pre               2117 units 38 states  ok
+15:19:48    seda variant c_hispanic_white  r2      unweighted      drop_few_pre               3762 units 41 states  ok
+15:19:50    seda variant c_hispanic_white  r2      tested_weighted drop_few_pre               2352 units 38 states  ok
+15:19:54    seda variant b_black_white     primary unweighted      anticipation_1             2030 units 33 states  ok
+15:19:57    seda variant b_black_white     primary tested_weighted anticipation_1             1697 units 31 states  ok
+15:20:02    seda variant c_hispanic_white  primary unweighted      anticipation_1             2876 units 33 states  ok
+15:20:05    seda variant c_hispanic_white  primary tested_weighted anticipation_1             1812 units 31 states  ok
+15:20:12    seda variant b_black_white     r2      unweighted      anticipation_1             2632 units 42 states  ok
+15:20:14    seda variant b_black_white     r2      tested_weighted anticipation_1             2156 units 39 states  ok
+15:20:18    seda variant c_hispanic_white  r2      unweighted      anticipation_1             3903 units 42 states  ok
+15:20:21    seda variant c_hispanic_white  r2      tested_weighted anticipation_1             2462 units 39 states  ok
+15:20:24    seda variant b_black_white     primary unweighted      seda_2009_2019             2073 units 36 states  ok
+15:20:27    seda variant b_black_white     primary tested_weighted seda_2009_2019             1793 units 33 states  ok
+15:20:30    seda variant c_hispanic_white  primary unweighted      seda_2009_2019             2757 units 36 states  ok
+15:20:33    seda variant c_hispanic_white  primary tested_weighted seda_2009_2019             1840 units 33 states  ok
+15:20:39    seda variant b_black_white     r2      unweighted      seda_2009_2019             2540 units 42 states  ok
+15:20:41    seda variant b_black_white     r2      tested_weighted seda_2009_2019             2156 units 39 states  ok
+15:20:44    seda variant c_hispanic_white  r2      unweighted      seda_2009_2019             3604 units 42 states  ok
+15:20:47    seda variant c_hispanic_white  r2      tested_weighted seda_2009_2019             2462 units 39 states  ok
+15:20:50    seda variant b_black_white     primary unweighted      seda_2022_2025             1243 units 23 states  ok
+15:20:51    seda variant b_black_white     primary tested_weighted seda_2022_2025             1112 units 21 states  ok
+15:20:53    seda variant c_hispanic_white  primary unweighted      seda_2022_2025             1912 units 23 states  ok
+15:20:55    seda variant c_hispanic_white  primary tested_weighted seda_2022_2025             1228 units 21 states  ok
+15:20:57    seda variant b_black_white     r2      unweighted      seda_2022_2025             1921 units 33 states  ok
+15:20:59    seda variant b_black_white     r2      tested_weighted seda_2022_2025             1642 units 31 states  ok
+15:21:01    seda variant c_hispanic_white  r2      unweighted      seda_2022_2025             3180 units 33 states  ok
+15:21:03    seda variant c_hispanic_white  r2      tested_weighted seda_2022_2025             2083 units 31 states  ok
+15:40:29  seda variants: bootstrap, Romano-Wolf and HonestDiD done for 55 fitted models
+16:49:56  seda variants: randomization inference (1000 reassignments) on 55 models, 69.5 min
+16:49:56  done  variants seda  90.7 min
+16:49:57  start 05_primary hs
+16:50:01    hs fit b_black_white     primary unweighted      unbalanced   1703 units 35 states  ok
+16:50:02    hs fit b_black_white     primary unweighted      balanced       55 units  8 states  ok
+16:50:03    hs fit b_black_white     primary tested_weighted unbalanced   1109 units 32 states  ok
+16:50:04    hs fit b_black_white     primary tested_weighted balanced       55 units  8 states  ok
+16:50:06    hs fit c_hispanic_white  primary unweighted      unbalanced   2085 units 32 states  ok
+16:50:07    hs fit c_hispanic_white  primary unweighted      balanced       23 units  7 states  ok
+16:50:08    hs fit c_hispanic_white  primary tested_weighted unbalanced    964 units 29 states  ok
+16:50:09    hs fit c_hispanic_white  primary tested_weighted balanced       23 units  7 states  ok
+16:50:12    hs fit b_black_white     r2      unweighted      unbalanced   2159 units 44 states  ok
+16:50:12    hs fit b_black_white     r2      unweighted      balanced       55 units  8 states  not ok (status in files)
+16:50:13    hs fit b_black_white     r2      tested_weighted unbalanced   1459 units 41 states  ok
+16:50:14    hs fit b_black_white     r2      tested_weighted balanced       55 units  8 states  not ok (status in files)
+16:50:15    hs fit c_hispanic_white  r2      unweighted      unbalanced   2976 units 43 states  ok
+16:50:16    hs fit c_hispanic_white  r2      unweighted      balanced       25 units  8 states  not ok (status in files)
+16:50:17    hs fit c_hispanic_white  r2      tested_weighted unbalanced   1453 units 39 states  ok
+16:50:18    hs fit c_hispanic_white  r2      tested_weighted balanced       25 units  8 states  not ok (status in files)
+16:50:19    hs floor b_black_white     primary removed cohorts: 2017 (SD, 1 at base); 2019 (NM, 0 at base); 2020 (NV, 2 at base); 2025 (CO MS, 1 at base)
+16:50:21    hs floor c_hispanic_white  primary removed cohorts: 2017 (SD, 2 at base); 2019 (NM, 0 at base); 2020 (NV, 9 at base); 2022 (MD OH, 19 at base); 2025 (CO MS, 5 at base)
+16:50:22    hs floor b_black_white     r2      removed cohorts: 2019 (NM, 0 at base)
+16:50:23    hs floor c_hispanic_white  r2      removed cohorts: 2019 (NM, 0 at base)
+16:50:23  done  05_primary hs  0.4 min
+16:50:23  skip 06_secondary hs (finished in run 20260917T041717Z)
+16:50:31  start 07_inference hs
+16:59:33    hs step 7 primary bootstrap, Romano-Wolf draws and HonestDiD: 10 fitted models
+17:00:12    hs step 7 r1      bootstrap, Romano-Wolf draws and HonestDiD: 6 fitted models
+17:01:16    hs step 7 r2      bootstrap, Romano-Wolf draws and HonestDiD: 6 fitted models
+17:01:16    hs randomization a_poverty.primary.unweighted.unbalanced       10000/10000 reassignments estimated
+17:01:16    hs randomization a_poverty.primary.unweighted.balanced         10000/10000 reassignments estimated
+17:26:02    hs randomization b_black_white.primary.unweighted.unbalanced    9991/10000 reassignments estimated
+17:28:04    hs randomization b_black_white.primary.unweighted.balanced      9611/10000 reassignments estimated
+17:48:38    hs randomization b_black_white.primary.tested_weighted.unbalanced  9993/10000 reassignments estimated
+17:50:48    hs randomization b_black_white.primary.tested_weighted.balanced  9599/10000 reassignments estimated
+18:17:34    hs randomization c_hispanic_white.primary.unweighted.unbalanced  9990/10000 reassignments estimated
+18:19:03    hs randomization c_hispanic_white.primary.unweighted.balanced   8560/10000 reassignments estimated
+18:37:09    hs randomization c_hispanic_white.primary.tested_weighted.unbalanced  9989/10000 reassignments estimated
+18:38:46    hs randomization c_hispanic_white.primary.tested_weighted.balanced  8577/10000 reassignments estimated
+18:38:46    hs randomization a_poverty.r1.unweighted.unbalanced            10000/10000 reassignments estimated
+18:38:46    hs randomization a_poverty.r1.unweighted.balanced              10000/10000 reassignments estimated
+18:38:46    hs randomization b_black_white.r1.unweighted.unbalanced         9429/10000 reassignments estimated
+18:38:46    hs randomization b_black_white.r1.tested_weighted.unbalanced    9607/10000 reassignments estimated
+18:38:46    hs randomization c_hispanic_white.r1.unweighted.unbalanced      9639/10000 reassignments estimated
+18:38:46    hs randomization c_hispanic_white.r1.tested_weighted.unbalanced  9626/10000 reassignments estimated
+18:38:46    hs randomization a_poverty.r2.unweighted.unbalanced             9983/10000 reassignments estimated
+18:38:46    hs randomization a_poverty.r2.unweighted.balanced              10000/10000 reassignments estimated
+18:57:04    hs randomization b_black_white.r2.unweighted.unbalanced         8476/10000 reassignments estimated
+19:11:35    hs randomization b_black_white.r2.tested_weighted.unbalanced    8748/10000 reassignments estimated
+19:36:43    hs randomization c_hispanic_white.r2.unweighted.unbalanced      8801/10000 reassignments estimated
+19:52:19    hs randomization c_hispanic_white.r2.tested_weighted.unbalanced  9042/10000 reassignments estimated
+19:52:19    hs randomization inference: 22 models, 171.1 min
+19:52:20  done  07_inference hs  181.8 min
+19:52:20  start variants hs
+19:52:22  hs variants: 105 models (7 variants and splits x 3 event sets x gaps and weightings)
+19:52:24    hs variant b_black_white     primary unweighted      sample_r5                  1459 units 34 states  ok
+19:52:26    hs variant b_black_white     primary tested_weighted sample_r5                   729 units 32 states  ok
+19:52:28    hs variant c_hispanic_white  primary unweighted      sample_r5                  1782 units 31 states  ok
+19:52:29    hs variant c_hispanic_white  primary tested_weighted sample_r5                   585 units 28 states  ok
+19:52:31    hs variant b_black_white     r2      unweighted      sample_r5                  1781 units 43 states  ok
+19:52:33    hs variant b_black_white     r2      tested_weighted sample_r5                   927 units 40 states  ok
+19:52:34    hs variant c_hispanic_white  r2      unweighted      sample_r5                  2548 units 41 states  ok
+19:52:36    hs variant c_hispanic_white  r2      tested_weighted sample_r5                   929 units 37 states  ok
+19:52:37    hs variant b_black_white     primary unweighted      sample_exact               1196 units 30 states  ok
+19:52:38    hs variant b_black_white     primary tested_weighted sample_exact                169 units 24 states  ok
+19:52:40    hs variant c_hispanic_white  primary unweighted      sample_exact               1517 units 29 states  ok
+19:52:41    hs variant c_hispanic_white  primary tested_weighted sample_exact                131 units 21 states  ok
+19:52:43    hs variant b_black_white     r2      unweighted      sample_exact               1413 units 37 states  ok
+19:52:43    hs variant b_black_white     r2      tested_weighted sample_exact                197 units 29 states  not ok (status in files)
+19:52:44    hs variant c_hispanic_white  r2      unweighted      sample_exact               2203 units 36 states  ok
+19:52:45    hs variant c_hispanic_white  r2      tested_weighted sample_exact                237 units 27 states  not ok (status in files)
+19:52:46    hs variant b_black_white     primary unweighted      participation_from_2013    1544 units 33 states  ok
+19:52:48    hs variant b_black_white     primary tested_weighted participation_from_2013     995 units 30 states  ok
+19:52:49    hs variant c_hispanic_white  primary unweighted      participation_from_2013    1869 units 30 states  ok
+19:52:50    hs variant c_hispanic_white  primary tested_weighted participation_from_2013     844 units 27 states  ok
+19:52:52    hs variant b_black_white     r2      unweighted      participation_from_2013    2020 units 43 states  ok
+19:52:53    hs variant b_black_white     r2      tested_weighted participation_from_2013    1352 units 40 states  ok
+19:52:55    hs variant c_hispanic_white  r2      unweighted      participation_from_2013    2823 units 42 states  ok
+19:52:56    hs variant c_hispanic_white  r2      tested_weighted participation_from_2013    1355 units 38 states  ok
+19:52:58    hs variant b_black_white     primary unweighted      drop_few_pre               1615 units 33 states  ok
+19:53:00    hs variant b_black_white     primary tested_weighted drop_few_pre               1052 units 30 states  ok
+19:53:01    hs variant c_hispanic_white  primary unweighted      drop_few_pre               1894 units 30 states  ok
+19:53:03    hs variant c_hispanic_white  primary tested_weighted drop_few_pre                867 units 27 states  ok
+19:53:05    hs variant b_black_white     r2      unweighted      drop_few_pre               2128 units 43 states  ok
+19:53:06    hs variant b_black_white     r2      tested_weighted drop_few_pre               1431 units 40 states  ok
+19:53:08    hs variant c_hispanic_white  r2      unweighted      drop_few_pre               2873 units 42 states  ok
+19:53:09    hs variant c_hispanic_white  r2      tested_weighted drop_few_pre               1391 units 38 states  ok
+19:53:11    hs variant b_black_white     primary unweighted      anticipation_1             1703 units 35 states  ok
+19:53:13    hs variant b_black_white     primary tested_weighted anticipation_1             1109 units 32 states  ok
+19:53:15    hs variant c_hispanic_white  primary unweighted      anticipation_1             2085 units 32 states  ok
+19:53:16    hs variant c_hispanic_white  primary tested_weighted anticipation_1              964 units 29 states  ok
+19:53:19    hs variant b_black_white     r2      unweighted      anticipation_1             2159 units 44 states  ok
+19:53:20    hs variant b_black_white     r2      tested_weighted anticipation_1             1459 units 41 states  ok
+19:53:21    hs variant c_hispanic_white  r2      unweighted      anticipation_1             2976 units 43 states  ok
+19:53:23    hs variant c_hispanic_white  r2      tested_weighted anticipation_1             1453 units 39 states  ok
+19:53:24    hs variant b_black_white     primary unweighted      hs_edfacts_years           1564 units 37 states  ok
+19:53:25    hs variant b_black_white     primary tested_weighted hs_edfacts_years           1195 units 34 states  ok
+19:53:26    hs variant c_hispanic_white  primary unweighted      hs_edfacts_years           1841 units 36 states  ok
+19:53:27    hs variant c_hispanic_white  primary tested_weighted hs_edfacts_years           1052 units 33 states  ok
+19:53:29    hs variant b_black_white     r2      unweighted      hs_edfacts_years           1911 units 44 states  ok
+19:53:31    hs variant b_black_white     r2      tested_weighted hs_edfacts_years           1459 units 41 states  ok
+19:53:32    hs variant c_hispanic_white  r2      unweighted      hs_edfacts_years           2429 units 43 states  ok
+19:53:33    hs variant c_hispanic_white  r2      tested_weighted hs_edfacts_years           1453 units 39 states  ok
+19:53:34    hs variant b_black_white     primary unweighted      hs_17_states                707 units 10 states  ok
+19:53:35    hs variant b_black_white     primary tested_weighted hs_17_states                452 units  9 states  ok
+19:53:36    hs variant c_hispanic_white  primary unweighted      hs_17_states               1043 units 10 states  ok
+19:53:37    hs variant c_hispanic_white  primary tested_weighted hs_17_states                518 units  9 states  ok
+19:53:39    hs variant b_black_white     r2      unweighted      hs_17_states                936 units 14 states  ok
+19:53:40    hs variant b_black_white     r2      tested_weighted hs_17_states                652 units 13 states  ok
+19:53:41    hs variant c_hispanic_white  r2      unweighted      hs_17_states               1494 units 14 states  ok
+19:53:42    hs variant c_hispanic_white  r2      tested_weighted hs_17_states                890 units 13 states  ok
+20:55:22  hs variants: bootstrap, Romano-Wolf and HonestDiD done for 91 fitted models
+22:04:55  hs variants: randomization inference (1000 reassignments) on 91 models, 69.6 min
+22:04:56  done  variants hs  132.6 min
+22:04:56  start lee hs
+22:05:01    Lee share model b_black_white     bl: 1703 districts, ok
+22:05:03    Lee share model b_black_white     wh: 1703 districts, ok
+22:05:06    Lee trim b_black_white     treated post-reform district-years: 180 of 1418, ok
+22:05:09    Lee share model c_hispanic_white  hi: 2084 districts, ok
+22:05:11    Lee share model c_hispanic_white  wh: 2084 districts, ok
+22:05:14    Lee trim c_hispanic_white  treated post-reform district-years: 174 of 1716, ok
+22:05:14  done  lee hs  0.3 min
+22:05:14  start dose seda
+22:05:17    revenue exclusions (seda, fiscal years 2010-2024): 4137 of 174332 F-33 district-years
+22:05:52    seda revenue first stage a_poverty         primary    37 units, ok
+22:05:55    seda revenue first stage b_black_white     primary  2030 units, ok
+22:05:58    seda revenue first stage c_hispanic_white  primary  2876 units, ok
+22:05:58    seda revenue first stage a_poverty         r1         37 units, ok
+22:05:59    seda revenue first stage b_black_white     r1       2160 units, ok
+22:06:01    seda revenue first stage c_hispanic_white  r1       3050 units, ok
+22:06:02    seda revenue first stage a_poverty         r2         42 units, ok
+22:06:03    seda revenue first stage b_black_white     r2       2629 units, ok
+22:06:06    seda revenue first stage c_hispanic_white  r2       3897 units, ok
+22:06:06  done  dose seda  0.9 min
+22:06:06  start dose hs
+22:06:08    revenue exclusions (hs, fiscal years 2010-2024): 4432 of 187521 F-33 district-years
+22:06:16    hs revenue first stage a_poverty         primary    38 units, ok
+22:06:18    hs revenue first stage b_black_white     primary  1703 units, ok
+22:06:20    hs revenue first stage c_hispanic_white  primary  2085 units, ok
+22:06:21    hs revenue first stage a_poverty         r1         38 units, ok
+22:06:22    hs revenue first stage b_black_white     r1       1817 units, ok
+22:06:24    hs revenue first stage c_hispanic_white  r1       2434 units, ok
+22:06:24    hs revenue first stage a_poverty         r2         43 units, ok
+22:06:26    hs revenue first stage b_black_white     r2       2157 units, ok
+22:06:28    hs revenue first stage c_hispanic_white  r2       2973 units, ok
+22:06:28  done  dose hs  0.4 min
+22:06:28  start mde seda
+22:06:30    SEDA MDE (descriptive) from the step 7 randomization draws of the primary models
+22:06:30  done  mde seda  0.0 min
+22:06:30  start report
+22:06:31  Report: outputs/run2/13_report/report.md (6 plots, 62 tables)
+22:06:31  Report: 0 models shown with their recorded status in place of numbers
+22:06:31  done  report  0.0 min
+22:06:31  Run 20260917T041717Z finished. Total run time over parts: 11.97 h (wall clock since start: 45.82 h)
+22:06:31  Run times per part: outputs/run2/14_run_all/run_times.csv; log: outputs/logs/14_run_all_run2_20260918T141240Z.log
