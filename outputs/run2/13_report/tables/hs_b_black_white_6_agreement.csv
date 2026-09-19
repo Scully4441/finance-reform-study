@@ -1,5 +1,5 @@
 "estimator","estimate","se","ci","status"
-"callaway_santanna (primary)","0.027","0.031","[-0.034, 0.087]","ok"
+"callaway_santanna (primary)","0.025","0.031","[-0.035, 0.085]","ok"
 "sun_abraham","0.009","0.023","[-0.037, 0.055]","ok"
 "imputation","0.047","0.022","[0.005, 0.090]","ok"
 "synthdid","-0.009","0.078","[-0.161, 0.143]","ok"

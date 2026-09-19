@@ -4,18 +4,18 @@ Run 20260917T041717Z; blinding status **REAL**. Run 2 is the registered extensio
 
 Run 1 Section 13 applies to each Run 2 outcome family. For each gap the honest-DiD bound sets come first; the headline is the bound set at M̄ = 1, and all five M̄ values are shown. Point estimates, p-values and intervals are reported as quantities, and no result is described as statistically significant.
 
-Primary specification: Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school), reference period −1, primary event set, unweighted; high school models add the source covariate where it varies (Section 7). Event-time and overall intervals are Webb wild cluster bootstrap intervals (9,999 draws, state clusters).
+Primary specification: Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school), reference period −1, primary event set, unweighted; the high school models take no source covariate (post-freeze correction 2026-09-17). Treated-unit floor (post-freeze correction 2026-09-18, Section 7): in gaps (b) and (c), whose models adjust for the 2009 covariates, a cohort with fewer than 20 treated units at its base period in the primary model's panel is left out of every Callaway–Sant'Anna model of its gap and event set and fitted without covariates in appendix/thin_cohorts.csv (listed at the end of this report). In the event-study tables, † marks a coefficient resting on a single treated state. Event-time and overall intervals are Webb wild cluster bootstrap intervals (9,999 draws, state clusters).
 
 ## Answer to the research question, by family and gap
 
 | family | gap | sd_interval_mbar1 | per_1000_interval |
 |---|---|---|---|
 | seda | a_poverty | [-0.341, 0.341] | unbounded (the revenue effect's bootstrap interval includes zero) |
-| seda | b_black_white | [-0.190, 0.172] | unbounded (the revenue effect's bootstrap interval includes zero) |
-| seda | c_hispanic_white | [-0.207, 0.200] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| seda | b_black_white | [-0.197, 0.176] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| seda | c_hispanic_white | [-0.206, 0.196] | unbounded (the revenue effect's bootstrap interval includes zero) |
 | hs | a_poverty | [-1.768, 1.847] | unbounded (the revenue effect's bootstrap interval includes zero) |
-| hs | b_black_white | [-1.702, 1.796] | unbounded (the revenue effect's bootstrap interval includes zero) |
-| hs | c_hispanic_white | [-44.277, 44.478] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| hs | b_black_white | [-1.682, 1.774] | unbounded (the revenue effect's bootstrap interval includes zero) |
+| hs | c_hispanic_white | [-1.413, 1.630] | unbounded (the revenue effect's bootstrap interval includes zero) |
 
 # SEDA grades 3–8 gaps (end years 2009–2019 and 2022–2025)
 
@@ -61,7 +61,7 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| -0.007 | 0.020 | [-0.046, 0.032] | 0.7218 | 0.8439 | 10000 | 0.9231 | 9 | 11 | ok |
+| -0.007 | 0.020 | [-0.046, 0.032] | 0.7218 | 0.8439 | 10000 | 0.8769 | 9 | 11 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
@@ -175,12 +175,12 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | M̄ | lower | upper | width | status | grid | headline |
 |---|---|---|---|---|---|---|
-| original CS (no restriction) | -0.052 | 0.019 | 0.071 | ok | – |  |
-| 0 | -0.052 | 0.019 | 0.071 | ok | [-0.363, 0.363], 1000 points |  |
-| 0.5 | -0.109 | 0.088 | 0.197 | ok | [-0.363, 0.363], 1000 points |  |
-| 1 | -0.190 | 0.172 | 0.362 | ok | [-0.363, 0.363], 1000 points | **headline** |
-| 1.5 | -0.276 | 0.257 | 0.533 | ok | [-0.363, 0.363], 1000 points |  |
-| 2 | -0.362 | 0.344 | 0.706 | ok | [-0.363, 0.363], 1000 points |  |
+| original CS (no restriction) | -0.055 | 0.019 | 0.073 | ok | – |  |
+| 0 | -0.055 | 0.018 | 0.073 | ok | [-0.374, 0.374], 1000 points |  |
+| 0.5 | -0.113 | 0.090 | 0.204 | ok | [-0.374, 0.374], 1000 points |  |
+| 1 | -0.197 | 0.176 | 0.373 | ok | [-0.374, 0.374], 1000 points | **headline** |
+| 1.5 | -0.286 | 0.265 | 0.550 | ok | [-0.374, 0.374], 1000 points |  |
+| 2 | -0.375 | 0.354 | 0.730 | ok | [-1.121, 0.374], 1999 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
@@ -188,34 +188,36 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
 |---|---|---|---|---|---|---|---|
-| -5 | -0.024 | [-0.048, 0.000] | 0.0552 | 4 |  5 | 532 |  |
-| -4 | -0.013 | [-0.027, 0.002] | 0.0806 | 3 |  4 | 380 |  |
-| -3 | 0.007 | [-0.007, 0.021] | 0.3388 | 3 |  4 | 371 |  |
-| -2 | 0.001 | [-0.019, 0.021] | 0.9353 | 4 |  4 | 420 |  |
-| -1 | 0.000 | – | – | 9 | 10 | 631 | ref |
-|  0 | -0.013 | [-0.040, 0.014] | 0.3533 | 6 |  7 | 648 |  |
-|  1 | -0.010 | [-0.046, 0.025] | 0.5779 | 6 |  7 | 648 |  |
-|  2 | -0.002 | [-0.044, 0.040] | 0.9436 | 4 |  5 | 344 |  |
-|  3 | -0.031 | [-0.115, 0.054] | 0.5146 | 2 |  3 | 219 |  |
-|  4 | 0.005 | [-0.038, 0.049] | 0.7991 | 3 |  3 | 268 |  |
-|  5 | 0.007 | [-0.028, 0.041] | 0.7655 | 3 |  3 | 268 |  |
-|  6 | -0.016 | [-0.054, 0.022] | 0.4656 | 3 |  3 | 268 |  |
-|  7 | -0.028 | [-0.102, 0.046] | 0.5043 | 2 |  2 | 116 |  |
-|  8 | -0.057 | [-0.089, -0.024] | 0.0002 | 1 |  1 |  44 |  |
+| -5 | -0.023 | [-0.046, -0.001] | 0.0414 | 4 | 5 | 532 |  |
+| -4 | -0.014 | [-0.028, 0.001] | 0.0671 | 3 | 4 | 380 |  |
+| -3 | 0.007 | [-0.007, 0.021] | 0.3643 | 3 | 4 | 371 |  |
+| -2 | 0.001 | [-0.019, 0.020] | 0.9350 | 4 | 4 | 420 |  |
+| -1 | 0.000 | – | – | 5 | 5 | 501 | ref |
+|  0 | -0.014 | [-0.043, 0.014] | 0.3377 | 6 | 7 | 648 |  |
+|  1 | -0.012 | [-0.049, 0.025] | 0.5399 | 6 | 7 | 648 |  |
+|  2 | -0.006 | [-0.051, 0.038] | 0.8406 | 4 | 5 | 344 |  |
+|  3 | -0.031 | [-0.115, 0.053] | 0.5132 | 2 | 3 | 219 |  |
+|  4 | 0.004 | [-0.039, 0.046] | 0.8522 | 3 | 3 | 268 |  |
+|  5 | 0.005 | [-0.029, 0.039] | 0.8428 | 3 | 3 | 268 |  |
+|  6 | -0.018 | [-0.058, 0.022] | 0.4373 | 3 | 3 | 268 |  |
+|  7 | -0.028 | [-0.104, 0.049] | 0.5192 | 2 | 2 | 116 |  |
+|  8 | -0.062 † | [-0.096, -0.028] | 0.0001 | 1 | 1 |  44 |  |
 
+
+† The coefficient rests on a single treated state.
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| -0.016 | 0.018 | [-0.051, 0.019] | 0.3941 | 0.5321 | 10000 | 0.7357 | 6 | 7 | ok |
+| -0.018 | 0.019 | [-0.054, 0.017] | 0.3503 | 0.5652 | 10000 | 0.6757 | 6 | 7 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
-Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 7 of the 28071 district-years in scope (0 below 30 enrolled, 7 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
+Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 7 of the 26381 district-years in scope (0 below 30 enrolled, 7 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| -0.016 | 0.596 | [-0.012, 1.212] | -0.027 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
+| -0.018 | 0.534 | [-0.068, 1.147] | -0.034 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -227,7 +229,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | -0.016 | 0.018 | [-0.051, 0.019] | ok |
+| callaway_santanna (primary) | -0.018 | 0.019 | [-0.054, 0.017] | ok |
 | sun_abraham | 0.008 | 0.007 | [-0.006, 0.022] | ok |
 | imputation | 0.005 | 0.008 | [-0.012, 0.021] | ok |
 | synthdid | 0.086 | 0.044 | [0.000, 0.173] | ok |
@@ -241,8 +243,8 @@ tested_weighted: SEDA's tot_asmt of the gap's two groups in 2009-10, summed over
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | -0.016 | 0.3941 | 0.5321 | [-0.190, 0.172] | 648 | ok |
-| tested_weighted | -0.012 | 0.3174 | 0.6614 | [-0.209, 0.183] | 489 | ok |
+| unweighted | -0.018 | 0.3503 | 0.5652 | [-0.197, 0.176] | 648 | ok |
+| tested_weighted | -0.014 | 0.2557 | 0.6726 | [-0.205, 0.175] | 489 | ok |
 
 ### 8. Narrower event definitions
 
@@ -250,9 +252,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | -0.016 | [-0.051, 0.019] | 0.3941 | 0.5321 | [-0.190, 0.172] | -0.027 | ok |
+| primary | -0.018 | [-0.054, 0.017] | 0.3503 | 0.5652 | [-0.197, 0.176] | -0.034 | ok |
 | r1 | -0.003 | [-0.050, 0.044] | 0.8914 | 0.9286 | [-0.201, 0.154] | -0.008 | ok |
-| r2 | -0.068 | [-0.087, -0.049] | 0.0001 | 0.0851 | [-0.066, 0.014] (event times -2..+2) | -0.071 | ok |
+| r2 | -0.068 | [-0.087, -0.049] | 0.0001 | 0.1179 | [-0.066, 0.014] (event times -2..+2) | -0.074 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -261,8 +263,8 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | 0.027 | 0.0611 | 0.6377 | 10000 | [-0.261, 0.301] (event times -3..+7) | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.001 | 0.9301 | 0.9680 |  1000 | [-0.159, 0.165] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.015 | 0.4616 | 0.6104 |  1000 | [-0.239, 0.232] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | -0.000 | 0.9790 | 0.9890 |  1000 | [-0.165, 0.170] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.017 | 0.4372 | 0.6304 |  1000 | [-0.255, 0.247] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -270,8 +272,8 @@ SEDA's 2022–2025 estimates come from public suppressed state data rather than 
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Full SEDA window, 2009–2019 and 2022–2025 (primary specification) | -0.016 | 0.3941 | 0.5321 | 10000 | [-0.190, 0.172] | ok |
-| SEDA 2009-2019 alone (Section 10 span split) | -0.002 | 0.9132 | 0.9400 |  1000 | [-0.234, 0.248] | ok |
+| Full SEDA window, 2009–2019 and 2022–2025 (primary specification) | -0.018 | 0.3503 | 0.5652 | 10000 | [-0.197, 0.176] | ok |
+| SEDA 2009-2019 alone (Section 10 span split) | -0.002 | 0.9238 | 0.9398 |  1000 | [-0.234, 0.250] | ok |
 | SEDA 2022-2025 alone (Section 10 span split) | 0.001 | 0.9510 | 0.9719 |  1000 | [-0.074, 0.072] | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
@@ -316,7 +318,7 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, [-0.190, 0.172]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-0.197, 0.176]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
 
 ## SEDA gap (c): within-district Hispanic–White gap, grades 3–8
 
@@ -326,12 +328,12 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | M̄ | lower | upper | width | status | grid | headline |
 |---|---|---|---|---|---|---|
-| original CS (no restriction) | -0.023 | 0.016 | 0.039 | ok | – |  |
-| 0 | -0.024 | 0.016 | 0.040 | ok | [-0.201, 0.201], 1000 points |  |
-| 0.5 | -0.107 | 0.101 | 0.208 | ok | [-0.201, 0.201], 1000 points |  |
-| 1 | -0.207 | 0.200 | 0.407 | ok | [-0.604, 0.201], 1999 points | **headline** |
-| 1.5 | -0.306 | 0.299 | 0.605 | ok | [-0.604, 0.604], 2998 points |  |
-| 2 | -0.404 | 0.398 | 0.802 | ok | [-0.604, 0.604], 2998 points |  |
+| original CS (no restriction) | -0.025 | 0.015 | 0.040 | ok | – |  |
+| 0 | -0.025 | 0.015 | 0.040 | ok | [-0.206, 0.206], 1000 points |  |
+| 0.5 | -0.108 | 0.097 | 0.205 | ok | [-0.206, 0.206], 1000 points |  |
+| 1 | -0.206 | 0.196 | 0.402 | ok | [-0.617, 0.206], 1999 points | **headline** |
+| 1.5 | -0.303 | 0.293 | 0.597 | ok | [-0.617, 0.617], 2998 points |  |
+| 2 | -0.401 | 0.391 | 0.792 | ok | [-0.617, 0.617], 2998 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
@@ -339,34 +341,36 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
 |---|---|---|---|---|---|---|---|
-| -5 | 0.001 | [-0.025, 0.027] | 0.9210 | 4 |  5 | 622 |  |
-| -4 | 0.011 | [-0.022, 0.044] | 0.5901 | 4 |  5 | 458 |  |
-| -3 | 0.007 | [-0.010, 0.025] | 0.4836 | 4 |  5 | 505 |  |
-| -2 | 0.012 | [-0.013, 0.038] | 0.4496 | 5 |  5 | 682 |  |
-| -1 | 0.000 | – | – | 9 | 10 | 916 | ref |
-|  0 | 0.005 | [-0.015, 0.025] | 0.6753 | 6 |  7 | 882 |  |
-|  1 | 0.007 | [-0.018, 0.032] | 0.6376 | 6 |  7 | 882 |  |
-|  2 | 0.010 | [-0.018, 0.037] | 0.5324 | 5 |  6 | 484 |  |
-|  3 | -0.013 | [-0.054, 0.028] | 0.5580 | 3 |  4 | 271 |  |
-|  4 | -0.008 | [-0.036, 0.021] | 0.6004 | 4 |  4 | 506 |  |
-|  5 | -0.003 | [-0.042, 0.037] | 0.9156 | 4 |  4 | 506 |  |
-|  6 | 0.003 | [-0.017, 0.023] | 0.7799 | 3 |  3 | 494 |  |
-|  7 | -0.002 | [-0.036, 0.032] | 0.9188 | 2 |  2 | 260 |  |
-|  8 | -0.032 | [-0.053, -0.012] | 0.0006 | 1 |  1 | 141 |  |
+| -5 | 0.000 | [-0.025, 0.025] | 0.9971 | 4 | 5 | 622 |  |
+| -4 | 0.012 | [-0.021, 0.045] | 0.5424 | 3 | 4 | 446 |  |
+| -3 | 0.009 | [-0.008, 0.026] | 0.3566 | 3 | 4 | 493 |  |
+| -2 | 0.013 | [-0.013, 0.039] | 0.4404 | 4 | 4 | 670 |  |
+| -1 | 0.000 | – | – | 5 | 5 | 742 | ref |
+|  0 | 0.005 | [-0.015, 0.024] | 0.6729 | 6 | 7 | 882 |  |
+|  1 | 0.006 | [-0.018, 0.029] | 0.6783 | 6 | 7 | 882 |  |
+|  2 | 0.011 | [-0.016, 0.037] | 0.4617 | 4 | 5 | 472 |  |
+|  3 | -0.013 | [-0.054, 0.029] | 0.5645 | 2 | 3 | 259 |  |
+|  4 | -0.008 | [-0.038, 0.023] | 0.6462 | 3 | 3 | 494 |  |
+|  5 | -0.003 | [-0.046, 0.040] | 0.9182 | 3 | 3 | 494 |  |
+|  6 | 0.003 | [-0.019, 0.025] | 0.8193 | 3 | 3 | 494 |  |
+|  7 | -0.007 | [-0.042, 0.029] | 0.7308 | 2 | 2 | 260 |  |
+|  8 | -0.037 † | [-0.055, -0.019] | 0.0001 | 1 | 1 | 141 |  |
 
+
+† The coefficient rests on a single treated state.
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| -0.004 | 0.010 | [-0.023, 0.016] | 0.7157 | 0.8758 | 10000 | 0.9231 | 7 | 8 | ok |
+| -0.005 | 0.010 | [-0.025, 0.015] | 0.6446 | 0.8538 | 10000 | 0.8769 | 6 | 7 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
-Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 9 of the 39645 district-years in scope (0 below 30 enrolled, 9 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
+Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 9 of the 37383 district-years in scope (0 below 30 enrolled, 9 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| -0.004 | 0.623 | [-0.043, 1.287] | -0.006 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
+| -0.005 | 0.533 | [-0.120, 1.198] | -0.009 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -378,7 +382,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | -0.004 | 0.010 | [-0.023, 0.016] | ok |
+| callaway_santanna (primary) | -0.005 | 0.010 | [-0.025, 0.015] | ok |
 | sun_abraham | 0.010 | 0.006 | [-0.001, 0.022] | ok |
 | imputation | 0.010 | 0.008 | [-0.005, 0.025] | ok |
 | synthdid | 0.049 | 0.033 | [-0.015, 0.113] | ok |
@@ -392,8 +396,8 @@ tested_weighted: SEDA's tot_asmt of the gap's two groups in 2009-10, summed over
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | -0.004 | 0.7157 | 0.8758 | [-0.207, 0.200] | 894 | ok |
-| tested_weighted | 0.001 | 0.9406 | 0.9682 | [-0.413, 0.416] | 513 | ok |
+| unweighted | -0.005 | 0.6446 | 0.8538 | [-0.206, 0.196] | 882 | ok |
+| tested_weighted | 0.001 | 0.9289 | 0.9678 | [-0.454, 0.447] | 502 | ok |
 
 ### 8. Narrower event definitions
 
@@ -401,9 +405,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | -0.004 | [-0.023, 0.016] | 0.7157 | 0.8758 | [-0.207, 0.200] | -0.006 | ok |
+| primary | -0.005 | [-0.025, 0.015] | 0.6446 | 0.8538 | [-0.206, 0.196] | -0.009 | ok |
 | r1 | -0.000 | [-0.020, 0.020] | 0.9994 | 1.0000 | [-0.322, 0.343] | -0.000 | ok |
-| r2 | -0.011 | [-0.023, 0.000] | 0.0596 | 0.7059 | [-0.047, 0.098] (event times -2..+2) | -0.013 | ok |
+| r2 | -0.012 | [-0.024, -0.000] | 0.0442 | 0.7230 | [-0.047, 0.098] (event times -2..+2) | -0.017 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -412,8 +416,8 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | 0.027 | 0.0001 | 0.2061 | 10000 | [-0.212, 0.264] (event times -3..+7) | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.005 | 0.6195 | 0.8452 |  1000 | [-0.177, 0.192] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.028 | 0.0031 | 0.2817 |  1000 | [-0.267, 0.215] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.006 | 0.5311 | 0.8422 |  1000 | [-0.175, 0.190] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.030 | 0.0022 | 0.3457 |  1000 | [-0.278, 0.212] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -421,8 +425,8 @@ SEDA's 2022–2025 estimates come from public suppressed state data rather than 
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Full SEDA window, 2009–2019 and 2022–2025 (primary specification) | -0.004 | 0.7157 | 0.8758 | 10000 | [-0.207, 0.200] | ok |
-| SEDA 2009-2019 alone (Section 10 span split) | -0.000 | 0.9746 | 0.9930 |  1000 | [-0.212, 0.233] | ok |
+| Full SEDA window, 2009–2019 and 2022–2025 (primary specification) | -0.005 | 0.6446 | 0.8538 | 10000 | [-0.206, 0.196] | ok |
+| SEDA 2009-2019 alone (Section 10 span split) | -0.001 | 0.9412 | 0.9820 |  1000 | [-0.211, 0.231] | ok |
 | SEDA 2022-2025 alone (Section 10 span split) | 0.017 | 0.3287 | 0.5546 |  1000 | [-0.079, 0.114] | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
@@ -467,7 +471,7 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, [-0.207, 0.200]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-0.206, 0.196]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
 
 ## SEDA design: placebo-based minimum detectable effect (descriptive)
 
@@ -476,8 +480,8 @@ For information only (Section 8): no power ceiling applies to Run 2, and this is
 | gap | reassignments | draws_ok | placebo_sd | mde_power_80 | mde_normal | status |
 |---|---|---|---|---|---|---|
 | a_poverty | 10000 | 10000 | 0.036 | 0.100 | 0.101 | descriptive |
-| b_black_white | 10000 | 10000 | 0.029 | 0.074 | 0.082 | descriptive |
-| c_hispanic_white | 10000 | 10000 | 0.030 | 0.080 | 0.084 | descriptive |
+| b_black_white | 10000 | 10000 | 0.036 | 0.093 | 0.101 | descriptive |
+| c_hispanic_white | 10000 | 10000 | 0.037 | 0.087 | 0.104 | descriptive |
 
 # High school gaps, extended panel (EDFacts 2010–2021, state report cards 2022–2025)
 
@@ -640,12 +644,12 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | M̄ | lower | upper | width | status | grid | headline |
 |---|---|---|---|---|---|---|
-| original CS (no restriction) | -0.035 | 0.088 | 0.122 | ok | – |  |
-| 0 | -0.032 | 0.084 | 0.116 | ok | [-0.625, 0.625], 1000 points |  |
-| 0.5 | -0.834 | 0.925 | 1.759 | ok | [-1.875, 1.875], 2998 points |  |
-| 1 | -1.702 | 1.796 | 3.498 | ok | [-1.875, 1.875], 2998 points | **headline** |
-| 1.5 | -2.568 | 2.662 | 5.230 | ok | [-5.625, 5.625], 8992 points |  |
-| 2 | -3.433 | 3.527 | 6.959 | ok | [-5.625, 5.625], 8992 points |  |
+| original CS (no restriction) | -0.036 | 0.086 | 0.122 | ok | – |  |
+| 0 | -0.033 | 0.084 | 0.117 | ok | [-0.621, 0.621], 1000 points |  |
+| 0.5 | -0.824 | 0.915 | 1.739 | ok | [-1.864, 1.864], 2998 points |  |
+| 1 | -1.682 | 1.774 | 3.456 | ok | [-1.864, 1.864], 2998 points | **headline** |
+| 1.5 | -2.539 | 2.630 | 5.169 | ok | [-5.591, 5.591], 8992 points |  |
+| 2 | -3.393 | 3.484 | 6.878 | ok | [-5.591, 5.591], 8992 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
@@ -653,34 +657,36 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
 |---|---|---|---|---|---|---|---|
-| -5 | -0.024 | [-0.084, 0.036] | 0.4646 |  4 |  5 | 415 |  |
-| -4 | 0.042 | [-0.026, 0.110] | 0.2677 |  3 |  4 | 334 |  |
-| -3 | 0.171 | [-0.047, 0.390] | 0.2411 |  2 |  3 | 286 |  |
-| -2 | 0.121 | [-0.058, 0.299] | 0.3482 |  4 |  4 | 295 |  |
-| -1 | 0.000 | – | – | 10 | 12 | 617 | ref |
-|  0 | -0.011 | [-0.054, 0.032] | 0.6791 |  6 |  7 | 503 |  |
-|  1 | 0.095 | [-0.067, 0.257] | 0.4132 |  6 |  7 | 503 |  |
-|  2 | 0.062 | [-0.236, 0.361] | 0.6833 |  3 |  4 | 282 |  |
-|  3 | -0.051 | [-0.122, 0.020] | 0.1717 |  3 |  4 | 343 |  |
-|  4 | -0.068 | [-0.140, 0.004] | 0.0693 |  1 |  1 | 109 |  |
-|  5 | 0.037 | [-0.034, 0.109] | 0.3228 |  2 |  2 | 166 |  |
-|  6 | 0.136 | [0.018, 0.254] | 0.0210 |  2 |  2 | 166 |  |
-|  7 | 0.012 | [-0.085, 0.109] | 0.8812 |  2 |  2 | 166 |  |
-|  8 | – | – | – |  0 |  0 |   0 |  |
+| -5 | -0.026 | [-0.091, 0.040] | 0.4754 | 4 | 5 | 415 |  |
+| -4 | 0.042 | [-0.033, 0.117] | 0.2894 | 3 | 4 | 334 |  |
+| -3 | 0.168 | [-0.057, 0.392] | 0.2731 | 2 | 3 | 286 |  |
+| -2 | 0.122 | [-0.056, 0.300] | 0.3407 | 4 | 4 | 295 |  |
+| -1 | 0.000 | – | – | 6 | 7 | 503 | ref |
+|  0 | -0.008 | [-0.055, 0.040] | 0.7951 | 6 | 7 | 503 |  |
+|  1 | 0.092 | [-0.068, 0.253] | 0.4343 | 6 | 7 | 503 |  |
+|  2 | 0.061 | [-0.226, 0.349] | 0.6548 | 3 | 4 | 282 |  |
+|  3 | -0.050 | [-0.123, 0.022] | 0.1885 | 3 | 4 | 343 |  |
+|  4 | -0.067 † | [-0.145, 0.010] | 0.1016 | 1 | 1 | 109 |  |
+|  5 | 0.033 | [-0.047, 0.114] | 0.4379 | 2 | 2 | 166 |  |
+|  6 | 0.131 | [0.006, 0.256] | 0.0370 | 2 | 2 | 166 |  |
+|  7 | 0.008 | [-0.090, 0.106] | 0.9214 | 2 | 2 | 166 |  |
+|  8 | – | – | – | 0 | 0 |   0 |  |
 
+
+† The coefficient rests on a single treated state.
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| 0.027 | 0.031 | [-0.034, 0.087] | 0.4135 | 0.6890 | 10000 | 0.6578 | 6 | 7 | ok |
+| 0.025 | 0.031 | [-0.035, 0.085] | 0.4338 | 0.7237 | 10000 | 0.6877 | 6 | 7 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
-Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 6 of the 25416 district-years in scope (0 below 30 enrolled, 6 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
+Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 6 of the 23823 district-years in scope (0 below 30 enrolled, 6 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| 0.027 | 0.269 | [-0.237, 0.764] | 0.099 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
+| 0.025 | 0.212 | [-0.264, 0.681] | 0.119 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -688,7 +694,7 @@ Tested share = the subgroup's exact tested count (mean of math and RLA) over its
 
 | p_minority | p_white | trim_fraction | trimmed_treated_post_district_years | estimate_trim_top | estimate_trim_bottom | lee_bracket | status |
 |---|---|---|---|---|---|---|---|
-| 0.0681 | -0.0462 | 0.1143 | 165 of 1445 | -0.015 | 0.110 | [-0.015, 0.110] | ok |
+| 0.0656 | -0.0616 | 0.1272 | 180 of 1418 | -0.025 | 0.116 | [-0.025, 0.116] | ok |
 
 ### 6. Estimator agreement (unbalanced panel, primary event set)
 
@@ -696,7 +702,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | 0.027 | 0.031 | [-0.034, 0.087] | ok |
+| callaway_santanna (primary) | 0.025 | 0.031 | [-0.035, 0.085] | ok |
 | sun_abraham | 0.009 | 0.023 | [-0.037, 0.055] | ok |
 | imputation | 0.047 | 0.022 | [0.005, 0.090] | ok |
 | synthdid | -0.009 | 0.078 | [-0.161, 0.143] | ok |
@@ -710,8 +716,8 @@ tested_weighted: students tested in the gap's two groups in 2009-10, mean of mat
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | 0.027 | 0.4135 | 0.6890 | [-1.702, 1.796] | 503 | ok |
-| tested_weighted | 0.047 | 0.0754 | 0.5805 | [-2.036, 2.118] | 303 | ok |
+| unweighted | 0.025 | 0.4338 | 0.7237 | [-1.682, 1.774] | 503 | ok |
+| tested_weighted | 0.047 | 0.0982 | 0.5575 | [-2.051, 2.131] | 303 | ok |
 
 ### 8. Narrower event definitions
 
@@ -719,9 +725,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | 0.027 | [-0.034, 0.087] | 0.4135 | 0.6890 | [-1.702, 1.796] | 0.099 | ok |
+| primary | 0.025 | [-0.035, 0.085] | 0.4338 | 0.7237 | [-1.682, 1.774] | 0.119 | ok |
 | r1 | 0.159 | [0.068, 0.251] | 0.0001 | 0.1082 | [0.005, 0.533] (event times -2..+3) | 0.439 | ok |
-| r2 | -0.035 | [-0.081, 0.012] | 0.2199 | 0.5982 | [-0.238, 0.166] (event times -2..+1) | -0.038 | ok |
+| r2 | -0.035 | [-0.081, 0.012] | 0.2191 | 0.5554 | [-0.238, 0.166] (event times -2..+1) | -0.042 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -730,11 +736,11 @@ Variants on all three event sets and both weightings, with event times, Romano�
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
 | Balanced panel (Run 1 Section 7) | -0.006 | 0.8907 | 0.9047 | 10000 | [-1.089, 1.129] | ok |
-| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.078 | 0.0500 | 0.3846 |  1000 | [-1.218, 1.438] | ok |
-| Exact values only (Run 1 Section 5 rule 3) | -0.020 | 0.7497 | 0.8938 |  1000 | [-0.379, 0.351] | ok |
-| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.007 | 0.8093 | 0.9391 |  1000 | [-1.720, 1.733] | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.007 | 0.8212 | 0.9289 |  1000 | [-1.734, 1.747] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.131 | 0.0164 | 0.1758 |  1000 | [-2.161, 1.789] | ok |
+| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.071 | 0.0874 | 0.3913 |  1000 | [-1.236, 1.447] | ok |
+| Exact values only (Run 1 Section 5 rule 3) | -0.020 | 0.7489 | 0.7797 |  1000 | [-0.377, 0.345] | ok |
+| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.008 | 0.8083 | 0.9203 |  1000 | [-1.698, 1.714] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.008 | 0.8190 | 0.9351 |  1000 | [-1.712, 1.726] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.133 | 0.0080 | 0.1329 |  1000 | [-2.250, 1.882] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -742,9 +748,9 @@ The EDFacts-years split is Run 1's window; beside the extended panel it shows th
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.027 | 0.4135 | 0.6890 | 10000 | [-1.702, 1.796] | ok |
-| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.124 | 0.0001 | 0.1690 |  1000 | [-1.011, 1.426] (event times -5..+3) | ok |
-| The seventeen confirmed states only, every year (Section 10 coverage split) | -0.070 | 0.0001 | 0.5203 |  1000 | no bound (no estimated pre-reform event time: relative magnitudes need one) | ok |
+| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.025 | 0.4338 | 0.7237 | 10000 | [-1.682, 1.774] | ok |
+| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.124 | 0.0003 | 0.1893 |  1000 | [-0.995, 1.414] (event times -5..+3) | ok |
+| The seventeen confirmed states only, every year (Section 10 coverage split) | -0.107 | 0.0001 | 0.2075 |  1000 | no bound (no estimated pre-reform event time: relative magnitudes need one) | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
 
@@ -788,7 +794,7 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, [-1.702, 1.796]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-1.682, 1.774]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
 
 ## High school gap (c): within-district Hispanic–White gap
 
@@ -798,12 +804,12 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | M̄ | lower | upper | width | status | grid | headline |
 |---|---|---|---|---|---|---|
-| original CS (no restriction) | 0.021 | 0.151 | 0.130 | ok | – |  |
-| 0 | 0.022 | 0.151 | 0.129 | ok | [-0.663, 0.663], 1000 points |  |
-| 0.5 | -22.092 | 22.293 | 44.385 | ok | [-53.671, 53.671], 80920 points |  |
-| 1 | -44.277 | 44.478 | 88.755 | ok | [-53.671, 53.671], 80920 points | **headline** |
-| 1.5 | -66.462 | 66.663 | 133.125 | ok | [-161.014, 161.014], 242758 points |  |
-| 2 | -88.647 | 88.848 | 177.495 | ok | [-161.014, 161.014], 242758 points |  |
+| original CS (no restriction) | 0.017 | 0.163 | 0.146 | ok | – |  |
+| 0 | 0.019 | 0.161 | 0.143 | ok | [-0.743, 0.743], 1000 points |  |
+| 0.5 | -0.657 | 0.876 | 1.533 | ok | [-0.743, 2.230], 1999 points |  |
+| 1 | -1.413 | 1.630 | 3.044 | ok | [-2.230, 2.230], 2998 points | **headline** |
+| 1.5 | -2.153 | 2.369 | 4.521 | ok | [-2.230, 6.691], 5995 points |  |
+| 2 | -2.893 | 3.110 | 6.002 | ok | [-6.691, 6.691], 8992 points |  |
 
 ### 2. Event study with honest-DiD bounds and cohorts per coefficient
 
@@ -811,34 +817,36 @@ Each M̄ starts on HonestDiD's default grid (±20 standard deviations of the ove
 
 | event_time | estimate | boot_ci | boot_p | cohorts | treated_states | treated_units | reference |
 |---|---|---|---|---|---|---|---|
-| -5 | -0.026 | [-0.100, 0.048] | 0.5119 |  4 |  5 | 495 |  |
-| -4 | 3.868 | [-2.163, 9.898] | 0.2017 |  5 |  7 | 502 |  |
-| -3 | 0.046 | [-0.089, 0.182] | 0.5340 |  3 |  4 | 374 |  |
-| -2 | 0.138 | [-0.054, 0.330] | 0.1620 |  6 |  7 | 482 |  |
-| -1 | 0.000 | – | – | 10 | 12 | 837 | ref |
-|  0 | 0.115 | [-0.050, 0.281] | 0.2823 |  7 |  9 | 773 |  |
-|  1 | 0.057 | [0.007, 0.107] | 0.0233 |  7 |  8 | 696 |  |
-|  2 | -0.039 | [-0.223, 0.144] | 0.7252 |  5 |  6 | 440 |  |
-|  3 | 0.061 | [-0.064, 0.185] | 0.4074 |  4 |  5 | 555 |  |
-|  4 | 0.104 | [-0.029, 0.237] | 0.2781 |  2 |  2 | 254 |  |
-|  5 | 0.003 | [-0.081, 0.086] | 0.9434 |  2 |  2 | 254 |  |
-|  6 | 0.034 | [-0.095, 0.164] | 0.6244 |  2 |  2 | 254 |  |
-|  7 | 0.093 | [-0.050, 0.237] | 0.3446 |  3 |  3 | 357 |  |
-|  8 | 0.346 | [0.300, 0.391] | 0.0001 |  1 |  1 | 103 |  |
+| -5 | -0.037 | [-0.108, 0.034] | 0.3972 | 3 | 3 | 297 |  |
+| -4 | -0.000 | [-0.050, 0.050] | 0.9908 | 2 | 2 | 207 |  |
+| -3 | 0.168 † | [0.124, 0.213] | 0.0001 | 1 | 1 | 166 |  |
+| -2 | 0.101 | [-0.115, 0.317] | 0.4739 | 4 | 4 | 385 |  |
+| -1 | 0.000 | – | – | 5 | 5 | 488 | ref |
+|  0 | 0.032 | [0.002, 0.063] | 0.0327 | 5 | 5 | 488 |  |
+|  1 | 0.061 | [0.013, 0.109] | 0.0058 | 5 | 5 | 488 |  |
+|  2 | 0.040 | [-0.193, 0.274] | 0.6087 | 3 | 3 | 232 |  |
+|  3 | 0.115 | [-0.021, 0.251] | 0.1156 | 3 | 3 | 357 |  |
+|  4 | 0.100 | [-0.027, 0.228] | 0.2642 | 2 | 2 | 254 |  |
+|  5 | 0.002 | [-0.086, 0.090] | 0.9649 | 2 | 2 | 254 |  |
+|  6 | 0.032 | [-0.103, 0.167] | 0.6476 | 2 | 2 | 254 |  |
+|  7 | 0.086 | [-0.060, 0.231] | 0.3746 | 3 | 3 | 357 |  |
+|  8 | 0.340 † | [0.286, 0.393] | 0.0001 | 1 | 1 | 103 |  |
 
+
+† The coefficient rests on a single treated state.
 ### 3. Overall post-reform average
 
 | estimate | clustered_se | boot_ci | boot_p | randomization_p | randomization_reps | romano_wolf_p | cohorts | treated_states | model_status |
 |---|---|---|---|---|---|---|---|---|---|
-| 0.086 | 0.033 | [0.021, 0.150] | 0.0046 | 0.2065 | 10000 | 0.0124 | 8 | 10 | ok |
+| 0.090 | 0.037 | [0.023, 0.156] | 0.0007 | 0.1522 | 10000 | 0.0220 | 5 | 5 | ok |
 
 ### 4. Dose-scaled estimate (per $1,000 of per-pupil state-plus-local revenue, 2025 dollars)
 
-Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 16 of the 34074 district-years in scope (0 below 30 enrolled, 16 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
+Revenue effect: the same Callaway–Sant'Anna model with F-33 (TSTREV + TLOCREV) / V33 in thousands of 2025 dollars as the outcome, fiscal years 2010–2024 (district revenue per pupil). District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded: 13 of the 29188 district-years in scope (0 below 30 enrolled, 13 above $100,000). The dose-scaled estimate is the ratio of the two overall effects, with a percentile interval from this run's step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction). The assumption is stated, not tested.
 
 | effect_sd | revenue_effect | revenue_boot_ci | sd_per_1000 | interval_per_1000 | status |
 |---|---|---|---|---|---|
-| 0.086 | 0.623 | [-0.116, 1.344] | 0.138 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
+| 0.090 | 0.536 | [-0.118, 1.183] | 0.167 | unbounded or none | unbounded: the revenue effect's bootstrap interval includes zero |
 
 ### 5. Lee bounds
 
@@ -846,7 +854,7 @@ Tested share = the subgroup's exact tested count (mean of math and RLA) over its
 
 | p_minority | p_white | trim_fraction | trimmed_treated_post_district_years | estimate_trim_top | estimate_trim_bottom | lee_bracket | status |
 |---|---|---|---|---|---|---|---|
-| 0.0151 | -0.0719 | 0.0869 | 217 of 2497 | 0.055 | 0.147 | [0.055, 0.147] | ok |
+| 0.0183 | -0.0833 | 0.1016 | 174 of 1716 | 0.156 | 0.145 | [0.145, 0.156] | ok |
 
 ### 6. Estimator agreement (unbalanced panel, primary event set)
 
@@ -854,7 +862,7 @@ Secondary intervals are each estimator's own state-clustered or placebo interval
 
 | estimator | estimate | se | ci | status |
 |---|---|---|---|---|
-| callaway_santanna (primary) | 0.086 | 0.033 | [0.021, 0.150] | ok |
+| callaway_santanna (primary) | 0.090 | 0.037 | [0.023, 0.156] | ok |
 | sun_abraham | 0.046 | 0.010 | [0.026, 0.067] | ok |
 | imputation | 0.079 | 0.008 | [0.064, 0.094] | ok |
 | synthdid | 0.030 | 0.050 | [-0.067, 0.128] | ok |
@@ -868,8 +876,8 @@ tested_weighted: students tested in the gap's two groups in 2009-10, mean of mat
 
 | weighting | estimate | boot_p | randomization_p | bound_mbar1 | units | status |
 |---|---|---|---|---|---|---|
-| unweighted | 0.086 | 0.0046 | 0.2065 | [-44.277, 44.478] | 783 | ok |
-| tested_weighted | 0.152 | 0.0007 | 0.2793 | [-3.670, 3.854] | 310 | ok |
+| unweighted | 0.090 | 0.0007 | 0.1522 | [-1.413, 1.630] | 488 | ok |
+| tested_weighted | 0.082 | 0.0354 | 0.3504 | [-1.636, 1.883] | 235 | ok |
 
 ### 8. Narrower event definitions
 
@@ -877,9 +885,9 @@ r1 = LRS list plus final state supreme court rulings; r2 = court rulings only.
 
 | event_set | estimate | boot_ci | boot_p | randomization_p | bound_mbar1 | sd_per_1000 | status |
 |---|---|---|---|---|---|---|---|
-| primary | 0.086 | [0.021, 0.150] | 0.0046 | 0.2065 | [-44.277, 44.478] | 0.138 | ok |
+| primary | 0.090 | [0.023, 0.156] | 0.0007 | 0.1522 | [-1.413, 1.630] | 0.167 | ok |
 | r1 | 0.095 | [-0.001, 0.191] | 0.0529 | 0.2169 | [-0.388, 0.583] | 0.167 | ok |
-| r2 | 0.215 | [0.184, 0.246] | 0.0001 | 0.0487 | [-0.203, 0.567] (event times -2..+3) | 0.180 | ok |
+| r2 | 0.214 | [0.183, 0.244] | 0.0001 | 0.0662 | [-0.204, 0.566] (event times -2..+3) | 0.234 | ok |
 
 ### 9. Run 1 robustness checks (primary event set, unweighted)
 
@@ -887,12 +895,12 @@ Variants on all three event sets and both weightings, with event times, Romano�
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Balanced panel (Run 1 Section 7) | 0.145 | 0.0001 | 0.2820 | 10000 | [-2.605, 2.924] | ok |
-| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.171 | 0.0001 | 0.2108 |  1000 | [-2.473, 2.824] | ok |
-| Exact values only (Run 1 Section 5 rule 3) | 0.104 | 0.0029 | 0.3286 |  1000 | [-2.284, 2.492] (event times -2..+7) | ok |
-| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.046 | 0.1478 | 0.5594 |  1000 | [-38.883, 39.008] | ok |
-| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.047 | 0.1427 | 0.5534 |  1000 | [-40.246, 40.373] | ok |
-| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.041 | 0.7574 | 0.5724 |  1000 | [-1.077, 0.871] | ok |
+| Balanced panel (Run 1 Section 7) | 0.138 | 0.0001 | 0.4248 | 10000 | [-0.941, 1.019] (event times -5..+1) | ok |
+| Ranges of 5 points or less (Run 1 Section 5 rule 3) | 0.085 | 0.0001 | 0.3667 |  1000 | [-1.495, 1.719] | ok |
+| Exact values only (Run 1 Section 5 rule 3) | 0.081 | 0.0022 | 0.2440 |  1000 | [-2.478, 2.640] (event times -2..+7) | ok |
+| End years 2013 on (Run 1 Section 5 rule 4; report-card years test participation where the state prints it) | 0.061 | 0.0004 | 0.4280 |  1000 | [-1.629, 1.761] | ok |
+| Cohorts with fewer than three pre-reform years dropped (Run 1 Section 5 rule 6) | 0.061 | 0.0001 | 0.4329 |  1000 | [-1.628, 1.760] | ok |
+| Anticipation = 1, reference period -2 (Run 1 step 10) | -0.126 | 0.1975 | 0.1648 |  1000 | [-1.472, 1.334] | ok |
 
 ### 10. Run 2 splits (Section 10; primary event set, unweighted)
 
@@ -900,9 +908,9 @@ The EDFacts-years split is Run 1's window; beside the extended panel it shows th
 
 | check | estimate | boot_p | randomization_p | randomization_reps | bound_mbar1 | status |
 |---|---|---|---|---|---|---|
-| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.086 | 0.0046 | 0.2065 | 10000 | [-44.277, 44.478] | ok |
-| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.092 | 0.0218 | 0.2028 |  1000 | [-1.744, 1.968] | ok |
-| The seventeen confirmed states only, every year (Section 10 coverage split) | 0.270 | 0.0001 | 0.0959 |  1000 | [-0.761, 1.458] (event times -4..+3) | ok |
+| Extended panel with the report-card years, 2010–2025 (primary specification) | 0.090 | 0.0007 | 0.1522 | 10000 | [-1.413, 1.630] | ok |
+| EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window) | 0.092 | 0.0201 | 0.2302 |  1000 | [-1.852, 2.081] | ok |
+| The seventeen confirmed states only, every year (Section 10 coverage split) | 0.192 | 0.0001 | 0.2729 |  1000 | no bound (no estimated pre-reform event time: relative magnitudes need one) | ok |
 
 ### 11. Continuous-treatment estimates (exploratory; step 13, DIDmultiplegtDYN)
 
@@ -946,5 +954,54 @@ Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity
 
 ### Answer, stated as intervals
 
-SD units: honest-DiD bound set at M̄ = 1, [-44.277, 44.478]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+SD units: honest-DiD bound set at M̄ = 1, [-1.413, 1.630]. Per $1,000 of per-pupil revenue (2025 dollars): unbounded (the revenue effect's bootstrap interval includes zero) (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction).
+
+# Appendix: cohorts below the treated-unit floor
+
+Post-freeze correction 2026-09-18 (docs/deviations_run2.md, Section 7). A cohort with fewer than 20 treated units at its base period (the last window year before the cohort year) in the primary model's panel of its gap and event set (primary suppression sample, unbalanced, unweighted) is left out of every covariate-adjusted Callaway–Sant'Anna model of that gap and event set: step 5 under both weightings and panel rules, the variants and splits, and the Lee and dose refits. Each removed cohort is fitted without covariates on its gap's primary panel, all cohorts present; its group-time cells and did's group aggregate are in appendix/thin_cohorts.csv, with the cohort's treated units at the base period and in any year. Gap (a) has no covariates and no floor.
+
+Removed cohorts:
+
+| family | gap | event_set | cohort | states | base_year | treated_units_base | treated_units |
+|---|---|---|---|---|---|---|---|
+| seda | b_black_white | primary | 2017 | SD | 2016 |  1 |   4 |
+| seda | b_black_white | primary | 2019 | NM | 2018 |  0 |   8 |
+| seda | b_black_white | primary | 2020 | NV | 2019 |  2 |   4 |
+| seda | b_black_white | primary | 2025 | CO MS | 2024 |  0 | 114 |
+| seda | c_hispanic_white | primary | 2017 | SD | 2016 |  4 |  12 |
+| seda | c_hispanic_white | primary | 2019 | NM | 2018 |  0 |  41 |
+| seda | c_hispanic_white | primary | 2020 | NV | 2019 | 12 |  12 |
+| seda | c_hispanic_white | primary | 2025 | CO MS | 2024 |  0 | 109 |
+| seda | b_black_white | r2 | 2019 | NM | 2018 |  0 |   8 |
+| seda | c_hispanic_white | r2 | 2019 | NM | 2018 |  0 |  41 |
+| hs | b_black_white | primary | 2017 | SD | 2016 |  1 |   1 |
+| hs | b_black_white | primary | 2019 | NM | 2018 |  0 |   9 |
+| hs | b_black_white | primary | 2020 | NV | 2019 |  2 |   3 |
+| hs | b_black_white | primary | 2025 | CO MS | 2024 |  1 | 101 |
+| hs | c_hispanic_white | primary | 2017 | SD | 2016 |  2 |   3 |
+| hs | c_hispanic_white | primary | 2019 | NM | 2018 |  0 |  51 |
+| hs | c_hispanic_white | primary | 2020 | NV | 2019 |  9 |  10 |
+| hs | c_hispanic_white | primary | 2022 | MD OH | 2021 | 19 | 198 |
+| hs | c_hispanic_white | primary | 2025 | CO MS | 2024 |  5 |  87 |
+| hs | b_black_white | r2 | 2019 | NM | 2018 |  0 |   9 |
+| hs | c_hispanic_white | r2 | 2019 | NM | 2018 |  0 |  51 |
+
+
+Cohorts remaining in the primary panel of each gap and event set:
+
+| family | gap | event_set | cohorts_kept |
+|---|---|---|---|
+| hs | b_black_white | primary | 6 |
+| hs | b_black_white | r1 | 2 |
+| hs | b_black_white | r2 | 2 |
+| hs | c_hispanic_white | primary | 5 |
+| hs | c_hispanic_white | r1 | 2 |
+| hs | c_hispanic_white | r2 | 2 |
+| seda | b_black_white | primary | 6 |
+| seda | b_black_white | r1 | 2 |
+| seda | b_black_white | r2 | 2 |
+| seda | c_hispanic_white | primary | 6 |
+| seda | c_hispanic_white | r1 | 2 |
+| seda | c_hispanic_white | r2 | 2 |
+
 

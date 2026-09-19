@@ -1,2 +1,2 @@
 "estimate","clustered_se","boot_ci","boot_p","randomization_p","randomization_reps","romano_wolf_p","cohorts","treated_states","model_status"
-"0.086","0.033","[0.021, 0.150]","0.0046","0.2065",10000,"0.0124",8,10,"ok"
+"0.090","0.037","[0.023, 0.156]","0.0007","0.1522",10000,"0.0220",5,5,"ok"

@@ -1,4 +1,4 @@
 "gap","event_set","weighting","panel","reassignments","draws_ok","placebo_sd","crit_abs_q95","mde_power_80","power_at_mde","mde_normal","status","label"
 "a_poverty","primary","unweighted","unbalanced",10000,10000,0.0360938414754617,0.070751573609938,0.100033985356332,0.8,0.101119972742566,"descriptive","For information only: no power ceiling applies to Run 2 (extension design Section 8)"
-"b_black_white","primary","unweighted","unbalanced",10000,10000,0.0292937534194625,0.0534722352568206,0.0738577277691795,0.8,0.0820689465630124,"descriptive","For information only: no power ceiling applies to Run 2 (extension design Section 8)"
-"c_hispanic_white","primary","unweighted","unbalanced",10000,10000,0.0299934389614763,0.0527175088233987,0.0799453129531563,0.8,0.0840291752348455,"descriptive","For information only: no power ceiling applies to Run 2 (extension design Section 8)"
+"b_black_white","primary","unweighted","unbalanced",10000,10000,0.0360948003257438,0.06447416985884,0.0928412660172364,0.8,0.101122659043343,"descriptive","For information only: no power ceiling applies to Run 2 (extension design Section 8)"
+"c_hispanic_white","primary","unweighted","unbalanced",10000,10000,0.0372231867176763,0.0582011378791807,0.0868264745829187,0.8,0.104283929679301,"descriptive","For information only: no power ceiling applies to Run 2 (extension design Section 8)"

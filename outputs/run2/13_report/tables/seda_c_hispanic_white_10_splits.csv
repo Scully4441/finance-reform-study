@@ -1,4 +1,4 @@
 "check","estimate","boot_p","randomization_p","randomization_reps","bound_mbar1","status"
-"Full SEDA window, 2009–2019 and 2022–2025 (primary specification)","-0.004","0.7157","0.8758",10000,"[-0.207, 0.200]","ok"
-"SEDA 2009-2019 alone (Section 10 span split)","-0.000","0.9746","0.9930",1000,"[-0.212, 0.233]","ok"
+"Full SEDA window, 2009–2019 and 2022–2025 (primary specification)","-0.005","0.6446","0.8538",10000,"[-0.206, 0.196]","ok"
+"SEDA 2009-2019 alone (Section 10 span split)","-0.001","0.9412","0.9820",1000,"[-0.211, 0.231]","ok"
 "SEDA 2022-2025 alone (Section 10 span split)","0.017","0.3287","0.5546",1000,"[-0.079, 0.114]","ok"

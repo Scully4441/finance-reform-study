@@ -1,0 +1,61 @@
+"family","gap","event_set","cohort","states","base_year","treated_units_base","treated_units","below_floor"
+"seda","b_black_white","primary",2011,"WA",2010,39,44,FALSE
+"seda","b_black_white","primary",2012,"IN",2011,47,72,FALSE
+"seda","b_black_white","primary",2017,"SD",2016,1,4,TRUE
+"seda","b_black_white","primary",2018,"IL",2017,109,152,FALSE
+"seda","b_black_white","primary",2019,"NM",2018,0,8,TRUE
+"seda","b_black_white","primary",2020,"NV",2019,2,4,TRUE
+"seda","b_black_white","primary",2022,"MD OH",2019,128,147,FALSE
+"seda","b_black_white","primary",2023,"TN",2022,66,81,FALSE
+"seda","b_black_white","primary",2024,"PA",2023,93,152,FALSE
+"seda","b_black_white","primary",2025,"CO MS",2024,0,114,TRUE
+"seda","c_hispanic_white","primary",2011,"WA",2010,110,141,FALSE
+"seda","c_hispanic_white","primary",2012,"IN",2011,84,119,FALSE
+"seda","c_hispanic_white","primary",2017,"SD",2016,4,12,TRUE
+"seda","c_hispanic_white","primary",2018,"IL",2017,197,234,FALSE
+"seda","c_hispanic_white","primary",2019,"NM",2018,0,41,TRUE
+"seda","c_hispanic_white","primary",2020,"NV",2019,12,12,TRUE
+"seda","c_hispanic_white","primary",2022,"MD OH",2019,117,140,FALSE
+"seda","c_hispanic_white","primary",2023,"TN",2022,59,72,FALSE
+"seda","c_hispanic_white","primary",2024,"PA",2023,143,176,FALSE
+"seda","c_hispanic_white","primary",2025,"CO MS",2024,0,109,TRUE
+"seda","b_black_white","r1",2011,"WA",2010,39,44,FALSE
+"seda","b_black_white","r1",2012,"IN",2011,47,72,FALSE
+"seda","c_hispanic_white","r1",2011,"WA",2010,110,141,FALSE
+"seda","c_hispanic_white","r1",2012,"IN",2011,84,119,FALSE
+"seda","b_black_white","r2",2011,"WA",2010,39,44,FALSE
+"seda","b_black_white","r2",2019,"NM",2018,0,8,TRUE
+"seda","b_black_white","r2",2024,"PA",2023,93,152,FALSE
+"seda","c_hispanic_white","r2",2011,"WA",2010,110,141,FALSE
+"seda","c_hispanic_white","r2",2019,"NM",2018,0,41,TRUE
+"seda","c_hispanic_white","r2",2024,"PA",2023,143,176,FALSE
+"hs","b_black_white","primary",2011,"WA",2010,28,31,FALSE
+"hs","b_black_white","primary",2012,"IN",2011,34,57,FALSE
+"hs","b_black_white","primary",2017,"SD",2016,1,1,TRUE
+"hs","b_black_white","primary",2018,"IL",2017,60,109,FALSE
+"hs","b_black_white","primary",2019,"NM",2018,0,9,TRUE
+"hs","b_black_white","primary",2020,"NV",2019,2,3,TRUE
+"hs","b_black_white","primary",2022,"MD OH",2021,30,177,FALSE
+"hs","b_black_white","primary",2023,"TN",2022,22,48,FALSE
+"hs","b_black_white","primary",2024,"PA",2023,38,81,FALSE
+"hs","b_black_white","primary",2025,"CO MS",2024,1,101,TRUE
+"hs","c_hispanic_white","primary",2011,"WA",2010,62,103,FALSE
+"hs","c_hispanic_white","primary",2012,"IN",2011,41,88,FALSE
+"hs","c_hispanic_white","primary",2017,"SD",2016,2,3,TRUE
+"hs","c_hispanic_white","primary",2018,"IL",2017,100,166,FALSE
+"hs","c_hispanic_white","primary",2019,"NM",2018,0,51,TRUE
+"hs","c_hispanic_white","primary",2020,"NV",2019,9,10,TRUE
+"hs","c_hispanic_white","primary",2022,"MD OH",2021,19,198,TRUE
+"hs","c_hispanic_white","primary",2023,"TN",2022,29,41,FALSE
+"hs","c_hispanic_white","primary",2024,"PA",2023,60,90,FALSE
+"hs","c_hispanic_white","primary",2025,"CO MS",2024,5,87,TRUE
+"hs","b_black_white","r1",2011,"WA",2010,28,31,FALSE
+"hs","b_black_white","r1",2012,"IN",2011,34,57,FALSE
+"hs","c_hispanic_white","r1",2011,"WA",2010,62,103,FALSE
+"hs","c_hispanic_white","r1",2012,"IN",2011,41,88,FALSE
+"hs","b_black_white","r2",2011,"WA",2010,28,31,FALSE
+"hs","b_black_white","r2",2019,"NM",2018,0,9,TRUE
+"hs","b_black_white","r2",2024,"PA",2023,38,81,FALSE
+"hs","c_hispanic_white","r2",2011,"WA",2010,62,103,FALSE
+"hs","c_hispanic_white","r2",2019,"NM",2018,0,51,TRUE
+"hs","c_hispanic_white","r2",2024,"PA",2023,60,90,FALSE

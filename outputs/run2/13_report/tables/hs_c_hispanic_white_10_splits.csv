@@ -1,4 +1,4 @@
 "check","estimate","boot_p","randomization_p","randomization_reps","bound_mbar1","status"
-"Extended panel with the report-card years, 2010–2025 (primary specification)","0.086","0.0046","0.2065",10000,"[-44.277, 44.478]","ok"
-"EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window)","0.092","0.0218","0.2028",1000,"[-1.744, 1.968]","ok"
-"The seventeen confirmed states only, every year (Section 10 coverage split)","0.270","0.0001","0.0959",1000,"[-0.761, 1.458] (event times -4..+3)","ok"
+"Extended panel with the report-card years, 2010–2025 (primary specification)","0.090","0.0007","0.1522",10000,"[-1.413, 1.630]","ok"
+"EDFacts years alone, 2010-2021 (Section 10 source split; Run 1's window)","0.092","0.0201","0.2302",1000,"[-1.852, 2.081]","ok"
+"The seventeen confirmed states only, every year (Section 10 coverage split)","0.192","0.0001","0.2729",1000,"no bound (no estimated pre-reform event time: relative magnitudes need one)","ok"

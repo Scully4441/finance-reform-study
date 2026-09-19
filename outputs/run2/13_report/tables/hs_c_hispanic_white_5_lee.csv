@@ -1,2 +1,2 @@
 "gap","event_set","weighting","panel","att_primary","effect_share_minority","effect_share_white","p_minority","p_white","trim_fraction","treated_post_unit_years","trimmed_unit_years","att_trim_top","att_trim_bottom","lee_lower","lee_upper","status"
-"c_hispanic_white","primary","unweighted","unbalanced",0.0858283845967055,0.0166789657531848,-0.0635225583551092,0.0150545444345761,-0.0718519371768793,0.0869064816114554,2497,217,0.0545952579883633,0.147411703775838,0.0545952579883633,0.147411703775838,"ok"
+"c_hispanic_white","primary","unweighted","unbalanced",0.0897651041596804,0.0200703360307434,-0.0719559322588428,0.0183182632151151,-0.0832701682020045,0.10158843141712,1716,174,0.156445487039033,0.144613651993637,0.144613651993637,0.156445487039033,"ok"

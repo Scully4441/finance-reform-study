@@ -1,7 +1,7 @@
 "gap","event_set","weighting","panel","mbar","lb","ub","method","status","num_pre","num_post","grid_lb","grid_ub","grid_points","event_block","event_block_note"
-"b_black_white","primary","unweighted","unbalanced",,-0.05164371887747,0.019432185900743,"original","ok",4,9,,,,,
-"b_black_white","primary","unweighted","unbalanced",0,-0.0519092620678115,0.019239097130028,"C-LF","ok",4,9,-0.362638830809396,0.362638830809396,1000,,
-"b_black_white","primary","unweighted","unbalanced",0.5,-0.10853754795997,0.0882094453320154,"C-LF","ok",4,9,-0.362638830809396,0.362638830809396,1000,,
-"b_black_white","primary","unweighted","unbalanced",1,-0.189849958471786,0.171699866839684,"C-LF","ok",4,9,-0.362638830809396,0.362638830809396,1000,,
-"b_black_white","primary","unweighted","unbalanced",1.5,-0.275518390975307,0.257368299343205,"C-LF","ok",4,9,-0.362638830809396,0.362638830809396,1000,,
-"b_black_white","primary","unweighted","unbalanced",2,-0.361912827144112,0.34376273551201,"C-LF","ok",4,9,-0.362638830809396,0.362638830809396,1000,,
+"b_black_white","primary","unweighted","unbalanced",,-0.0547536294402926,0.018512576395613,"original","ok",4,9,,,,,
+"b_black_white","primary","unweighted","unbalanced",0,-0.0550056697780553,0.0183352232593518,"C-LF","ok",4,9,-0.373814041552907,0.373814041552907,1000,,
+"b_black_white","primary","unweighted","unbalanced",0.5,-0.113379033624155,0.0901793633776282,"C-LF","ok",4,9,-0.373814041552907,0.373814041552907,1000,,
+"b_black_white","primary","unweighted","unbalanced",1,-0.197197197095477,0.176242656227647,"C-LF","ok",4,9,-0.373814041552907,0.373814041552907,1000,,
+"b_black_white","primary","unweighted","unbalanced",1.5,-0.285505619324192,0.264551078456362,"C-LF","ok",4,9,-0.373814041552907,0.373814041552907,1000,,
+"b_black_white","primary","unweighted","unbalanced",2,-0.375310794472038,0.354356253604207,"C-LF","ok",4,9,-1.12144212465872,0.373814041552907,1999,,
