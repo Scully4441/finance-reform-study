@@ -4,10 +4,14 @@ STAGE1_ROWS <- list(
   edfacts_rla_lea                = 2010:2013,
   edfacts_math_participation_lea = 2013L,
   edfacts_rla_participation_lea  = 2013L,
-  edfacts_docs                   = 2011:2013,
-  ccd_lea_directory              = 2010:2013,
-  ccd_membership                 = 2010L,
-  saipe_district                 = 2009L)
+  edfacts_docs                   = 2010:2013,
+  ccd_lea_directory              = 2007:2013,
+  ccd_membership                 = 2007:2013,
+  ccd_membership_layout          = 2007:2013,
+  ccd_lunch_program              = 2007:2013,
+  ccd_school_characteristics     = 2007:2013,
+  saipe_district                 = 2009:2012,
+  f33_school_finance             = 2010:2013)
 
 stage_allows <- function(dataset, sy_end, stage) {
   stage <- as.integer(stage)

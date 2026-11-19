@@ -21,10 +21,12 @@ allowed1 <- paste(man$dataset[a1], man$sy_end[a1])
 expected1 <- c(paste(rep(c("edfacts_math_lea", "edfacts_rla_lea"), each = 4), 2010:2013),
                paste(c("edfacts_math_participation_lea", "edfacts_rla_participation_lea"), 2013),
                paste("edfacts_docs", 2011:2013), paste("ccd_lea_directory", 2010:2013),
-               "ccd_membership 2010", "saipe_district 2009")
-expect_all(all(a2), setequal(allowed1, expected1), length(allowed1) == length(expected1),
+               paste("ccd_membership", c(2007, 2007, 2007, 2008:2013)), "ccd_membership_layout 2007",
+               paste("saipe_district", 2009:2012), paste("f33_school_finance", 2010:2013))
+expect_all(all(a2), setequal(allowed1, expected1), length(allowed1) == length(expected1), length(allowed1) == 35L,
           all(!is.na(y[a1]) & y[a1] <= STAGE1_LAST_YEAR),
-          !any(a1 & grepl("^(seda_|hs_reportcard_|edfacts_acgr|bls_cpi|ccd_school_characteristics|f33_)", man$dataset)),
+          !any(a1 & grepl("^(seda_|hs_reportcard_|edfacts_acgr|bls_cpi|ccd_school_characteristics)", man$dataset)),
+          all(a1[grepl("^ccd_", man$dataset) & !is.na(y) & y >= 2007 & y <= 2013]),
           inherits(try(stage_allows("x", 2010L, 3L), silent = TRUE), "try-error"),
           identical(ach_window(1L), 2010:2013), identical(ach_window(2L), ACH_WINDOW))
 

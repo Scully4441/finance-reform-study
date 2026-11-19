@@ -1,35 +1,21 @@
 options(repos = c(CRAN = "https://cloud.r-project.org"), Ncpus = 4)
 
-cran <- c("data.table", "digest", "future", "furrr", "testthat", "remotes",
-          "renv", "did", "fixest", "didimputation", "fwildclusterboot",
-          "wildrwolf", "HonestDiD", "readxl")
-github <- c(synthdid = "synth-inference/synthdid",
-            summclust = "s3alfisc/summclust",
-            fwildclusterboot = "s3alfisc/fwildclusterboot",
-            wildrwolf = "s3alfisc/wildrwolf",
-            HonestDiD = "asheshrambachan/HonestDiD",
-            readxlsb = "velofrog/readxlsb@644ef7aefd4b1342d6754db7bab3dc9310137da7")
+if (!requireNamespace("renv", quietly = TRUE)) stop("renv is not installed; open R in the repository folder so renv/activate.R bootstraps it")
+renv::restore(lockfile = "renv.lock", prompt = FALSE)
 
-for (p in cran) {
-  if (!requireNamespace(p, quietly = TRUE)) try(install.packages(p))
-}
-for (p in names(github)) {
-  if (!requireNamespace(p, quietly = TRUE))
-    try(remotes::install_github(github[[p]], dependencies = TRUE, upgrade = "never"))
-}
-
-all_pkgs <- union(cran, names(github))
-have <- vapply(all_pkgs, requireNamespace, logical(1), quietly = TRUE)
-if (any(!have)) {
-  message("Not installed: ", paste(all_pkgs[!have], collapse = ", "))
-  message("Fix these before continuing.")
-}
+locked <- renv::lockfile_read("renv.lock")$Packages
+pkgs <- sort(names(locked))
+have <- vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)
 versions <- data.frame(
-  package = all_pkgs,
-  version = vapply(all_pkgs, function(p) if (have[[p]]) as.character(packageVersion(p)) else NA_character_, character(1)),
+  package = pkgs,
+  version = vapply(pkgs, function(p) if (have[[p]]) as.character(utils::packageVersion(p)) else NA_character_, character(1)),
+  locked_version = vapply(pkgs, function(p) as.character(locked[[p]]$Version), character(1)),
+  source = vapply(pkgs, function(p) as.character(locked[[p]]$Source), character(1)),
   r_version = R.version.string,
   recorded_utc = format(Sys.time(), tz = "UTC", "%Y-%m-%dT%H:%M:%SZ"),
   stringsAsFactors = FALSE)
 dir.create("outputs", showWarnings = FALSE)
-write.csv(versions, "outputs/package_versions.csv", row.names = FALSE)
-print(versions[, c("package", "version")], row.names = FALSE)
+utils::write.csv(versions, "outputs/package_versions.csv", row.names = FALSE)
+bad <- versions$package[is.na(versions$version) | versions$version != versions$locked_version]
+if (length(bad)) stop("installed versions differ from renv.lock for: ", paste(bad, collapse = ", "))
+cat(nrow(versions), "packages restored at their renv.lock versions; versions in outputs/package_versions.csv\n")
