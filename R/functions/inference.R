@@ -101,6 +101,46 @@ ri_pvalue <- function(vals, att) {
   (1 + sum(abs(vals) >= abs(att) - RI_TIE_TOL * max(1, abs(att)))) / (length(vals) + 1)
 }
 
+ri_assignment_count <- function(n_states, gs) {
+  k <- length(gs)
+  if (!k || n_states < k) return(0)
+  round(exp(lchoose(n_states, k) + lfactorial(k) - sum(lfactorial(as.vector(table(gs))))))
+}
+
+ri_enumerate <- function(n_states, gs) {
+  yrs <- sort(unique(gs)); m <- as.vector(table(factor(gs, levels = yrs)))
+  out <- list(rep(0, n_states))
+  for (c in seq_along(yrs)) {
+    out <- unlist(lapply(out, function(a) {
+      free <- which(a == 0)
+      cm <- utils::combn(length(free), m[c])
+      lapply(seq_len(ncol(cm)), function(j) { x <- a; x[free[cm[, j]]] <- yrs[c]; x })
+    }), recursive = FALSE)
+  }
+  out
+}
+
+ri_draw_unique <- function(n_states, gs, reps) {
+  seen <- new.env(hash = TRUE)
+  out <- vector("list", reps); n <- 0L
+  while (n < reps) {
+    a <- rep(0, n_states)
+    a[sample.int(n_states, length(gs))] <- gs
+    key <- paste(a, collapse = ",")
+    if (!is.null(seen[[key]])) next
+    assign(key, TRUE, envir = seen)
+    n <- n + 1L
+    out[[n]] <- a
+  }
+  out
+}
+
+ri_assignments <- function(n_states, gs, reps) {
+  total <- ri_assignment_count(n_states, gs)
+  if (total <= reps) list(method = "enumerated", assignments = ri_enumerate(n_states, gs), possible = total)
+  else list(method = "drawn without duplicate assignments", assignments = ri_draw_unique(n_states, gs, reps), possible = total)
+}
+
 ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
   cp <- cs_panel(fit)
   panel <- cp$panel
@@ -109,25 +149,27 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
   g_state <- vapply(split(panel$g, panel$state), function(z) z[1], numeric(1))
   gs <- unname(g_state[g_state > 0])
   if (!length(gs) || length(states) <= length(gs))
-    return(list(status = "no reassignment possible", p_value = NA_real_, values = numeric(),
-                reps = reps, draws_ok = 0L, treated_states = length(gs), eligible_states = length(states)))
+    return(list(status = "no reassignment possible", p_value = NA_real_, values = numeric(), reps = 0L, requested = reps,
+                method = "none", assignments_possible = 0, draws_ok = 0L, treated_states = length(gs),
+                eligible_states = length(states)))
   set.seed(seed_for(seed_step))
-  picks <- lapply(seq_len(reps), function(b) states[sample.int(length(states), length(gs))])
-  one <- function(pick) {
-    g <- stats::setNames(rep(0, length(states)), states)
-    g[pick] <- gs
+  asg <- ri_assignments(length(states), gs, reps)
+  one <- function(a) {
     p <- panel
-    p$g <- unname(g[p$state])
+    p$g <- unname(stats::setNames(a, states)[p$state])
     cs_overall(p, cp$xformla, cp$weightsname, cp$min_e, cp$max_e, cp$allow_unbalanced, cp$anticipation)
   }
   vals <- if (parallel && requireNamespace("furrr", quietly = TRUE))
-    furrr::future_map_dbl(picks, one, .options = furrr::furrr_options(seed = seed_for(paste(seed_step, "workers"))))
-  else vapply(picks, one, numeric(1))
+    furrr::future_map_dbl(asg$assignments, one, .options = furrr::furrr_options(seed = seed_for(paste(seed_step, "workers"))))
+  else vapply(asg$assignments, one, numeric(1))
   ok <- is.finite(vals)
-  p <- if (!any(ok) || !is.finite(att)) NA_real_ else ri_pvalue(vals[ok], att)
+  p <- if (!any(ok) || !is.finite(att)) NA_real_ else if (asg$method == "enumerated") ri_pvalue_exact(vals[ok], att) else ri_pvalue(vals[ok], att)
   list(status = if (any(ok)) "ok" else "every reassignment failed", p_value = p, values = vals,
-       reps = reps, draws_ok = sum(ok), treated_states = length(gs), eligible_states = length(states))
+       reps = length(asg$assignments), requested = reps, method = asg$method, assignments_possible = asg$possible,
+       draws_ok = sum(ok), treated_states = length(gs), eligible_states = length(states))
 }
+
+ri_pvalue_exact <- function(vals, att) mean(abs(vals) >= abs(att) - RI_TIE_TOL * max(1, abs(att)))
 
 HONEST_GRID_SD <- 20
 HONEST_GRID_POINTS <- 1000L

@@ -195,7 +195,10 @@ if (all(file.exists(of7))) {
 
   expect_all(setequal(key7(ro), used), all(ro$draws_ok <= ro$reps), all(ro$p_value > 0),
             all(ro$p_value <= 1), all(ro$treated_states >= 1), all(ro$eligible_states > ro$treated_states),
-            all(ro$reps == se7$value[se7$setting == "randomization_reps"]))
+            all(ro$requested[(ro$event_set == "primary" & ro$weighting == "unweighted" & ro$panel == "unbalanced")] == as.integer(se7$value[se7$setting == "randomization_reps"])),
+            all(ro$requested[!(ro$event_set == "primary" & ro$weighting == "unweighted" & ro$panel == "unbalanced")] == as.integer(se7$value[se7$setting == "randomization_reps_other"])),
+            all(ro$method %in% c("enumerated", "drawn without duplicate assignments", "none")),
+            all(ro$reps[ro$method == "enumerated"] == ro$assignments_possible[ro$method == "enumerated"]))
   for (m in unique(key7(ro))) {
     v <- rdw$att[key7(rdw) == m]
     v <- v[!is.na(v)]

@@ -193,7 +193,7 @@ for (i in which(usable)) {
 say(sprintf("Growth contrast G: %d models (bootstrap, Romano-Wolf over the gaps, HonestDiD), %.1f s; models with missing event times: %d",
             length(growth), as.numeric(difftime(Sys.time(), t0, units = "secs")), length(gaps_tab)))
 
-say("\nRandomization inference: ", reps$randomization, " reassignments per model on ", WORKERS, " workers")
+say("\nRandomization inference: ", reps$randomization, " reassignments for the primary model of each gap and ", min(reps$randomization, RI_REPS_VARIANT), " for every other model, on ", WORKERS, " workers")
 ri <- list(); ri_draws <- list()
 cache_dir <- local({ a <- commandArgs(trailingOnly = TRUE); k <- which(a == "--cache-dir")
   if (length(k) && k[1] < length(a)) a[k[1] + 1L] else NULL })
@@ -204,10 +204,12 @@ for (i in which(usable)) {
   seed_step <- paste(seed_tag, "randomization", keys[i])
   cf <- if (!is.null(cache_dir)) file.path(cache_dir, paste0(keys[i], ".rds"))
   r <- if (!is.null(cf) && file.exists(cf)) readRDS(cf)
-  if (!is.null(r) && !(identical(r$seed_step, seed_step) && identical(r$reps, reps$randomization) &&
+  r_reps <- if (parts$event_set[i] == "primary" && parts$weighting[i] == "unweighted" && parts$panel[i] == "unbalanced") reps$randomization else
+    min(reps$randomization, RI_REPS_VARIANT)
+  if (!is.null(r) && !(identical(r$seed_step, seed_step) && identical(r$requested, r_reps) &&
                        identical(r$att, infs[[i]]$overall_att))) r <- NULL
   if (is.null(r)) {
-    r <- ri_overall(models[[i]], reps$randomization, seed_step)
+    r <- ri_overall(models[[i]], r_reps, seed_step)
     r$seed_step <- seed_step; r$att <- infs[[i]]$overall_att
     if (!is.null(cf)) saveRDS(r, cf)
   }
@@ -216,7 +218,8 @@ for (i in which(usable)) {
   v <- r$values[is.finite(r$values)]
   ri[[keys[i]]] <- tag(i, data.frame(
     att = att, p_value = r$p_value,
-    reps = as.integer(r$reps), draws_ok = as.integer(r$draws_ok),
+    reps = as.integer(r$reps), requested = as.integer(r$requested), method = r$method,
+    assignments_possible = r$assignments_possible, draws_ok = as.integer(r$draws_ok),
     treated_states = as.integer(r$treated_states), eligible_states = as.integer(r$eligible_states),
     placebo_mean = if (length(v)) mean(v) else NA_real_, placebo_sd = if (length(v)) stats::sd(v) else NA_real_,
     placebo_abs_q95 = if (length(v)) unname(stats::quantile(abs(v), 0.95)) else NA_real_,
@@ -242,12 +245,12 @@ rit <- bind(ri); rid <- bind(ri_draws)
 status$notes <- trimws(sub("^ \\| ", "", status$notes))
 
 settings <- data.frame(setting = c("run", "outcome", "stage", "blinding", "quick_run", "bootstrap_reps",
-                                   "romano_wolf_reps", "randomization_reps", "webb_support", "mbar",
+                                   "romano_wolf_reps", "randomization_reps", "randomization_reps_other", "webb_support", "mbar",
                                    "master_seed", "workers", "boot_level", "r_version", "did", "HonestDiD",
                                    "fwildclusterboot", "wildrwolf"),
                        value = c(stamp, OUTCOME, stage, readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE),
                                  tolower(as.character(quick)), reps$bootstrap, reps$romano_wolf,
-                                 reps$randomization, paste(round(WEBB_SUPPORT, 6), collapse = " "),
+                                 reps$randomization, min(reps$randomization, RI_REPS_VARIANT), paste(round(WEBB_SUPPORT, 6), collapse = " "),
                                  paste(MBARVEC, collapse = " "), MASTER_SEED, WORKERS, BOOT_LEVEL,
                                  R.version.string, as.character(utils::packageVersion("did")),
                                  as.character(utils::packageVersion("HonestDiD")),
