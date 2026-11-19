@@ -18,6 +18,8 @@ show <- function(x) say(paste(utils::capture.output(print(x, row.names = FALSE))
 
 say("Step 9 SEDA outcomes, run ", stamp, "; stage ", stage, "; blinding ",
     readLines("data/reference/blinding_status.txt", n = 1, warn = FALSE))
+rel <- seda_release()
+say("SEDA release read: ", rel, " (", attr(rel, "reason"), ")")
 
 sets <- c(retained = "event_table.csv", retained_r1 = "event_table_r1.csv", retained_r2 = "event_table_r2.csv")
 groups <- lapply(sets, function(f) {

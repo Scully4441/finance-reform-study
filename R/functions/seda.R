@@ -6,7 +6,26 @@ SEDA_SUBJECTS     <- c(math = "mth", rla = "rla")
 SEDA_SUBGROUPS    <- c(all = "all", wh = "wht", bl = "blk", hi = "hsp")
 SEDA_GAPS <- list(b_black_white = c("bl", "wh"), c_hispanic_white = c("hi", "wh"))
 
-seda_long_file <- function(release = "2025.2")
+SEDA_RELEASES <- c(primary = "2025.2", fallback = "2025.1")
+SEDA_PRE_YEARS <- 2009:2019
+seda_cache <- new.env()
+
+seda_release <- function(dir = "data/raw/seda", years_of = function(f) unique(data.table::fread(f, select = "year", showProgress = FALSE)$year)) {
+  f2 <- file.path(dir, sprintf("seda_admindist_long_cs_%s.csv", SEDA_RELEASES[["primary"]]))
+  f1 <- file.path(dir, sprintf("seda_admindist_long_cs_%s.csv", SEDA_RELEASES[["fallback"]]))
+  if (!file.exists(f2)) return(structure(SEDA_RELEASES[["primary"]], reason = "release 2025.2 not downloaded"))
+  key <- paste(normalizePath(f2), file.info(f2)$mtime)
+  if (!is.null(seda_cache[[key]])) return(seda_cache[[key]])
+  yrs <- years_of(f2)
+  miss <- setdiff(SEDA_PRE_YEARS, yrs)
+  out <- if (!length(miss)) structure(SEDA_RELEASES[["primary"]], reason = "release 2025.2 carries end years 2009-2019") else
+    if (file.exists(f1)) structure(SEDA_RELEASES[["fallback"]], reason = paste("release 2025.2 lacks end years", paste(miss, collapse = " "))) else
+    stop("release 2025.2 lacks end years ", paste(miss, collapse = " "), " and release 2025.1 is not downloaded")
+  assign(key, out, envir = seda_cache)
+  out
+}
+
+seda_long_file <- function(release = seda_release())
   sprintf("data/raw/seda/seda_admindist_long_cs_%s.csv", release)
 
 read_seda_long <- function(path = seda_long_file()) {
@@ -55,6 +74,18 @@ seda_pool <- function(x) {
     out[[paste0("grades_", sg)]] <- as.integer(rowsum(as.integer(ok), f, reorder = FALSE))
     out[[paste0("gmask_", sg)]] <- as.integer(rowsum(ifelse(ok, 2L^(x$grade - 3L), 0L), f, reorder = FALSE))
   }
+  for (g in names(SEDA_GAPS)) {
+    a <- SEDA_GAPS[[g]][1]; b <- SEDA_GAPS[[g]][2]
+    ma <- x[[paste0("mn_", a)]]; sa <- x[[paste0("se_", a)]]; mb <- x[[paste0("mn_", b)]]; sb <- x[[paste0("se_", b)]]
+    ok <- !is.na(ma) & !is.na(sa) & sa > 0 & !is.na(mb) & !is.na(sb) & sb > 0
+    w <- ifelse(ok, 1 / (sa^2 + sb^2), 0)
+    sw <- as.vector(rowsum(w, f, reorder = FALSE))
+    pm <- function(m) ifelse(sw > 0, as.vector(rowsum(ifelse(ok, w * m, 0), f, reorder = FALSE)) / sw, NA_real_)
+    ps <- function(s) ifelse(sw > 0, sqrt(as.vector(rowsum(ifelse(ok, w^2 * s^2, 0), f, reorder = FALSE))) / sw, NA_real_)
+    out[[paste0("mn_", a, "_", g)]] <- pm(ma); out[[paste0("mn_", b, "_", g)]] <- pm(mb)
+    out[[paste0("se_", a, "_", g)]] <- ps(sa); out[[paste0("se_", b, "_", g)]] <- ps(sb)
+    out[[paste0("grades_", g)]] <- as.integer(rowsum(as.integer(ok), f, reorder = FALSE))
+  }
   out
 }
 
@@ -72,17 +103,15 @@ seda_subject_wide <- function(x, keys, carry = character()) {
 seda_race_gaps <- function(p) {
   do.call(rbind, lapply(names(SEDA_GAPS), function(g) {
     a <- SEDA_GAPS[[g]][1]; b <- SEDA_GAPS[[g]][2]
-    ok <- !is.na(p$mn_all) & !is.na(p[[paste0("mn_", a)]]) & !is.na(p[[paste0("mn_", b)]])
+    ga <- paste0("_", a, "_", g); gb <- paste0("_", b, "_", g)
+    ok <- !is.na(p$mn_all) & !is.na(p[[paste0("mn", ga)]]) & !is.na(p[[paste0("mn", gb)]])
     y <- p[ok, ]
     if (!nrow(y)) return(NULL)
-    y$value <- y[[paste0("mn_", a)]] - y[[paste0("mn_", b)]]
-    y$se <- sqrt(y[[paste0("se_", a)]]^2 + y[[paste0("se_", b)]]^2)
-    for (pre in c("mn", "se", "grades")) {
-      nm <- if (pre == "mn") "mean" else pre
-      y[[paste0(nm, "_all")]]   <- y[[paste0(pre, "_all")]]
-      y[[paste0(nm, "_group")]] <- y[[paste0(pre, "_", a)]]
-      y[[paste0(nm, "_wh")]]    <- y[[paste0(pre, "_", b)]]
-    }
+    y$value <- y[[paste0("mn", ga)]] - y[[paste0("mn", gb)]]
+    y$se <- sqrt(y[[paste0("se", ga)]]^2 + y[[paste0("se", gb)]]^2)
+    y$mean_all <- y$mn_all; y$se_all <- y$se_all; y$grades_all <- y$grades_all
+    y$mean_group <- y[[paste0("mn", ga)]]; y$se_group <- y[[paste0("se", ga)]]; y$grades_group <- y[[paste0("grades_", g)]]
+    y$mean_wh <- y[[paste0("mn", gb)]]; y$se_wh <- y[[paste0("se", gb)]]; y$grades_wh <- y[[paste0("grades_", g)]]
     carry <- as.vector(outer(c("mean", "se", "grades"), c("all", "group", "wh"), paste, sep = "_"))
     w <- seda_subject_wide(y, c("leaid", "state", "sy_end"), carry)
     cbind(gap = rep(g, nrow(w)), w, stringsAsFactors = FALSE)
