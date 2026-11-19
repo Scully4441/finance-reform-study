@@ -89,13 +89,9 @@ dist <- s1[!duplicated(s1$leaid), c("leaid", "retained", "reason", "retained_r1"
                                      "saipe_pov_rate_2009", "pov_quintile_2009")]
 k <- match(cells$leaid, dist$leaid)
 rc <- cells[c("leaid", "state", "sy_end")]
-rc$rc_rule12 <- rc_rule12(rc$leaid, rc$sy_end, ccd)
-ok12 <- rc$rc_rule12 == "pass"
 for (flag in c("retained", "retained_r1", "retained_r2"))
-  rc[[flag]] <- as.integer(!is.na(k) & dist[[flag]][k] %in% 1L & ok12)
-rc$reason <- ifelse(is.na(k), "rule 2: not in the step 3 sample file (no CCD row 2010-2021)",
-                    ifelse(dist$reason[k] != "retained", dist$reason[k],
-                           ifelse(!ok12, paste(rc$rc_rule12, "(report-card year)"), "retained")))
+  rc[[flag]] <- as.integer(!is.na(k) & dist[[flag]][k] %in% 1L)
+rc$reason <- ifelse(is.na(k), "rule 2: not in the step 3 sample file (not operational in every tested year)", dist$reason[k])
 rc$robust_from_2013 <- 1L
 ky <- match(paste(rc$leaid, pmin(rc$sy_end, max(HS_RC_CCD_YEARS))), paste(ccd$leaid, ccd$sy_end))
 rc$agency_type <- ccd$agency_type[ky]
@@ -113,13 +109,13 @@ rc <- cbind(rc, cells[setdiff(names(cells), c("leaid", "state", "sy_end"))])
 rc$source <- "report_card"
 
 sg_cols <- as.vector(outer(c("math", "rla"), RC_SAMPLE_SUBGROUPS, paste, sep = "_"))
-s1$source <- "edfacts"; s1$cep_carried <- 0L; s1$rc_rule12 <- NA_character_
+s1$source <- "edfacts"; s1$cep_carried <- 0L
 for (v in sg_cols) {
   s1[[paste0("nbasis_", v)]] <- ifelse(is.na(s1[[paste0("n_", v)]]), "none", "exact")
   s1[[paste0("nclamp_", v)]] <- s1[[paste0("n_", v)]]
 }
 cols <- c(names(utils::read.csv("data/derived/sample_district_year.csv", nrows = 1, check.names = FALSE)),
-          "source", "cep_carried", "rc_rule12", paste0("nbasis_", sg_cols), paste0("nclamp_", sg_cols))
+          "source", "cep_carried", paste0("nbasis_", sg_cols), paste0("nclamp_", sg_cols))
 stopifnot(all(cols %in% names(rc)), all(cols %in% names(s1)))
 panel <- rbind(s1[cols], rc[cols])
 panel <- panel[order(panel$state, panel$leaid, panel$sy_end), ]

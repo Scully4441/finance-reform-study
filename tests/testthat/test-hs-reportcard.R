@@ -82,9 +82,13 @@ expect_all(identical(cw$leaid, c("1300001", "1300009", NA, "5600001", NA, NA)),
           all(cw$author_check == ""))
 expect_all(identical(rc_xw_key(c("NH", "GA"), c(NA, "601"), c("Dover", "x")), c("NH name Dover", "GA id 601")))
 
-rr <- rc_rule12(c("1300001", "1300009", "5600001", "3300002", "9999999", "1300001"), c(2024L, 2023L, 2024L, 2024L, 2024L, 2025L), ccd)
-expect_all(identical(rr, c("pass", "rule 2: not operational", "rule 2: boundary change (5 or 8)",
-                          "rule 1: agency type not 1 or 2", "rule 2: not in the CCD LEA directory", "pass")))
+expect_all(!exists("rc_rule12"), identical(HS_RULES_WINDOW, c(2010:2019, 2021:2024)), identical(hs_rules_window(2L), HS_RULES_WINDOW),
+           identical(hs_rules_window(1L), 2010:2013))
+lea_t <- rbind(data.frame(leaid = "0100001", sy_end = HS_RULES_WINDOW, agency_type = 1L, ccd_bound = 1L),
+               data.frame(leaid = "0100002", sy_end = HS_RULES_WINDOW, agency_type = 1L, ccd_bound = ifelse(HS_RULES_WINDOW == 2023L, 5L, 1L)),
+               data.frame(leaid = "0100003", sy_end = setdiff(HS_RULES_WINDOW, 2024L), agency_type = 1L, ccd_bound = 1L))
+dr_t <- district_rules(lea_t, HS_RULES_WINDOW)
+expect_all(identical(dr_t$rule12, c("pass", "rule 2: boundary change (BOUND 5 or 8)", "rule 2: not operational in every window year")))
 
 dd <- rbind(cx, cx[1, ], transform(cx[2, ], p_lo = 99, p_hi = 99))
 dd <- rc_dedupe(dd)
@@ -126,9 +130,10 @@ if (file.exists("data/derived/hs_panel.csv") && file.exists("data/derived/sample
             all(p$sy_end[p$source == "edfacts"] %in% ACH_WINDOW), all(p$sy_end[p$source == "report_card"] %in% HS_RC_WINDOW),
             !anyDuplicated(p[c("leaid", "sy_end")]), all(p$source %in% c("edfacts", "report_card")),
             all(p$cep_carried == as.integer(p$source == "report_card" & p$sy_end == 2025L)),
-            all(is.na(p$rc_rule12) == (p$source == "edfacts")))
+            !"rc_rule12" %in% names(p))
   r2 <- p[p$source == "report_card", ]
-  expect_all(all(r2$retained[r2$rc_rule12 != "pass"] == 0L), all(r2$robust_from_2013 == 1L),
+  kd <- match(r2$leaid, s1$leaid)
+  expect_all(all(r2$retained[is.na(kd)] == 0L), all(r2$retained[!is.na(kd)] == s1$retained[kd[!is.na(kd)]]), all(r2$robust_from_2013 == 1L),
             all(substr(r2$leaid, 1, 2) == STATE_FIPS[r2$state]))
   for (v in as.vector(outer(c("math", "rla"), RC_SAMPLE_SUBGROUPS, paste, sep = "_"))) {
     cl <- r2[[paste0("cell_", v)]]; nb <- r2[[paste0("nbasis_", v)]]; pp <- r2[[paste0("p_", v)]]

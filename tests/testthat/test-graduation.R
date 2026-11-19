@@ -2,7 +2,7 @@ withr::local_dir(ROOT)
 
 test_that("graduation loaders, gaps and the graduation pass", {
 GW <- GRAD_WINDOW
-expect_all(identical(GW, 2011:2021), identical(GRAD_FILE_YEARS, 2011:2024), identical(GRAD_RULES_WINDOW, 2010:2021),
+expect_all(identical(GW, 2011:2021), identical(GRAD_FILE_YEARS, 2011:2024), identical(GRAD_RULES_WINDOW, 2011:2021),
           identical(unname(GRAD_GAPS), c("bw", "hw")), identical(GRAD_SEC_FLAGS, "cep"))
 
 expect_all(outcome_arg(character()) == "achievement", outcome_arg(c("--quick")) == "achievement",

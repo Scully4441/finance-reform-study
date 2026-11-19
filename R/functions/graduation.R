@@ -1,6 +1,6 @@
 GRAD_WINDOW       <- 2011:2021
 GRAD_FILE_YEARS   <- 2011:2024
-GRAD_RULES_WINDOW <- 2010:2021
+GRAD_RULES_WINDOW <- 2011:2021
 GRAD_SUBGROUPS    <- c("wh", "bl", "hi")
 GRAD_GAPS         <- c(grad_black_white = "bw", grad_hispanic_white = "hw")
 GRAD_WEIGHT       <- "cohort_2011"

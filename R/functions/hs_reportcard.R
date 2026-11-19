@@ -258,17 +258,6 @@ rc_crosswalk_draft <- function(keys, ccd) {
 rc_xw_key <- function(state, st_id, name) ifelse(state %in% HS_RC_NAME_STATES, paste(state, "name", name), paste(state, "id", st_id))
 
 
-rc_rule12 <- function(leaid, sy_end, ccd) {
-  y <- pmin(sy_end, max(HS_RC_CCD_YEARS))
-  k <- match(paste(leaid, y), paste(ccd$leaid, ccd$sy_end))
-  ty <- ccd$agency_type[k]; st <- ccd$status[k]
-  ifelse(is.na(k), "rule 2: not in the CCD LEA directory",
-         ifelse(!ty %in% 1:2, "rule 1: agency type not 1 or 2",
-                ifelse(st %in% c(2L, 6L, 7L), "rule 2: not operational",
-                       ifelse(st %in% BOUND_CHANGE, "rule 2: boundary change (5 or 8)", "pass"))))
-}
-
-
 rc_cep <- function(leaid, sy_end) {
   cep <- integer(length(leaid))
   for (y in HS_RC_CCD_YEARS) {

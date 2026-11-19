@@ -12,7 +12,9 @@ gap_cells_ok <- function(d, subj, sgs, sample = names(MAX_WIDTH)) {
   for (s in sgs) {
     col <- function(pre) d[[paste0(pre, "_", subj, "_", s)]]
     pk <- col("part_ok")
-    ok <- ok & cell_in_sample(col("cell"), col("w"), sample) & (is.na(pk) | pk == 1L)
+    okp <- is.na(pk) | pk == 1L
+    if (sample == "exact" && !is.null(col("part"))) okp <- okp & !part_straddles(col("part"))
+    ok <- ok & cell_in_sample(col("cell"), col("w"), sample) & okp
   }
   ok
 }

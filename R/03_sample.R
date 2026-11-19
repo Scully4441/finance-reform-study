@@ -32,12 +32,25 @@ cep <- utils::read.csv("data/reference/cep_phase_in.csv", stringsAsFactors = FAL
 stopifnot(all(outer(names(STATE_FIPS), WINDOW, paste) %in% paste(tr$state, tr$sy_end)),
           setequal(cep$state, names(STATE_FIPS)))
 
-lea <- do.call(rbind, lapply(WINDOW, read_ccd_lea_year))
-lea$state <- fips_to_state(lea$fipst)
-n_outside <- length(unique(lea$leaid[is.na(lea$state)]))
-lea <- lea[!is.na(lea$state), ]
+read_edfacts_year <- function(subj, y, kind) {
+  if (y != 2019L) return(read_edfacts_hs(edfacts_hs_file(subj, y, kind), subj, y, kind))
+  d <- edfacts_2019_read(subj, kind)
+  lg <- attr(d, "choice_log")
+  say("End year 2019 ", subj, " ", kind, ": read the ", attr(d, "choice"), " copy; ",
+      paste(sprintf("%s %s (states %s%s)", lg$copy, basename(lg$file), lg$states, ifelse(nzchar(lg$note), paste0("; ", lg$note), "")),
+            collapse = "; "))
+  d
+}
 
-dr <- district_rules(lea, WINDOW)
+RULES_YEARS <- hs_rules_window(stage)
+lea_all <- do.call(rbind, lapply(RULES_YEARS, read_ccd_lea_year))
+lea_all$state <- fips_to_state(lea_all$fipst)
+n_outside <- length(unique(lea_all$leaid[is.na(lea_all$state)]))
+lea_all <- lea_all[!is.na(lea_all$state), ]
+lea <- lea_all[lea_all$sy_end %in% WINDOW, ]
+
+dr <- district_rules(lea_all, RULES_YEARS)
+say("Rules 1 and 2 tested in end years ", paste(RULES_YEARS, collapse = " "))
 dr$state <- fips_to_state(substr(dr$leaid, 1, 2))
 
 NO_SAIPE <- "no SAIPE 2009 poverty rate"
@@ -76,7 +89,7 @@ smp$test_replaced_rla  <- tr$replaced_rla[kt]
 edf <- lapply(WINDOW, function(y) {
   yr <- NULL
   for (subj in names(SUBJECTS)) {
-    a <- read_edfacts_hs(edfacts_hs_file(subj, y, "achievement"), subj, y, "achievement")
+    a <- read_edfacts_year(subj, y, "achievement")
     x <- data.frame(leaid = a$leaid, stringsAsFactors = FALSE)
     for (s in SUBGROUPS) {
       n_raw <- a[[paste0("n_", s)]]
@@ -89,7 +102,7 @@ edf <- lapply(WINDOW, function(y) {
       x[[paste0("cell_", subj, "_", s)]] <- st
     }
     if (y >= PART_FROM) {
-      p <- read_edfacts_hs(edfacts_hs_file(subj, y, "participation"), subj, y, "participation")
+      p <- read_edfacts_year(subj, y, "participation")
       pp <- data.frame(leaid = p$leaid, stringsAsFactors = FALSE)
       for (s in SUBGROUPS) pp[[paste0("part_", subj, "_", s)]] <- trimws(p[[paste0("part_", s)]])
       x <- merge(x, pp, by = "leaid", all.x = TRUE)
@@ -117,8 +130,8 @@ for (subj in names(SUBJECTS)) for (s in SUBGROUPS) {
   pr <- edfacts_range(smp[[pv]][k])
   straddle <- !is.na(pr$width) & pr$width > 0 & pr$lo < 95 & pr$hi >= 95
   if (any(straddle))
-    stop("exact-only sample: participation band straddling 95 in ", sum(straddle),
-         " ", subj, " ", s, " cells; the participation rule for that sample needs an author decision")
+    say("exact-only sample: participation band straddling 95 in ", sum(straddle), " ", subj, " ", s,
+        " cells; treated as failing rule 4 in that sample")
 }
 
 cols <- c("leaid", "state", "sy_end", "retained", "reason", "retained_r1", "retained_r2",

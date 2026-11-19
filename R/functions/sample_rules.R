@@ -243,3 +243,69 @@ cep_indicator <- function(leaid, state, sy_end,
   }
   cep
 }
+
+part_straddles <- function(x) {
+  pr <- edfacts_range(x)
+  !is.na(pr$width) & pr$width > 0 & pr$lo < 95 & pr$hi >= 95
+}
+
+HS_RULES_WINDOW <- c(2010:2019, 2021:2024)
+hs_rules_window <- function(stage) if (identical(as.integer(stage), 1L)) ach_window(1L) else HS_RULES_WINDOW
+
+EDFACTS_2019_CANDIDATES <- c(ed = "data/raw/edfacts/%s-%s-lea-sy2018-19.zip", archive = "data/raw/edfacts/%s-%s-lea-sy2018-19-long.csv")
+EDL_SUBGROUP_PATTERNS <- c(ALL = "^All Students", MWH = "^White", MBL = "^Black", MHI = "^Hispanic", ECD = "^Economically Disadvantaged")
+
+read_edfacts_hs_edl <- function(path, subject, sy_end, kind = c("achievement", "participation")) {
+  kind <- match.arg(kind)
+  td <- tempfile("edl"); dir.create(td); on.exit(unlink(td, recursive = TRUE), add = TRUE)
+  files <- utils::unzip(path, exdir = td)
+  files <- files[grepl("\\.csv$", files, ignore.case = TRUE)]
+  if (!length(files)) stop(basename(path), ": no CSV member")
+  need <- c("School Year", "NCES LEA ID", "Value", "Denominator", "Subgroup", "Age/Grade", "Academic Subject")
+  d <- do.call(rbind, lapply(files, function(f) {
+    x <- data.table::fread(f, colClasses = "character", na.strings = NULL, showProgress = FALSE, data.table = FALSE, check.names = FALSE)
+    miss <- setdiff(need, names(x))
+    if (length(miss)) stop(basename(f), " lacks columns: ", paste(miss, collapse = ", "))
+    x[need]
+  }))
+  subj_pat <- if (subject == "math") "^Math" else "Reading|Language"
+  d <- d[grepl("high school", d[["Age/Grade"]], ignore.case = TRUE) & grepl(subj_pat, d[["Academic Subject"]], ignore.case = TRUE), , drop = FALSE]
+  if (!nrow(d)) stop(basename(path), ": no high school rows for ", subject)
+  d$leaid <- trimws(d[["NCES LEA ID"]])
+  d <- d[grepl("^[0-9]{7}$", d$leaid), , drop = FALSE]
+  out <- data.frame(leaid = sort(unique(d$leaid)), stringsAsFactors = FALSE)
+  for (sg in names(SUBGROUPS)) {
+    x <- d[grepl(EDL_SUBGROUP_PATTERNS[[sg]], d$Subgroup), , drop = FALSE]
+    if (anyDuplicated(x$leaid)) stop(basename(path), ": duplicate LEA rows for ", sg)
+    k <- match(out$leaid, x$leaid)
+    val <- ifelse(is.na(k), "", acgr_value(x$Value[k]))
+    if (kind == "achievement") {
+      out[[paste0("n_", SUBGROUPS[[sg]])]] <- ifelse(is.na(k), "", trimws(x$Denominator[k]))
+      out[[paste0("p_", SUBGROUPS[[sg]])]] <- val
+    } else out[[paste0("part_", SUBGROUPS[[sg]])]] <- val
+  }
+  out
+}
+
+edfacts_states_covered <- function(d) sort(unique(stats::na.omit(fips_to_state(substr(d$leaid, 1, 2)))))
+
+edfacts_2019_read <- function(subject, kind = c("achievement", "participation"), candidates = EDFACTS_2019_CANDIDATES) {
+  kind <- match.arg(kind)
+  log <- data.frame(copy = character(), file = character(), states = integer(), covers_all = logical(), note = character(),
+                    stringsAsFactors = FALSE)
+  got <- list()
+  for (nm in names(candidates)) {
+    f <- sprintf(candidates[[nm]], subject, kind)
+    if (!file.exists(f)) { log[nrow(log) + 1L, ] <- list(nm, f, NA_integer_, FALSE, "file not present"); next }
+    d <- tryCatch(if (grepl("\\.zip$", f)) read_edfacts_hs_edl(f, subject, 2019L, kind) else read_edfacts_hs(f, subject, 2019L, kind),
+                  error = function(e) e)
+    if (inherits(d, "error")) { log[nrow(log) + 1L, ] <- list(nm, f, NA_integer_, FALSE, conditionMessage(d)); next }
+    st <- edfacts_states_covered(d)
+    all51 <- all(names(STATE_FIPS) %in% st)
+    log[nrow(log) + 1L, ] <- list(nm, f, length(intersect(st, names(STATE_FIPS))), all51, "")
+    got[[nm]] <- d
+  }
+  pick <- log$copy[log$covers_all][1]
+  if (is.na(pick)) stop("no 2019 ", subject, " ", kind, " file covers the 50 states and DC")
+  structure(got[[pick]], choice = pick, choice_log = log)
+}

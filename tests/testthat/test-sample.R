@@ -152,8 +152,6 @@ if (file.exists(out)) {
               all(is.na(pv[!u])), all(wv[cs == "wide_range"] > 10), all(is.na(wv[cs == "suppressed"])))
     pr <- s[[paste0("part_", v)]]; t13 <- s$sy_end >= 2013
     expect_all(all(s[[paste0("part_ok_", v)]][t13] == as.integer(part_pass(pr[t13]))))
-    px <- edfacts_range(pr[t13 & cell_in_sample(cs, wv, "exact")])
-    expect_all(!any(!is.na(px$width) & px$width > 0 & px$lo < 95 & px$hi >= 95))
   }
   q <- s$pov_quintile_2009[s$retained == 1 & !is.na(s$pov_quintile_2009)]
   expect_all(all(q %in% 1:5))
