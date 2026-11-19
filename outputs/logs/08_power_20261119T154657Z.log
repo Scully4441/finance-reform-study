@@ -1,0 +1,12 @@
+Step 8 power, run 20261119T154657Z; stage 1; blinding PERMUTED; did 2.5.1
+Placebo runs per gap: 2000  (the registered count)
+Placebo-treated states per draw: 5 (treated states of the primary event set with a post-reform year in the federal files, end year 2021); cohort years drawn uniformly from 2011-2013
+Minimum detectable effect at 80% power, 5% two-sided test; the study is registered as underpowered if any gap exceeds 0.1 SD
+
+== Step 5 panels the placebo runs are built on
+a_poverty           38 states    in 38 states, unbalanced panel
+b_black_white     1509 districts in 40 states, unbalanced panel
+c_hispanic_white  1589 districts in 38 states, unbalanced panel
+Panels and estimates agree with outputs/05_primary/panel_counts.csv and overall_estimates.csv
+
+== Placebo runs: 2000 per gap on 12 workers

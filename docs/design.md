@@ -1423,13 +1423,13 @@ the continuous-treatment estimator.
 ### 12.1 Where the hypotheses are evaluated
 
 The hypotheses are evaluated on the high school achievement family, the primary
-outcome of the study, on the primary model of each gap: primary event set,
-unweighted, unbalanced panel, primary suppression sample, with the treated-unit floor.
-The same rules are applied to the graduation family (H2 and H3 only) and the SEDA
-family and reported beside the high school verdicts, labelled as evidence on those
-outcomes. They do not change the high school verdicts. Every hypothesis receives one
-verdict per gap, and the summary states the verdict for each gap without combining
-gaps.
+outcome of the study, on the primary model of each gap: primary event set, unweighted,
+unbalanced panel, primary suppression sample, with the treated-unit floor. The same
+rules are applied to the graduation family (gaps (b) and (c): H2, H3, and H4 and H5
+for those two gaps) and the SEDA family and reported beside the high school verdicts,
+labelled as evidence on those outcomes. They do not change the high school verdicts.
+Every hypothesis receives one verdict per gap, and the summary states the verdict for
+each gap without combining gaps.
 
 ### 12.2 Agreement criterion
 
@@ -1583,7 +1583,15 @@ that description; the verdict rules of Section 12 and the reporting order of Sec
 The minimum detectable effects of the three gaps and the resulting classification are
 entered here and in the registration.
 
-PLACEHOLDER-POWER
+The simulation was run on November 19, 2026 with 2,000 placebo runs per gap on the
+stage 1 panels (gap (a): 38 states; gap (b): 1,509 districts in 40 states; gap (c):
+1,589 districts in 38 states). The minimum detectable effects at 80 percent power and
+a 5 percent two-sided test, from the exact inversion of the placebo distribution, are
+0.200 SD for gap (a), 0.190 SD for gap (b) and 0.166 SD for gap (c); the normal
+approximation gives 0.208, 0.203 and 0.170. All three exceed the 0.10 SD ceiling, so
+the study is registered as underpowered and is described as a bounds analysis. The
+outputs of the simulation are in `outputs/08_power/` and are attached to the
+registration.
 
 The graduation and SEDA families are registered without a power calculation, because
 no file of either is opened before registration.

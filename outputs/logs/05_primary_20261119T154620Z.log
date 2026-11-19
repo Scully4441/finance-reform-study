@@ -1,0 +1,1265 @@
+Step 5 primary estimator (achievement), run 20261119T154620Z; stage 1; blinding PERMUTED; did 2.5.1
+Console: panel sizes only. Cohort counts, estimates and model status: outputs/05_primary and outputs/logs/05_primary_20261119T154620Z.log
+Covariates for the 2879 districts in the district gap file; missing: log_member_2009 2, saipe_pov_rate_2009 0, black_share_2009 0, hisp_share_2009 0
+
+== Panels (both subjects; gaps (b) and (c) with all covariates), primary suppression sample, end years 2010-2013
+   unbalanced = the primary rule (any window year); balanced = the robustness rule (every window year)
+
+== Event set primary (event_table.csv): states by cohort status
+ cohort_status states
+     estimable      2
+  after_window      7
+         never     31
+    first_year      0
+      excluded     11
+a_poverty           primary unbalanced    38 states    in 38 states
+a_poverty           primary balanced      36 states    in 36 states
+b_black_white       primary unbalanced  1509 districts in 40 states
+b_black_white       primary balanced     806 districts in 37 states
+c_hispanic_white    primary unbalanced  1589 districts in 38 states
+c_hispanic_white    primary balanced     773 districts in 36 states
+
+== Event set r1 (event_table_r1.csv): states by cohort status
+ cohort_status states
+     estimable      2
+  after_window      0
+         never     38
+    first_year      0
+      excluded     11
+a_poverty           r1      unbalanced    38 states    in 38 states
+a_poverty           r1      balanced      36 states    in 36 states
+b_black_white       r1      unbalanced  1509 districts in 40 states
+b_black_white       r1      balanced     806 districts in 37 states
+c_hispanic_white    r1      unbalanced  1589 districts in 38 states
+c_hispanic_white    r1      balanced     773 districts in 36 states
+
+== Event set r2 (event_table_r2.csv): states by cohort status
+ cohort_status states
+     estimable      1
+  after_window      3
+         never     41
+    first_year      0
+      excluded      6
+a_poverty           r2      unbalanced    43 states    in 43 states
+a_poverty           r2      balanced      41 states    in 41 states
+b_black_white       r2      unbalanced  1806 districts in 45 states
+b_black_white       r2      balanced    1007 districts in 41 states
+c_hispanic_white    r2      unbalanced  2055 districts in 42 states
+c_hispanic_white    r2      balanced    1101 districts in 40 states
+
+== Units and states entering each model (panel_counts.csv)
+              gap event_set      panel     unit units_with_outcome
+        a_poverty   primary unbalanced    state                 38
+        a_poverty   primary   balanced    state                 38
+    b_black_white   primary unbalanced district               1596
+    b_black_white   primary   balanced district               1596
+ c_hispanic_white   primary unbalanced district               1683
+ c_hispanic_white   primary   balanced district               1683
+        a_poverty        r1 unbalanced    state                 38
+        a_poverty        r1   balanced    state                 38
+    b_black_white        r1 unbalanced district               1596
+    b_black_white        r1   balanced district               1596
+ c_hispanic_white        r1 unbalanced district               1683
+ c_hispanic_white        r1   balanced district               1683
+        a_poverty        r2 unbalanced    state                 43
+        a_poverty        r2   balanced    state                 43
+    b_black_white        r2 unbalanced district               1900
+    b_black_white        r2   balanced district               1900
+ c_hispanic_white        r2 unbalanced district               2156
+ c_hispanic_white        r2   balanced district               2156
+ units_in_panel dropped_missing_covariates dropped_first_year_state
+             38                          0                        0
+             36                          0                        0
+           1509                          0                        0
+            806                          0                        0
+           1589                          0                        0
+            773                          0                        0
+             38                          0                        0
+             36                          0                        0
+           1509                          0                        0
+            806                          0                        0
+           1589                          0                        0
+            773                          0                        0
+             43                          0                        0
+             41                          0                        0
+           1807                          1                        0
+           1007                          0                        0
+           2057                          2                        0
+           1102                          1                        0
+ units_in_model states_in_model dropped_missing_weight unit_years
+             38              38                      0        150
+             36              36                      0        144
+           1509              40                    299       4799
+            806              37                      0       3224
+           1589              38                    495       4738
+            773              36                      0       3092
+             38              38                      0        150
+             36              36                      0        144
+           1509              40                    299       4799
+            806              37                      0       3224
+           1589              38                    495       4738
+            773              36                      0       3092
+             43              43                      0        170
+             41              41                      0        164
+           1806              45                    335       5806
+           1007              41                      0       4028
+           2055              42                    569       6359
+           1101              40                      0       4404
+ unit_years_per_unit units_estimable units_after_window units_never
+            3.947368               2                  7          29
+            4.000000               2                  7          27
+            3.180252              47                298        1164
+            4.000000              22                145         639
+            2.981750              56                216        1317
+            4.000000              39                 56         678
+            3.947368               2                  0          36
+            4.000000               2                  0          34
+            3.180252              67                  0        1442
+            4.000000               5                  0         801
+            2.981750             128                  0        1461
+            4.000000              14                  0         759
+            3.953488               1                  3          39
+            4.000000               1                  3          37
+            3.214839               6                104        1696
+            4.000000               4                 35         968
+            3.094404              34                130        1891
+            4.000000              24                 30        1047
+ states_estimable states_after_window states_never
+                2                   7           29
+                2                   7           27
+                2                   7           31
+                2                   7           28
+                2                   7           29
+                2                   7           27
+                2                   0           36
+                2                   0           34
+                2                   0           38
+                2                   0           35
+                2                   0           36
+                2                   0           34
+                1                   3           39
+                1                   3           37
+                1                   3           41
+                1                   3           37
+                1                   3           38
+                1                   3           36
+
+== a_poverty.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012,2011. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2 -0.06985189 0.02729914 -0.12500474 -0.01469904       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.06734314 0.04513429 -0.15852862  0.02384234       2              2
+  1 -0.01015443 0.03711823 -0.08514495  0.06483608       2              2
+  2  0.30774816 0.02838207  0.25040745  0.36508888       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se      ci_lo     ci_hi cohorts treated_states treated_units
+ 0.0767502 0.03313768 0.01180153 0.1416989       2              2             2
+
+== a_poverty.primary.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012,2011. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e          att         se      ci_lo       ci_hi cohorts treated_states
+ -5           NA         NA         NA          NA       0              0
+ -4           NA         NA         NA          NA       0              0
+ -3           NA         NA         NA          NA       0              0
+ -2 -0.096329125 0.01594063 -0.1290795 -0.06357879       1              1
+ -1  0.000000000         NA         NA          NA       2              2
+  0 -0.057085429 0.06828201 -0.1973722  0.08320133       2              2
+  1 -0.004345632 0.05216931 -0.1115285  0.10283724       2              2
+  2  0.323966325 0.02181678  0.2791433  0.36878933       1              1
+  3           NA         NA         NA          NA       0              0
+  4           NA         NA         NA          NA       0              0
+  5           NA         NA         NA          NA       0              0
+  6           NA         NA         NA          NA       0              0
+  7           NA         NA         NA          NA       0              0
+  8           NA         NA         NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se       ci_lo     ci_hi cohorts treated_states
+ 0.08751175 0.04011468 0.008888421 0.1661351       2              2
+ treated_units
+             2
+
+== b_black_white.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | Error computing internal 2x2 DiD for (g, t) = (2012, 2010): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals. | 1 group-time cells without an estimate, left out of the aggregation
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2          NA         NA          NA         NA       0              0
+ -1  0.00000000         NA          NA         NA       2              2
+  0  0.07389214 0.05282640 -0.02964569 0.17742998       2              2
+  1 -0.02510039 0.03145456 -0.08675018 0.03654941       2              2
+  2 -0.05249317 0.02940510 -0.11012610 0.00513976       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            47
+            47
+            47
+            41
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+          att         se      ci_lo     ci_hi cohorts treated_states
+ -0.001233805 0.07317302 -0.1446503 0.1421827       2              2
+ treated_units
+            47
+
+== b_black_white.primary.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | Error computing internal 2x2 DiD for (g, t) = (2012, 2010): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals. | 3 group-time cells without an estimate, left out of the aggregation
+  e          att         se        ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA           NA         NA       0              0
+ -4           NA         NA           NA         NA       0              0
+ -3           NA         NA           NA         NA       0              0
+ -2           NA         NA           NA         NA       0              0
+ -1  0.000000000         NA           NA         NA       2              2
+  0  0.021487253 0.01290577 -0.003807601 0.04678211       1              1
+  1 -0.005632139 0.05412882 -0.111722681 0.10045840       1              1
+  2 -0.017247394 0.04529568 -0.106025301 0.07153051       1              1
+  3           NA         NA           NA         NA       0              0
+  4           NA         NA           NA         NA       0              0
+  5           NA         NA           NA         NA       0              0
+  6           NA         NA           NA         NA       0              0
+  7           NA         NA           NA         NA       0              0
+  8           NA         NA           NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            40
+            36
+            36
+            36
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+           att         se       ci_lo      ci_hi cohorts treated_states
+ -0.0004640934 0.03320321 -0.06554119 0.06461301       1              1
+ treated_units
+            36
+
+== b_black_white.primary.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals.
+  e         att         se       ci_lo     ci_hi cohorts treated_states
+ -5          NA         NA          NA        NA       0              0
+ -4          NA         NA          NA        NA       0              0
+ -3          NA         NA          NA        NA       0              0
+ -2  0.37440980 0.06353615  0.24988124 0.4989384       1              1
+ -1  0.00000000         NA          NA        NA       2              2
+  0  0.02511459 0.05389662 -0.08052085 0.1307500       2              2
+  1  0.02815480 0.07756484 -0.12386949 0.1801791       2              2
+  2 -0.02701317 0.02533203 -0.07666303 0.0226367       1              1
+  3          NA         NA          NA        NA       0              0
+  4          NA         NA          NA        NA       0              0
+  5          NA         NA          NA        NA       0              0
+  6          NA         NA          NA        NA       0              0
+  7          NA         NA          NA        NA       0              0
+  8          NA         NA          NA        NA       0              0
+ treated_units
+             0
+             0
+             0
+             4
+            22
+            22
+            22
+            18
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ 0.008752075 0.04345605 -0.07642022 0.09392437       2              2
+ treated_units
+            22
+
+== b_black_white.primary.tested_weighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2  0.44724508 0.10052879  0.24299645 0.65149371       1              1
+ -1  0.00000000         NA          NA         NA       2              2
+  0  0.06156746 0.04154933 -0.02285008 0.14598500       2              2
+  1  0.04069750 0.03182850 -0.02396982 0.10536481       2              2
+  2 -0.00525217 0.02235068 -0.05066299 0.04015865       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             4
+            22
+            22
+            22
+            18
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att        se       ci_lo      ci_hi cohorts treated_states
+ 0.0323376 0.0287784 -0.02406703 0.08874222       2              2
+ treated_units
+            22
+
+== c_hispanic_white.primary.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2  0.07442871 0.01673241  0.03672906  0.112128356       1              1
+ -1  0.00000000         NA          NA           NA       2              2
+  0 -0.06989890 0.02919284 -0.13567304 -0.004124758       2              2
+  1 -0.02569536 0.02249356 -0.07637540  0.024984683       2              2
+  2 -0.05293696 0.02894583 -0.11815457  0.012280644       1              1
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+            34
+            56
+            56
+            56
+            22
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo        ci_hi cohorts treated_states
+ -0.04951041 0.02066022 -0.0900037 -0.009017116       2              2
+ treated_units
+            56
+
+== c_hispanic_white.primary.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2  0.07285560 0.01780389  0.03569853  0.110012661       1              1
+ -1  0.00000000         NA          NA           NA       2              2
+  0 -0.04403145 0.01691989 -0.07934358 -0.008719316       2              2
+  1 -0.02407353 0.04271363 -0.11321770  0.065070631       2              2
+  2  0.00165802 0.02357017 -0.04753337  0.050849414       1              1
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+            28
+            47
+            47
+            47
+            19
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ -0.02214899 0.01685677 -0.05518765 0.01088967       2              2
+ treated_units
+            47
+
+== c_hispanic_white.primary.unweighted.balanced: ok
+did: The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e          att         se       ci_lo         ci_hi cohorts treated_states
+ -5           NA         NA          NA            NA       0              0
+ -4           NA         NA          NA            NA       0              0
+ -3           NA         NA          NA            NA       0              0
+ -2  0.056488676 0.01655067  0.02151598  0.0914613682       1              1
+ -1  0.000000000         NA          NA            NA       2              2
+  0 -0.064659864 0.04693780 -0.16384266  0.0345229297       2              2
+  1  0.002580414 0.03105693 -0.06304501  0.0682058420       2              2
+  2 -0.049701517 0.02347257 -0.09930066 -0.0001023788       1              1
+  3           NA         NA          NA            NA       0              0
+  4           NA         NA          NA            NA       0              0
+  5           NA         NA          NA            NA       0              0
+  6           NA         NA          NA            NA       0              0
+  7           NA         NA          NA            NA       0              0
+  8           NA         NA          NA            NA       0              0
+ treated_units
+             0
+             0
+             0
+            24
+            39
+            39
+            39
+            15
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo        ci_hi cohorts treated_states
+ -0.03726032 0.01693929 -0.07046071 -0.004059932       2              2
+ treated_units
+            39
+
+== c_hispanic_white.primary.tested_weighted.balanced: ok
+did: The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.06424148 0.01226483  0.03881585  0.08966711       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.05678233 0.02142758 -0.10120282 -0.01236184       2              2
+  1 -0.01755551 0.04864475 -0.11839861  0.08328760       2              2
+  2 -0.03882853 0.01976779 -0.07980818  0.00215112       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            24
+            39
+            39
+            39
+            15
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo        ci_hi cohorts treated_states
+ -0.03772212 0.01610211 -0.06928168 -0.006162566       2              2
+ treated_units
+            39
+
+== a_poverty.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2  0.01610934 0.02992675 -0.04684479 0.07906348       1              1
+ -1  0.00000000         NA          NA         NA       2              2
+  0 -0.05021739 0.04360815 -0.14195181 0.04151704       2              2
+  1  0.01550072 0.07981316 -0.15239482 0.18339626       2              2
+  2  0.01462347 0.02692114 -0.04200803 0.07125497       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+          att         se       ci_lo      ci_hi cohorts treated_states
+ -0.006697731 0.04029569 -0.08567583 0.07228037       2              2
+ treated_units
+             2
+
+== a_poverty.r1.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e          att         se       ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA          NA         NA       0              0
+ -4           NA         NA          NA         NA       0              0
+ -3           NA         NA          NA         NA       0              0
+ -2 -0.009313843 0.01604985 -0.04128471 0.02265702       1              1
+ -1  0.000000000         NA          NA         NA       2              2
+  0 -0.040016729 0.03595559 -0.11163928 0.03160582       2              2
+  1  0.020863021 0.06747317 -0.11354169 0.15526773       2              2
+  2  0.029738812 0.02448252 -0.01902970 0.07850732       1              1
+  3           NA         NA          NA         NA       0              0
+  4           NA         NA          NA         NA       0              0
+  5           NA         NA          NA         NA       0              0
+  6           NA         NA          NA         NA       0              0
+  7           NA         NA          NA         NA       0              0
+  8           NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             1
+             2
+             2
+             2
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ 0.003528368 0.03115708 -0.05753839 0.06459513       2              2
+ treated_units
+             2
+
+== b_black_white.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Error computing internal 2x2 DiD for (g, t) = (2012, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | 1 group-time cells without an estimate, left out of the aggregation
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2  0.01387156 0.01708561 -0.02303638 0.050779498       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0 -0.02251293 0.01150727 -0.04737067 0.002344807       2              2
+  1  0.02322664 0.02368776 -0.02794309 0.074396371       1              1
+  2  0.79838415 0.02379244  0.74698828 0.849780016       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            30
+            67
+            67
+            37
+            37
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+      att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.266366 0.01855283 0.2300031 0.3027288       2              2            67
+
+== b_black_white.r1.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2012, 2013): The regression design matrix for post-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals. | 2 group-time cells without an estimate, left out of the aggregation
+  e          att         se       ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA          NA         NA       0              0
+ -4           NA         NA          NA         NA       0              0
+ -3           NA         NA          NA         NA       0              0
+ -2 -0.008961532 0.02096165 -0.05004560 0.03212254       1              1
+ -1  0.000000000         NA          NA         NA       2              2
+  0 -0.014706787 0.02499140 -0.06368903 0.03427545       2              2
+  1  0.040282912 0.03787934 -0.03395924 0.11452506       1              1
+  2           NA         NA          NA         NA       0              0
+  3           NA         NA          NA         NA       0              0
+  4           NA         NA          NA         NA       0              0
+  5           NA         NA          NA         NA       0              0
+  6           NA         NA          NA         NA       0              0
+  7           NA         NA          NA         NA       0              0
+  8           NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+            28
+            57
+            57
+            29
+             0
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att        se       ci_lo      ci_hi cohorts treated_states
+ 0.01278806 0.0327686 -0.05143721 0.07701333       2              2
+ treated_units
+            57
+
+== b_black_white.r1.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e          att         se      ci_lo      ci_hi cohorts treated_states
+ -5           NA         NA         NA         NA       0              0
+ -4           NA         NA         NA         NA       0              0
+ -3           NA         NA         NA         NA       0              0
+ -2  0.030628612 0.02183994 -0.0148495 0.07610672       1              1
+ -1  0.000000000         NA         NA         NA       2              2
+  0 -0.014607367 0.06943596 -0.1591964 0.12998170       2              2
+  1 -0.001762801 0.11496156 -0.2411515 0.23762591       2              2
+  2  0.147921749 0.02495175  0.0959638 0.19987970       1              1
+  3           NA         NA         NA         NA       0              0
+  4           NA         NA         NA         NA       0              0
+  5           NA         NA         NA         NA       0              0
+  6           NA         NA         NA         NA       0              0
+  7           NA         NA         NA         NA       0              0
+  8           NA         NA         NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             2
+             5
+             5
+             5
+             3
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se        ci_lo      ci_hi cohorts treated_states
+ 0.04385053 0.02631286 -0.007721738 0.09542279       2              2
+ treated_units
+             5
+
+== b_black_white.r1.tested_weighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA          NA         NA       0              0
+ -4          NA         NA          NA         NA       0              0
+ -3          NA         NA          NA         NA       0              0
+ -2 -0.27982065 0.02502049 -0.33172650 -0.2279148       1              1
+ -1  0.00000000         NA          NA         NA       2              2
+  0 -0.05255303 0.12437112 -0.31056510  0.2054590       2              2
+  1 -0.02695216 0.09198492 -0.21777798  0.1638737       2              2
+  2  0.16797977 0.03313823  0.09923339  0.2367262       1              1
+  3          NA         NA          NA         NA       0              0
+  4          NA         NA          NA         NA       0              0
+  5          NA         NA          NA         NA       0              0
+  6          NA         NA          NA         NA       0              0
+  7          NA         NA          NA         NA       0              0
+  8          NA         NA          NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             2
+             5
+             5
+             5
+             3
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se       ci_lo      ci_hi cohorts treated_states
+ 0.02949153 0.03155841 -0.03236182 0.09134488       2              2
+ treated_units
+             5
+
+== c_hispanic_white.r1.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2 -0.08691812 0.01266869 -0.11621421 -0.05762203       1              1
+ -1  0.00000000         NA          NA          NA       2              2
+  0  0.05235316 0.01316927  0.02189949  0.08280684       2              2
+  1  0.12555037 0.03811248  0.03741603  0.21368471       2              2
+  2  0.22728667 0.01540645  0.19165957  0.26291377       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            83
+           128
+           128
+           128
+            45
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.1350634 0.01421427 0.1072039 0.1629229       2              2           128
+
+== c_hispanic_white.r1.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att          se       ci_lo       ci_hi cohorts treated_states
+ -5          NA          NA          NA          NA       0              0
+ -4          NA          NA          NA          NA       0              0
+ -3          NA          NA          NA          NA       0              0
+ -2 -0.06909914 0.007806194 -0.09766125 -0.04053703       1              1
+ -1  0.00000000          NA          NA          NA       2              2
+  0  0.02069920 0.022152369 -0.06035417  0.10175257       2              2
+  1  0.32221742 0.108947071 -0.07640935  0.72084419       2              2
+  2  0.80036940 0.020807279  0.72423758  0.87650121       1              1
+  3          NA          NA          NA          NA       0              0
+  4          NA          NA          NA          NA       0              0
+  5          NA          NA          NA          NA       0              0
+  6          NA          NA          NA          NA       0              0
+  7          NA          NA          NA          NA       0              0
+  8          NA          NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+            62
+            97
+            97
+            97
+            35
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se     ci_lo     ci_hi cohorts treated_states treated_units
+ 0.3810953 0.03150915 0.3193385 0.4428521       2              2            97
+
+== c_hispanic_white.r1.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se        ci_lo      ci_hi cohorts treated_states
+ -5          NA         NA           NA         NA       0              0
+ -4          NA         NA           NA         NA       0              0
+ -3          NA         NA           NA         NA       0              0
+ -2 -0.07762453 0.02228460 -0.122330760 -0.0329183       1              1
+ -1  0.00000000         NA           NA         NA       2              2
+  0  0.10912363 0.03570064  0.037502822  0.1807444       2              2
+  1  0.04923085 0.04192003 -0.034866983  0.1333287       2              2
+  2  0.03951693 0.02298322 -0.006590849  0.0856247       1              1
+  3          NA         NA           NA         NA       0              0
+  4          NA         NA           NA         NA       0              0
+  5          NA         NA           NA         NA       0              0
+  6          NA         NA           NA         NA       0              0
+  7          NA         NA           NA         NA       0              0
+  8          NA         NA           NA         NA       0              0
+ treated_units
+             0
+             0
+             0
+             7
+            14
+            14
+            14
+             7
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se      ci_lo      ci_hi cohorts treated_states
+ 0.06595714 0.01529306 0.03598329 0.09593098       2              2
+ treated_units
+            14
+
+== c_hispanic_white.r1.tested_weighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011,2012. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2 -0.05316439 0.02148546 -0.09748813 -0.008840642       1              1
+ -1  0.00000000         NA          NA           NA       2              2
+  0  0.04119111 0.01156929  0.01732407  0.065058149       2              2
+  1  0.01846137 0.04966228 -0.08399017  0.120912917       2              2
+  2  0.04620102 0.01619178  0.01279794  0.079604107       1              1
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+             7
+            14
+            14
+            14
+             7
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+       att         se        ci_lo     ci_hi cohorts treated_states
+ 0.0352845 0.02094304 -0.005763098 0.0763321       2              2
+ treated_units
+            14
+
+== a_poverty.r2.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2          NA         NA          NA          NA       0              0
+ -1  0.00000000         NA          NA          NA       1              1
+  0  0.07010086 0.02530559  0.01840431  0.12179742       1              1
+  1 -0.06390584 0.02265376 -0.11018499 -0.01762669       1              1
+  2  0.01653106 0.02709527 -0.03882160  0.07188373       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             1
+             1
+             1
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se       ci_lo      ci_hi cohorts treated_states
+ 0.007575362 0.02230168 -0.03613514 0.05128586       1              1
+ treated_units
+             1
+
+== a_poverty.r2.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2          NA         NA          NA           NA       0              0
+ -1  0.00000000         NA          NA           NA       1              1
+  0  0.09264470 0.01417492  0.06097757  0.124311834       1              1
+  1 -0.04524243 0.01716910 -0.08359866 -0.006886198       1              1
+  2  0.03054917 0.02293132 -0.02068000  0.081778328       1              1
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             1
+             1
+             1
+             1
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se        ci_lo      ci_hi cohorts treated_states
+ 0.02598381 0.01515274 -0.003715006 0.05568263       1              1
+ treated_units
+             1
+
+== b_black_white.r2.unweighted.unbalanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | Error computing internal 2x2 DiD for (g, t) = (2011, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.r2.tested_weighted.unbalanced: error: No valid att_gt() estimates found for this aggregation. This may happen if all estimates for a particular group or time period are NA.
+did: You have an unbalanced panel. Proceeding as such. | Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | fit_glm: fitted probabilities numerically 0 or 1 occurred | Error computing internal 2x2 DiD for (g, t) = (2011, 2011): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2012): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | Error computing internal 2x2 DiD for (g, t) = (2011, 2013): The regression design matrix for pre-treatment is singular. Consider removing some covariates.. The ATT for this cell will be set to NA. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | Simultaneous critical value is NA, likely because the standard errors could not be computed. Falling back to pointwise confidence intervals.
+  e att se ci_lo ci_hi cohorts treated_states treated_units
+ -5  NA NA    NA    NA       0              0             0
+ -4  NA NA    NA    NA       0              0             0
+ -3  NA NA    NA    NA       0              0             0
+ -2  NA NA    NA    NA       0              0             0
+ -1  NA NA    NA    NA       0              0             0
+  0  NA NA    NA    NA       0              0             0
+  1  NA NA    NA    NA       0              0             0
+  2  NA NA    NA    NA       0              0             0
+  3  NA NA    NA    NA       0              0             0
+  4  NA NA    NA    NA       0              0             0
+  5  NA NA    NA    NA       0              0             0
+  6  NA NA    NA    NA       0              0             0
+  7  NA NA    NA    NA       0              0             0
+  8  NA NA    NA    NA       0              0             0
+overall post-reform average:
+ att se ci_lo ci_hi cohorts treated_states treated_units
+  NA NA    NA    NA       0              0             0
+
+== b_black_white.r2.unweighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2          NA         NA          NA          NA       0              0
+ -1  0.00000000         NA          NA          NA       1              1
+  0 -0.27013246 0.05576489 -0.37942963 -0.16083529       1              1
+  1 -0.19167056 0.01602928 -0.22308737 -0.16025375       1              1
+  2 -0.01916852 0.02648431 -0.07107681  0.03273978       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             4
+             4
+             4
+             4
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se      ci_lo      ci_hi cohorts treated_states
+ -0.1603238 0.02682088 -0.2128918 -0.1077559       1              1
+ treated_units
+             4
+
+== b_black_white.r2.tested_weighted.balanced: ok
+did: Some groups in your dataset have very few observations, which may cause estimation problems.
+  Check groups: 2011. | fit_glm: fitted probabilities numerically 0 or 1 occurred | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals.
+  e         att         se      ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA         NA          NA       0              0
+ -4          NA         NA         NA          NA       0              0
+ -3          NA         NA         NA          NA       0              0
+ -2          NA         NA         NA          NA       0              0
+ -1  0.00000000         NA         NA          NA       1              1
+  0 -0.20834256 0.07568830 -0.3566889 -0.05999623       1              1
+  1 -0.09880728 0.03618748 -0.1697334 -0.02788113       1              1
+  2 -0.03389543 0.08995556 -0.2102051  0.14241423       1              1
+  3          NA         NA         NA          NA       0              0
+  4          NA         NA         NA          NA       0              0
+  5          NA         NA         NA          NA       0              0
+  6          NA         NA         NA          NA       0              0
+  7          NA         NA         NA          NA       0              0
+  8          NA         NA         NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+             4
+             4
+             4
+             4
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se      ci_lo      ci_hi cohorts treated_states
+ -0.1136818 0.06945627 -0.2498135 0.02245003       1              1
+ treated_units
+             4
+
+== c_hispanic_white.r2.unweighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se      ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA         NA          NA       0              0
+ -4          NA         NA         NA          NA       0              0
+ -3          NA         NA         NA          NA       0              0
+ -2          NA         NA         NA          NA       0              0
+ -1  0.00000000         NA         NA          NA       1              1
+  0 -0.09286938 0.01465505 -0.1231033 -0.06263549       1              1
+  1 -0.16370213 0.02071354 -0.2064349 -0.12096938       1              1
+  2 -0.09261971 0.03067342 -0.1559000 -0.02933938       1              1
+  3          NA         NA         NA          NA       0              0
+  4          NA         NA         NA          NA       0              0
+  5          NA         NA         NA          NA       0              0
+  6          NA         NA         NA          NA       0              0
+  7          NA         NA         NA          NA       0              0
+  8          NA         NA         NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            34
+            34
+            34
+            34
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+        att         se      ci_lo       ci_hi cohorts treated_states
+ -0.1163971 0.02013813 -0.1558671 -0.07692706       1              1
+ treated_units
+            34
+
+== c_hispanic_white.r2.tested_weighted.unbalanced: ok
+did: You have an unbalanced panel. Proceeding as such. | The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals.
+  e         att         se       ci_lo        ci_hi cohorts treated_states
+ -5          NA         NA          NA           NA       0              0
+ -4          NA         NA          NA           NA       0              0
+ -3          NA         NA          NA           NA       0              0
+ -2          NA         NA          NA           NA       0              0
+ -1  0.00000000         NA          NA           NA       1              1
+  0 -0.09534060 0.01358548 -0.12196764 -0.068713556       1              1
+  1 -0.10656143 0.01397911 -0.13395998 -0.079162887       1              1
+  2 -0.04702559 0.02690855 -0.09976537  0.005714199       1              1
+  3          NA         NA          NA           NA       0              0
+  4          NA         NA          NA           NA       0              0
+  5          NA         NA          NA           NA       0              0
+  6          NA         NA          NA           NA       0              0
+  7          NA         NA          NA           NA       0              0
+  8          NA         NA          NA           NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            28
+            28
+            28
+            28
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.08297587 0.01074845 -0.1040424 -0.06190931       1              1
+ treated_units
+            28
+
+== c_hispanic_white.r2.unweighted.balanced: ok
+did: The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends. | The simultaneous confidence band is narrower than the pointwise confidence interval, which is unexpected. Falling back to pointwise confidence intervals.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2          NA         NA          NA          NA       0              0
+ -1  0.00000000         NA          NA          NA       1              1
+  0 -0.07056861 0.01243552 -0.09494177 -0.04619544       1              1
+  1 -0.16833195 0.02338512 -0.21416594 -0.12249797       1              1
+  2 -0.03707990 0.02592961 -0.08790100  0.01374119       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            24
+            24
+            24
+            24
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo      ci_hi cohorts treated_states
+ -0.09199349 0.01811752 -0.1275032 -0.0564838       1              1
+ treated_units
+            24
+
+== c_hispanic_white.r2.tested_weighted.balanced: ok
+did: The Wald pre-test is not reported when clustering beyond the unit level (clustervars = 'state') because the analytical variance matrix does not account for between-cluster correlation. Use the bootstrap confidence intervals to assess pre-trends.
+  e         att         se       ci_lo       ci_hi cohorts treated_states
+ -5          NA         NA          NA          NA       0              0
+ -4          NA         NA          NA          NA       0              0
+ -3          NA         NA          NA          NA       0              0
+ -2          NA         NA          NA          NA       0              0
+ -1  0.00000000         NA          NA          NA       1              1
+  0 -0.07824728 0.01046694 -0.09924021 -0.05725435       1              1
+  1 -0.11878465 0.01735092 -0.15358437 -0.08398493       1              1
+  2 -0.01489045 0.01977755 -0.05455710  0.02477621       1              1
+  3          NA         NA          NA          NA       0              0
+  4          NA         NA          NA          NA       0              0
+  5          NA         NA          NA          NA       0              0
+  6          NA         NA          NA          NA       0              0
+  7          NA         NA          NA          NA       0              0
+  8          NA         NA          NA          NA       0              0
+ treated_units
+             0
+             0
+             0
+             0
+            24
+            24
+            24
+            24
+             0
+             0
+             0
+             0
+             0
+             0
+overall post-reform average:
+         att         se      ci_lo       ci_hi cohorts treated_states
+ -0.07064079 0.01315754 -0.0964291 -0.04485248       1              1
+ treated_units
+            24
+
+Wrote outputs/05_primary/event_time_estimates.csv, outputs/05_primary/overall_estimates.csv, outputs/05_primary/group_time_estimates.csv, outputs/05_primary/model_status.csv, outputs/05_primary/panel_counts.csv, outputs/05_primary/cs_models.rds
+30 achievement models (3 event sets x 2 panel rules); models that stopped with an error: 2. Status per model: outputs/05_primary/model_status.csv
+Log: outputs/logs/05_primary_20261119T154620Z.log
