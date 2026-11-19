@@ -35,7 +35,8 @@ verifies the checksum of such a file once it is in `data/raw/`.
 
 - Report-card files served only through an interactive reporting tool are
   exported through a browser; each row's `notes` gives the steps.
-- Some agencies refuse scripted requests (AZ, CO, DC, KY, MN, NH, NM, VA);
+- Some sites refuse scripted requests (ed.gov for every EDFacts file, and
+  the agencies of AZ, CO, DC, KY, MN, NH, NM and VA);
   those files are downloaded through a browser and moved into place.
 - The CPI workbook is saved from the BLS data viewer. The CSV beside it is
   derived with `cpi_from_bls_xlsx()` in `R/functions/cpi.R`.

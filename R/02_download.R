@@ -10,6 +10,7 @@ man <- read.csv("data/manifest/download_manifest.csv", stringsAsFactors = FALSE,
 man$sy_end <- as.integer(man$sy_end)
 blank <- function(x) is.na(x) | !nzchar(trimws(x))
 allowed <- stage_allows(man$dataset, man$sy_end, stage)
+failed <- character(0)
 
 for (i in seq_len(nrow(man))) {
   label <- paste(man$dataset[i], man$sy_end[i])
@@ -23,7 +24,18 @@ for (i in seq_len(nrow(man))) {
     dir.create(dirname(dest), recursive = TRUE, showWarnings = FALSE)
     message("downloading ", label)
     part <- paste0(dest, ".part")
-    utils::download.file(man$url[i], part, mode = "wb", quiet = TRUE)
+    ok <- tryCatch({
+      utils::download.file(man$url[i], part, mode = "wb", quiet = TRUE)
+      TRUE
+    }, error = function(e) {
+      message("download failed: ", label, ": ", conditionMessage(e))
+      FALSE
+    })
+    if (!ok) {
+      if (file.exists(part)) file.remove(part)
+      failed <- c(failed, label)
+      next
+    }
     if (!file.rename(part, dest)) stop("could not move ", part, " to ", dest)
   }
   h <- digest::digest(file = dest, algo = "sha256")
@@ -37,3 +49,7 @@ for (i in seq_len(nrow(man))) {
 }
 write.csv(man, "data/manifest/download_manifest.csv", row.names = FALSE, na = "")
 message("manifest updated")
+if (length(failed)) {
+  stop("Files not obtained by script; fetch them by browser into data/raw and rerun: ",
+       paste(failed, collapse = "; "))
+}
