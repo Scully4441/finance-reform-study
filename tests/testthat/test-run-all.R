@@ -283,11 +283,12 @@ if (file.exists(file.path(vd, "randomization_overall.csv"))) {
   hd <- rd("honestdid_overall.csv"); st <- rd("inference_settings.csv")
   expect_all(nrow(ms) == length(variants_for("graduation")) * 3L * 4L, !anyDuplicated(ms[c("variant", "gap", "event_set", "weighting")]),
             setequal(ms$variant, variants_for("graduation")), all(ms$panel == "unbalanced"),
-            all(ri$reps == RI_REPS_VARIANT), all(bo$reps == BOOT_REPS),
-            st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "1000",
+            all(ri$requested == RI_REPS_VARIANT), all(bo$reps == BOOT_REPS),
+            st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "1000 primary models; 1000 other models" || st$value[st$setting == "randomization_reps"] == "1000",
             setequal(unique(hd$mbar[!is.na(hd$mbar)]), MBAR_GRID) || any(hd$status != "ok"))
   s7 <- utils::read.csv("outputs/07_inference/graduation/inference_settings.csv", stringsAsFactors = FALSE)
   expect_all(s7$value[s7$setting == "bootstrap_reps"] == "9999", s7$value[s7$setting == "randomization_reps"] == "10000",
+            s7$value[s7$setting == "randomization_reps_other"] == "1000",
             s7$value[s7$setting == "quick_run"] == "false")
 }
 expect_all(edge_ok("outputs/07_inference/graduation/honestdid_overall.csv"), edge_ok(file.path(vd, "honestdid_overall.csv")))
@@ -330,11 +331,12 @@ for (fam in FAMILIES) {
   ms <- rd(file.path(vd, "model_status.csv")); ri <- rd(file.path(vd, "randomization_overall.csv"))
   bo <- rd(file.path(vd, "bootstrap_overall.csv"))
   expect_all(nrow(ms) == length(family_variants_for(fam)) * 3L * 5L, setequal(ms$variant, family_variants_for(fam)),
-            !anyDuplicated(ms[c("variant", "gap", "event_set", "weighting")]), all(ri$reps == RI_REPS_VARIANT), all(bo$reps == BOOT_REPS))
+            !anyDuplicated(ms[c("variant", "gap", "event_set", "weighting")]), all(ri$requested == RI_REPS_VARIANT), all(bo$reps == BOOT_REPS))
   s7 <- file.path(ra, fam, "07_inference")
   st <- rd(file.path(s7, "inference_settings.csv")); r7 <- rd(file.path(s7, "randomization_overall.csv"))
-  expect_all(st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "10000",
-            all(r7$reps == RI_REPS), nrow(rd(file.path(ra, fam, "05_primary", "model_status.csv"))) == nrow(family_grid(fam)))
+  r7p <- r7$event_set == "primary" & r7$weighting == "unweighted" & r7$panel == "unbalanced"
+  expect_all(st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "10000 primary models; 1000 other models",
+            all(r7$requested[r7p] == RI_REPS), all(r7$requested[!r7p] == RI_REPS_VARIANT), nrow(rd(file.path(ra, fam, "05_primary", "model_status.csv"))) == nrow(family_grid(fam)))
   cf <- file.path(ra, fam, "05_primary", "cohort_floor.csv")
   if (file.exists(cf)) {
     fl13 <- rd(cf); pc13 <- rd(file.path(ra, fam, "05_primary", "panel_counts.csv"))
@@ -344,8 +346,6 @@ for (fam in FAMILIES) {
   }
   expect_all(edge_ok(file.path(s7, "honestdid_overall.csv")), edge_ok(file.path(vd, "honestdid_overall.csv")))
 }
-mf13 <- file.path(ra, "seda", "mde", "mde_descriptive.csv")
-if (file.exists(mf13)) expect_all(all(utils::read.csv(mf13, stringsAsFactors = FALSE)$status %in% c("descriptive", "no randomization draws for the model")))
 rf <- "outputs/13_report/report.md"
 if (file.exists(rf)) {
   txt <- readLines(rf, warn = FALSE, encoding = "UTF-8")
@@ -356,7 +356,7 @@ if (file.exists(rf)) {
   heads_event <- heads[heads < cont]
   n_gaps <- length(FAMILY_GAPS) * 2L + length(outcome_gaps("graduation"))
   expect_all(length(cont) == 1L, length(heads_event) == n_gaps, length(heads) == 2L * n_gaps,
-            any(grepl("^## SEDA design: placebo-based minimum detectable effect \\(descriptive\\)", txt)))
+            !any(grepl("minimum detectable effect", txt)))
   for (i in seq_along(heads_event)) {
     end <- if (i < length(heads_event)) heads_event[i + 1] - 1L else cont - 1L
     sub <- txt[heads_event[i]:end]

@@ -10,7 +10,7 @@ STAGE1_ROWS <- list(
   ccd_membership_layout          = 2007:2013,
   ccd_lunch_program              = 2007:2013,
   ccd_school_characteristics     = 2007:2013,
-  saipe_district                 = 2009:2012,
+  saipe_district                 = 2009L,
   f33_school_finance             = 2010:2013)
 
 stage_allows <- function(dataset, sy_end, stage) {

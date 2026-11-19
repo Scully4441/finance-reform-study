@@ -94,6 +94,7 @@ load_family <- function(family, weights = TRUE) {
 }
 
 grid5 <- function(family) family_grid(family)
+primary_key <- function(meta) paste(meta$gap, "primary", "unweighted", "unbalanced", sep = ".")
 tagk <- function(meta, x) if (!is.null(x) && nrow(x)) data.frame(meta, x, row.names = NULL, stringsAsFactors = FALSE)
 panel_size <- function(mp) data.frame(units_in_model = mp$units, states_in_model = mp$states,
   states_dropped_few_pre = mp$states_dropped_few_pre, unit_years = nrow(mp$panel),
@@ -301,7 +302,8 @@ rw_family <- function(pick, bo, tb, meta) {
 
 ri_row <- function(meta, att, r) {
   v <- r$values[is.finite(r$values)]
-  data.frame(meta, att = att, p_value = r$p_value, reps = as.integer(r$reps), draws_ok = as.integer(r$draws_ok),
+  data.frame(meta, att = att, p_value = r$p_value, reps = as.integer(r$reps), requested = as.integer(r$requested),
+             method = r$method, assignments_possible = r$assignments_possible, draws_ok = as.integer(r$draws_ok),
              treated_states = as.integer(r$treated_states), eligible_states = as.integer(r$eligible_states),
              placebo_mean = if (length(v)) mean(v) else NA_real_, placebo_sd = if (length(v) > 1) stats::sd(v) else NA_real_,
              placebo_abs_q95 = if (length(v)) unname(stats::quantile(abs(v), 0.95)) else NA_real_, status = r$status,
@@ -344,7 +346,8 @@ run_step7 <- function(family) {
   ri <- list(); rid <- list()
   t0 <- Sys.time()
   for (k in g$key[vapply(g$key, function(k) !is.null(res[[k]]$fit), TRUE)]) {
-    r <- ri_cached(res[[k]]$fit, RI_REPS, paste(SEED, family, "07_inference randomization", k), file.path(rdir, paste0(k, ".rds")))
+    r_reps <- if (identical(k, primary_key(res[[k]]$meta))) RI_REPS else RI_REPS_VARIANT
+    r <- ri_cached(res[[k]]$fit, r_reps, paste(SEED, family, "07_inference randomization", k), file.path(rdir, paste0(k, ".rds")))
     ri[[k]] <- ri_row(res[[k]]$meta, res[[k]]$fit$aggte$overall.att, r)
     if (length(r$values)) rid[[k]] <- data.frame(res[[k]]$meta, draw = seq_along(r$values), att = r$values, row.names = NULL)
     say(sprintf("  %s randomization %-45s %5d/%5d reassignments estimated", family, k, r$draws_ok, r$reps))
@@ -365,7 +368,7 @@ run_step7 <- function(family) {
   wcsv(bind(gro), file.path(od, "growth_contrast.csv")); wcsv(bind(grw), file.path(od, "growth_romano_wolf.csv"))
   wcsv(bind(ghd), file.path(od, "growth_honestdid.csv"))
   wcsv(missing_event_times(res), file.path(od, "event_time_gaps.csv"))
-  wcsv(settings_rows(family, RI_REPS), file.path(od, "inference_settings.csv"))
+  wcsv(settings_rows(family, paste(RI_REPS, "primary models;", RI_REPS_VARIANT, "other models")), file.path(od, "inference_settings.csv"))
 }
 
 run_variants <- function(name) {
@@ -556,6 +559,7 @@ run_dose <- function(name) {
   window <- if (fam) FAMILY_WINDOWS[[name]] else outcome_window(name)
   years <- window[window %in% CDID_F33_YEARS]
   rev_all <- cdid_real_revenue(f33_revenue(years))
+  if (!is.null(attr(rev_all, "sources"))) wcsv(attr(rev_all, "sources"), file.path(ddir, "f33_sources.csv"))
   rev <- rev_all[!rev_all$excluded, , drop = FALSE]
   count_excl <- function(scope, gap, s, lea_sy) {
     k <- paste(rev_all$leaid, rev_all$sy_end) %in% lea_sy
@@ -577,8 +581,7 @@ run_dose <- function(name) {
   rows <- list(); fs_ev <- list(); fs_ov <- list()
   for (s in SETS) for (gap in gaps) {
     key <- paste(gap, s, "unweighted", "unbalanced", sep = ".")
-    inf_y <- s7$infs[[key]]
-    mp <- tryCatch(if (fam) family_model_panel(inp, gap, s, cohort_floor = TRUE) else cs_model_panel(inp, gap, s),
+    mp <- tryCatch(if (fam) family_model_panel(inp, gap, s, years = years, cohort_floor = TRUE) else cs_model_panel(inp, gap, s),
                    error = function(e) e)
     if (inherits(mp, "error")) {
       rows[[key]] <- data.frame(gap = gap, event_set = s, weighting = "unweighted", panel = "unbalanced", status = paste("panel error:", conditionMessage(mp)))
@@ -595,8 +598,11 @@ run_dose <- function(name) {
     } else as.vector(outer(unique(base$leaid), years, paste))
     exrows[[key]] <- count_excl(if (gap == "a_poverty") "quintile 1 and 5 districts of the gap (a) states" else
                                   "districts of the gap's primary model", gap, s, scope)
+    base <- base[base$sy_end %in% years, , drop = FALSE]
+    fy <- run_cs(base, xformla = mp$xformla, seed_step = paste(SEED, name, "dose outcome", key), allow_unbalanced_panel = TRUE)
     fr <- run_cs(rp, xformla = mp$xformla, seed_step = paste(SEED, name, "dose", key), allow_unbalanced_panel = TRUE)
-    inf_r <- cs_influence(fr$fit)
+    cmn <- common_overall(cs_influence(fy$fit), cs_influence(fr$fit))
+    inf_y <- cmn$y; inf_r <- cmn$r
     say(sprintf("  %s revenue first stage %-19s %-7s %5d units, %s", name, gap, s, length(unique(rp$id)), fr$status))
     fs_ev[[key]] <- data.frame(gap = gap, event_set = s, fr$event, stringsAsFactors = FALSE)
     rb <- if (!is.null(inf_r) && !is.null(s7$draws[[s]]) && all(inf_r$states %in% s7$draws[[s]]$states))
@@ -604,8 +610,11 @@ run_dose <- function(name) {
     fs_ov[[key]] <- data.frame(gap = gap, event_set = s, status = fr$status, fr$overall,
       boot_p_value = if (is.null(rb)) NA_real_ else rb$p_value, units_in_model = length(unique(rp$id)),
       unit_years = nrow(rp), notes = paste(unique(fr$notes), collapse = " | "), stringsAsFactors = FALSE)
-    d <- if (is.null(inf_y)) dose_none("no step 5 influence function", reps7) else if (is.null(inf_r)) dose_none(paste("revenue model:", fr$status), reps7) else
+    d <- if (is.null(fy$fit)) dose_none(paste("outcome model:", fy$status), reps7) else if (is.null(fr$fit)) dose_none(paste("revenue model:", fr$status), reps7) else
+      if (is.null(cmn)) dose_none("no post-reform event time estimated in both stages", reps7) else
       tryCatch(dose_ratio(inf_y, inf_r, s7$draws[[s]]), error = function(e) dose_none(paste("error:", conditionMessage(e)), reps7))
+    d$event_times <- if (is.null(cmn)) NA_character_ else paste(cmn$event_times, collapse = " ")
+    d$end_years <- paste0(min(years), "-", max(years))
     rows[[key]] <- data.frame(gap = gap, event_set = s, weighting = "unweighted", panel = "unbalanced", d,
                               revenue_units = paste0("thousands of ", CDID_BASE_YEAR, " dollars per pupil"), stringsAsFactors = FALSE)
   }
@@ -614,25 +623,6 @@ run_dose <- function(name) {
   wcsv(bind(fs_ov), file.path(ddir, "revenue_first_stage_overall.csv"))
   wcsv(bind(fs_ev), file.path(ddir, "revenue_first_stage_event_time.csv"))
   wcsv(bind(exrows), file.path(ddir, "revenue_exclusions.csv"))
-}
-
-run_mde <- function() {
-  rows <- lapply(FAMILY_GAPS, function(gap) {
-    key <- paste(gap, "primary", "unweighted", "unbalanced", sep = ".")
-    cf <- file.path(FITS, "seda", "07_randomization", paste0(key, ".rds"))
-    base <- data.frame(gap = gap, event_set = "primary", weighting = "unweighted", panel = "unbalanced", stringsAsFactors = FALSE)
-    if (!file.exists(cf)) return(data.frame(base, status = "no randomization draws for the model", stringsAsFactors = FALSE))
-    r <- readRDS(cf)
-    m <- mde_from_placebo(r$values)
-    v <- r$values[is.finite(r$values)]
-    data.frame(base, reassignments = as.integer(r$reps), draws_ok = m$draws, placebo_sd = if (length(v) > 1) stats::sd(v) else NA_real_,
-               crit_abs_q95 = m$crit, mde_power_80 = m$mde, power_at_mde = m$power_at_mde, mde_normal = m$mde_normal,
-               status = "descriptive", label = "For information only: the power rule applies to the federal high school gaps (step 8)",
-               stringsAsFactors = FALSE)
-  })
-  nm <- unique(unlist(lapply(rows, names)))
-  wcsv(bind(lapply(rows, function(r) { for (v in setdiff(nm, names(r))) r[[v]] <- NA; r[nm] })), odir("seda", "mde", "mde_descriptive.csv"))
-  say("  SEDA MDE (descriptive) from the step 7 randomization draws of the primary models")
 }
 
 if (!REPORT_ONLY) {
@@ -648,7 +638,6 @@ if (!REPORT_ONLY) {
   future::plan(future::sequential)
   part("lee hs", run_lee_hs)
   for (nm in REPORT_ORDER) part(paste("dose", nm), function() run_dose(nm))
-  part("mde seda", run_mde)
 }
 
 FAMILY_HEADS <- c(
@@ -737,7 +726,7 @@ verdict_rows <- function(name) {
                        robust = crit$holds, secondary_estimable = crit$secondary_estimable, disagreeing = crit$disagreeing,
                        stringsAsFactors = FALSE)
     rbind(
-      data.frame(base, hypothesis = HYPOTHESIS_OF_GAP[[gap]], verdict = verdict_overall(b1, crit$holds), headline_interval = bound_text(b1),
+      data.frame(base, hypothesis = HYPOTHESIS_OF_GAP[[gap]], verdict = verdict_overall(b1, crit), headline_interval = bound_text(b1),
                  bound_mbar0 = bound_text(b0), largest_mbar_excluding_zero = largest_mbar_excluding_zero(h), event_block = blk,
                  note = "overall post-reform average", stringsAsFactors = FALSE),
       data.frame(base, hypothesis = "H4", verdict = verdict_growth(if (nrow(g7)) g7[1, , drop = FALSE] else NULL, gb1, att, sec_g),
@@ -778,7 +767,7 @@ build_report <- function() {
           paste0("Power simulation (step 8, Section 14): ", if (nrow(pdec) && "classification" %in% names(pdec)) pdec$classification[1] else
                    "no classification in outputs/08_power/power_decision.csv", ". For each gap the honest-DiD bound sets come first; the headline is the bound set at M̄ = 1, and all five M̄ values are shown. Point estimates, p-values and intervals are reported as quantities, and no result is described as statistically significant."),
           "",
-          paste0("Primary specification (Section 7.1): Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school and graduation), reference period −1, primary event set, unweighted. No report-card source indicator enters any model. Treated-unit floor (Section 5.4): in gaps (b) and (c) of the high school and SEDA families a cohort with fewer than ", COHORT_FLOOR, " treated units at its base period in the primary model's panel is left out of every Callaway–Sant'Anna model of its gap and event set and fitted without covariates in appendix/thin_cohorts.csv. In the event-study tables, † marks a coefficient resting on a single treated state. Event-time and overall intervals are Webb wild cluster bootstrap intervals (", BOOT_REPS, " draws, state clusters). Revenue is in ", CDID_BASE_YEAR, " dollars."),
+          paste0("Primary specification (Section 7.1): Callaway–Sant'Anna, not-yet-treated controls, doubly robust, unbalanced panel, primary suppression sample (high school and graduation), reference period −1, primary event set, unweighted. No report-card source indicator enters any model. Treated-unit floor (Section 5.4): in gaps (b) and (c) of the high school and SEDA families a cohort with fewer than ", COHORT_FLOOR, " treated units at its base period in the primary model's panel is left out of every Callaway–Sant'Anna model of its gap and event set and fitted without covariates in appendix/thin_cohorts.csv. In the event-study tables, † marks a coefficient resting on a single treated state; ‡ marks a model to which fewer than five treated states contribute, with its randomization p-value shown beside the bootstrap interval. Event-time and overall intervals are Webb wild cluster bootstrap intervals (", BOOT_REPS, " draws, state clusters). Revenue is in ", CDID_BASE_YEAR, " dollars."),
           "", "## Hypotheses", "", HYPOTHESES, "",
           "The rules of Section 12 are applied by code from the saved outputs: H1 to H3 from the bound set at M̄ = 1 of the overall post-reform average and the agreement criterion of Section 12.2, H4 from the growth contrast G, and H5 from the dose-scaled estimate. Each family closes with its verdict table. Each answer is stated as an interval.",
           "")
@@ -795,6 +784,7 @@ build_report <- function() {
   st1 <- function(st) if (length(st)) st[1] else "no status recorded"
   blk <- function(r) if ("event_block" %in% names(r) && !is.na(r$event_block[1])) paste0(" (event times ", r$event_block[1], ")") else ""
   ci <- function(lo, hi) ifelse(is.na(lo), "–", paste0("[", fmt(lo), ", ", fmt(hi), "]"))
+  few_mark <- function(d) if (nrow(d) && "treated_states" %in% names(d) && isTRUE(d$treated_states[1] < FEW_TREATED_STATES)) " ‡" else ""
   for (name in REPORT_ORDER) {
     fam <- is_family(name)
     dr <- report_dirs(name)
@@ -871,13 +861,20 @@ build_report <- function() {
       wcsv(ev, tf(2, "event_study"))
       o <- sel(ov5, gap); b <- sel(bo7, gap); r <- sel(ri7, gap)
       rw <- rw7[rw7$gap %in% gap & rw7$event_set %in% "primary" & rw7$panel %in% "unbalanced" & rw7$family %in% "unweighted", , drop = FALSE]
-      ot <- data.frame(estimate = val(o, fmt(o$att), st0, id0), clustered_se = val(b, fmt(b$se), st0, id0),
-                       boot_ci = val(b, ci(b$ci_lo, b$ci_hi), st0, id0), boot_p = val(b, fmt_p(b$p_value), st0, id0),
+      few0 <- few_mark(o)
+      e5c <- e5[e5$e >= 0 & !is.na(e5$att), , drop = FALSE]
+      ot <- data.frame(estimate = paste0(val(o, fmt(o$att), st0, id0), few0), clustered_se = val(b, fmt(b$se), st0, id0),
+                       boot_ci = paste0(val(b, ci(b$ci_lo, b$ci_hi), st0, id0),
+                                        if (nzchar(few0) && nrow(r)) paste0(" (randomization p = ", fmt_p(r$p_value), ")") else ""),
+                       boot_p = val(b, fmt_p(b$p_value), st0, id0),
                        randomization_p = val(r, fmt_p(r$p_value), st0, id0), randomization_reps = val(r, r$reps, st0, id0),
                        romano_wolf_p = fmt_p(if (nrow(rw)) rw$p_romano_wolf else NA), cohorts = val(o, o$cohorts, st0, id0),
-                       treated_states = val(o, o$treated_states, st0, id0), model_status = st1(st0))
+                       treated_states = val(o, o$treated_states, st0, id0),
+                       cohorts_by_event_time = if (nrow(e5c)) paste(paste0(e5c$e, ":", e5c$cohorts), collapse = " ") else "–",
+                       model_status = st1(st0))
       wcsv(ot, tf(3, "overall"))
-      md <- c(md, "### 3. Overall post-reform average", "", md_table(ot))
+      md <- c(md, "### 3. Overall post-reform average", "", md_table(ot),
+              "cohorts_by_event_time lists event time:cohorts behind each post-reform coefficient of the overall average.", "")
       g7 <- sel(gro7, gap); gh <- sel(ghd7, gap)
       grw <- grw7[grw7$gap %in% gap & grw7$event_set %in% "primary" & grw7$panel %in% "unbalanced" & grw7$family %in% "unweighted", , drop = FALSE]
       sec_g <- vapply(SECONDARY4, function(es) {
@@ -912,7 +909,7 @@ build_report <- function() {
                ". District-years with F-33 enrollment below 30 or revenue above $100,000 per pupil are excluded",
                if (nrow(ex)) sprintf(": %d of the %d district-years in scope (%d below 30 enrolled, %d above $100,000)", ex$excluded_total,
                                      ex$district_years_with_revenue, ex$excluded_enrollment_below_30, ex$excluded_revenue_above_100k) else "",
-               ". The dose-scaled estimate is the ratio of the two overall effects (the Wald form of the two-stage estimate), with a percentile interval from the step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction); accountability or other provisions enacted with a reform would violate it. The assumption is stated, not tested."),
+               ". Both stages are fitted on end years 2010-2024 and averaged over the same post-reform event times; the dose-scaled estimate is the overall average of the outcome over the overall average of revenue, with a percentile interval from the step 7 Webb draws applied to both. **Assumption:** the reform affects the gap only through revenue (exclusion restriction); accountability or other provisions enacted with a reform would violate it. The assumption is stated, not tested."),
         "", md_table(dt))
       if (nrow(lee) && gap %in% lee$gap) {
         l <- lee[lee$gap == gap, ]
@@ -931,22 +928,32 @@ build_report <- function() {
       st6 <- ms6$status[match(paste(a6$estimator, a6$gap, a6$event_set), paste(ms6$estimator, ms6$gap, ms6$event_set))]
       p5 <- pc5[pc5$gap %in% gap & pc5$event_set %in% "primary" & pc5$panel %in% "unbalanced" &
                   (if ("weighting" %in% names(pc5)) pc5$weighting %in% "unweighted" else TRUE), , drop = FALSE]
-      cs_left <- if (!nrow(p5)) NA else if ("units_left_out" %in% names(p5)) p5$units_left_out[1] else p5$units_with_outcome[1] - p5$units_in_model[1]
+      cs_left <- if (!nrow(p5)) NA else if ("units_left_out" %in% names(p5)) p5$units_left_out[1] else
+        if (all(c("units_with_outcome", "units_in_model") %in% names(p5))) p5$units_with_outcome[1] - p5$units_in_model[1] else NA
+      ets <- function(e, att) { k <- e >= 0 & is.finite(att); if (any(k)) paste(sort(e[k]), collapse = " ") else "–" }
+      et6 <- vapply(seq_len(nrow(a6)), function(i) { x <- ev6[ev6$estimator %in% a6$estimator[i] & ev6$gap %in% gap & ev6$event_set %in% "primary", , drop = FALSE]
+        if (nrow(x)) ets(x$e, x$att) else "–" }, "")
+      pl6 <- read_or_empty(file.path(s6, "synthdid_pooled.csv"))
+      pl6 <- pl6[pl6$estimator %in% "synthdid" & pl6$gap %in% gap & pl6$event_set %in% "primary", , drop = FALSE]
       left6 <- if (nrow(a6) && "units_left_out" %in% names(pc6))
         pc6$units_left_out[match(paste(a6$estimator, a6$gap, a6$event_set), paste(pc6$estimator, pc6$gap, pc6$event_set))] else rep(NA, nrow(a6))
+      lab6 <- ifelse(a6$estimator == "synthdid", "synthdid (overall average of event times)", a6$estimator)
       at <- rbind(data.frame(estimator = "callaway_santanna (primary)", estimate = val(o, fmt(o$att), st0, id0), se = val(b, fmt(b$se), st0, id0),
-                             ci = val(b, ci(b$ci_lo, b$ci_hi), st0, id0), units_left_out = cs_left, status = st1(st0)),
-                  if (nrow(a6)) data.frame(estimator = a6$estimator, estimate = fmt(a6$att), se = fmt(a6$se), ci = ci(a6$ci_lo, a6$ci_hi),
-                                           units_left_out = left6, status = st6))
+                             ci = val(b, ci(b$ci_lo, b$ci_hi), st0, id0), event_times = ets(e5$e, e5$att), units_left_out = cs_left, status = st1(st0)),
+                  if (nrow(a6)) data.frame(estimator = lab6, estimate = fmt(a6$att), se = fmt(a6$se), ci = ci(a6$ci_lo, a6$ci_hi),
+                                           event_times = et6, units_left_out = left6, status = st6),
+                  if (nrow(pl6)) data.frame(estimator = "synthdid (pooled cohort average)", estimate = fmt(pl6$att[1]), se = fmt(pl6$se[1]),
+                                            ci = ci(pl6$ci_lo[1], pl6$ci_hi[1]), event_times = "post-reform years of each cohort",
+                                            units_left_out = NA, status = "ok"))
       wcsv(at, tf(7, "agreement"))
       md <- c(md, "### 7. Estimator agreement (unbalanced panel, primary event set)", "",
-              paste0("Secondary intervals are each estimator's own state-clustered or placebo interval; the stacked regression averages event times 0..+5; two-way fixed effects rows are for comparison only (Section 7.3). units_left_out = units of the gap's panel the estimator does not use (Section 16.1). Controls: ",
+              paste0("Secondary intervals are each estimator's own state-clustered or placebo interval; the stacked regression averages event times 0..+5; two-way fixed effects rows are for comparison only (Section 7.3). event_times = the post-reform event times each estimator's overall average covers; units_left_out = units of the gap's panel the estimator does not use (Section 16.1). synthdid's overall average of event times enters the agreement criterion; its pooled cohort average is shown for reference. Controls: ",
                      CONTROLS_TEXT[[name]], if (gap == "a_poverty") "" else ", and the 2009 covariates by year", "."), "", md_table(at))
       if (gap != "a_poverty") {
         wt <- bind(lapply(c("unweighted", "tested_weighted"), function(w) {
           st <- sel(ms5, gap, w = w)$status; id <- mid("primary", w, "unbalanced")
           oo <- sel(ov5, gap, w = w); bb <- sel(bo7, gap, w = w); rr <- sel(ri7, gap, w = w)
-          data.frame(weighting = w, estimate = val(oo, fmt(oo$att), st, id), boot_p = val(bb, fmt_p(bb$p_value), st, id),
+          data.frame(weighting = w, estimate = paste0(val(oo, fmt(oo$att), st, id), few_mark(oo)), boot_p = val(bb, fmt_p(bb$p_value), st, id),
                      randomization_p = val(rr, fmt_p(rr$p_value), st, id), bound_mbar1 = m1(sel(hd7, gap, w = w), st, id),
                      units = val(oo, oo$treated_units, st, id), status = st1(st)) }))
         wcsv(wt, tf(8, "weighted"))
@@ -955,7 +962,7 @@ build_report <- function() {
       nt <- bind(lapply(SETS, function(s) { dd <- dose[dose$gap %in% gap & dose$event_set %in% s, , drop = FALSE]
         st <- sel(ms5, gap, s)$status; id <- mid(s, "unweighted", "unbalanced")
         oo <- sel(ov5, gap, s); bb <- sel(bo7, gap, s); rr <- sel(ri7, gap, s)
-        data.frame(event_set = s, estimate = val(oo, fmt(oo$att), st, id), boot_ci = val(bb, ci(bb$ci_lo, bb$ci_hi), st, id),
+        data.frame(event_set = s, estimate = paste0(val(oo, fmt(oo$att), st, id), few_mark(oo)), boot_ci = val(bb, ci(bb$ci_lo, bb$ci_hi), st, id),
                    boot_p = val(bb, fmt_p(bb$p_value), st, id), randomization_p = val(rr, fmt_p(rr$p_value), st, id),
                    bound_mbar1 = m1(sel(hd7, gap, s), st, id), sd_per_1000 = if (nrow(dd)) fmt(dd$dose_scaled) else "–", status = st1(st)) }))
       wcsv(nt, tf(9, "event_sets"))
@@ -963,14 +970,14 @@ build_report <- function() {
       vrow <- function(v) { f <- function(x) x[x$variant %in% v, , drop = FALSE]
         st <- sel(f(vms), gap)$status; id <- mid("primary", "unweighted", "unbalanced", v)
         oo <- sel(f(vov), gap); bb <- sel(f(vbo), gap); rr <- sel(f(vri), gap)
-        data.frame(check = defs[[v]]$label, estimate = val(oo, fmt(oo$att), st, id), boot_p = val(bb, fmt_p(bb$p_value), st, id),
+        data.frame(check = defs[[v]]$label, estimate = paste0(val(oo, fmt(oo$att), st, id), few_mark(oo)), boot_p = val(bb, fmt_p(bb$p_value), st, id),
                    randomization_p = val(rr, fmt_p(rr$p_value), st, id), randomization_reps = val(rr, rr$reps[1], st, id),
                    bound_mbar1 = m1(sel(f(vhd), gap), st, id), status = st1(st)) }
       bal <- NULL
       if (name != "seda") {
         stb <- sel(ms5, gap, p = "balanced")$status; idb <- mid("primary", "unweighted", "balanced")
         ob <- sel(ov5, gap, p = "balanced"); bb <- sel(bo7, gap, p = "balanced"); rb <- sel(ri7, gap, p = "balanced")
-        bal <- data.frame(check = "Balanced panel (Section 5.3)", estimate = val(ob, fmt(ob$att), stb, idb),
+        bal <- data.frame(check = "Balanced panel (Section 5.3)", estimate = paste0(val(ob, fmt(ob$att), stb, idb), few_mark(ob)),
                           boot_p = val(bb, fmt_p(bb$p_value), stb, idb), randomization_p = val(rb, fmt_p(rb$p_value), stb, idb),
                           randomization_reps = val(rb, rb$reps[1], stb, idb), bound_mbar1 = m1(sel(hd7, gap, p = "balanced"), stb, idb),
                           status = st1(stb))
@@ -987,7 +994,7 @@ build_report <- function() {
       if (length(v10)) {
         prim <- data.frame(check = if (name == "hs") "Full high school panel, 2010–2025 (primary specification)" else
                              "Full SEDA window, 2009–2019 and 2022–2025 (primary specification)",
-                           estimate = val(o, fmt(o$att), st0, id0), boot_p = val(b, fmt_p(b$p_value), st0, id0),
+                           estimate = paste0(val(o, fmt(o$att), st0, id0), few_mark(o)), boot_p = val(b, fmt_p(b$p_value), st0, id0),
                            randomization_p = val(r, fmt_p(r$p_value), st0, id0), randomization_reps = val(r, r$reps[1], st0, id0),
                            bound_mbar1 = m1(h, st0, id0), status = st1(st0))
         sp <- rbind(prim, bind(lapply(v10, vrow)))
@@ -1036,6 +1043,10 @@ build_report <- function() {
                      " (percentile interval of the dose-scaled ratio; the first interval rests on bounded departures from parallel trends, the second on parallel trends and the exclusion restriction)."), "")
     }
     vt <- read_or_empty(odir(name, "verdicts.csv"))
+    if (nrow(vt) && "verdict" %in% names(vt)) {
+      vt$largest_mbar_excluding_zero <- ifelse(is.na(vt$largest_mbar_excluding_zero), "none", formatC(vt$largest_mbar_excluding_zero, format = "g"))
+      for (cc in c("bound_mbar0", "event_block", "headline_interval")) vt[[cc]] <- ifelse(is.na(vt[[cc]]) | !nzchar(vt[[cc]]), "–", vt[[cc]])
+    }
     md <- c(md, paste0("## Hypothesis verdicts: ", FAMILY_HEADS[[name]]), "",
             paste0("Section 12, applied by code to the primary model of each gap (primary event set, unweighted, unbalanced panel, primary suppression sample",
                    if (name %in% c("hs", "seda")) ", with the treated-unit floor" else "", ").",
@@ -1043,16 +1054,6 @@ build_report <- function() {
             if (nrow(vt) && "verdict" %in% names(vt)) md_table(vt[c("gap", "hypothesis", "verdict", "headline_interval", "bound_mbar0",
                                                                    "largest_mbar_excluding_zero", "criterion_estimators", "criterion_variants",
                                                                    "event_block")]) else "_No verdict rows._\n")
-    if (name == "seda") {
-      mde <- rd0(odir("seda", "mde", "mde_descriptive.csv"))
-      mt <- if (nrow(mde) && "mde_power_80" %in% names(mde)) data.frame(gap = mde$gap, reassignments = mde$reassignments, draws_ok = mde$draws_ok,
-        placebo_sd = fmt(mde$placebo_sd), mde_power_80 = fmt(mde$mde_power_80), mde_normal = fmt(mde$mde_normal), status = mde$status) else
-        data.frame(status = "no MDE rows")
-      wcsv(mde, file.path(REP, "tables", "seda_mde_descriptive.csv"))
-      md <- c(md, "## SEDA design: placebo-based minimum detectable effect (descriptive)", "",
-              "For information only: the power rule of Section 14 applies to the high school gaps on the 2010-2013 federal files, and this is not a power calculation for a registered test. Placebo distribution: the randomization-inference reassignments of the primary models (primary event set, unweighted, unbalanced), the observed cohort years reassigned among the panel's states. MDE = the smallest shift of the placebo distribution that a test at the 95th percentile of the absolute placebo estimates rejects with probability 0.80; the normal approximation (2.8016 × sd) beside it.",
-              "", md_table(mt))
-    }
   }
   md <- c(md, "# Continuous-treatment estimates (exploratory; step 11, DIDmultiplegtDYN; Section 7.6)", "",
           paste0("Treatment: binned real revenue per pupil (bin_1000 primary, bin_2000 sensitivity), a discrete treatment; effects at event times 0..+8 and placebos at −2..−6, reference −1; an effect or placebo with fewer than 20 stayers or stayers in fewer than 3 states is not estimable. These results are exploratory and are reported after all event-based results. **Caveat:** ",

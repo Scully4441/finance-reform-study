@@ -49,6 +49,12 @@ wcsv(data.frame(setting = c("package", "polars_remote_sha", "treatment", "contin
                           CDID_MIN_STAYERS, CDID_MIN_STAYER_STATES, ESTIMATE)), "settings.csv")
 
 rev_all <- cdid_real_revenue(f33_revenue())
+f33_src <- attr(rev_all, "sources")
+if (!is.null(f33_src)) {
+  utils::write.csv(f33_src, file.path(out_dir, "f33_sources.csv"), row.names = FALSE, na = "")
+  say("F-33 release read per fiscal year (the file with more records): ",
+      paste(sprintf("%d %s", f33_src$fiscal_year, f33_src$choice), collapse = ", "))
+}
 ex <- data.frame(sy_end = sort(unique(rev_all$sy_end)))
 ex$district_years <- as.vector(table(rev_all$sy_end))
 ex$enrollment_below_30 <- as.vector(tapply(rev_all$v33 < CDID_REV_MIN_ENROLL, rev_all$sy_end, sum))

@@ -28,15 +28,33 @@ f33_rows <- function(d, y) {
   out[!duplicated(out$leaid), , drop = FALSE]
 }
 
+f33_text_records <- function(f) max(0L, length(readLines(f, warn = FALSE)) - 1L)
+
+f33_xlsx_rows <- function(x) {
+  d <- readxl::read_excel(x, sheet = 1, col_types = "text")
+  need <- c("NCESID", "V33", "TSTREV", "TLOCREV")
+  if (!all(need %in% names(d))) stop(x, " lacks ", paste(setdiff(need, names(d)), collapse = ", "))
+  as.data.frame(d[need])
+}
+
+f33_choose <- function(y, dir = "data/raw/f33") {
+  txt <- file.path(dir, sprintf("f33-fy%d.csv", y)); x <- file.path(dir, sprintf("f33-fy%d.xlsx", y))
+  have_t <- file.exists(txt); have_x <- file.exists(x)
+  if (!have_t && !have_x) stop("no F-33 file for fiscal year ", y, " in ", dir)
+  n_t <- if (have_t) f33_text_records(txt) else NA_integer_
+  n_x <- if (have_x) nrow(f33_xlsx_rows(x)) else NA_integer_
+  use_x <- have_x && (!have_t || n_x > n_t)
+  data.frame(fiscal_year = as.integer(y), file = if (use_x) x else txt, records_text = n_t, records_xlsx = n_x,
+             choice = if (use_x) "spreadsheet" else "text", stringsAsFactors = FALSE)
+}
+
 f33_revenue <- function(years = CDID_F33_YEARS, dir = "data/raw/f33") {
-  do.call(rbind, lapply(years, function(y) {
-    x <- file.path(dir, sprintf("f33-fy%d.xlsx", y))
-    if (!file.exists(x)) return(read_f33_revenue(y, dir))
-    d <- readxl::read_excel(x, sheet = 1, col_types = "text")
-    need <- c("NCESID", "V33", "TSTREV", "TLOCREV")
-    if (!all(need %in% names(d))) stop(x, " lacks ", paste(setdiff(need, names(d)), collapse = ", "))
-    f33_rows(as.data.frame(d[need]), y)
+  ch <- do.call(rbind, lapply(years, f33_choose, dir = dir))
+  out <- do.call(rbind, lapply(seq_len(nrow(ch)), function(i) {
+    if (ch$choice[i] == "spreadsheet") f33_rows(f33_xlsx_rows(ch$file[i]), ch$fiscal_year[i]) else read_f33_revenue(ch$fiscal_year[i], dir)
   }))
+  attr(out, "sources") <- ch
+  out
 }
 
 cdid_real_revenue <- function(rev, cpi_file = "data/raw/cpi/cuur0000sa0.csv") {

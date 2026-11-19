@@ -130,7 +130,7 @@ ri_cached <- function(fit, reps, seed_step, cache_file) {
   att <- fit$aggte$overall.att
   if (file.exists(cache_file)) {
     r <- readRDS(cache_file)
-    if (identical(r$seed_step, seed_step) && identical(r$reps, reps) && identical(r$att, att)) return(r)
+    if (identical(r$seed_step, seed_step) && identical(r$requested, reps) && identical(r$att, att)) return(r)
   }
   r <- ri_overall(fit, reps, seed_step)
   r$seed_step <- seed_step; r$att <- att
@@ -787,10 +787,11 @@ agreement_criterion <- function(att, ci_lo, ci_hi, secondary, variants, min_esti
        disagreeing = paste(c(ok_sec$name[!sec_in], ok_var$name[!var_in]), collapse = "; "))
 }
 
-verdict_overall <- function(b1, criterion_holds) {
+verdict_overall <- function(b1, criterion) {
   if (is.null(b1) || !b1$status %in% "ok" || !is.finite(b1$lb) || !is.finite(b1$ub)) return("not evaluable")
-  if (b1$lb > 0 && isTRUE(criterion_holds)) return("supported")
-  if (b1$ub < 0 && isTRUE(criterion_holds)) return("contradicted")
+  if (startsWith(criterion$estimators, "not evaluated")) return("criterion not evaluable")
+  if (b1$lb > 0 && isTRUE(criterion$holds)) return("supported")
+  if (b1$ub < 0 && isTRUE(criterion$holds)) return("contradicted")
   "not supported"
 }
 
@@ -798,6 +799,7 @@ verdict_growth <- function(g_row, g_b1, overall_att, secondary_g) {
   if (is.null(g_row) || !g_row$status %in% "ok") return("not evaluable")
   if (is.null(g_b1) || !g_b1$status %in% "ok" || !is.finite(g_b1$lb)) return("not evaluable")
   sg <- secondary_g[is.finite(secondary_g)]
+  if (length(sg) < 3L) return("criterion not evaluable")
   if (g_b1$lb > 0 && is.finite(overall_att) && overall_att > 0 && all(sg > 0)) return("supported")
   "not supported"
 }
@@ -823,3 +825,20 @@ family_grid <- function(family) {
   rownames(g) <- NULL
   g
 }
+
+common_overall <- function(inf_y, inf_r, lo = 0L, hi = EVENT_MAX) {
+  if (is.null(inf_y) || is.null(inf_r)) return(NULL)
+  est <- function(inf) inf$egt[inf$egt >= lo & inf$egt <= hi & is.finite(inf$att_egt) & is.finite(inf$se_egt)]
+  e <- sort(intersect(est(inf_y), est(inf_r)))
+  if (!length(e)) return(NULL)
+  fix <- function(inf) {
+    j <- match(e, inf$egt)
+    inf$overall_att <- mean(inf$att_egt[j])
+    inf$scores[, "overall"] <- rowMeans(inf$scores[, paste0("e", e), drop = FALSE])
+    inf$common_event_times <- e
+    inf
+  }
+  list(y = fix(inf_y), r = fix(inf_r), event_times = e)
+}
+
+FEW_TREATED_STATES <- 5L
