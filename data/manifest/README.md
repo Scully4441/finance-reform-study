@@ -24,8 +24,8 @@ that has no usable file:
 `R/02_download.R` fetches only the stage 1 rows (`STAGE1_ROWS` in
 `R/functions/stage.R`): the EDFacts high school assessment files for end years
 2010-2013, the participation files for 2013 and their documentation; the CCD
-files for end years 2007-2013; SAIPE income years 2009-2012; and F-33 fiscal
-years 2010-2013. The CPI series, the graduation, SEDA and report-card files and
+files for end years 2007-2013; SAIPE income year 2009; and F-33 fiscal years
+2010-2013. The CPI series, the graduation, SEDA and report-card files and
 every later year are stage 2. At stage 2 every row is allowed.
 
 ## Rows a reader fetches by hand
@@ -44,19 +44,22 @@ verifies the checksum of such a file once it is in `data/raw/`.
 
 ## File notes
 
-- EDFacts end year 2019: the ED Data Library release is truncated, so the
-  `*_edc_archive` rows (Education Data Center EDFacts archive) are read for
-  that year.
+- EDFacts end year 2019: both ED's release and the `*_edc_archive` rows
+  (Education Data Center EDFacts archive) are listed. Step 3 reads the copy
+  that covers the 50 states and DC, ED's release first, and logs the choice.
 - No EDFacts assessment file exists for end year 2020; the graduation file for
   that year does.
-- F-33 fiscal year 2022 is archived as `elsec22.xlsx`, the text file being
-  incomplete.
+- F-33: the text release of each fiscal year is read unless the spreadsheet
+  release of that year holds more records (both are listed for 2022); the
+  choice is written to `f33_sources.csv`.
 - CCD school universe 2006-07 is published as three fixed-width files with a
   separate record layout row.
 
 ## SEDA
 
-The SEDA rows point to the Stanford Digital Repository. The files are used
+The SEDA rows point to the Stanford Digital Repository. Release 2025.1 is read
+only if the 2025.2 long file lacks end years 2009-2019; step 9 logs the
+release read. The files are used
 under the SEDA data use agreement and are never committed or deposited, in
 full or in part. A reader must accept the agreement at edopportunity.org and
 download the files from the addresses in the manifest.
