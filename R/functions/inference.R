@@ -132,7 +132,7 @@ ri_overall <- function(fit, reps, seed_step, parallel = TRUE) {
 HONEST_GRID_SD <- 20
 HONEST_GRID_POINTS <- 1000L
 HONEST_GRID_MAX_WIDEN <- 6L
-honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
+honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L, weights = NULL) {
   fail <- function(status) data.frame(mbar = NA_real_, lb = NA_real_, ub = NA_real_,
                                       method = NA_character_, status = status,
                                       num_pre = NA_integer_, num_post = NA_integer_,
@@ -152,7 +152,9 @@ honest_rm <- function(inf, mbarvec, alpha = 1 - BOOT_LEVEL, ref = -1L) {
   sigma <- (sigma + t(sigma)) / 2
   dimnames(sigma) <- NULL
   post_e <- e[e > ref]
-  l_vec <- matrix(ifelse(post_e >= 0L, 1 / sum(post_e >= 0L), 0), ncol = 1)
+  lw <- if (is.null(weights)) ifelse(post_e >= 0L, 1 / sum(post_e >= 0L), 0) else weights(post_e)
+  if (is.null(lw)) return(fail("growth contrast: no estimated event time in one of the two windows"))
+  l_vec <- matrix(lw, ncol = 1)
   row <- function(mbar, lb, ub, method, status, grid = c(NA_real_, NA_real_, NA_real_))
     data.frame(mbar = mbar, lb = lb, ub = ub, method = method, status = status,
                num_pre = as.integer(num_pre), num_post = as.integer(num_post),
@@ -215,7 +217,7 @@ honest_block_inf <- function(inf, lo, hi) {
 }
 
 honest_block <- function(inf, mbarvec, ref = -1L,
-                         status = "event times are not consecutive around the reference period") {
+                         status = "event times are not consecutive around the reference period", weights = NULL) {
   keep_status <- function(block, why) data.frame(mbar = NA_real_, lb = NA_real_, ub = NA_real_, method = NA_character_,
     status = status, num_pre = NA_integer_, num_post = NA_integer_, grid_lb = NA_real_, grid_ub = NA_real_,
     grid_points = NA_integer_, event_block = block, event_block_note = why, stringsAsFactors = FALSE)
@@ -224,7 +226,7 @@ honest_block <- function(inf, mbarvec, ref = -1L,
   if (is.null(b)) return(keep_status(NA_character_, "no consecutive block through the reference period reaches event time 0"))
   blk <- sprintf("%+d..%+d", b[1], b[2])
   if (b[1] >= ref) return(keep_status(blk, "the block has no pre-reform event time beyond the reference period"))
-  h <- honest_rm(honest_block_inf(inf, b[1], b[2]), mbarvec, ref = ref)
+  h <- honest_rm(honest_block_inf(inf, b[1], b[2]), mbarvec, ref = ref, weights = weights)
   h$event_block <- blk
   h$event_block_note <- sprintf("bound on event times %s; post-reform average over event times 0..%+d", blk, b[2])
   h
@@ -257,4 +259,62 @@ event_time_gaps <- function(fit, window, ref = -1L) {
         paste0("cohort ", cg, " at ", cg + e, " (", rows, " rows; base year ", base, ": ", base_rows, " rows)", collapse = "; ")),
       stringsAsFactors = FALSE)
   }))
+}
+
+GROWTH_EARLY <- 0:3
+GROWTH_LATE <- 4:8
+
+growth_weights <- function(e, early = GROWTH_EARLY, late = GROWTH_LATE) {
+  ne <- sum(e %in% early); nl <- sum(e %in% late)
+  if (!ne || !nl) return(NULL)
+  ifelse(e %in% early, -1 / ne, ifelse(e %in% late, 1 / nl, 0))
+}
+
+growth_contrast <- function(inf, ref = -1L, early = GROWTH_EARLY, late = GROWTH_LATE) {
+  if (is.null(inf)) return(NULL)
+  ok <- inf$egt != ref & is.finite(inf$att_egt) & is.finite(inf$se_egt)
+  e <- inf$egt[ok]
+  w <- growth_weights(e, early, late)
+  if (is.null(w)) return(NULL)
+  cols <- paste0("e", e)
+  list(estimate = sum(w * inf$att_egt[ok]), scores = as.vector(inf$scores[, cols, drop = FALSE] %*% w),
+       early = e[e %in% early], late = e[e %in% late], n = inf$n)
+}
+
+growth_from_events <- function(e, att, early = GROWTH_EARLY, late = GROWTH_LATE) {
+  ok <- is.finite(att)
+  ee <- e[ok & e %in% early]; el <- e[ok & e %in% late]
+  if (!length(ee) || !length(el)) return(NA_real_)
+  mean(att[ok & e %in% late]) - mean(att[ok & e %in% early])
+}
+
+growth_cohorts <- function(fit, early = GROWTH_EARLY, late = GROWTH_LATE) {
+  out <- data.frame(cohorts_early = NA_integer_, cohorts_late = NA_integer_, treated_states_early = NA_integer_,
+                    treated_states_late = NA_integer_)
+  if (is.null(fit) || is.null(fit$att_gt)) return(out)
+  gt <- fit$att_gt
+  e <- gt$t - gt$group
+  ok <- is.finite(gt$att) & is.finite(gt$se)
+  p <- cs_panel(fit)$panel
+  st <- function(gs) length(unique(p$state[p$g %in% gs]))
+  ge <- unique(gt$group[ok & e %in% early]); gl <- unique(gt$group[ok & e %in% late])
+  data.frame(cohorts_early = length(ge), cohorts_late = length(gl), treated_states_early = st(ge),
+             treated_states_late = st(gl))
+}
+
+growth_test <- function(inf, w, ref = -1L) {
+  g <- growth_contrast(inf, ref)
+  if (is.null(g)) return(NULL)
+  b <- wcb_test(g$estimate, g$scores, g$n, w)
+  b$row$early_event_times <- paste(g$early, collapse = " ")
+  b$row$late_event_times <- paste(g$late, collapse = " ")
+  b
+}
+
+honest_growth <- function(inf, mbarvec, ref = -1L) {
+  h <- suppressWarnings(honest_rm(inf, mbarvec, ref = ref, weights = growth_weights))
+  if (any(h$status %in% "event times are not consecutive around the reference period"))
+    h <- suppressWarnings(honest_block(inf, mbarvec, ref = ref, weights = growth_weights))
+  if (!"event_block" %in% names(h)) { h$event_block <- NA_character_; h$event_block_note <- NA_character_ }
+  h
 }

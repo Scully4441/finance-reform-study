@@ -131,7 +131,7 @@ expect_all(identical(variants_for("graduation"), setdiff(variants_for("achieveme
 expect_all(identical(FAMILY_WINDOWS$seda, SEDA_WINDOW), identical(FAMILY_WINDOWS$hs, sort(c(ACH_WINDOW, HS_RC_WINDOW))),
           identical(EDFACTS_YEARS, ACH_WINDOW), RC_FROM == min(HS_RC_WINDOW),
           identical(FAMILY_GAPS, outcome_gaps("achievement")), BOOT_REPS == 9999L, RI_REPS == 10000L,
-          RI_REPS_VARIANT == 1000L, length(CONFIRMED_STATES) == 17L, all(CONFIRMED_STATES %in% c(state.abb, "DC")),
+          RI_REPS_VARIANT == 1000L, length(covered_states()) == 18L, all(covered_states() %in% c(state.abb, "DC")),
           CDID_BASE_YEAR == max(FAMILY_WINDOWS$hs), CDID_BASE_YEAR == max(FAMILY_WINDOWS$seda))
 
 expect_all(all(vapply(FAMILY_VARIANTS, function(v) sum(v$sample != "primary", !is.null(v$from_year), !is.null(v$years),
@@ -139,7 +139,7 @@ expect_all(all(vapply(FAMILY_VARIANTS, function(v) sum(v$sample != "primary", !i
           identical(family_variants_for("hs", split = FALSE), names(VARIANTS)),
           identical(family_variants_for("seda", split = FALSE), c("drop_few_pre", "anticipation_1")),
           identical(family_variants_for("seda", split = TRUE), c("seda_2009_2019", "seda_2022_2025")),
-          identical(family_variants_for("hs", split = TRUE), c("hs_edfacts_years", "hs_17_states")),
+          identical(family_variants_for("hs", split = TRUE), c("hs_edfacts_years", "hs_covered_states")),
           identical(FAMILY_VARIANTS$hs_edfacts_years$years, EDFACTS_YEARS),
           all(FAMILY_VARIANTS$seda_2009_2019$years %in% SEDA_WINDOW), all(FAMILY_VARIANTS$seda_2022_2025$years %in% SEDA_WINDOW),
           all(vapply(names(VARIANTS), function(v) FAMILY_VARIANTS[[v]]$anticipation == VARIANTS[[v]]$anticipation &&
@@ -211,6 +211,15 @@ expect_all(!any(mfw$panel$state %in% c("A", "B")))
 expect_all(identical(family_model_panel(hinp, "a_poverty", "primary", events = hev, cohort_floor = TRUE)$panel,
                     family_model_panel(hinp, "a_poverty", "primary", events = hev)$panel))
 ma <- family_model_panel(hinp, "a_poverty", "primary", events = hev)
+lo_u <- mp$left_out
+expect_all(all(c("units_with_outcome", "dropped_missing_covariates", "dropped_first_year_state", "dropped_few_pre", "dropped_floor",
+                 "dropped_missing_weight") %in% names(lo_u)),
+           lo_u$units_with_outcome - lo_u$dropped_missing_covariates - lo_u$dropped_first_year_state - lo_u$dropped_few_pre -
+             lo_u$dropped_floor - lo_u$dropped_missing_weight == mp$units,
+           mw$left_out$units_with_outcome - mw$left_out$dropped_missing_weight - mw$left_out$dropped_floor -
+             mw$left_out$dropped_first_year_state - mw$left_out$dropped_missing_covariates == mw$units,
+           mfl$left_out$dropped_floor == length(unique(mp$panel$leaid[mp$panel$g > 0 & mp$panel$g %in% fl$cohort[fl$below_floor]])),
+           ms$left_out$units_with_outcome == length(unique(ms$panel$leaid)))
 expect_all(identical(ma$unit, "state"), identical(sort(unique(ma$panel$state)), c("A", "C")), near(ma$panel$y, -0.3),
           identical(all.vars(ma$xformla), character()), identical(ma$source_covariate, "not entered: constant in this panel"))
 expect_all(inherits(try(family_outcome_rows(modifyList(hinp, list(family = "seda")), "b_black_white", "retained", "r5"), silent = TRUE),
@@ -325,7 +334,7 @@ for (fam in FAMILIES) {
   s7 <- file.path(ra, fam, "07_inference")
   st <- rd(file.path(s7, "inference_settings.csv")); r7 <- rd(file.path(s7, "randomization_overall.csv"))
   expect_all(st$value[st$setting == "bootstrap_reps"] == "9999", st$value[st$setting == "randomization_reps"] == "10000",
-            all(r7$reps == RI_REPS), nrow(rd(file.path(ra, fam, "05_primary", "model_status.csv"))) == 30L)
+            all(r7$reps == RI_REPS), nrow(rd(file.path(ra, fam, "05_primary", "model_status.csv"))) == nrow(family_grid(fam)))
   cf <- file.path(ra, fam, "05_primary", "cohort_floor.csv")
   if (file.exists(cf)) {
     fl13 <- rd(cf); pc13 <- rd(file.path(ra, fam, "05_primary", "panel_counts.csv"))
@@ -352,8 +361,8 @@ if (file.exists(rf)) {
     end <- if (i < length(heads_event)) heads_event[i + 1] - 1L else cont - 1L
     sub <- txt[heads_event[i]:end]
     expect_all(grepl("^### 1\\. Honest-DiD", sub[grep("^### ", sub)[1]]), any(grepl("\\*\\*headline\\*\\*|not estimable|no result row", sub)),
-              all(paste0("### ", 1:11, ".") %in% sub("^(### [0-9]+\\.).*", "\\1", sub[grepl("^### [0-9]+\\.", sub)])),
-              !any(grepl("^### 12\\.", sub)))
+              all(paste0("### ", 1:12, ".") %in% sub("^(### [0-9]+\\.).*", "\\1", sub[grepl("^### [0-9]+\\.", sub)])),
+              !any(grepl("^### 13\\.", sub)))
   }
   fh <- vapply(c("^# High school achievement gaps", "^# Graduation-rate gaps", "^# SEDA grades 3", "^# Continuous-treatment estimates",
                  "^# Appendix"), function(p) min(grep(p, txt)), 0)

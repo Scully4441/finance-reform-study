@@ -121,6 +121,8 @@ infer_fits <- function(fits, seed_step, reps, mbarvec = MBAR_GRID) {
   environment(one) <- globalenv()
   hs <- furrr::future_map(jobs, one, mbarvec = mbarvec, .options = furrr::furrr_options(seed = NULL))
   out$honest[ks] <- hs
+  out$wm <- wm
+  out$st <- st
   out
 }
 
@@ -417,8 +419,6 @@ SEDA_CONTROLS <- "cep"
 BOOT_REPS <- 9999L
 RI_REPS <- 10000L
 COHORT_FLOOR <- 20L
-CONFIRMED_STATES <- c("AL", "CA", "CO", "CT", "DE", "GA", "KS", "MA", "MI", "MO", "NC", "NV", "NY", "OR",
-                           "RI", "TX", "WA")
 HONEST_NOT_CONSEC <- "event times are not consecutive around the reference period"
 
 FAMILY_VARIANTS <- list(
@@ -446,7 +446,7 @@ FAMILY_VARIANTS <- list(
   hs_edfacts_years        = list(families = "hs", sample = "primary", from_year = NULL, years = c(2010:2019, 2021L), states = NULL,
                                  drop_few_pre = FALSE, anticipation = 0L, split = TRUE,
                                  label = "EDFacts years alone, 2010-2021 (source split; the federal-file window)"),
-  hs_17_states            = list(families = "hs", sample = "primary", from_year = NULL, years = NULL, states = CONFIRMED_STATES,
+  hs_covered_states       = list(families = "hs", sample = "primary", from_year = NULL, years = NULL, states = function() covered_states(),
                                  drop_few_pre = FALSE, anticipation = 0L, split = TRUE,
                                  label = "States covered in every report-card year, every year (coverage split)"))
 family_variants_for <- function(family, split = NULL) {
@@ -572,25 +572,33 @@ family_model_panel <- function(inp, gap, set, sample = "primary", balanced = FAL
   if (!is.null(years)) cw <- cw[cw %in% years]
   if (!is.null(from_year)) cw <- cw[cw >= from_year]
   p <- p[p$sy_end %in% cw, , drop = FALSE]
+  if (is.function(states)) states <- states()
   if (!is.null(states)) p <- p[p$state %in% states, , drop = FALSE]
   if (balanced) {
     full <- tapply(p$sy_end, p[[unit]], function(t) all(cw %in% t))
     p <- p[p[[unit]] %in% names(full)[full], , drop = FALSE]
   }
   covs <- character()
+  n_outcome <- length(unique(p[[unit]]))
+  n_nocov <- 0L
   if (gap != "a_poverty") {
     covs <- CS_COVARIATES
     p <- cbind(p, inp$cov[match(p$leaid, inp$cov$leaid), CS_COVARIATES])
-    p <- p[stats::complete.cases(p[CS_COVARIATES]), , drop = FALSE]
+    cc <- stats::complete.cases(p[CS_COVARIATES])
+    n_nocov <- length(setdiff(unique(p[[unit]][!cc]), unique(p[[unit]][cc])))
+    p <- p[cc, , drop = FALSE]
   }
   ev <- if (is.null(events)) utils::read.csv(file.path("data", "reference", EVENT_FILES[[set]]), stringsAsFactors = FALSE) else events
   coding <- cohort_coding(ev, cw)
   n_few <- 0L
+  few_states <- character(); floor_states <- character()
+  fy_states <- coding$state[coding$cohort_status == "first_year"]
   if (drop_few_pre) {
     pre <- vapply(seq_len(nrow(coding)), function(i)
       if (coding$cohort_status[i] == "estimable") sum(cw < coding$g[i]) else NA_integer_, integer(1))
     few <- coding$cohort_status == "estimable" & !is.na(pre) & pre < MIN_PRE_YEARS
     n_few <- sum(few & coding$state %in% p$state)
+    few_states <- coding$state[few]
     coding$cohort_status[few] <- "excluded"
     coding$g[few] <- NA_integer_
   }
@@ -600,11 +608,17 @@ family_model_panel <- function(inp, gap, set, sample = "primary", balanced = FAL
     fl <- fl[fl$below_floor, , drop = FALSE]
     thin <- coding$cohort_status == "estimable" & coding$g %in% fl$cohort
     removed <- fl[fl$cohort %in% coding$g[thin], c("cohort", "states", "treated_units_base"), drop = FALSE]
+    floor_states <- coding$state[thin]
     coding$cohort_status[thin] <- "excluded"
     coding$g[thin] <- NA_integer_
   }
+  nu <- function(s) length(unique(p[[unit]][p$state %in% s]))
+  left <- data.frame(units_with_outcome = n_outcome, dropped_missing_covariates = n_nocov,
+                     dropped_first_year_state = nu(fy_states), dropped_few_pre = nu(few_states), dropped_floor = nu(floor_states),
+                     dropped_missing_weight = 0L)
   p <- attach_cohorts(p, coding, unit)$panel
   if (weighting == "tested_weighted") {
+    left$dropped_missing_weight <- length(unique(p[[unit]][is.na(p$tested_2010)]))
     p <- p[!is.na(p$tested_2010), , drop = FALSE]
     p$id <- as.integer(factor(p[[unit]]))
   }
@@ -620,7 +634,7 @@ family_model_panel <- function(inp, gap, set, sample = "primary", balanced = FAL
   list(panel = p, unit = unit, xformla = if (length(covs)) stats::reformulate(covs) else ~1,
        weightsname = if (weighting == "tested_weighted") "tested_2010" else NULL,
        units = length(unique(p$id)), states = length(unique(p$state)), states_dropped_few_pre = as.integer(n_few),
-       window = cw, source_covariate = src, floor_removed = removed)
+       window = cw, source_covariate = src, floor_removed = removed, left_out = left)
 }
 
 family_cohort_floor <- function(inp, gap, set, events = NULL, floor = COHORT_FLOOR) {
@@ -703,4 +717,109 @@ family_gap_a_revenue_panel <- function(d, flag, rev, years, base) {
   out$id <- as.integer(factor(out$state))
   rownames(out) <- NULL
   out
+}
+
+HS_RC_COVERAGE <- "data/reference/hs_reportcard_coverage.csv"
+covered_states <- function(path = HS_RC_COVERAGE) {
+  cv <- utils::read.csv(path, stringsAsFactors = FALSE, na.strings = character(0))
+  sort(cv$state[cv$status == "covered"])
+}
+
+growth_empty_row <- function(status, reps = NA_integer_)
+  data.frame(att = NA_real_, se = NA_real_, boot_se = NA_real_, t = NA_real_, crit_val = NA_real_, ci_lo = NA_real_,
+             ci_hi = NA_real_, p_value = NA_real_, reps = reps, clusters = NA_integer_, early_event_times = NA_character_,
+             late_event_times = NA_character_, status = status, stringsAsFactors = FALSE)
+
+growth_infer <- function(fits, wm, st, mbarvec = MBAR_GRID) {
+  rows <- list(); tb <- list()
+  ks <- names(fits)
+  infs <- lapply(fits, function(f) cs_influence(f$fit))
+  for (k in ks) {
+    inf <- infs[[k]]
+    if (is.null(inf)) { rows[[k]] <- cbind(growth_empty_row("no influence function", nrow(wm)), growth_cohorts(NULL)); next }
+    g <- growth_test(inf, wm[, match(inf$states, st), drop = FALSE], fits[[k]]$ref)
+    coh <- growth_cohorts(fits[[k]]$fit)
+    if (is.null(g)) { rows[[k]] <- cbind(growth_empty_row("no estimated event time in one of the two windows", nrow(wm)), coh); next }
+    rows[[k]] <- cbind(g$row, status = if (is.finite(g$row$t)) "ok" else "no clustered standard error", coh, stringsAsFactors = FALSE)
+    if (is.finite(g$row$t)) tb[[k]] <- g$t_boot
+  }
+  hk <- ks[!vapply(infs[ks], is.null, TRUE)]
+  jobs <- lapply(hk, function(k) list(inf = infs[[k]], ref = as.integer(fits[[k]]$ref)))
+  one <- function(j, mbarvec) honest_growth(j$inf, mbarvec, ref = j$ref)
+  environment(one) <- globalenv()
+  hon <- stats::setNames(furrr::future_map(jobs, one, mbarvec = mbarvec, .options = furrr::furrr_options(seed = NULL)), hk)
+  list(rows = rows, t_boot = tb, honest = hon)
+}
+
+largest_mbar_excluding_zero <- function(h) {
+  if (is.null(h) || !nrow(h)) return(NA_real_)
+  x <- h[!is.na(h$mbar) & h$status %in% "ok" & (h$lb > 0 | h$ub < 0), , drop = FALSE]
+  if (nrow(x)) max(x$mbar) else NA_real_
+}
+
+bound_row <- function(h, mbar) {
+  if (is.null(h) || !nrow(h)) return(NULL)
+  r <- h[!is.na(h$mbar) & h$mbar == mbar, , drop = FALSE]
+  if (nrow(r)) r[1, , drop = FALSE] else NULL
+}
+
+bound_text <- function(r) {
+  if (is.null(r)) return("no bound set")
+  if (!r$status %in% "ok") return(paste0("no bound (", r$status, ")"))
+  paste0("[", formatC(r$lb, format = "f", digits = 3), ", ", formatC(r$ub, format = "f", digits = 3), "]")
+}
+
+inside_interval <- function(x, ref, lo, hi) is.finite(x) & sign(x) == sign(ref) & x >= lo & x <= hi
+
+agreement_criterion <- function(att, ci_lo, ci_hi, secondary, variants, min_estimable = 3L) {
+  ok_sec <- secondary[secondary$status %in% "ok" & is.finite(secondary$att), , drop = FALSE]
+  ok_var <- variants[variants$status %in% "ok" & is.finite(variants$att), , drop = FALSE]
+  base_ok <- is.finite(att) && is.finite(ci_lo) && is.finite(ci_hi)
+  sec_in <- if (base_ok) inside_interval(ok_sec$att, att, ci_lo, ci_hi) else rep(FALSE, nrow(ok_sec))
+  var_in <- if (base_ok) inside_interval(ok_var$att, att, ci_lo, ci_hi) else rep(FALSE, nrow(ok_var))
+  part1 <- if (!base_ok) "not evaluated (no primary bootstrap interval)" else
+    if (nrow(ok_sec) < min_estimable) paste0("not evaluated (", nrow(ok_sec), " of 4 secondary estimators estimable)") else
+    if (all(sec_in)) "holds" else "fails"
+  part2 <- if (!base_ok) "not evaluated (no primary bootstrap interval)" else if (all(var_in)) "holds" else "fails"
+  list(estimators = part1, variants = part2, holds = identical(part1, "holds") && identical(part2, "holds"),
+       secondary_estimable = nrow(ok_sec), secondary_agreeing = sum(sec_in), variants_estimable = nrow(ok_var),
+       variants_agreeing = sum(var_in),
+       disagreeing = paste(c(ok_sec$name[!sec_in], ok_var$name[!var_in]), collapse = "; "))
+}
+
+verdict_overall <- function(b1, criterion_holds) {
+  if (is.null(b1) || !b1$status %in% "ok" || !is.finite(b1$lb) || !is.finite(b1$ub)) return("not evaluable")
+  if (b1$lb > 0 && isTRUE(criterion_holds)) return("supported")
+  if (b1$ub < 0 && isTRUE(criterion_holds)) return("contradicted")
+  "not supported"
+}
+
+verdict_growth <- function(g_row, g_b1, overall_att, secondary_g) {
+  if (is.null(g_row) || !g_row$status %in% "ok") return("not evaluable")
+  if (is.null(g_b1) || !g_b1$status %in% "ok" || !is.finite(g_b1$lb)) return("not evaluable")
+  sg <- secondary_g[is.finite(secondary_g)]
+  if (g_b1$lb > 0 && is.finite(overall_att) && overall_att > 0 && all(sg > 0)) return("supported")
+  "not supported"
+}
+
+verdict_dose <- function(d) {
+  if (is.null(d) || !nrow(d) || !all(c("revenue_ci_lo", "revenue_ci_hi") %in% names(d))) return("not evaluable")
+  if (!is.finite(d$revenue_ci_lo[1]) || !is.finite(d$revenue_ci_hi[1]) || d$revenue_ci_lo[1] <= 0) return("not evaluable")
+  if (is.finite(d$ci_lo[1]) && d$ci_lo[1] > 0) return("supported")
+  "not supported"
+}
+
+HYPOTHESIS_OF_GAP <- c(a_poverty = "H1", b_black_white = "H2", c_hispanic_white = "H3",
+                       grad_black_white = "H2", grad_hispanic_white = "H3")
+SECONDARY4 <- c("sun_abraham", "imputation", "synthdid", "stacked")
+
+family_panels <- function(family) if (family == "seda") "unbalanced" else names(PANEL_TYPES)
+
+family_grid <- function(family) {
+  g <- do.call(rbind, lapply(names(EVENT_FILES), function(s) do.call(rbind, lapply(FAMILY_GAPS, function(gp)
+    do.call(rbind, lapply(family_weightings(gp), function(w)
+      data.frame(gap = gp, event_set = s, weighting = w, panel = family_panels(family), stringsAsFactors = FALSE)))))))
+  g$key <- paste(g$gap, g$event_set, g$weighting, g$panel, sep = ".")
+  rownames(g) <- NULL
+  g
 }

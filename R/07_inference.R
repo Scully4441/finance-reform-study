@@ -156,6 +156,43 @@ say(sprintf("HonestDiD relative magnitudes: %d models x %d M-bar values, %.1f s;
             length(honest), length(MBARVEC), as.numeric(difftime(Sys.time(), t0, units = "secs")),
             sum(hd_new$grid_points > HONEST_GRID_POINTS, na.rm = TRUE), n_block))
 
+t0 <- Sys.time()
+growth <- list(); growth_tb <- list(); growth_hd <- list()
+for (s in names(wmat)) {
+  ks <- keys[usable & parts$event_set == s]
+  gr <- growth_infer(stats::setNames(lapply(ks, function(k) list(fit = models[[k]], ref = -1L)), ks), wmat[[s]], set_states[[s]])
+  for (k in ks) {
+    i <- match(k, keys)
+    growth[[k]] <- tag(i, gr$rows[[k]])
+    if (!is.null(gr$t_boot[[k]])) growth_tb[[k]] <- gr$t_boot[[k]]
+    if (!is.null(gr$honest[[k]])) growth_hd[[k]] <- tag(i, gr$honest[[k]])
+  }
+}
+growth_rw <- list()
+for (s in EVENT_SETS) for (pan in PANELS) for (fam in c("unweighted", "tested_weighted")) {
+  pick <- vapply(GAPS, function(g) {
+    w <- if (g == "a_poverty") "unweighted" else fam
+    k <- keys[parts$gap == g & parts$event_set == s & parts$weighting == w & parts$panel == pan]
+    if (length(k) == 1L && !is.null(growth_tb[[k]])) k else NA_character_
+  }, "")
+  k <- pick[!is.na(pick)]
+  if (length(k) < 2L) next
+  to <- vapply(k, function(x) growth[[x]]$t, numeric(1))
+  growth_rw[[paste(s, pan, fam)]] <- data.frame(
+    event_set = s, panel = pan, family = fam, gap = parts$gap[match(k, keys)], weighting = parts$weighting[match(k, keys)],
+    t = to, p_unadjusted = vapply(k, function(x) growth[[x]]$p_value, numeric(1)),
+    p_romano_wolf = rw_stepdown(to, do.call(cbind, growth_tb[k])), rank = rank(-abs(to), ties.method = "first"),
+    hypotheses = length(k), reps = reps$romano_wolf, row.names = NULL, stringsAsFactors = FALSE)
+}
+window_of <- if (OUTCOME == "achievement") ach_window(stage) else GRAD_WINDOW
+gaps_tab <- list()
+for (i in which(usable)) {
+  eg <- tryCatch(event_time_gaps(models[[i]], window_of, -1L), error = function(e) NULL)
+  if (!is.null(eg)) gaps_tab[[keys[i]]] <- tag(i, eg)
+}
+say(sprintf("Growth contrast G: %d models (bootstrap, Romano-Wolf over the gaps, HonestDiD), %.1f s; models with missing event times: %d",
+            length(growth), as.numeric(difftime(Sys.time(), t0, units = "secs")), length(gaps_tab)))
+
 say("\nRandomization inference: ", reps$randomization, " reassignments per model on ", WORKERS, " workers")
 ri <- list(); ri_draws <- list()
 cache_dir <- local({ a <- commandArgs(trailingOnly = TRUE); k <- which(a == "--cache-dir")
@@ -223,7 +260,8 @@ settings <- rbind(settings, data.frame(setting = c("honest_grid", "honest_block_
 
 files <- list(bootstrap_overall = bo, bootstrap_event_time = be, randomization_overall = rit,
               randomization_draws = rid, romano_wolf = rwt, honestdid_overall = hd,
-              model_status = status, inference_settings = settings)
+              model_status = status, inference_settings = settings, growth_contrast = bind(growth),
+              growth_romano_wolf = bind(growth_rw), growth_honestdid = bind(growth_hd), event_time_gaps = bind(gaps_tab))
 for (fn in names(files))
   utils::write.csv(files[[fn]], file.path(out_dir, paste0(fn, ".csv")), row.names = FALSE, na = "")
 

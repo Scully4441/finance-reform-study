@@ -1,0 +1,52 @@
+state,status,access,high_school_test
+AL,covered,Script,"ACT with Writing, grade 11"
+AK,conditional,District files,AK STAR grade 9
+AZ,conditional,Browser,ACT Aspire grade 9 and ACT grade 11
+AR,covered,Tool,"ACT Aspire grades 9-10 (2022-2023); ATLAS ELA grades 9-10, EOC Algebra I and Geometry (2024-2025)"
+CA,covered,Script (unverified),Smarter Balanced grade 11
+CO,conditional,Script,"PSAT 8/9 grade 9, PSAT 10 grade 10, SAT grade 11"
+CT,covered,Tool,SAT School Day grade 11
+DE,covered,Script,SAT School Day grade 11
+DC,conditional,Browser,"PARCC high school courses (2022-2023); DC CAPE, same design (2024-2025)"
+FL,conditional,Tool,FSA ELA grade 10 and EOCs (2022); FAST ELA Reading grade 10 and B.E.S.T. EOCs (2023-2025)
+GA,conditional,Script,"Milestones EOC American Literature; Algebra I/Coordinate Algebra (2022-2023), Algebra: Concepts and Connections (2024-2025)"
+HI,not_covered,Script,Smarter Balanced grade 11
+ID,conditional,Tool,ISAT grade 10 (2022); ISAT grade 11 (2023-2025)
+IL,covered,Script,SAT grade 11 (2022-2024); ACT with Writing grade 11 (2025)
+IN,conditional,Script,Indiana SAT School Day grade 11
+IA,conditional,Script,ISASP grades 9-11
+KS,covered,Script,KAP grade 10
+KY,conditional,Script (UA),Kentucky Summative Assessment grade 10
+LA,conditional,Script,"LEAP 2025 EOCs: Algebra I, Geometry, English I, English II"
+ME,conditional,Tool,NWEA MAP Growth grade 11 (2022); Maine Through Year Assessment grade 10 (2023-2025)
+MD,conditional,Browser,MCAP Algebra I and English 10
+MA,covered,Script,Next-generation MCAS grade 10
+MI,conditional,Tool,SAT grade 11
+MN,conditional,Browser,"MCA-III reading grade 10, mathematics grade 11"
+MS,conditional,Script (UA),MAAP Algebra I and English II
+MO,covered,Script,MAP EOC Algebra I and English II
+MT,conditional,Tool,ACT with Writing grade 11
+NE,conditional,Script (unverified),ACT with Writing grade 11
+NV,covered,Tool,ACT with Writing grade 11
+NH,conditional,Browser,SAT grade 11
+NJ,covered,Script,NJSLA ELA grade 9 and NJSLA Algebra I EOC
+NM,conditional,Script,SAT School Day grade 11
+NY,covered,Script,Regents Algebra I and ELA (Total Cohort results)
+NC,covered,Script,EOC English II and NC Math 1
+ND,conditional,Script,NDSA grade 10 or ACT grade 11 (2022-2024); ND A+ grade 10 (2025)
+OH,conditional,Browser,"Ohio's State Tests EOC: Algebra I or Integrated Math I, Geometry or Integrated Math II, ELA II"
+OK,not_covered,Script,"CCRA grade 11: ACT or SAT (2022-2023), ACT (2024-2025)"
+OR,covered,Script,Smarter Balanced grade 11
+PA,conditional,Script,Keystone Algebra I and Literature
+RI,covered,Tool,SAT School Day grade 11
+SC,conditional,Script,EOCEP Algebra 1 and English 2
+SD,conditional,Script,SD ELA and mathematics assessments (Smarter Balanced based) grade 11
+TN,conditional,Script,"TCAP EOC mathematics courses, English I and II"
+TX,covered,Tool,"STAAR EOC Algebra I, English I, English II"
+UT,conditional,Script,Utah Aspire Plus grades 9-10
+VT,conditional,Script (UA),Smarter Balanced grade 9 (2022); VTCAP grade 9 (2023-2025)
+VA,conditional,Browser,"SOL EOC Reading; EOC Algebra I, Geometry, Algebra II"
+WA,covered,Script,Smarter Balanced grade 10
+WV,conditional,Script (Tool in 2024),SAT School Day grade 11
+WI,conditional,Script,ACT grade 11
+WY,covered,Tool,WY-TOPP grades 9-10
