@@ -1,6 +1,6 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 if (!identical(stage, 2L)) stop("R/10_hs_reportcard_outcomes.R reads report-card outcome files, which needs data/stage.txt = 2.")
 reuse_long <- "--reuse-long" %in% commandArgs(TRUE)
 

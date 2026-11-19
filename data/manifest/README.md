@@ -21,10 +21,11 @@ that has no usable file:
 ## Stage gate
 
 `data/stage.txt` reads `1` until the registration is filed. At stage 1,
-`R/02_download.R` fetches only rows with an end year of 2013 or earlier,
-excluding the graduation, SEDA, report-card, CPI and CCD school
-characteristics rows (`R/functions/stage.R`). At stage 2 every row is
-allowed.
+`R/02_download.R` fetches only the rows the power simulation needs
+(`STAGE1_ROWS` in `R/functions/stage.R`): the EDFacts high school assessment
+files for end years 2010-2013, the participation files for 2013, their
+documentation, the CCD LEA directories for 2010-2013, the 2009-10 CCD school
+membership file and the 2009 SAIPE file. At stage 2 every row is allowed.
 
 ## Rows a reader fetches by hand
 

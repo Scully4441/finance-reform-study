@@ -1,9 +1,7 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
-if (!identical(stage, 2L))
-  stop("R/03_sample.R reads the full achievement window, which needs stage 2 (outcome files after 2012-13).")
-WINDOW <- ACH_WINDOW
+stage <- read_stage()
+WINDOW <- ach_window(stage)
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")
 out_dir <- "outputs/03_sample"

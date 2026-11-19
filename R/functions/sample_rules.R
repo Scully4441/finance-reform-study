@@ -42,6 +42,7 @@ read_ccd_lea <- function(path, sy_end, extra = character()) {
 }
 
 ACH_WINDOW <- c(2010:2019, 2021L)
+ach_window <- function(stage) if (identical(as.integer(stage), 1L)) ACH_WINDOW[ACH_WINDOW <= STAGE1_LAST_YEAR] else ACH_WINDOW
 PART_FROM  <- 2013L
 
 edfacts_hs_file <- function(subject, sy_end, kind = c("achievement", "participation")) {

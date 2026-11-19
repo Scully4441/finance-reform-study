@@ -1,13 +1,12 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
 OUTCOME <- outcome_arg()
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 SAMPLE <- "primary"
 FLAGS      <- c(primary = "retained", r1 = "retained_r1", r2 = "retained_r2")
 PANEL_DIRS <- c(unbalanced = "", balanced = "appendix")
 if (OUTCOME == "achievement") {
-  if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
-  WINDOW <- ACH_WINDOW
+  WINDOW <- ach_window(stage)
   EVENT_SETS <- c(primary = "event_table.csv", r1 = "event_table_r1.csv", r2 = "event_table_r2.csv")
   GAPS <- c("a_poverty", "b_black_white", "c_hispanic_white")
   CONTROLS <- SEC_FLAGS

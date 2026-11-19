@@ -65,7 +65,17 @@ post_years <- function(g, last_year, drop = integer())
   vapply(g, function(x) if (x > last_year) 0L else sum(!(seq.int(x, last_year) %in% drop)),
          integer(1))
 
-mde_projection <- function(mde, placebo_state_years, design_state_years) {
-  stopifnot(placebo_state_years > 0, design_state_years > 0)
-  mde * sqrt(placebo_state_years / design_state_years)
+placebo_state_count <- function(events, first_year, last_year) {
+  g <- events$treat_year[events$group == "treated" & !is.na(events$treat_year)]
+  as.integer(sum(g > first_year & g <= last_year))
+}
+
+power_decision <- function(mt, gaps, ceiling = POWER_CEILING) {
+  m <- if (is.null(mt)) rep(NA_real_, length(gaps)) else mt$mde[match(gaps, mt$gap)]
+  over <- !is.na(m) & m > ceiling
+  missing <- is.na(m)
+  data.frame(gaps = length(gaps), gaps_evaluated = sum(!missing), gaps_over_ceiling = sum(over), gaps_without_mde = sum(missing),
+             ceiling = ceiling, rule = "underpowered if the MDE of any gap exceeds the ceiling",
+             classification = if (any(over | missing)) "UNDERPOWERED: the study proceeds as a bounds analysis" else
+               "not underpowered", stringsAsFactors = FALSE)
 }

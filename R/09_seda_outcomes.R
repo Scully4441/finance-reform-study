@@ -1,6 +1,6 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 if (!identical(stage, 2L)) stop("R/09_seda_outcomes.R reads a SEDA outcome file, which needs data/stage.txt = 2.")
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")

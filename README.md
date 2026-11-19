@@ -14,7 +14,7 @@ continuous-treatment estimator. The code is released under the MIT license
 - `data/reference/` reference tables; the event tables are written by step 1
 - `data/stage.txt` download stage gate (`1` until registration, then `2`)
 - `data/raw/`, `data/derived/`, `outputs/` are not committed
-- `tests/` test suite (`Rscript tests/run_tests.R`)
+- `tests/` testthat suite (`Rscript tests/run_tests.R`, which exits non-zero on a failure)
 
 ## Running
 
@@ -30,6 +30,8 @@ docker run --rm -v "${PWD}:/study" finance-reform-study
 
 The last command runs `R/13_run_all.R`, which needs `data/stage.txt` set to
 `2` and the files in `data/raw/` (fetched and verified by `R/02_download.R`).
+At stage 1, steps 3-5 run on end years 2010-2013 and step 8 runs the power
+simulation.
 Without Docker, run the same scripts with `Rscript` from the repository folder
 after `renv::restore()`.
 

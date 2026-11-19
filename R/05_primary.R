@@ -1,10 +1,9 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
 OUTCOME <- outcome_arg()
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 if (OUTCOME == "achievement") {
-  if (!identical(stage, 2L)) stop("the achievement pass reads the full window, which needs stage 2")
-  WINDOW <- ACH_WINDOW
+  WINDOW <- ach_window(stage)
   GAPS   <- c("a_poverty", "b_black_white", "c_hispanic_white")
   WCOL   <- "tested_2010"
 } else {

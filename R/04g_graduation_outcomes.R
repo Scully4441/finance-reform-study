@@ -1,6 +1,6 @@
 for (f in list.files("R/functions", full.names = TRUE)) source(f)
 
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 if (!identical(stage, 2L)) stop("R/04g_graduation_outcomes.R needs stage 2 (graduation files after 2012-13).")
 WINDOW <- GRAD_WINDOW
 

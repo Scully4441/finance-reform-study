@@ -6,7 +6,7 @@ MIN_PRE_YEARS <- 3L
 RI_REPS_VARIANT <- 1000L
 LEE_LAG <- 3L
 LEE_FIRST_CCD <- 2007L
-DOSE_BASE_YEAR <- 2021L
+DOSE_BASE_YEAR <- 2025L
 
 VARIANTS <- list(
   sample_r5               = list(sample = "r5",      from_year = NULL, drop_few_pre = FALSE, anticipation = 0L,
@@ -313,10 +313,6 @@ real_revenue <- function(rev, cpi_file = "data/raw/cpi/cuur0000sa0.csv", base = 
   rev
 }
 
-REV_MIN_ENROLL <- 30
-REV_MAX_PP <- 100
-revenue_excluded <- function(rev) rev$v33 < REV_MIN_ENROLL | rev$rev_pp_real > REV_MAX_PP
-
 dist_revenue_panel <- function(base, rev, window) {
   units <- base[!duplicated(base$id), c("leaid", "state", "g", intersect(CS_COVARIATES, names(base)))]
   r <- rev[rev$leaid %in% units$leaid & rev$sy_end %in% window, , drop = FALSE]
@@ -325,30 +321,6 @@ dist_revenue_panel <- function(base, rev, window) {
   p$id <- as.integer(factor(p$leaid))
   rownames(p) <- NULL
   p
-}
-
-pov_revenue_panel <- function(d, flag, rev, window, base) {
-  x <- d[d[[flag]] == 1L & d$pov_quintile_2009 %in% c(1L, 5L) & !is.na(d$member_2009) & d$member_2009 > 0 &
-           d$sy_end %in% window, , drop = FALSE]
-  x$rev <- rev$rev_pp_real[match(paste(x$leaid, x$sy_end), paste(rev$leaid, rev$sy_end))]
-  x <- x[!is.na(x$rev), , drop = FALSE]
-  wm <- function(q) {
-    z <- x[x$pov_quintile_2009 == q, , drop = FALSE]
-    s <- split(seq_len(nrow(z)), paste(z$state, z$sy_end))
-    data.frame(key = names(s), v = vapply(s, function(i) sum(z$rev[i] * z$member_2009[i]) / sum(z$member_2009[i]), 0),
-               stringsAsFactors = FALSE)
-  }
-  q5 <- wm(5L); q1 <- wm(1L)
-  k <- intersect(q5$key, q1$key)
-  out <- data.frame(state = sub(" .*", "", k), sy_end = as.integer(sub(".* ", "", k)),
-                    y = q5$v[match(k, q5$key)] - q1$v[match(k, q1$key)], stringsAsFactors = FALSE)
-  st <- base[!duplicated(base$state), c("state", "g")]
-  out <- out[out$state %in% st$state, , drop = FALSE]
-  out$g <- st$g[match(out$state, st$state)]
-  out <- out[order(out$state, out$sy_end), , drop = FALSE]
-  out$id <- as.integer(factor(out$state))
-  rownames(out) <- NULL
-  out
 }
 
 step7_draws <- function(outcome, reps) {
@@ -440,7 +412,7 @@ EDFACTS_YEARS <- c(2010:2019, 2021L)
 RC_FROM <- 2022L
 FAMILY_WEIGHT_YEAR <- 2010L
 SOURCE_COV <- "rc_first"
-HS_CONTROLS <- c("test_replaced", "cep", "rc")
+HS_CONTROLS <- c("test_replaced", "cep")
 SEDA_CONTROLS <- "cep"
 BOOT_REPS <- 9999L
 RI_REPS <- 10000L
@@ -476,7 +448,7 @@ FAMILY_VARIANTS <- list(
                                  label = "EDFacts years alone, 2010-2021 (source split; the federal-file window)"),
   hs_17_states            = list(families = "hs", sample = "primary", from_year = NULL, years = NULL, states = CONFIRMED_STATES,
                                  drop_few_pre = FALSE, anticipation = 0L, split = TRUE,
-                                 label = "The seventeen confirmed states only, every year (coverage split)"))
+                                 label = "States covered in every report-card year, every year (coverage split)"))
 family_variants_for <- function(family, split = NULL) {
   v <- names(FAMILY_VARIANTS)[vapply(FAMILY_VARIANTS, function(x) family %in% x$families, TRUE)]
   if (is.null(split)) v else v[vapply(FAMILY_VARIANTS[v], function(x) identical(x$split, split), TRUE)]

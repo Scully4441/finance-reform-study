@@ -1,14 +1,17 @@
+withr::local_dir(ROOT)
+
+test_that("gap outcomes and the step 4 output", {
 pa <- c(0.7, 1, 0, 0.35); pb <- c(0.4, 0.2, 0.5, 0.35); na <- c(40, 40, 50, 60); nb <- c(30, 80, 40, 60)
-stopifnot(near(v_gap(pa, pb, na, nb), probit_score(pa, na) - probit_score(pb, nb)),
+expect_all(near(v_gap(pa, pb, na, nb), probit_score(pa, na) - probit_score(pb, nb)),
           near(probit_score(0.5), 0), is.finite(probit_score(1, 40)), is.finite(probit_score(0, 40)))
 
-stopifnot(identical(ccd_count(c("120", " 0 ", "-1", "-2", "-9", "M", "")), c(120, 0, NA, NA, NA, NA, NA)))
+expect_all(identical(ccd_count(c("120", " 0 ", "-1", "-2", "-9", "M", "")), c(120, 0, NA, NA, NA, NA, NA)))
 
 tmp <- tempfile(fileext = ".txt")
 writeLines(c("LEAID\tFIPST\tTYPE09\tBOUND09\tGSHI09\tMEMBER09",
              "0100005\t01\t1\t1\t12\t3467", "0100006\t01\t1\t1\t12\t-9"), tmp)
 cc <- read_ccd_lea(tmp, 2010L, extra = "MEMBER")
-stopifnot(identical(cc$member, c("3467", "-9")), identical(ccd_count(cc$member), c(3467, NA)),
+expect_all(identical(cc$member, c("3467", "-9")), identical(ccd_count(cc$member), c(3467, NA)),
           !"member" %in% names(read_ccd_lea(tmp, 2010L)))
 
 dy <- function(leaid, state = "X", sy_end = 2011L, q = NA_integer_, member = 1000) {
@@ -40,20 +43,20 @@ d <- set_cell(d, 2, "bl", part = 0L)
 d <- set_cell(d, 3, "wh", n = 20, p = NA, w = 19, cell = "below_30")
 d <- set_cell(d, 4, "wh", p = 70); d <- set_cell(d, 4, "bl", p = 35); d <- set_cell(d, 4, "hi", p = 55)
 rp <- race_gaps(d, "math", "primary"); r5 <- race_gaps(d, "math", "r5"); rx <- race_gaps(d, "math", "exact")
-stopifnot(identical(rp$leaid, c("D1", "D2", "D4")), identical(r5$leaid, c("D1", "D2", "D4")),
+expect_all(identical(rp$leaid, c("D1", "D2", "D4")), identical(r5$leaid, c("D1", "D2", "D4")),
           identical(rx$leaid, c("D2", "D4")))
-stopifnot(all(rp$sample == "primary"), all(rp$subject == "math"))
+expect_all(all(rp$sample == "primary"), all(rp$subject == "math"))
 i <- rp$leaid == "D1"
-stopifnot(near(rp$v_bw[i], v_gap(0.42, 0.60, 50, 200)), rp$v_bw[i] < 0,
+expect_all(near(rp$v_bw[i], v_gap(0.42, 0.60, 50, 200)), rp$v_bw[i] < 0,
           near(rp$se_bw[i], v_gap_se(0.42, 0.60, 50, 200)),
           near(rp$v_hw[i], v_gap(0.545, 0.60, 40, 200)),
           near(rp$p_bl[i], 0.42), rp$w_hi[i] == 9, rp$n_wh[i] == 200)
-stopifnot(!is.na(r5$v_bw[r5$leaid == "D1"]), is.na(r5$v_hw[r5$leaid == "D1"]))
-stopifnot(is.na(rp$v_bw[rp$leaid == "D2"]), !is.na(rp$v_hw[rp$leaid == "D2"]))
-stopifnot(near(rx$v_bw[rx$leaid == "D4"], rp$v_bw[rp$leaid == "D4"]),
+expect_all(!is.na(r5$v_bw[r5$leaid == "D1"]), is.na(r5$v_hw[r5$leaid == "D1"]))
+expect_all(is.na(rp$v_bw[rp$leaid == "D2"]), !is.na(rp$v_hw[rp$leaid == "D2"]))
+expect_all(near(rx$v_bw[rx$leaid == "D4"], rp$v_bw[rp$leaid == "D4"]),
           near(rp$v_bw[rp$leaid == "D4"], qnorm(0.35) - qnorm(0.70)))
-stopifnot(nrow(race_gaps(d, "rla", "primary")) == 4)
-stopifnot(identical(gap_cells_ok(d, "math", c("bl", "wh"), "primary"), c(TRUE, FALSE, FALSE, TRUE)))
+expect_all(nrow(race_gaps(d, "rla", "primary")) == 4)
+expect_all(identical(gap_cells_ok(d, "math", c("bl", "wh"), "primary"), c(TRUE, FALSE, FALSE, TRUE)))
 
 d <- rbind(dy("A", q = 1L, member = 100), dy("B", q = 1L, member = 300), dy("C", q = 5L, member = 200),
            dy("E", q = 5L, member = NA), dy("F", q = 3L, member = 500),
@@ -65,67 +68,68 @@ d <- set_cell(d, 3, "all", n = 50, p = 30); d <- set_cell(d, 4, "all", p = 10); 
 d <- set_cell(d, 6, "all", w = 19, cell = "wide_range", p = NA)
 d <- set_cell(d, 10, "all", part = 0L)
 pg <- poverty_gap(d, "math", "primary")
-stopifnot(nrow(pg) == 1, pg$state == "X", pg$sy_end == 2011L)
+expect_all(nrow(pg) == 1, pg$state == "X", pg$sy_end == 2011L)
 q1 <- (100 * qnorm(0.8) + 300 * qnorm(0.7)) / 400
-stopifnot(near(pg$score_q1, q1), near(pg$score_q5, qnorm(0.3)),
+expect_all(near(pg$score_q1, q1), near(pg$score_q5, qnorm(0.3)),
           near(pg$v_pov, qnorm(0.3) - q1), pg$v_pov < 0,
           pg$districts_q1 == 2, pg$districts_q5 == 1, pg$member_q1 == 400, pg$member_q5 == 200,
           pg$tested_q1 == 300, pg$tested_q5 == 50, pg$sample == "primary", pg$subject == "math")
 px <- poverty_gap(d, "math", "exact")
-stopifnot(nrow(px) == 1, near(px$score_q1, qnorm(0.8)), px$districts_q1 == 1)
-stopifnot(nrow(poverty_gap(d[d$state == "Y", ], "math", "primary")) == 0)
+expect_all(nrow(px) == 1, near(px$score_q1, qnorm(0.8)), px$districts_q1 == 1)
+expect_all(nrow(poverty_gap(d[d$state == "Y", ], "math", "primary")) == 0)
 d$retained[1] <- 0L
-stopifnot(inherits(try(poverty_gap(d, "math", "primary"), silent = TRUE), "try-error"))
+expect_all(inherits(try(poverty_gap(d, "math", "primary"), silent = TRUE), "try-error"))
 
-stopifnot(!any(grepl("treat_year", readLines("R/04_outcomes.R"))))
+expect_all(!any(grepl("treat_year", readLines("R/04_outcomes.R"))))
 
 rf <- "data/derived/gaps_race_district_year.csv"; pf <- "data/derived/gap_poverty_state_year.csv"
 if (file.exists(rf) && file.exists(pf)) {
   r <- utils::read.csv(rf, colClasses = c(leaid = "character"), stringsAsFactors = FALSE, na.strings = "")
-  stopifnot(identical(names(r), c("leaid", "state", "sy_end", "subject", "sample", "retained", "retained_r1",
+  expect_all(identical(names(r), c("leaid", "state", "sy_end", "subject", "sample", "retained", "retained_r1",
                                    "retained_r2", "v_bw", "se_bw", "v_hw", "se_hw",
                                    paste0(rep(c("n_", "p_", "w_"), each = 3), c("wh", "bl", "hi")))))
-  stopifnot(!anyDuplicated(r[c("leaid", "sy_end", "subject", "sample")]), all(r$sample %in% names(MAX_WIDTH)),
+  expect_all(!anyDuplicated(r[c("leaid", "sy_end", "subject", "sample")]), all(r$sample %in% names(MAX_WIDTH)),
             all(r$subject %in% names(SUBJECTS)), all(!is.na(r$v_bw) | !is.na(r$v_hw)),
             all(r$retained == 1 | r$retained_r1 == 1 | r$retained_r2 == 1))
   for (g in names(RACE_GAPS)) {
     a <- RACE_GAPS[[g]][1]; b <- RACE_GAPS[[g]][2]
     v <- r[[paste0("v_", g)]]; k <- !is.na(v)
     pa <- r[[paste0("p_", a)]][k]; pb <- r[[paste0("p_", b)]][k]; na <- r[[paste0("n_", a)]][k]; nb <- r[[paste0("n_", b)]][k]
-    stopifnot(near(v[k], v_gap(pa, pb, na, nb)), near(r[[paste0("se_", g)]][k], v_gap_se(pa, pb, na, nb)),
+    expect_all(near(v[k], v_gap(pa, pb, na, nb)), near(r[[paste0("se_", g)]][k], v_gap_se(pa, pb, na, nb)),
               all(na >= 30 & nb >= 30),
               all(r[[paste0("w_", a)]][k] <= MAX_WIDTH[r$sample[k]] & r[[paste0("w_", b)]][k] <= MAX_WIDTH[r$sample[k]]),
               all(is.na(r[[paste0("se_", g)]][!k])))
     for (pr in list(c("exact", "r5"), c("r5", "primary"))) {
       x <- r[r$sample == pr[1] & !is.na(v), ]; y <- r[r$sample == pr[2] & !is.na(v), ]
       m <- match(paste(x$leaid, x$sy_end, x$subject), paste(y$leaid, y$sy_end, y$subject))
-      stopifnot(!anyNA(m), near(x[[paste0("v_", g)]], y[[paste0("v_", g)]][m]))
+      expect_all(!anyNA(m), near(x[[paste0("v_", g)]], y[[paste0("v_", g)]][m]))
     }
   }
-  stopifnot(mean(r$v_bw[r$sample == "primary"], na.rm = TRUE) < 0, mean(r$v_hw[r$sample == "primary"], na.rm = TRUE) < 0)
+  expect_all(mean(r$v_bw[r$sample == "primary"], na.rm = TRUE) < 0, mean(r$v_hw[r$sample == "primary"], na.rm = TRUE) < 0)
   s <- utils::read.csv("data/derived/sample_district_year.csv", colClasses = c(leaid = "character"),
                        stringsAsFactors = FALSE, na.strings = "")
   m <- match(paste(r$leaid, r$sy_end), paste(s$leaid, s$sy_end))
-  stopifnot(!anyNA(m), all(r$retained == s$retained[m]), all(r$retained_r1 == s$retained_r1[m]),
+  expect_all(!anyNA(m), all(r$retained == s$retained[m]), all(r$retained_r1 == s$retained_r1[m]),
             all(r$retained_r2 == s$retained_r2[m]), all(r$state == s$state[m]))
   for (subj in names(SUBJECTS)) for (g in names(RACE_GAPS)) {
     k <- r$subject == subj & r$sy_end >= 2013 & !is.na(r[[paste0("v_", g)]])
-    for (sg in RACE_GAPS[[g]]) stopifnot(all(s[[paste0("part_ok_", subj, "_", sg)]][m[k]] == 1))
+    for (sg in RACE_GAPS[[g]]) expect_all(all(s[[paste0("part_ok_", subj, "_", sg)]][m[k]] == 1))
   }
 
   p <- utils::read.csv(pf, stringsAsFactors = FALSE, na.strings = "")
-  stopifnot(identical(names(p), c("state", "sy_end", "subject", "sample", "retained", "retained_r1", "retained_r2",
+  expect_all(identical(names(p), c("state", "sy_end", "subject", "sample", "retained", "retained_r1", "retained_r2",
                                   "v_pov", "score_q5", "score_q1", "districts_q5", "districts_q1",
                                   "member_q5", "member_q1", "tested_q5", "tested_q1")))
-  stopifnot(!anyDuplicated(p[c("state", "sy_end", "subject", "sample")]), all(p$sample %in% names(MAX_WIDTH)),
+  expect_all(!anyDuplicated(p[c("state", "sy_end", "subject", "sample")]), all(p$sample %in% names(MAX_WIDTH)),
             near(p$v_pov, p$score_q5 - p$score_q1), all(p$districts_q1 >= 1 & p$districts_q5 >= 1),
             all(p$member_q1 > 0 & p$member_q5 > 0), all(p$tested_q1 >= 30 & p$tested_q5 >= 30),
             !any(p$state %in% c("DC", "HI")), mean(p$v_pov[p$sample == "primary"]) < 0)
   qs <- unique(s[!is.na(s$pov_quintile_2009), c("state", "retained", "retained_r1", "retained_r2")])
-  stopifnot(!anyDuplicated(qs$state))
+  expect_all(!anyDuplicated(qs$state))
   k <- match(p$state, qs$state)
-  stopifnot(!anyNA(k), all(p$retained == qs$retained[k]), all(p$retained_r1 == qs$retained_r1[k]),
+  expect_all(!anyNA(k), all(p$retained == qs$retained[k]), all(p$retained_r1 == qs$retained_r1[k]),
             all(p$retained_r2 == qs$retained_r2[k]))
   np <- table(factor(p$sample, levels = names(MAX_WIDTH)))
-  stopifnot(np[["exact"]] <= np[["r5"]], np[["r5"]] <= np[["primary"]])
+  expect_all(np[["exact"]] <= np[["r5"]], np[["r5"]] <= np[["primary"]])
 }
+})

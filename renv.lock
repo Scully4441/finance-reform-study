@@ -991,6 +991,35 @@
       "Author": "Angelo Canty [aut] (author of original code for S), Brian Ripley [aut, trl] (conversion to R, maintainer 1999--2022, author of parallel support), Alessandra R. Brazzale [ctb, cre] (minor bug fixes)",
       "Repository": "CRAN"
     },
+    "brio": {
+      "Package": "brio",
+      "Version": "1.1.5",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.6)"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "covr",
+        "testthat (>= 3.0.0)"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "broom": {
       "Package": "broom",
       "Version": "1.0.13",
@@ -1113,6 +1142,45 @@
       "Author": "David Robinson [aut], Alex Hayes [aut] (ORCID: <https://orcid.org/0000-0002-4985-5160>), Simon Couch [aut] (ORCID: <https://orcid.org/0000-0001-5676-5107>), Emil Hvitfeldt [aut, cre] (ORCID: <https://orcid.org/0000-0002-0679-1945>), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>), Indrajeet Patil [ctb] (ORCID: <https://orcid.org/0000-0003-1995-6531>), Derek Chiu [ctb], Matthieu Gomez [ctb], Boris Demeshev [ctb], Dieter Menne [ctb], Benjamin Nutter [ctb], Luke Johnston [ctb], Ben Bolker [ctb], Francois Briatte [ctb], Jeffrey Arnold [ctb], Jonah Gabry [ctb], Luciano Selzer [ctb], Gavin Simpson [ctb], Jens Preussner [ctb], Jay Hesselberth [ctb], Hadley Wickham [ctb], Matthew Lincoln [ctb], Alessandro Gasparini [ctb], Lukasz Komsta [ctb], Frederick Novometsky [ctb], Wilson Freitas [ctb], Michelle Evans [ctb], Jason Cory Brunson [ctb], Simon Jackson [ctb], Ben Whalley [ctb], Karissa Whiting [ctb], Yves Rosseel [ctb], Michael Kuehn [ctb], Jorge Cimentada [ctb], Erle Holgersen [ctb], Karl Dunkle Werner [ctb] (ORCID: <https://orcid.org/0000-0003-0523-7309>), Ethan Christensen [ctb], Steven Pav [ctb], Paul PJ [ctb], Ben Schneider [ctb], Patrick Kennedy [ctb], Lily Medina [ctb], Brian Fannin [ctb], Jason Muhlenkamp [ctb], Matt Lehman [ctb], Bill Denney [ctb] (ORCID: <https://orcid.org/0000-0002-5759-428X>), Nic Crane [ctb], Andrew Bates [ctb], Vincent Arel-Bundock [ctb] (ORCID: <https://orcid.org/0000-0003-2042-7063>), Hideaki Hayashi [ctb], Luis Tobalina [ctb], Annie Wang [ctb], Wei Yang Tham [ctb], Clara Wang [ctb], Abby Smith [ctb] (ORCID: <https://orcid.org/0000-0002-3207-0375>), Jasper Cooper [ctb] (ORCID: <https://orcid.org/0000-0002-8639-3188>), E Auden Krauska [ctb] (ORCID: <https://orcid.org/0000-0002-1466-5850>), Alex Wang [ctb], Malcolm Barrett [ctb] (ORCID: <https://orcid.org/0000-0003-0299-5825>), Charles Gray [ctb] (ORCID: <https://orcid.org/0000-0002-9978-011X>), Jared Wilber [ctb], Vilmantas Gegzna [ctb] (ORCID: <https://orcid.org/0000-0002-9500-5167>), Eduard Szoecs [ctb], Frederik Aust [ctb] (ORCID: <https://orcid.org/0000-0003-4900-788X>), Angus Moore [ctb], Nick Williams [ctb], Marius Barth [ctb] (ORCID: <https://orcid.org/0000-0002-3421-6665>), Bruna Wundervald [ctb] (ORCID: <https://orcid.org/0000-0001-8163-220X>), Joyce Cahoon [ctb] (ORCID: <https://orcid.org/0000-0001-7217-4702>), Grant McDermott [ctb] (ORCID: <https://orcid.org/0000-0001-7883-8573>), Kevin Zarca [ctb], Shiro Kuriwaki [ctb] (ORCID: <https://orcid.org/0000-0002-5687-2647>), Lukas Wallrich [ctb] (ORCID: <https://orcid.org/0000-0003-2121-5177>), James Martherus [ctb] (ORCID: <https://orcid.org/0000-0002-8285-3300>), Chuliang Xiao [ctb] (ORCID: <https://orcid.org/0000-0002-8466-9398>), Joseph Larmarange [ctb], Max Kuhn [ctb], Michal Bojanowski [ctb], Hakon Malmedal [ctb], Clara Wang [ctb], Sergio Oller [ctb], Luke Sonnet [ctb], Jim Hester [ctb], Ben Schneider [ctb], Bernie Gray [ctb] (ORCID: <https://orcid.org/0000-0001-9190-6032>), Mara Averick [ctb], Aaron Jacobs [ctb], Andreas Bender [ctb], Sven Templer [ctb], Paul-Christian Buerkner [ctb], Matthew Kay [ctb], Erwan Le Pennec [ctb], Johan Junkka [ctb], Hao Zhu [ctb], Benjamin Soltoff [ctb], Zoe Wilkinson Saldana [ctb], Tyler Littlefield [ctb], Charles T. Gray [ctb], Shabbh E. Banks [ctb], Serina Robinson [ctb], Roger Bivand [ctb], Riinu Ots [ctb], Nicholas Williams [ctb], Nina Jakobsen [ctb], Michael Weylandt [ctb], Lisa Lendway [ctb], Karl Hailperin [ctb], Josue Rodriguez [ctb], Jenny Bryan [ctb], Chris Jarvis [ctb], Greg Macfarlane [ctb], Brian Mannakee [ctb], Drew Tyre [ctb], Shreyas Singh [ctb], Laurens Geffert [ctb], Hong Ooi [ctb], Henrik Bengtsson [ctb], Eduard Szocs [ctb], David Hugh-Jones [ctb], Matthieu Stigler [ctb], Hugo Tavares [ctb] (ORCID: <https://orcid.org/0000-0001-9373-2726>), R. Willem Vervoort [ctb], Brenton M. Wiernik [ctb], Josh Yamamoto [ctb], Jasme Lee [ctb], Taren Sanders [ctb] (ORCID: <https://orcid.org/0000-0002-4504-6008>), Ilaria Prosdocimi [ctb] (ORCID: <https://orcid.org/0000-0001-8565-094X>), Daniel D. Sjoberg [ctb] (ORCID: <https://orcid.org/0000-0003-0862-2018>), Alex Reinhart [ctb] (ORCID: <https://orcid.org/0000-0002-6658-514X>)",
       "Maintainer": "Emil Hvitfeldt <emil.hvitfeldt@posit.co>",
       "Repository": "CRAN"
+    },
+    "callr": {
+      "Package": "callr",
+      "Version": "3.8.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.4)"
+      ],
+      "Imports": [
+        "otel (>= 0.2.0)",
+        "processx (>= 3.6.1)",
+        "R6",
+        "utils"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "asciicast (>= 2.3.1)",
+        "carrier",
+        "cli (>= 1.1.0)",
+        "otelsdk (>=\n0.2.0)",
+        "ps",
+        "rprojroot",
+        "spelling",
+        "testthat (>= 3.2.0)",
+        "withr (>=\n2.3.0)"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "car": {
       "Package": "car",
@@ -1610,6 +1678,42 @@
       "Maintainer": "Tyson Barrett <t.barrett88@gmail.com>",
       "Repository": "CRAN"
     },
+    "desc": {
+      "Package": "desc",
+      "Version": "1.4.3",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.4)"
+      ],
+      "Imports": [
+        "cli",
+        "R6",
+        "utils"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "callr",
+        "covr",
+        "gh",
+        "spelling",
+        "testthat",
+        "whoami",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "did": {
       "Package": "did",
       "Version": "2.5.1",
@@ -1687,6 +1791,39 @@
       "Author": "Kyle Butts [aut, cre] (ORCID: <https://orcid.org/0000-0002-9048-8059>)",
       "Maintainer": "Kyle Butts <buttskyle96@gmail.com>",
       "Repository": "CRAN"
+    },
+    "diffobj": {
+      "Package": "diffobj",
+      "Version": "0.3.10",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 4.1.0)"
+      ],
+      "Imports": [
+        "crayon (>= 1.3.2)",
+        "tools",
+        "methods",
+        "utils",
+        "stats"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "knitr",
+        "rmarkdown"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "GPL-2 | GPL-3",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "digest": {
       "Package": "digest",
@@ -1855,6 +1992,44 @@
       "Author": "Laurent Berge [aut, cre]",
       "Maintainer": "Laurent Berge <laurent.berge@u-bordeaux.fr>",
       "Repository": "CRAN"
+    },
+    "evaluate": {
+      "Package": "evaluate",
+      "Version": "1.0.5",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "callr",
+        "covr",
+        "ggplot2 (>= 3.3.6)",
+        "lattice",
+        "methods",
+        "pkgload",
+        "ragg (>= 1.4.0)",
+        "rlang (>= 1.1.5)",
+        "knitr",
+        "testthat (>= 3.0.0)",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "farver": {
       "Package": "farver",
@@ -2145,6 +2320,43 @@
       "Author": "Martin Maechler [aut, cre] (ORCID: <https://orcid.org/0000-0002-8685-9910>), Chris Fraley [ctb, cph] (S original; Fortran code), Friedrich Leisch [ctb] (R port, ORCID: <https://orcid.org/0000-0001-7278-1983>), Valderio Reisen [ctb] (fdGPH() & fdSperio()), Artur Lemonte [ctb] (fdGPH() & fdSperio()), Rob Hyndman [ctb] (residuals() & fitted(), ORCID: <https://orcid.org/0000-0002-2140-5352>)",
       "Maintainer": "Martin Maechler <maechler@stat.math.ethz.ch>",
       "Repository": "CRAN"
+    },
+    "fs": {
+      "Package": "fs",
+      "Version": "2.1.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 4.1)"
+      ],
+      "Imports": [
+        "methods"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "covr",
+        "crayon",
+        "knitr",
+        "pillar (>= 1.0.0)",
+        "rmarkdown",
+        "spelling",
+        "testthat (>= 3.0.0)",
+        "tibble (>= 1.1.0)",
+        "vctrs (>= 0.3.0)",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "furrr": {
       "Package": "furrr",
@@ -2649,6 +2861,40 @@
       "Author": "Folashade Daniel [cre], Revolution Analytics [aut, cph], Steve Weston [aut]",
       "Maintainer": "Folashade Daniel <fdaniel@microsoft.com>",
       "Repository": "CRAN"
+    },
+    "jsonlite": {
+      "Package": "jsonlite",
+      "Version": "2.0.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "methods"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "httr",
+        "vctrs",
+        "testthat",
+        "knitr",
+        "rmarkdown",
+        "R.rsp",
+        "sf"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "labeling": {
       "Package": "labeling",
@@ -3326,6 +3572,44 @@
       "Maintainer": "Balasubramanian Narasimhan <naras@stanford.edu>",
       "Repository": "CRAN"
     },
+    "otel": {
+      "Package": "otel",
+      "Version": "0.3.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.6.0)"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "callr",
+        "cli",
+        "glue",
+        "jsonlite",
+        "otelsdk (>= 0.2.4)",
+        "processx",
+        "shiny",
+        "spelling",
+        "testthat (>= 3.0.0)",
+        "utils",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "parallelly": {
       "Package": "parallelly",
       "Version": "1.48.0",
@@ -3479,6 +3763,44 @@
       "Maintainer": "Kirill Müller <kirill@cynkra.com>",
       "Repository": "CRAN"
     },
+    "pkgbuild": {
+      "Package": "pkgbuild",
+      "Version": "1.4.8",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.5)"
+      ],
+      "Imports": [
+        "callr (>= 3.2.0)",
+        "cli (>= 3.4.0)",
+        "desc",
+        "processx",
+        "R6"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "covr",
+        "cpp11",
+        "knitr",
+        "Rcpp",
+        "rmarkdown",
+        "testthat (>= 3.2.0)",
+        "withr (>= 2.3.0)"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "pkgconfig": {
       "Package": "pkgconfig",
       "Version": "2.0.3",
@@ -3502,6 +3824,53 @@
       "Encoding": "UTF-8",
       "NeedsCompilation": "no",
       "Repository": "CRAN"
+    },
+    "pkgload": {
+      "Package": "pkgload",
+      "Version": "1.5.3",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.4.0)"
+      ],
+      "Imports": [
+        "cli (>= 3.3.0)",
+        "desc",
+        "fs",
+        "glue",
+        "lifecycle",
+        "methods",
+        "pkgbuild",
+        "processx",
+        "rlang (>= 1.1.1)",
+        "rprojroot",
+        "utils"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "bitops",
+        "jsonlite",
+        "mathjaxr",
+        "pak",
+        "Rcpp",
+        "remotes",
+        "rstudioapi",
+        "testthat (>= 3.2.1.1)",
+        "usethis",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "polars": {
       "Package": "polars",
@@ -3596,6 +3965,34 @@
       "Maintainer": "Hans W. Borchers <hwborchers@googlemail.com>",
       "Repository": "CRAN"
     },
+    "praise": {
+      "Package": "praise",
+      "Version": "1.0.0",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        null
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "testthat"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "prettyunits": {
       "Package": "prettyunits",
       "Version": "1.2.0",
@@ -3619,6 +4016,33 @@
       "NeedsCompilation": "no",
       "Author": "Gabor Csardi [aut, cre], Bill Denney [ctb] (<https://orcid.org/0000-0002-5759-428X>), Christophe Regouby [ctb]",
       "Maintainer": "Gabor Csardi <csardi.gabor@gmail.com>",
+      "Repository": "CRAN"
+    },
+    "processx": {
+      "Package": "processx",
+      "Version": "3.9.0",
+      "Source": "Repository",
+      "Depends": [
+        "R (>= 3.4.0)"
+      ],
+      "Imports": [
+        "ps (>= 1.9.3)",
+        "R6",
+        "utils"
+      ],
+      "Suggests": [
+        "callr (>= 3.7.3)",
+        "cli (>= 3.3.0)",
+        "codetools",
+        "covr",
+        "curl",
+        "debugme",
+        "parallel",
+        "rlang (>= 1.0.2)",
+        "testthat (>= 3.0.0)",
+        "webfakes",
+        "withr"
+      ],
       "Repository": "CRAN"
     },
     "progress": {
@@ -3653,6 +4077,44 @@
       "Author": "Gábor Csárdi [aut, cre], Rich FitzJohn [aut], Posit Software, PBC [cph, fnd]",
       "Maintainer": "Gábor Csárdi <csardi.gabor@gmail.com>",
       "Repository": "CRAN"
+    },
+    "ps": {
+      "Package": "ps",
+      "Version": "1.9.3",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.4)"
+      ],
+      "Imports": [
+        "utils"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "callr",
+        "covr",
+        "curl",
+        "pillar",
+        "pingr",
+        "processx (>= 3.1.0)",
+        "R6",
+        "rlang",
+        "testthat (>= 3.0.0)",
+        "webfakes",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "purrr": {
       "Package": "purrr",
@@ -4154,6 +4616,40 @@
       "NeedsCompilation": "no",
       "Repository": "CRAN"
     },
+    "rprojroot": {
+      "Package": "rprojroot",
+      "Version": "2.1.1",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 3.0.0)"
+      ],
+      "Imports": [
+        null
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "covr",
+        "knitr",
+        "lifecycle",
+        "rlang",
+        "rmarkdown",
+        "testthat (>=\n3.2.0)",
+        "withr"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
+    },
     "sandwich": {
       "Package": "sandwich",
       "Version": "3.1-3",
@@ -4485,6 +4981,65 @@
       "RemoteRef": "HEAD",
       "RemoteSha": "70c1ce3eac58e28c30b67435ca377bb48baa9b8a",
       "NeedsCompilation": "no"
+    },
+    "testthat": {
+      "Package": "testthat",
+      "Version": "3.3.2",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 4.1.0)"
+      ],
+      "Imports": [
+        "brio (>= 1.1.5)",
+        "callr (>= 3.7.6)",
+        "cli (>= 3.6.5)",
+        "desc (>=\n1.4.3)",
+        "evaluate (>= 1.0.4)",
+        "jsonlite (>= 2.0.0)",
+        "lifecycle (>=\n1.0.4)",
+        "magrittr (>= 2.0.3)",
+        "methods",
+        "pkgload (>= 1.4.0)",
+        "praise (>= 1.0.0)",
+        "processx (>= 3.8.6)",
+        "ps (>= 1.9.1)",
+        "R6 (>=\n2.6.1)",
+        "rlang (>= 1.1.6)",
+        "utils",
+        "waldo (>= 0.6.2)",
+        "withr (>=\n3.0.2)"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "covr",
+        "curl (>= 0.9.5)",
+        "diffviewer (>= 0.1.0)",
+        "digest (>=\n0.6.33)",
+        "gh",
+        "knitr",
+        "otel",
+        "otelsdk",
+        "rmarkdown",
+        "rstudioapi",
+        "S7",
+        "shiny",
+        "usethis",
+        "vctrs (>= 0.1.0)",
+        "xml2"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "yes",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "tibble": {
       "Package": "tibble",
@@ -4947,6 +5502,43 @@
       "Author": "Jim Hester [aut] (ORCID: <https://orcid.org/0000-0002-2739-7082>), Hadley Wickham [aut] (ORCID: <https://orcid.org/0000-0003-4757-117X>), Jennifer Bryan [aut, cre] (ORCID: <https://orcid.org/0000-0002-6983-2759>), Shelby Bearrows [ctb], https://github.com/mandreyel/ [cph] (mio library), Jukka Jylänki [cph] (grisu3 implementation), Mikkel Jørgensen [cph] (grisu3 implementation), Posit Software, PBC [cph, fnd] (ROR: <https://ror.org/03wc8by49>)",
       "Maintainer": "Jennifer Bryan <jenny@posit.co>",
       "Repository": "CRAN"
+    },
+    "waldo": {
+      "Package": "waldo",
+      "Version": "0.6.2",
+      "Source": "Repository",
+      "Priority": null,
+      "Depends": [
+        "R (>= 4.0)"
+      ],
+      "Imports": [
+        "cli",
+        "diffobj (>= 0.3.4)",
+        "glue",
+        "methods",
+        "rlang (>= 1.1.0)"
+      ],
+      "LinkingTo": [
+        null
+      ],
+      "Suggests": [
+        "bit64",
+        "R6",
+        "S7",
+        "testthat (>= 3.0.0)",
+        "withr",
+        "xml2"
+      ],
+      "Enhances": [
+        null
+      ],
+      "License": "MIT + file LICENSE",
+      "License_is_FOSS": null,
+      "License_restricts_use": null,
+      "OS_type": null,
+      "NeedsCompilation": "no",
+      "Repository": "CRAN",
+      "Type": "source"
     },
     "withr": {
       "Package": "withr",

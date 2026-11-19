@@ -10,7 +10,7 @@ if (length(args) == 3L && args[1] == "--fit-rds") {
 }
 
 ESTIMATE <- !"--counts-only" %in% args
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+stage <- read_stage()
 if (!identical(stage, 2L)) stop("R/11_continuous_did.R reads SEDA and report-card outcome files, which needs data/stage.txt = 2.")
 
 stamp   <- format(Sys.time(), tz = "UTC", "%Y%m%dT%H%M%SZ")

@@ -1,4 +1,5 @@
-stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
+source("R/functions/stage.R")
+stage <- read_stage()
 if (!identical(stage, 2L)) stop("R/02a_ny_access_export.R reads a report-card outcome file, which needs data/stage.txt = 2.")
 for (tool in c("mdb-export", "mdb-tables", "unzip"))
   if (!nzchar(Sys.which(tool))) stop(tool, " not found: run this script in the project container with mdbtools and unzip installed.")
