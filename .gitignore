@@ -1,0 +1,14 @@
+data/raw/*
+!data/raw/.gitkeep
+data/derived/*
+!data/derived/.gitkeep
+outputs/*
+!outputs/.gitkeep
+!outputs/logs/
+!outputs/package_versions.csv
+.Rhistory
+.RData
+.Rproj.user/
+renv/library/
+../finance-reform-study-private/
+finance-reform-study-private/

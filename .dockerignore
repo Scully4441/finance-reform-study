@@ -1,0 +1,13 @@
+data/raw/
+data/derived/
+outputs/
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/python/
+renv/sandbox/
+renv/staging/
+.Rhistory
+.RData
+.Rproj.user/
