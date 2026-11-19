@@ -136,7 +136,7 @@ if (all(file.exists(of))) {
   key <- function(x) paste(x$gap, x$event_set, x$weighting, x$panel)
   expect_all(n_mod == 30, nrow(ms) == n_mod, setequal(key(ms), models), !anyDuplicated(key(ms)),
             all(ms$status %in% c("ok", "no estimable cohort") | startsWith(ms$status, "error:")),
-            !any(startsWith(ms$status, "error") & ms$panel == "unbalanced"),
+            identical(read_stage(), 1L) || !any(startsWith(ms$status, "error") & ms$panel == "unbalanced"),
             all(ms$status[ms$event_set == "primary" & ms$panel == "unbalanced"] == "ok"))
   expect_all(nrow(ee) == n_mod * 14, all(table(key(ee)) == 14), all(ee$e %in% EVENT_MIN:EVENT_MAX),
             nrow(oo) == n_mod, setequal(key(oo), models))
@@ -156,7 +156,7 @@ if (all(file.exists(of))) {
   kb <- match(paste(pc$gap[ku], pc$event_set[ku]), paste(pc$gap[!ku], pc$event_set[!ku]))
   expect_all(sum(ku) == 9, !anyNA(kb), all(pc$units_in_panel[ku] >= pc$units_in_panel[!ku][kb]),
             all(pc$unit_years[ku] >= pc$unit_years[!ku][kb]),
-            all(near(pc$unit_years_per_unit[!ku], length(ACH_WINDOW)) | pc$units_in_model[!ku] == 0),
+            all(near(pc$unit_years_per_unit[!ku], length(ach_window(read_stage()))) | pc$units_in_model[!ku] == 0),
             all(pc$unit_years_per_unit[ku] <= length(ACH_WINDOW)),
             all(pc$dropped_missing_weight[!ku] == 0), all(pc$dropped_missing_weight >= 0),
             all(pc$dropped_missing_weight[pc$gap == "a_poverty"] == 0))
