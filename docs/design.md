@@ -763,6 +763,11 @@ for states whose files print names only, a unique match of the normalized name w
 the state. Ambiguous and unmatched names get no LEAID. Every name match carries a
 dated author check before use.
 
+The harmonization table and the crosswalk in the repository at registration were
+drafted from report-card file layouts the author saw during the earlier analyses
+disclosed in Section 17. Both are checked against each file downloaded at stage 2
+before use, and every change is logged.
+
 Where the state's high school result in a subject is formed from more than one
 component (for example several end-of-course tests, or a test given in more than one
 grade), the components whose tested count and rate are both printed are pooled with
@@ -797,7 +802,7 @@ poverty-quintile graduation gap.
 
 A graduation rate is not a cut on a test scale. The graduation gap is a gap in a
 binary outcome expressed in probit units, not a scale-invariant achievement measure.
-It has no power calculation, since no graduation file is opened before registration.
+It has no power calculation, since no graduation file is in the stage 1 archive.
 
 ### 6.5 SEDA gaps
 
@@ -868,7 +873,7 @@ Coding rules:
 - Every row coded 1 carries a dated author confirmation that the source was opened and
   the coding checked against the rule. The author checks every row before it is used.
 
-The 2022-2025 rows are coded before any report-card file is opened, for every state,
+The 2022-2025 rows are coded before any report-card file is downloaded, for every state,
 including states the report-card years do not cover. Any change found later that the
 table below does not list is coded under the same rules and logged.
 
@@ -1594,7 +1599,7 @@ outputs of the simulation are in `outputs/08_power/` and are attached to the
 registration.
 
 The graduation and SEDA families are registered without a power calculation, because
-no file of either is opened before registration.
+no file of either is in the stage 1 archive.
 
 ## 15. Pre-registration, blinding, code freeze, staging and reproducibility
 
@@ -1671,7 +1676,8 @@ robustness variant and split, the Lee bracket, the dose scaling and the report
 builder. Corrections found in the rehearsal are logged in the deviations log before
 the freeze. Results of the rehearsal are not interpreted. Public documents containing
 published achievement results that were seen while the reference tables were compiled
-are disclosed in the decision log and in Section 17.
+are disclosed in the decision log and in Section 17, as are the author's earlier
+analyses of the same sources.
 
 The code is then frozen with the tagged commit `freeze` in the repository history.
 Step 12 restores the real reform years with a script the author runs from the private
@@ -1935,6 +1941,16 @@ with a status, so a reader can see which models exist.
 - Post-2011 reforms that changed parameters of an existing formula without replacing it
   are coded as untreated. This can attenuate the estimate but cannot inflate it. The
   narrow event sets show how much the estimate depends on the post-2011 coding.
+- Before this design was written, the author ran earlier analyses of the same public
+  sources while developing the study: event studies with sensitivity bound sets and
+  secondary estimators for the high school, graduation and SEDA gaps, under an earlier
+  reform coding and earlier rules. The author saw those estimates. The design
+  registered here recodes the reform events from the ruling and statute texts under
+  the rules of Section 3, splits the second hypothesis into H2 and H3, and rewrites
+  the sample, measurement, inference and verdict rules. Because the earlier estimates
+  were seen, the author does not claim that they could not have influenced the design.
+  The earlier analyses are not part of this study and are not reported. The decision
+  log records the disclosure.
 - Few states are treated. The bootstrap's accuracy with so few treated clusters is
   uncertain, and models with fewer than five treated states are marked and read with
   the randomization p-value beside the interval.
