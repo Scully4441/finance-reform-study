@@ -99,16 +99,17 @@ expect_all(all(c("subgroup_all", "participation_col", "min_group_size", "min_gro
           !anyDuplicated(hz[c("state", "sy_end")]), all(hz$sy_end %in% HS_RC_WINDOW),
           all(hz$mapping_status %in% c("mapped", "unavailable")))
 mp <- hz[hz$mapping_status == "mapped", ]
-expect_all(nrow(mp) == 152, all(mp$state %in% names(HS_RC_LOADERS)), all(names(HS_RC_LOADERS) %in% mp$state),
+expect_all(nrow(mp) == 167, all(mp$state %in% names(HS_RC_LOADERS)), all(names(HS_RC_LOADERS) %in% mp$state),
           all(grepl("^[0-9]+$", mp$min_group_size)), all(nzchar(mp$min_group_source)))
 rcf <- unlist(lapply(split(mp, seq_len(nrow(mp))), rc_files))
 rc_man <- utils::read.csv("data/manifest/download_manifest.csv", colClasses = "character", na.strings = character(0))
 expect_all(all(sub("^data/raw/", "", rcf) %in% rc_man$filename))
 if (any(file.exists(rcf))) expect_all(all(file.exists(rcf)))
-expect_all(all(is.na(mp$subgroup_all[mp$state %in% c("CO", "CT", "OH", "RI")]) |
-                !nzchar(mp$subgroup_all[mp$state %in% c("CO", "CT", "OH", "RI")])))
+expect_all(all(is.na(mp$subgroup_all[mp$state %in% c("CO", "CT", "FL", "OH", "RI")]) |
+                !nzchar(mp$subgroup_all[mp$state %in% c("CO", "CT", "FL", "OH", "RI")])))
 un <- hz[hz$mapping_status == "unavailable", ]
-expect_all(setequal(paste(un$state, un$sy_end), c("AR 2022", paste("IA", 2022:2025), "ID 2025", paste("MI", 2022:2025))))
+expect_all(setequal(paste(un$state, un$sy_end), c(paste("AK", 2022:2025), "AR 2022", paste("IA", 2022:2025), "ID 2025", "ME 2022",
+                                                  paste("MI", 2022:2025), paste("MS", 2022:2025), paste("MT", 2022:2025))))
 
 if (file.exists(HS_RC_CROSSWALK)) {
   xw <- utils::read.csv(HS_RC_CROSSWALK, colClasses = "character", na.strings = "")

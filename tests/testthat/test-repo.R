@@ -40,7 +40,7 @@ refs <- c("data/reference/cep_phase_in.csv", "data/reference/test_replacement.cs
 expect_all(all(file.exists(refs)))
 hz_raw <- utils::read.csv("data/reference/hs_reportcard_harmonization.csv", stringsAsFactors = FALSE, colClasses = "character",
                           na.strings = character(0))
-expect_all(all(!nzchar(hz_raw$manifest_status)), all(!nzchar(hz_raw$notes)),
+expect_all(all(!nzchar(hz_raw$manifest_status)), all(!nzchar(hz_raw$notes[hz_raw$mapping_status == "mapped"])),
           !any(grepl("recon", hz_raw$min_group_source, fixed = TRUE)))
 
 code <- c(list.files("R", pattern = "\\.R$", full.names = TRUE, recursive = TRUE),

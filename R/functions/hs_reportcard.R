@@ -205,7 +205,7 @@ rc_poverty_gap <- function(d, subj, sample) {
 
 
 HS_RC_CROSSWALK <- "data/reference/hs_reportcard_leaid_crosswalk.csv"
-HS_RC_NAME_STATES <- c("NH", "RI", "UT", "WY")
+HS_RC_NAME_STATES <- c("ME", "NH", "RI", "UT", "WY")
 HS_RC_CCD_YEARS <- 2022:2024
 
 rc_ccd_directory <- function(sy_end, exdir = tempfile("ccdlea")) {

@@ -947,6 +947,120 @@ rc_load_wy <- function(row) {
   out
 }
 
+rc_load_fl <- function(row) {
+  files <- rc_files(row)
+  yr <- sprintf("%d-%02d", row$sy_end - 1L, row$sy_end %% 100L)
+  vals <- c("AGG(# Achievement Level)", "AGG(# of Students)", "AGG(% Achievement Level)")
+  out <- NULL
+  for (subj in c("math", "rla")) {
+    fs <- files[grepl(if (subj == "math") "_alg1_" else "_ela10_", basename(files))]
+    if (length(fs) != 2L) stop("FL ", row$sy_end, ": expected two ", subj, " files")
+    parts <- lapply(fs, function(f) {
+      d <- rc_fread(f)
+      if (!all(d[["School Year"]] == yr) || !all(d[["Achievement Level"]] == "Level 3 and Above"))
+        stop(basename(f), ": filter columns do not match ", yr, " and Level 3 and Above")
+      grp <- if (grepl("white-black", basename(f))) "Black" else "Hispanic"
+      rc_need(d$Indicator == grp, paste(grp, "rows"), d$Indicator, f)
+      rc_need(d$Indicator == "White", "White rows", d$Indicator, f)
+      d <- unique(d[c("District Name", "Indicator", vals)])
+      if (anyDuplicated(d[c("District Name", "Indicator")])) stop(basename(f), ": district rows differ across Measure Names")
+      if (!all(grepl("^[0-9]{2}-", d[["District Name"]]))) stop(basename(f), ": district names without a two-digit number")
+      d
+    })
+    w <- lapply(parts, function(d) { d <- d[d$Indicator == "White", ]; d <- d[order(d[["District Name"]]), ]; rownames(d) <- NULL; d })
+    if (!identical(w[[1]], w[[2]])) stop("FL ", row$sy_end, " ", subj, ": the White rows differ between the two pair files")
+    d <- rbind(parts[[1]], parts[[2]][parts[[2]]$Indicator != "White", ])
+    sg <- rc_sg(d$Indicator, c(bl = "Black", hi = "Hispanic", wh = "White"))
+    d <- d[!is.na(sg), ]; sg <- sg[!is.na(sg)]
+    pv <- d[["AGG(% Achievement Level)"]]
+    if (any(suppressWarnings(as.numeric(pv)) > 1, na.rm = TRUE)) stop("FL ", row$sy_end, ": % Achievement Level is not a proportion")
+    n <- rc_count(d[["AGG(# of Students)"]]); cnt <- rc_count(d[["AGG(# Achievement Level)"]])
+    p <- rc_pct(pv, scale = 100)
+    by_cnt <- !is.na(cnt) & !is.na(n) & n > 0
+    p$lo[by_cnt] <- p$hi[by_cnt] <- round(100 * cnt[by_cnt] / n[by_cnt], 6)
+    out <- rbind(out, rc_long("FL", row$sy_end, st_id = substr(d[["District Name"]], 1, 2),
+                              name = sub("^[0-9]{2}-", "", d[["District Name"]]), subject = subj, sg = sg, n = n, p = p))
+  }
+  out
+}
+
+rc_load_md <- function(row) {
+  f <- rc_files(row)[1]
+  out <- NULL
+  for (subj in c("math", "rla")) {
+    x <- rc_unzip(f, if (subj == "math") " MATH .*\\.xlsx$" else " ELA .*\\.xlsx$")
+    d <- rc_excel(x, "LEA_Level"); unlink(dirname(x), recursive = TRUE)
+    tests <- if (subj == "math") "Algebra 1" else c("English/Language Arts Grade 10", "English Language Arts 10")
+    keep <- d$Year == as.character(row$sy_end) & d$School == "A" & d$Assessment %in% tests
+    rc_need(keep, paste(tests, collapse = " / "), d$Assessment, x)
+    d <- d[keep, ]
+    sg <- rc_sg(d[["Student Group"]], c(all = "All Students", bl = "Black/African American",
+                                        hi = "Hispanic/Latino of any race", wh = "White"))
+    d <- d[!is.na(sg), ]; sg <- sg[!is.na(sg)]
+    n <- rc_count(d[["Tested Count"]]); cnt <- rc_count(d[["Proficient Count"]])
+    p <- rc_pct(d[["Proficient Pct"]])
+    by_cnt <- !is.na(cnt) & !is.na(n) & n > 0
+    p$lo[by_cnt] <- p$hi[by_cnt] <- round(100 * cnt[by_cnt] / n[by_cnt], 6)
+    out <- rbind(out, rc_long("MD", row$sy_end, st_id = d$LEA, name = d[["LEA Name"]], subject = subj, sg = sg, n = n, p = p))
+  }
+  out
+}
+
+rc_load_me <- function(row) {
+  yr <- sprintf("%d-%d", row$sy_end - 1L, row$sy_end)
+  out <- NULL
+  for (f in rc_files(row)) {
+    con <- file(f, encoding = "UTF-16"); x <- readLines(con, warn = FALSE); close(con)
+    d <- utils::read.delim(text = x, colClasses = "character", check.names = FALSE, na.strings = character(), quote = "\"")
+    names(d) <- make.unique(names(d))
+    keep <- d[["Report Type"]] == "District" & d$Year == yr & d$Grade == "High School" &
+      d$Assessment %in% c("Mathematics", "English Language Arts")
+    rc_need(keep, paste("District High School rows for", yr), d$Year, f)
+    d <- d[keep, ]
+    if (length(unique(d$Assessment)) != 1L) stop(basename(f), ": more than one assessment in the file")
+    sg <- rc_sg(d$Population, c(all = "All Students", bl = "Black or African American", hi = "Hispanic/Latino", wh = "White"))
+    d <- d[!is.na(sg), ]; sg <- sg[!is.na(sg)]
+    lev <- d[["Achievement Level"]]
+    k <- paste(d$Name, sg, sep = "\r")
+    sup <- tapply(lev == "*" | rc_col(d, "Subcategory (Assessments with suppression)", f) == "Suppressed", k, any)
+    first <- !duplicated(k)
+    kf <- k[first]
+    at <- lev == "At or Above State Expectations"
+    cnt <- rc_count(rc_col(d, "Students (not *)", f)[at])[match(kf, k[at])]
+    n <- rc_count(rc_col(d, "Max. Students Tested", f)[first])
+    ok <- !as.vector(sup[kf]) & !is.na(cnt) & !is.na(n) & n > 0
+    p <- ifelse(ok, round(100 * cnt / n, 6), NA)
+    out <- rbind(out, rc_long("ME", row$sy_end, st_id = NA_character_, name = d$Name[first],
+                              subject = if (d$Assessment[1] == "Mathematics") "math" else "rla", sg = sg[first], n = n,
+                              p = data.frame(lo = p, hi = p)))
+  }
+  out
+}
+
+rc_load_wv <- function(row) {
+  f <- rc_files(row)[1]
+  sh <- grep("(Comp\\. Results|School & District)$", readxl::excel_sheets(f), value = TRUE)
+  if (length(sh) != 1L) stop(basename(f), ": no single results sheet")
+  d <- rc_excel_two_rows(f, sh, 1)
+  pg <- intersect(c("Population Group", "PopulationGroup"), names(d))
+  keep <- d$Schl %in% "999" & grepl("^[0-9]{3}$", d$Dist) & d$Dist != "999"
+  rc_need(keep, "district total rows (Schl 999)", d$Schl, f)
+  d <- d[keep, ]
+  sg <- rc_sg(d$Subgroup, c(all = "Total", all = "Total (All Students)", bl = "Black or African American",
+                            hi = "Hispanic or Latino", wh = "White"))
+  sg[!is.na(sg) & sg != "all" & d[[pg]] != "Race/Ethnicity"] <- NA
+  d <- d[!is.na(sg), ]; sg <- sg[!is.na(sg)]
+  id <- sub("^0", "", d$Dist)
+  out <- NULL
+  for (subj in c("math", "rla")) {
+    v <- rc_col(d, paste0(if (subj == "math") "Mathematics" else "Reading", ": Grade 11 | Proficiency Rate (%)"), f)
+    p <- rc_pct(v, scale = if (all(rc_pct(v)$hi <= 1, na.rm = TRUE)) 100 else 1)
+    out <- rbind(out, rc_long("WV", row$sy_end, st_id = substr(paste0(id, "00000"), 1, 7), name = d$District,
+                              subject = subj, sg = sg, p = p))
+  }
+  out
+}
+
 HS_RC_LOADERS <- list(AL = rc_load_al, OR = rc_load_or, PA = rc_load_pa, SC = rc_load_sc, TN = rc_load_tn,
                       TX = rc_load_tx, UT = rc_load_ut, VA = rc_load_va, VT = rc_load_vt, WA = rc_load_wa,
                       WI = rc_load_wi, WY = rc_load_wy,
@@ -955,4 +1069,5 @@ HS_RC_LOADERS <- list(AL = rc_load_al, OR = rc_load_or, PA = rc_load_pa, SC = rc
                       KS = rc_load_ks, KY = rc_load_ky, LA = rc_load_la, MA = rc_load_ma, MN = rc_load_mn,
                       MO = rc_load_mo, NC = rc_load_nc, ND = rc_load_nd, NE = rc_load_ne, NH = rc_load_nh,
                       NJ = rc_load_nj, NM = rc_load_nm, NV = rc_load_nv, NY = rc_load_ny, OH = rc_load_oh,
-                      RI = rc_load_ri, SD = rc_load_sd)
+                      RI = rc_load_ri, SD = rc_load_sd, FL = rc_load_fl, MD = rc_load_md, ME = rc_load_me,
+                      WV = rc_load_wv)
