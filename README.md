@@ -7,6 +7,8 @@ the federal EDFacts high school files, high school report-card years
 continuous-treatment estimator. The code is released under the MIT license
 (`LICENSE`).
 
+The pre-analysis plan is registered on OSF: https://osf.io/583x7
+
 ## Layout
 
 - `R/` numbered step scripts in run order (00-13); shared functions in `R/functions/`
