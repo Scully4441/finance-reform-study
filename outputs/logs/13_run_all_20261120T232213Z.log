@@ -1,0 +1,32 @@
+18:22:13  Step 13 run-all, run 20261120T072238Z (resumed); stage 2; blinding PERMUTED
+18:22:13  Console: parts, model and unit counts, timings. Estimates: outputs/13_run_all and outputs/13_report; model objects: data/derived/run_all_fits
+18:22:13  skip step 03_sample (finished in run 20261120T072238Z)
+18:22:13  skip step 04_outcomes (finished in run 20261120T072238Z)
+18:22:13  skip step 03g_graduation_sample (finished in run 20261120T072238Z)
+18:22:13  skip step 04g_graduation_outcomes (finished in run 20261120T072238Z)
+18:22:13  skip step 05_primary_graduation (finished in run 20261120T072238Z)
+18:22:13  skip step 06_secondary_graduation (finished in run 20261120T072238Z)
+18:22:13  skip step 07_inference_graduation (finished in run 20261120T072238Z)
+18:22:13  skip step 09_seda_outcomes (finished in run 20261120T072238Z)
+18:22:13  skip step 10_hs_reportcard_outcomes (finished in run 20261120T072238Z)
+18:22:13  skip step 11_continuous_did (finished in run 20261120T072238Z)
+18:22:13  skip 05_primary seda (finished in run 20261120T072238Z)
+18:22:13  skip 06_secondary seda (finished in run 20261120T072238Z)
+18:23:00  skip 07_inference seda (finished in run 20261120T072238Z)
+18:23:00  skip 05_primary hs (finished in run 20261120T072238Z)
+18:23:00  skip 06_secondary hs (finished in run 20261120T072238Z)
+18:23:41  skip 07_inference hs (finished in run 20261120T072238Z)
+18:24:23  skip variants hs (finished in run 20261120T072238Z)
+18:24:23  skip variants graduation (finished in run 20261120T072238Z)
+18:24:23  skip variants seda (finished in run 20261120T072238Z)
+18:24:23  skip lee hs (finished in run 20261120T072238Z)
+18:24:23  skip dose hs (finished in run 20261120T072238Z)
+18:24:23  skip dose graduation (finished in run 20261120T072238Z)
+18:24:23  skip dose seda (finished in run 20261120T072238Z)
+18:24:24  skip verdicts (finished in run 20261120T072238Z)
+18:24:24  start report
+18:24:25  Report: outputs/13_report/report.md (8 plots, 95 tables)
+18:24:25  Report: 3 models shown with their recorded status in place of numbers: graduation.grad_hispanic_white.primary.unweighted.unbalanced.sample_exact, hs.b_black_white.primary.unweighted.unbalanced.hs_covered_states, hs.c_hispanic_white.primary.unweighted.unbalanced.hs_covered_states
+18:24:25  done  report  0.0 min
+18:24:25  Run 20261120T072238Z finished. Total run time over parts: 9.64 h (wall clock since start: 16.03 h)
+18:24:25  Run times per part: outputs/13_run_all/run_times.csv; log: outputs/logs/13_run_all_20261120T232213Z.log

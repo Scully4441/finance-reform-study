@@ -1,0 +1,53 @@
+- The project is out-of-sync -- use `renv::status()` for details.
+Step 7 inference (graduation), run 20261120T134603Z; stage 2; blinding PERMUTED; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference/graduation and outputs/logs/07_inference_graduation_20261120T134603Z.log
+
+24 step 5 models: 20 fitted
+Overall estimates agree with outputs/05_primary/graduation/overall_estimates.csv
+Webb draws for event set primary 39 states x 9999 replications
+Webb draws for event set r1      39 states x 9999 replications
+Webb draws for event set r2      44 states x 9999 replications
+Wild cluster bootstrap: 20 models, 0.3 s
+Romano-Wolf: 10 families of 2 gaps
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+- The project is out-of-sync -- use `renv::status()` for details.
+HonestDiD relative magnitudes: 20 models x 5 M-bar values, 607.6 s; grid widened for 57 M-bar rows; reduced event-time block for 0 models
+Growth contrast G: 20 models (bootstrap, Romano-Wolf over the gaps, HonestDiD), 584.9 s; models with missing event times: 0
+
+Randomization inference: 10000 reassignments for the primary model of each gap and 1000 for every other model, on 12 workers
+Randomization results cached per model in outputs/13_run_all/cache/07_inference_graduation
+  grad_black_white    primary unweighted      unbalanced  9973/10000 reassignments estimated, 1036.5 s
+  grad_black_white    primary tested_weighted unbalanced   997/ 1000 reassignments estimated,   97.5 s
+  grad_black_white    primary unweighted      balanced    1000/ 1000 reassignments estimated,   20.8 s
+  grad_black_white    primary tested_weighted balanced    1000/ 1000 reassignments estimated,   21.5 s
+  grad_hispanic_white primary unweighted      unbalanced  9987/10000 reassignments estimated, 1152.7 s
+  grad_hispanic_white primary tested_weighted unbalanced  1000/ 1000 reassignments estimated,   95.8 s
+  grad_hispanic_white primary unweighted      balanced    1000/ 1000 reassignments estimated,   20.9 s
+  grad_hispanic_white primary tested_weighted balanced    1000/ 1000 reassignments estimated,   22.7 s
+  grad_black_white    r1      unweighted      unbalanced    29/   39 reassignments estimated,    2.8 s
+  grad_black_white    r1      tested_weighted unbalanced    29/   36 reassignments estimated,    2.4 s
+  grad_hispanic_white r1      unweighted      unbalanced    29/   38 reassignments estimated,    2.8 s
+  grad_hispanic_white r1      tested_weighted unbalanced    29/   35 reassignments estimated,    1.9 s
+  grad_black_white    r2      unweighted      unbalanced   940/ 1000 reassignments estimated,   87.8 s
+  grad_black_white    r2      tested_weighted unbalanced   950/ 1000 reassignments estimated,   81.6 s
+  grad_black_white    r2      unweighted      balanced     870/  870 reassignments estimated,   15.3 s
+  grad_black_white    r2      tested_weighted balanced     870/  870 reassignments estimated,   15.9 s
+  grad_hispanic_white r2      unweighted      unbalanced   950/ 1000 reassignments estimated,  104.5 s
+  grad_hispanic_white r2      tested_weighted unbalanced   958/ 1000 reassignments estimated,   94.5 s
+  grad_hispanic_white r2      unweighted      balanced     870/  870 reassignments estimated,   17.2 s
+  grad_hispanic_white r2      tested_weighted balanced     870/  870 reassignments estimated,   17.7 s
+
+Wrote outputs/07_inference/graduation/bootstrap_overall.csv, outputs/07_inference/graduation/bootstrap_event_time.csv, outputs/07_inference/graduation/randomization_overall.csv, outputs/07_inference/graduation/randomization_draws.csv, outputs/07_inference/graduation/romano_wolf.csv, outputs/07_inference/graduation/honestdid_overall.csv, outputs/07_inference/graduation/model_status.csv, outputs/07_inference/graduation/inference_settings.csv, outputs/07_inference/graduation/growth_contrast.csv, outputs/07_inference/graduation/growth_romano_wolf.csv, outputs/07_inference/graduation/growth_honestdid.csv, outputs/07_inference/graduation/event_time_gaps.csv
+20 of 24 models carried through all four procedures. Status per model: outputs/07_inference/graduation/model_status.csv
+Log: outputs/logs/07_inference_graduation_20261120T134603Z.log

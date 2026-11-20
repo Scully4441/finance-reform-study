@@ -1,0 +1,13 @@
+18:29:13  Step 13 run-all, run 20261120T072238Z; stage 2; blinding PERMUTED
+18:29:13  Console: parts, model and unit counts, timings. Estimates: outputs/13_run_all and outputs/13_report; model objects: data/derived/run_all_fits
+18:29:13  start verdicts
+18:29:14    verdicts hs         9 rows
+18:29:14    verdicts graduation 6 rows
+18:29:14    verdicts seda       9 rows
+18:29:14  done  verdicts  0.0 min
+18:29:14  start report
+18:29:15  Report: outputs/13_report/report.md (8 plots, 95 tables)
+18:29:15  Report: 3 models shown with their recorded status in place of numbers: graduation.grad_hispanic_white.primary.unweighted.unbalanced.sample_exact, hs.b_black_white.primary.unweighted.unbalanced.hs_covered_states, hs.c_hispanic_white.primary.unweighted.unbalanced.hs_covered_states
+18:29:15  done  report  0.0 min
+18:29:15  Run 20261120T072238Z finished. Total run time over parts: 9.64 h (wall clock since start: 16.11 h)
+18:29:15  Run times per part: outputs/13_run_all/run_times.csv; log: outputs/logs/13_run_all_20261120T232913Z.log
