@@ -40,7 +40,7 @@ test_that("the F-33 release with more records is read", {
   expect_error(f33_choose(2016L, d), "no F-33 file")
 })
 
-test_that("end year 2019 is read from the copy that covers the 50 states and DC, ED's own first", {
+test_that("end year 2019 is read from the copy that covers the 50 states and DC, ED's own first, else the copy covering the most", {
   d <- tempfile("edf"); dir.create(d)
   mk <- function(states) {
     fips <- STATE_FIPS[states]
@@ -56,9 +56,15 @@ test_that("end year 2019 is read from the copy that covers the 50 states and DC,
   expect_equal(attr(a, "choice_log")$covers_all, c(FALSE, TRUE))
   utils::write.csv(mk(names(STATE_FIPS)), file.path(d, "ed-math-achievement.csv"), row.names = FALSE)
   expect_equal(attr(edfacts_2019_read("math", "achievement", candidates = cands), "choice"), "ed")
-  utils::write.csv(mk(names(STATE_FIPS)[1:10]), file.path(d, "ed-math-achievement.csv"), row.names = FALSE)
+  utils::write.csv(mk(names(STATE_FIPS)[1:35]), file.path(d, "ed-math-achievement.csv"), row.names = FALSE)
+  utils::write.csv(mk(setdiff(names(STATE_FIPS), "VT")), file.path(d, "arch-math-achievement.csv"), row.names = FALSE)
+  b <- edfacts_2019_read("math", "achievement", candidates = cands)
+  expect_equal(attr(b, "choice"), "archive")
+  expect_equal(attr(b, "choice_log")$covers_all, c(FALSE, FALSE))
   utils::write.csv(mk(names(STATE_FIPS)[1:10]), file.path(d, "arch-math-achievement.csv"), row.names = FALSE)
-  expect_error(edfacts_2019_read("math", "achievement", candidates = cands), "covers the 50 states")
+  expect_equal(attr(edfacts_2019_read("math", "achievement", candidates = cands), "choice"), "ed")
+  unlink(file.path(d, c("ed-math-achievement.csv", "arch-math-achievement.csv")))
+  expect_error(edfacts_2019_read("math", "achievement", candidates = cands), "could be read")
   expect_equal(names(EDFACTS_2019_CANDIDATES), c("ed", "archive"))
 })
 

@@ -259,8 +259,9 @@ read_edfacts_hs_edl <- function(path, subject, sy_end, kind = c("achievement", "
   kind <- match.arg(kind)
   td <- tempfile("edl"); dir.create(td); on.exit(unlink(td, recursive = TRUE), add = TRUE)
   files <- utils::unzip(path, exdir = td)
-  files <- files[grepl("\\.csv$", files, ignore.case = TRUE)]
-  if (!length(files)) stop(basename(path), ": no CSV member")
+  files <- files[grepl("\\.csv$", files, ignore.case = TRUE) &
+                 !grepl("_data_notes\\.csv$|_part_[0-9]+_of_[0-9]+", basename(files), ignore.case = TRUE)]
+  if (length(files) != 1L) stop(basename(path), ": expected one data CSV member, found ", length(files))
   need <- c("School Year", "NCES LEA ID", "Value", "Denominator", "Subgroup", "Age/Grade", "Academic Subject")
   d <- do.call(rbind, lapply(files, function(f) {
     x <- data.table::fread(f, colClasses = "character", na.strings = NULL, showProgress = FALSE, data.table = FALSE, check.names = FALSE)
@@ -306,6 +307,10 @@ edfacts_2019_read <- function(subject, kind = c("achievement", "participation"),
     got[[nm]] <- d
   }
   pick <- log$copy[log$covers_all][1]
-  if (is.na(pick)) stop("no 2019 ", subject, " ", kind, " file covers the 50 states and DC")
+  if (is.na(pick)) {
+    n <- ifelse(is.na(log$states), -1L, log$states)
+    if (max(n) < 1L) stop("no 2019 ", subject, " ", kind, " file could be read")
+    pick <- log$copy[which.max(n)]
+  }
   structure(got[[pick]], choice = pick, choice_log = log)
 }
