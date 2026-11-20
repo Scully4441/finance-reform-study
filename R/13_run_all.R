@@ -673,7 +673,10 @@ report_dirs <- function(name) {
 }
 
 read_or_empty <- function(f) {
-  if (file.exists(f)) { x <- rcsv(f); if (ncol(x) > 1L || nrow(x)) return(x) }
+  if (file.exists(f)) {
+    x <- tryCatch(rcsv(f), error = function(e) if (grepl("empty|no lines available", conditionMessage(e))) NULL else stop(e))
+    if (!is.null(x) && (ncol(x) > 1L || nrow(x))) return(x)
+  }
   data.frame(gap = character(), event_set = character(), weighting = character(), panel = character(), variant = character(),
              estimator = character(), family = character(), mbar = numeric(), lb = numeric(), ub = numeric(), e = integer(),
              att = numeric(), ci_lo = numeric(), ci_hi = numeric(), status = character(), stringsAsFactors = FALSE)
