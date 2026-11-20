@@ -108,7 +108,7 @@ if (any(file.exists(rcf))) expect_all(all(file.exists(rcf)))
 expect_all(all(is.na(mp$subgroup_all[mp$state %in% c("CO", "CT", "FL", "OH", "RI")]) |
                 !nzchar(mp$subgroup_all[mp$state %in% c("CO", "CT", "FL", "OH", "RI")])))
 un <- hz[hz$mapping_status == "unavailable", ]
-expect_all(setequal(paste(un$state, un$sy_end), c(paste("AK", 2022:2025), "AR 2022", paste("IA", 2022:2025), "ID 2025", "ME 2022",
+expect_all(setequal(paste(un$state, un$sy_end), c(paste("AK", 2022:2025), paste("AR", 2022:2025), paste("IA", 2022:2025), "ID 2025", "ME 2022",
                                                   paste("MI", 2022:2025), paste("MS", 2022:2025), paste("MT", 2022:2025))))
 
 if (file.exists(HS_RC_CROSSWALK)) {
