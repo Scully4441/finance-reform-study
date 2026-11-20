@@ -126,7 +126,7 @@ expect_all(!any(grepl("set\\.seed\\(\\s*[0-9]", src)))
 of <- file.path("outputs", "05_primary", c("event_time_estimates.csv", "overall_estimates.csv", "model_status.csv",
                                          "panel_counts.csv", "group_time_estimates.csv"))
 if (all(file.exists(of))) {
-  lg <- sort(list.files("outputs/logs", "^05_primary_.*[.]log$", full.names = TRUE))
+  lg <- sort(list.files("outputs/logs", "^05_primary_[0-9].*[.]log$", full.names = TRUE))
   out_stage <- if (length(lg)) as.integer(sub("^.*; stage ([12]);.*$", "\\1", readLines(lg[length(lg)], n = 1L))) else read_stage()
   rd <- function(f) utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
   ee <- rd(of[1]); oo <- rd(of[2]); ms <- rd(of[3]); pc <- rd(of[4])

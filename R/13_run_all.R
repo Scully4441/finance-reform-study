@@ -894,6 +894,7 @@ build_report <- function() {
                    lower = fmt(gh$lb), upper = fmt(gh$ub), status = gh$status,
                    event_block = if ("event_block_note" %in% names(gh)) ifelse(is.na(gh$event_block_note), "–", gh$event_block_note) else "–",
                    headline = ifelse(!is.na(gh$mbar) & gh$mbar == HEADLINE_MBAR, "**headline**", ""), check.names = FALSE)
+      names(g7)[names(g7) == "t"] <- "t_stat"
       wcsv(g7, tf(4, "growth")); wcsv(gh, tf(4, "growth_honestdid"))
       md <- c(md, "### 4. Growth contrast G (H4)", "",
               "G = mean of the estimated event-time effects +4 to +8 minus the mean of those 0 to +3 (Section 12.3), with its Webb bootstrap interval from the same draws, the Romano–Wolf p-value across the gaps of the family, the relative-magnitudes bound sets with l_vec set to the contrast weights, the cohorts and treated states behind each window, and the same contrast from each secondary estimator (the stacked regression's late window is +4 and +5).", "",
