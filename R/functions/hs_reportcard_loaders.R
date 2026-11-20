@@ -494,7 +494,7 @@ rc_load_nd <- function(row) {
   x[h] <- sub("^.*AcademicYear,", "AcademicYear,", x[h])
   body <- x[-seq_len(h)]
   d <- rc_fread(text = c(x[h], body[grepl("^[0-9]{4}-[0-9]{4},", body)]))
-  keep <- grepl("^[0-9]{5}$", d$InstitutionID) & d$Grade == "10" & d$Subject %in% c("Math", "Reading") &
+  keep <- grepl("^[0-9]{5}$", d$InstitutionID) & d$Grade == "10" & d$Subject %in% c("Math", "ELA") &
     d$AssessmentType == "Comp" & d$Accomodations == "All"
   rc_need(keep, "district grade 10 Comp rows", d$Grade, f)
   d <- d[keep, ]
@@ -794,8 +794,8 @@ rc_load_tx <- function(row) {
     d$DISTRICT <- sub("^'", "", d$DISTRICT)
     re <- "^DD([ABHW])00A(..)1([0S23])[0-9]{2}([DN])$"
     codes <- grep(re, names(d), value = TRUE)
-    test <- unique(sub(re, "\\2", codes))
-    if (length(test) != 1L) stop(basename(f), ": expected one test code, found ", paste(test, collapse = " "))
+    test <- c("A1", "R2")[i]
+    if (!test %in% sub(re, "\\2", codes)) stop(basename(f), ": no columns for test code ", test)
     num <- function(v) { v <- suppressWarnings(as.numeric(v)); v[!is.na(v) & v < 0] <- NA; v }
     for (g in c(all = "A", bl = "B", hi = "H", wh = "W")) {
       den <- grep(paste0("^DD", g, "00A", test, "10[0-9]{2}D$"), names(d), value = TRUE)
@@ -881,7 +881,7 @@ rc_load_wa <- function(row) {
                               "Count of Students Tested (including previously passed)",
                               "Count Consistent Grade Level Knowledge And Above (including previously passed)",
                               "Percent Consistent Grade Level Knowledge And Above (including previously passed)",
-                              "Percent_Participation_IncludingPP"))
+                              "Percent Participation (including previously passed)"))
   keep <- d$OrganizationLevel == "District" & d$GradeLevel == "10" & d$TestAdministration == "SBAC" &
     d$TestSubject %in% c("Math", "ELA")
   rc_need(keep, "District grade 10 SBAC rows", d$GradeLevel, f)
@@ -896,7 +896,7 @@ rc_load_wa <- function(row) {
   p <- rc_pct(ifelse(ok, d[["Percent Consistent Grade Level Knowledge And Above (including previously passed)"]], ""), scale = 100)
   by_cnt <- ok & !is.na(cnt) & !is.na(n) & n > 0
   p$lo[by_cnt] <- p$hi[by_cnt] <- round(100 * cnt[by_cnt] / n[by_cnt], 6)
-  part <- rc_pct(ifelse(ok, d$Percent_Participation_IncludingPP, ""), scale = 100)$lo
+  part <- rc_pct(ifelse(ok, d[["Percent Participation (including previously passed)"]], ""), scale = 100)$lo
   rc_long("WA", row$sy_end, st_id = d$DistrictCode, name = d$DistrictName, subject = ifelse(d$TestSubject == "Math", "math", "rla"),
           sg = sg, n = n, p = p, n_band_lo = ifelse(d$DAT == "N<10", 0, NA),
           part = ifelse(is.na(part), NA, format(round(part, 6), trim = TRUE)))

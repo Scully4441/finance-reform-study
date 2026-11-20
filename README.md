@@ -27,8 +27,8 @@ like `outputs/`, are excluded from version control and are never committed.
 ## System requirements
 
 R 4.6.1 with the packages pinned in `renv.lock` (`renv::restore()`, run by step
-0). Building HonestDiD's solver dependency from source needs the Rust toolchain
-1.85.0; the container installs it. The New York Access exports
+0). Building HonestDiD's solver dependency and polars from source needs the Rust toolchain
+1.97.0; the container installs it. The New York Access exports
 (`R/02a_ny_access_export.R`) need mdbtools 1.0.0, also installed in the container.
 
 ## Running
