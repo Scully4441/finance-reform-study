@@ -58,6 +58,25 @@ cpi_from_bls_xlsx <- function(path) {
   out[order(out$year, out$month), , drop = FALSE]
 }
 
+cpi_from_bls_json <- function(paths) {
+  rows <- lapply(paths, function(p) {
+    d <- jsonlite::fromJSON(p, simplifyVector = TRUE)
+    if (!identical(d$status, "REQUEST_SUCCEEDED")) stop("BLS request did not succeed: ", p)
+    s <- d$Results$series
+    if (!identical(s$seriesID, "CUUR0000SA0")) stop("not the BLS CUUR0000SA0 series: ", p)
+    x <- s$data[[1]]
+    x <- x[grepl("^M(0[1-9]|1[0-2])$", x$period), , drop = FALSE]
+    data.frame(series_id = "CUUR0000SA0", year = as.integer(x$year),
+               month = as.integer(substring(x$period, 2)),
+               value = suppressWarnings(as.numeric(x$value)))
+  })
+  out <- do.call(rbind, rows)
+  if (anyDuplicated(out[c("year", "month")])) stop("CPI months repeated across the BLS responses")
+  out <- out[order(out$year, out$month), , drop = FALSE]
+  rownames(out) <- NULL
+  out
+}
+
 deflate_to_base <- function(nominal, sy_end, cpi_table, base_sy_end) {
   base <- cpi_table$cpi[cpi_table$sy_end == base_sy_end]
   stopifnot(length(base) == 1L)

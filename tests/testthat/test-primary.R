@@ -126,6 +126,8 @@ expect_all(!any(grepl("set\\.seed\\(\\s*[0-9]", src)))
 of <- file.path("outputs", "05_primary", c("event_time_estimates.csv", "overall_estimates.csv", "model_status.csv",
                                          "panel_counts.csv", "group_time_estimates.csv"))
 if (all(file.exists(of))) {
+  lg <- sort(list.files("outputs/logs", "^05_primary_.*[.]log$", full.names = TRUE))
+  out_stage <- if (length(lg)) as.integer(sub("^.*; stage ([12]);.*$", "\\1", readLines(lg[length(lg)], n = 1L))) else read_stage()
   rd <- function(f) utils::read.csv(f, stringsAsFactors = FALSE, na.strings = "")
   ee <- rd(of[1]); oo <- rd(of[2]); ms <- rd(of[3]); pc <- rd(of[4])
   mw <- c("a_poverty unweighted", "b_black_white unweighted", "b_black_white tested_weighted",
@@ -136,7 +138,7 @@ if (all(file.exists(of))) {
   key <- function(x) paste(x$gap, x$event_set, x$weighting, x$panel)
   expect_all(n_mod == 30, nrow(ms) == n_mod, setequal(key(ms), models), !anyDuplicated(key(ms)),
             all(ms$status %in% c("ok", "no estimable cohort") | startsWith(ms$status, "error:")),
-            identical(read_stage(), 1L) || !any(startsWith(ms$status, "error") & ms$panel == "unbalanced"),
+            identical(out_stage, 1L) || !any(startsWith(ms$status, "error") & ms$panel == "unbalanced"),
             all(ms$status[ms$event_set == "primary" & ms$panel == "unbalanced"] == "ok"))
   expect_all(nrow(ee) == n_mod * 14, all(table(key(ee)) == 14), all(ee$e %in% EVENT_MIN:EVENT_MAX),
             nrow(oo) == n_mod, setequal(key(oo), models))
@@ -156,7 +158,7 @@ if (all(file.exists(of))) {
   kb <- match(paste(pc$gap[ku], pc$event_set[ku]), paste(pc$gap[!ku], pc$event_set[!ku]))
   expect_all(sum(ku) == 9, !anyNA(kb), all(pc$units_in_panel[ku] >= pc$units_in_panel[!ku][kb]),
             all(pc$unit_years[ku] >= pc$unit_years[!ku][kb]),
-            all(near(pc$unit_years_per_unit[!ku], length(ach_window(read_stage()))) | pc$units_in_model[!ku] == 0),
+            all(near(pc$unit_years_per_unit[!ku], length(ach_window(out_stage))) | pc$units_in_model[!ku] == 0),
             all(pc$unit_years_per_unit[ku] <= length(ACH_WINDOW)),
             all(pc$dropped_missing_weight[!ku] == 0), all(pc$dropped_missing_weight >= 0),
             all(pc$dropped_missing_weight[pc$gap == "a_poverty"] == 0))

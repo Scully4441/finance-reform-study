@@ -1,4 +1,5 @@
 source("R/functions/stage.R")
+source("R/functions/cpi.R")
 stage <- as.integer(readLines("data/stage.txt", n = 1, warn = FALSE))
 if (!stage %in% c(1L, 2L)) stop("data/stage.txt must be 1 or 2")
 
@@ -11,6 +12,12 @@ man$sy_end <- as.integer(man$sy_end)
 blank <- function(x) is.na(x) | !nzchar(trimws(x))
 allowed <- stage_allows(man$dataset, man$sy_end, stage)
 failed <- character(0)
+cpi_json <- file.path("data", "raw", man$filename[man$dataset == "bls_cpi_u_api"])
+cpi_csv <- file.path("data", "raw", man$filename[man$dataset == "bls_cpi_u_monthly"])
+if (length(cpi_json) && length(cpi_csv) == 1L && all(file.exists(cpi_json)) && !file.exists(cpi_csv)) {
+  utils::write.csv(cpi_from_bls_json(sort(cpi_json)), cpi_csv, row.names = FALSE, na = "")
+  message("built ", cpi_csv, " from the BLS API responses")
+}
 
 for (i in seq_len(nrow(man))) {
   label <- paste(man$dataset[i], man$sy_end[i])

@@ -50,6 +50,24 @@ expect_all(nrow(cpi_fill_gaps(m[-1, ])) == nrow(m) - 1)
 expect_all(inherits(try(cpi_fill_gaps(m[!(m$year == 2010 & m$month %in% 10:11), ]), silent = TRUE), "try-error"))
 })
 
+test_that("the CPI series is read from the BLS API responses", {
+js <- function(years, periods, values, status = "REQUEST_SUCCEEDED", id = "CUUR0000SA0") {
+  f <- tempfile(fileext = ".json")
+  d <- paste0('{"year":"', years, '","period":"', periods, '","periodName":"x","value":"', values, '","footnotes":[{}]}', collapse = ",")
+  writeLines(paste0('{"status":"', status, '","responseTime":1,"message":[],"Results":{"series":[{"seriesID":"', id, '","data":[', d, ']}]}}'), f)
+  f
+}
+a <- js(c(2011, 2011, 2011), c("M02", "M01", "M13"), c("220.1", "219.5", "224.9"))
+b <- js(c(2012, 2012), c("M01", "M02"), c("226.7", "-"))
+x <- cpi_from_bls_json(c(b, a))
+expect_all(identical(names(x), c("series_id", "year", "month", "value")), nrow(x) == 4,
+           identical(x$year, c(2011L, 2011L, 2012L, 2012L)), identical(x$month, c(1L, 2L, 1L, 2L)))
+expect_all(near(x$value[1:3], c(219.5, 220.1, 226.7)), is.na(x$value[4]))
+expect_all(inherits(try(cpi_from_bls_json(js(2011, "M01", "1", status = "REQUEST_NOT_PROCESSED")), silent = TRUE), "try-error"),
+           inherits(try(cpi_from_bls_json(js(2011, "M01", "1", id = "CUSR0000SA0")), silent = TRUE), "try-error"),
+           inherits(try(cpi_from_bls_json(c(a, a)), silent = TRUE), "try-error"))
+})
+
 test_that("the test-replacement table follows its coding rules", {
 tr <- read.csv("data/reference/test_replacement.csv", stringsAsFactors = FALSE, na.strings = character())
 tr_cols <- c("state", "sy_end", "replaced_math", "replaced_rla", "replaced",
