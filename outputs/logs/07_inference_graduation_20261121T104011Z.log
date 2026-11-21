@@ -1,0 +1,1545 @@
+Step 7 inference (graduation), run 20261121T104011Z; stage 2; blinding REAL; did 2.5.1, HonestDiD 0.2.8
+Replication counts: bootstrap 9999, Romano-Wolf 9999, randomization 10000  (the registered counts)
+Console: model names, cluster counts and timings. Estimates and p-values: outputs/07_inference/graduation and outputs/logs/07_inference_graduation_20261121T104011Z.log
+
+24 step 5 models: 24 fitted
+Overall estimates agree with outputs/05_primary/graduation/overall_estimates.csv
+Webb draws for event set primary 39 states x 9999 replications
+Webb draws for event set r1      39 states x 9999 replications
+Webb draws for event set r2      44 states x 9999 replications
+Wild cluster bootstrap: 24 models, 0.4 s
+Romano-Wolf: 12 families of 2 gaps
+HonestDiD relative magnitudes: 24 models x 5 M-bar values, 3153.3 s; grid widened for 45 M-bar rows; reduced event-time block for 2 models
+Growth contrast G: 24 models (bootstrap, Romano-Wolf over the gaps, HonestDiD), 1739.3 s; models with missing event times: 2
+
+Randomization inference: 10000 reassignments for the primary model of each gap and 1000 for every other model, on 12 workers
+Randomization results cached per model in outputs/13_run_all/cache/07_inference_graduation
+  grad_black_white    primary unweighted      unbalanced  9979/10000 reassignments estimated, 1037.3 s
+  grad_black_white    primary tested_weighted unbalanced   997/ 1000 reassignments estimated,   97.7 s
+  grad_black_white    primary unweighted      balanced     702/  702 reassignments estimated,   11.8 s
+  grad_black_white    primary tested_weighted balanced     702/  702 reassignments estimated,   12.3 s
+  grad_hispanic_white primary unweighted      unbalanced  9992/10000 reassignments estimated, 1076.4 s
+  grad_hispanic_white primary tested_weighted unbalanced  1000/ 1000 reassignments estimated,   87.3 s
+  grad_hispanic_white primary unweighted      balanced    1000/ 1000 reassignments estimated,   17.6 s
+  grad_hispanic_white primary tested_weighted balanced    1000/ 1000 reassignments estimated,   18.8 s
+  grad_black_white    r1      unweighted      unbalanced    29/   39 reassignments estimated,    2.6 s
+  grad_black_white    r1      tested_weighted unbalanced    29/   36 reassignments estimated,    2.4 s
+  grad_black_white    r1      unweighted      balanced      26/   27 reassignments estimated,    1.8 s
+  grad_black_white    r1      tested_weighted balanced      26/   27 reassignments estimated,    1.0 s
+  grad_hispanic_white r1      unweighted      unbalanced    29/   38 reassignments estimated,    2.5 s
+  grad_hispanic_white r1      tested_weighted unbalanced    29/   35 reassignments estimated,    1.8 s
+  grad_hispanic_white r1      unweighted      balanced      28/   28 reassignments estimated,    0.7 s
+  grad_hispanic_white r1      tested_weighted balanced      28/   28 reassignments estimated,    0.4 s
+  grad_black_white    r2      unweighted      unbalanced   938/ 1000 reassignments estimated,   87.3 s
+  grad_black_white    r2      tested_weighted unbalanced   945/ 1000 reassignments estimated,   79.9 s
+  grad_black_white    r2      unweighted      balanced     930/  930 reassignments estimated,   16.4 s
+  grad_black_white    r2      tested_weighted balanced     930/  930 reassignments estimated,   17.3 s
+  grad_hispanic_white r2      unweighted      unbalanced   955/ 1000 reassignments estimated,  101.7 s
+  grad_hispanic_white r2      tested_weighted unbalanced   965/ 1000 reassignments estimated,   79.0 s
+  grad_hispanic_white r2      unweighted      balanced     930/  930 reassignments estimated,   13.7 s
+  grad_hispanic_white r2      tested_weighted balanced     930/  930 reassignments estimated,   14.4 s
+
+== settings
+                  setting
+                      run
+                  outcome
+                    stage
+                 blinding
+                quick_run
+           bootstrap_reps
+         romano_wolf_reps
+       randomization_reps
+ randomization_reps_other
+             webb_support
+                     mbar
+              master_seed
+                  workers
+               boot_level
+                r_version
+                      did
+                HonestDiD
+         fwildclusterboot
+                wildrwolf
+              honest_grid
+        honest_block_rule
+                                                                                       value
+                                                                            20261121T104011Z
+                                                                                  graduation
+                                                                                           2
+                                                                                        REAL
+                                                                                       false
+                                                                                        9999
+                                                                                        9999
+                                                                                       10000
+                                                                                        1000
+                                                  -1.224745 -1 -0.707107 0.707107 1 1.224745
+                                                                               0 0.5 1 1.5 2
+                                                                                         130
+                                                                                          12
+                                                                                        0.95
+                                                           R version 4.6.1 (2026-06-24 ucrt)
+                                                                                       2.5.1
+                                                                                       0.2.8
+                                                                               not installed
+                                                                               not installed
+   start +/-20 sd, 1000 points; widened by its width per edge side, same step, up to 6 times
+ reduced consecutive event-time block where event times are not consecutive (honest_block())
+
+== wild cluster bootstrap, overall post-reform average
+                 gap event_set       weighting      panel           att
+    grad_black_white   primary      unweighted unbalanced -0.0851664624
+    grad_black_white   primary tested_weighted unbalanced -0.0885762819
+    grad_black_white   primary      unweighted   balanced -0.1135443632
+    grad_black_white   primary tested_weighted   balanced -0.1020319072
+ grad_hispanic_white   primary      unweighted unbalanced -0.0236811915
+ grad_hispanic_white   primary tested_weighted unbalanced  0.0033382840
+ grad_hispanic_white   primary      unweighted   balanced  0.0025965190
+ grad_hispanic_white   primary tested_weighted   balanced  0.0245906320
+    grad_black_white        r1      unweighted unbalanced -0.0996224320
+    grad_black_white        r1 tested_weighted unbalanced -0.0850573868
+    grad_black_white        r1      unweighted   balanced -0.1136059306
+    grad_black_white        r1 tested_weighted   balanced -0.1020501599
+ grad_hispanic_white        r1      unweighted unbalanced -0.0290946419
+ grad_hispanic_white        r1 tested_weighted unbalanced  0.0220700493
+ grad_hispanic_white        r1      unweighted   balanced  0.0006108395
+ grad_hispanic_white        r1 tested_weighted   balanced  0.0368261293
+    grad_black_white        r2      unweighted unbalanced  0.5376110223
+    grad_black_white        r2 tested_weighted unbalanced  0.1314251959
+    grad_black_white        r2      unweighted   balanced  0.0783155163
+    grad_black_white        r2 tested_weighted   balanced  0.0841052971
+ grad_hispanic_white        r2      unweighted unbalanced  0.0151524473
+ grad_hispanic_white        r2 tested_weighted unbalanced -0.0869352166
+ grad_hispanic_white        r2      unweighted   balanced -0.0146563928
+ grad_hispanic_white        r2 tested_weighted   balanced -0.0202128282
+         se    boot_se          t crit_val        ci_lo        ci_hi p_value
+ 0.02095035 0.02096280 -4.0651569 1.925911 -0.125514973 -0.044817952  0.0001
+ 0.01347064 0.01341326 -6.5755074 1.921612 -0.114461623 -0.062690941  0.0001
+ 0.01452313 0.01452186 -7.8181760 1.955158 -0.141939372 -0.085149354  0.0001
+ 0.01576602 0.01576406 -6.4716327 1.957445 -0.132893026 -0.071170788  0.0001
+ 0.01714941 0.01719806 -1.3808747 1.921789 -0.056638743  0.009276360  0.1783
+ 0.01580954 0.01583244  0.2111563 1.938498 -0.027308467  0.033985035  0.8374
+ 0.01484997 0.01498031  0.1748501 1.981883 -0.026834396  0.032027434  0.8634
+ 0.01886468 0.01894912  1.3035278 1.942944 -0.012062383  0.061243647  0.2010
+ 0.01173538 0.01178289 -8.4890672 1.966902 -0.122704776 -0.076540088  0.0001
+ 0.01078989 0.01085344 -7.8830640 1.946795 -0.106063092 -0.064051681  0.0001
+ 0.01452005 0.01469735 -7.8240723 1.969674 -0.142205693 -0.085006168  0.0001
+ 0.01576867 0.01593960 -6.4717021 1.966858 -0.133064904 -0.071035416  0.0001
+ 0.01635894 0.01627755 -1.7785160 1.890083 -0.060014398  0.001825114  0.0664
+ 0.01258992 0.01251848  1.7529937 1.912403 -0.002006949  0.046147047  0.0760
+ 0.01424895 0.01437842  0.0428691 1.958065 -0.027289526  0.028511205  0.9681
+ 0.01461670 0.01458644  2.5194563 1.936538  0.008520346  0.065131913  0.0082
+ 0.06327115 0.06324798  8.4969376 1.659420  0.432617633  0.642604411  0.0001
+ 0.09818762 0.09823761  1.3385108 1.726212 -0.038067500  0.300917891  0.2057
+ 0.02182650 0.02156704  3.5880934 1.834516  0.038274448  0.118356584  0.0001
+ 0.02098844 0.02073483  4.0072192 1.852624  0.045221596  0.122988998  0.0001
+ 0.02563552 0.02549019  0.5910723 1.811850 -0.031295269  0.061600164  0.5716
+ 0.01090815 0.01085458 -7.9697487 1.910176 -0.107771708 -0.066098726  0.0001
+ 0.02697123 0.02724584 -0.5434083 1.893314 -0.065721412  0.036408627  0.6198
+ 0.04026515 0.04058331 -0.5019932 1.840070 -0.094303515  0.053877859  0.6537
+ reps clusters
+ 9999       39
+ 9999       36
+ 9999       27
+ 9999       27
+ 9999       38
+ 9999       35
+ 9999       28
+ 9999       28
+ 9999       39
+ 9999       36
+ 9999       27
+ 9999       27
+ 9999       38
+ 9999       35
+ 9999       28
+ 9999       28
+ 9999       44
+ 9999       41
+ 9999       31
+ 9999       31
+ 9999       43
+ 9999       39
+ 9999       31
+ 9999       31
+
+== wild cluster bootstrap, event times
+                 gap event_set       weighting      panel  e           att
+    grad_black_white   primary      unweighted unbalanced -5  0.0656781493
+    grad_black_white   primary      unweighted unbalanced -4  2.4439553009
+    grad_black_white   primary      unweighted unbalanced -3 -0.1348341709
+    grad_black_white   primary      unweighted unbalanced -2  0.0168215037
+    grad_black_white   primary      unweighted unbalanced  0 -0.0209402952
+    grad_black_white   primary      unweighted unbalanced  1 -0.1845687322
+    grad_black_white   primary      unweighted unbalanced  2 -0.0712777035
+    grad_black_white   primary      unweighted unbalanced  3 -0.1185926258
+    grad_black_white   primary      unweighted unbalanced  4 -0.0969046904
+    grad_black_white   primary      unweighted unbalanced  5 -0.0852074379
+    grad_black_white   primary      unweighted unbalanced  6 -0.1467395558
+    grad_black_white   primary      unweighted unbalanced  7 -0.0246799426
+    grad_black_white   primary      unweighted unbalanced  8 -0.0175871780
+    grad_black_white   primary tested_weighted unbalanced -5  0.1796392154
+    grad_black_white   primary tested_weighted unbalanced -4  1.1301648479
+    grad_black_white   primary tested_weighted unbalanced -3 -0.0972321192
+    grad_black_white   primary tested_weighted unbalanced -2  0.3216287672
+    grad_black_white   primary tested_weighted unbalanced  0 -0.1320819558
+    grad_black_white   primary tested_weighted unbalanced  1 -0.1330015723
+    grad_black_white   primary tested_weighted unbalanced  2 -0.0968044529
+    grad_black_white   primary tested_weighted unbalanced  3 -0.0965800944
+    grad_black_white   primary tested_weighted unbalanced  4 -0.0954650989
+    grad_black_white   primary tested_weighted unbalanced  5 -0.0476906697
+    grad_black_white   primary tested_weighted unbalanced  6 -0.1014539360
+    grad_black_white   primary tested_weighted unbalanced  7 -0.0810741974
+    grad_black_white   primary tested_weighted unbalanced  8 -0.0130345600
+    grad_black_white   primary      unweighted   balanced  0 -0.1930854348
+    grad_black_white   primary      unweighted   balanced  1 -0.2063801765
+    grad_black_white   primary      unweighted   balanced  2 -0.1104960923
+    grad_black_white   primary      unweighted   balanced  3 -0.1340573342
+    grad_black_white   primary      unweighted   balanced  4 -0.1032475336
+    grad_black_white   primary      unweighted   balanced  5 -0.0357373063
+    grad_black_white   primary      unweighted   balanced  6 -0.1231432388
+    grad_black_white   primary      unweighted   balanced  7 -0.0461612621
+    grad_black_white   primary      unweighted   balanced  8 -0.0695908906
+    grad_black_white   primary tested_weighted   balanced  0 -0.1417772775
+    grad_black_white   primary tested_weighted   balanced  1 -0.1544841070
+    grad_black_white   primary tested_weighted   balanced  2 -0.0923654751
+    grad_black_white   primary tested_weighted   balanced  3 -0.1175458953
+    grad_black_white   primary tested_weighted   balanced  4 -0.1057700777
+    grad_black_white   primary tested_weighted   balanced  5 -0.0494607843
+    grad_black_white   primary tested_weighted   balanced  6 -0.1267744177
+    grad_black_white   primary tested_weighted   balanced  7 -0.0792467948
+    grad_black_white   primary tested_weighted   balanced  8 -0.0508623352
+ grad_hispanic_white   primary      unweighted unbalanced -5  0.0284175534
+ grad_hispanic_white   primary      unweighted unbalanced -4  0.0649337477
+ grad_hispanic_white   primary      unweighted unbalanced -3  0.0426240970
+ grad_hispanic_white   primary      unweighted unbalanced -2  0.0444039087
+ grad_hispanic_white   primary      unweighted unbalanced  0 -0.0428046315
+ grad_hispanic_white   primary      unweighted unbalanced  1 -0.0005424286
+ grad_hispanic_white   primary      unweighted unbalanced  2 -0.0374107227
+ grad_hispanic_white   primary      unweighted unbalanced  3 -0.0098243887
+ grad_hispanic_white   primary      unweighted unbalanced  4 -0.0361648952
+ grad_hispanic_white   primary      unweighted unbalanced  5 -0.0332379027
+ grad_hispanic_white   primary      unweighted unbalanced  6 -0.0361336666
+ grad_hispanic_white   primary      unweighted unbalanced  7 -0.0292911200
+ grad_hispanic_white   primary      unweighted unbalanced  8  0.0122790324
+ grad_hispanic_white   primary tested_weighted unbalanced -5  0.0249450879
+ grad_hispanic_white   primary tested_weighted unbalanced -4  0.0046996609
+ grad_hispanic_white   primary tested_weighted unbalanced -3  0.0565352039
+ grad_hispanic_white   primary tested_weighted unbalanced -2  0.0923630020
+ grad_hispanic_white   primary tested_weighted unbalanced  0 -0.1197017683
+ grad_hispanic_white   primary tested_weighted unbalanced  1 -0.0005761066
+ grad_hispanic_white   primary tested_weighted unbalanced  2 -0.0650110291
+ grad_hispanic_white   primary tested_weighted unbalanced  3 -0.0609624986
+ grad_hispanic_white   primary tested_weighted unbalanced  4  0.0184087198
+ grad_hispanic_white   primary tested_weighted unbalanced  5 -0.0271964908
+ grad_hispanic_white   primary tested_weighted unbalanced  6  0.0115781345
+ grad_hispanic_white   primary tested_weighted unbalanced  7  0.1547588032
+ grad_hispanic_white   primary tested_weighted unbalanced  8  0.1187467915
+ grad_hispanic_white   primary      unweighted   balanced -5  0.0109562479
+ grad_hispanic_white   primary      unweighted   balanced -4  0.0576124624
+ grad_hispanic_white   primary      unweighted   balanced -3  0.0450292420
+ grad_hispanic_white   primary      unweighted   balanced -2 -0.0281002318
+ grad_hispanic_white   primary      unweighted   balanced  0 -0.0634035079
+ grad_hispanic_white   primary      unweighted   balanced  1 -0.0173384905
+ grad_hispanic_white   primary      unweighted   balanced  2  0.0001743681
+ grad_hispanic_white   primary      unweighted   balanced  3 -0.0613848346
+ grad_hispanic_white   primary      unweighted   balanced  4  0.0196565119
+ grad_hispanic_white   primary      unweighted   balanced  5  0.0138106025
+ grad_hispanic_white   primary      unweighted   balanced  6  0.0015540039
+ grad_hispanic_white   primary      unweighted   balanced  7  0.0896550431
+ grad_hispanic_white   primary      unweighted   balanced  8  0.0406449748
+ grad_hispanic_white   primary tested_weighted   balanced -5  0.0055658104
+ grad_hispanic_white   primary tested_weighted   balanced -4  0.0493241963
+ grad_hispanic_white   primary tested_weighted   balanced -3  0.0332286115
+ grad_hispanic_white   primary tested_weighted   balanced -2  0.0089972902
+ grad_hispanic_white   primary tested_weighted   balanced  0 -0.0424285044
+ grad_hispanic_white   primary tested_weighted   balanced  1 -0.0164764565
+ grad_hispanic_white   primary tested_weighted   balanced  2 -0.0309734954
+ grad_hispanic_white   primary tested_weighted   balanced  3 -0.0525193565
+ grad_hispanic_white   primary tested_weighted   balanced  4  0.0592686919
+ grad_hispanic_white   primary tested_weighted   balanced  5  0.0002198633
+ grad_hispanic_white   primary tested_weighted   balanced  6  0.0540573595
+ grad_hispanic_white   primary tested_weighted   balanced  7  0.1513871551
+ grad_hispanic_white   primary tested_weighted   balanced  8  0.0987804311
+    grad_black_white        r1      unweighted unbalanced  0 -0.1388325844
+    grad_black_white        r1      unweighted unbalanced  1 -0.1845687322
+    grad_black_white        r1      unweighted unbalanced  2 -0.0807842391
+    grad_black_white        r1      unweighted unbalanced  3 -0.1185926258
+    grad_black_white        r1      unweighted unbalanced  4 -0.0969046904
+    grad_black_white        r1      unweighted unbalanced  5 -0.0855792634
+    grad_black_white        r1      unweighted unbalanced  6 -0.1467385684
+    grad_black_white        r1      unweighted unbalanced  7 -0.0248793901
+    grad_black_white        r1      unweighted unbalanced  8 -0.0197217944
+    grad_black_white        r1 tested_weighted unbalanced  0 -0.1125010680
+    grad_black_white        r1 tested_weighted unbalanced  1 -0.1330015723
+    grad_black_white        r1 tested_weighted unbalanced  2 -0.0822914368
+    grad_black_white        r1 tested_weighted unbalanced  3 -0.0965800944
+    grad_black_white        r1 tested_weighted unbalanced  4 -0.0954650989
+    grad_black_white        r1 tested_weighted unbalanced  5 -0.0480915347
+    grad_black_white        r1 tested_weighted unbalanced  6 -0.1014072050
+    grad_black_white        r1 tested_weighted unbalanced  7 -0.0813217885
+    grad_black_white        r1 tested_weighted unbalanced  8 -0.0148566825
+    grad_black_white        r1      unweighted   balanced  0 -0.1930854348
+    grad_black_white        r1      unweighted   balanced  1 -0.2063801765
+    grad_black_white        r1      unweighted   balanced  2 -0.1104960923
+    grad_black_white        r1      unweighted   balanced  3 -0.1340573342
+    grad_black_white        r1      unweighted   balanced  4 -0.1032475336
+    grad_black_white        r1      unweighted   balanced  5 -0.0357373063
+    grad_black_white        r1      unweighted   balanced  6 -0.1231432388
+    grad_black_white        r1      unweighted   balanced  7 -0.0466281918
+    grad_black_white        r1      unweighted   balanced  8 -0.0696780668
+    grad_black_white        r1 tested_weighted   balanced  0 -0.1417772775
+    grad_black_white        r1 tested_weighted   balanced  1 -0.1544841070
+    grad_black_white        r1 tested_weighted   balanced  2 -0.0923654751
+    grad_black_white        r1 tested_weighted   balanced  3 -0.1175458953
+    grad_black_white        r1 tested_weighted   balanced  4 -0.1057700777
+    grad_black_white        r1 tested_weighted   balanced  5 -0.0494607843
+    grad_black_white        r1 tested_weighted   balanced  6 -0.1267744177
+    grad_black_white        r1 tested_weighted   balanced  7 -0.0793671266
+    grad_black_white        r1 tested_weighted   balanced  8 -0.0509062782
+ grad_hispanic_white        r1      unweighted unbalanced  0 -0.0691809033
+ grad_hispanic_white        r1      unweighted unbalanced  1  0.0167710913
+ grad_hispanic_white        r1      unweighted unbalanced  2 -0.0799075884
+ grad_hispanic_white        r1      unweighted unbalanced  3 -0.0098243887
+ grad_hispanic_white        r1      unweighted unbalanced  4 -0.0361648952
+ grad_hispanic_white        r1      unweighted unbalanced  5 -0.0324179150
+ grad_hispanic_white        r1      unweighted unbalanced  6 -0.0345763186
+ grad_hispanic_white        r1      unweighted unbalanced  7 -0.0288328090
+ grad_hispanic_white        r1      unweighted unbalanced  8  0.0122819499
+ grad_hispanic_white        r1 tested_weighted unbalanced  0 -0.0220391324
+ grad_hispanic_white        r1 tested_weighted unbalanced  1  0.0640316631
+ grad_hispanic_white        r1 tested_weighted unbalanced  2 -0.0577853170
+ grad_hispanic_white        r1 tested_weighted unbalanced  3 -0.0609624986
+ grad_hispanic_white        r1 tested_weighted unbalanced  4  0.0184087198
+ grad_hispanic_white        r1 tested_weighted unbalanced  5 -0.0272135320
+ grad_hispanic_white        r1 tested_weighted unbalanced  6  0.0113730823
+ grad_hispanic_white        r1 tested_weighted unbalanced  7  0.1554193678
+ grad_hispanic_white        r1 tested_weighted unbalanced  8  0.1173980904
+ grad_hispanic_white        r1      unweighted   balanced  0 -0.0739259659
+ grad_hispanic_white        r1      unweighted   balanced  1  0.0258337488
+ grad_hispanic_white        r1      unweighted   balanced  2 -0.0492139579
+ grad_hispanic_white        r1      unweighted   balanced  3 -0.0613848346
+ grad_hispanic_white        r1      unweighted   balanced  4  0.0196565119
+ grad_hispanic_white        r1      unweighted   balanced  5  0.0138106025
+ grad_hispanic_white        r1      unweighted   balanced  6  0.0015540039
+ grad_hispanic_white        r1      unweighted   balanced  7  0.0906705626
+ grad_hispanic_white        r1      unweighted   balanced  8  0.0384968844
+ grad_hispanic_white        r1 tested_weighted   balanced  0 -0.0183245476
+ grad_hispanic_white        r1 tested_weighted   balanced  1  0.0765385618
+ grad_hispanic_white        r1 tested_weighted   balanced  2 -0.0407597257
+ grad_hispanic_white        r1 tested_weighted   balanced  3 -0.0525193565
+ grad_hispanic_white        r1 tested_weighted   balanced  4  0.0592686919
+ grad_hispanic_white        r1 tested_weighted   balanced  5  0.0002198633
+ grad_hispanic_white        r1 tested_weighted   balanced  6  0.0540573595
+ grad_hispanic_white        r1 tested_weighted   balanced  7  0.1534202707
+ grad_hispanic_white        r1 tested_weighted   balanced  8  0.0995340463
+    grad_black_white        r2      unweighted unbalanced -5  0.0285755452
+    grad_black_white        r2      unweighted unbalanced -4  2.4678566189
+    grad_black_white        r2      unweighted unbalanced -3 -0.1148269034
+    grad_black_white        r2      unweighted unbalanced -2 -0.0493860857
+    grad_black_white        r2      unweighted unbalanced  0  1.0102716678
+    grad_black_white        r2      unweighted unbalanced  2  0.0649503768
+    grad_black_white        r2 tested_weighted unbalanced -5  0.0911450449
+    grad_black_white        r2 tested_weighted unbalanced -4  1.1452197229
+    grad_black_white        r2 tested_weighted unbalanced -3 -0.0697208215
+    grad_black_white        r2 tested_weighted unbalanced -2  0.1658693120
+    grad_black_white        r2 tested_weighted unbalanced  0  0.2837178005
+    grad_black_white        r2 tested_weighted unbalanced  2 -0.0208674088
+    grad_black_white        r2      unweighted   balanced -5  0.0794409310
+    grad_black_white        r2      unweighted   balanced -4  0.2670752855
+    grad_black_white        r2      unweighted   balanced -3  0.4846915375
+    grad_black_white        r2      unweighted   balanced -2 -0.1015052566
+    grad_black_white        r2      unweighted   balanced  0  0.2570538910
+    grad_black_white        r2      unweighted   balanced  1  0.3763952008
+    grad_black_white        r2      unweighted   balanced  2 -0.1639283048
+    grad_black_white        r2      unweighted   balanced  3  0.2297242993
+    grad_black_white        r2      unweighted   balanced  4 -0.3076675050
+    grad_black_white        r2 tested_weighted   balanced -5  0.0804492745
+    grad_black_white        r2 tested_weighted   balanced -4  0.2644975968
+    grad_black_white        r2 tested_weighted   balanced -3  0.4925909177
+    grad_black_white        r2 tested_weighted   balanced -2 -0.0951504442
+    grad_black_white        r2 tested_weighted   balanced  0  0.2614063560
+    grad_black_white        r2 tested_weighted   balanced  1  0.3772655647
+    grad_black_white        r2 tested_weighted   balanced  2 -0.1595037915
+    grad_black_white        r2 tested_weighted   balanced  3  0.2389935842
+    grad_black_white        r2 tested_weighted   balanced  4 -0.2976352277
+ grad_hispanic_white        r2      unweighted unbalanced -5  0.0443939471
+ grad_hispanic_white        r2      unweighted unbalanced -4  0.0989951019
+ grad_hispanic_white        r2      unweighted unbalanced -3  0.0057812146
+ grad_hispanic_white        r2      unweighted unbalanced -2 -0.0046865750
+ grad_hispanic_white        r2      unweighted unbalanced  0 -0.0119196669
+ grad_hispanic_white        r2      unweighted unbalanced  1 -0.0295903793
+ grad_hispanic_white        r2      unweighted unbalanced  2  0.0869673881
+ grad_hispanic_white        r2 tested_weighted unbalanced -5  0.0475953297
+ grad_hispanic_white        r2 tested_weighted unbalanced -4  0.1156266852
+ grad_hispanic_white        r2 tested_weighted unbalanced -3  0.0443575179
+ grad_hispanic_white        r2 tested_weighted unbalanced -2 -0.0643346693
+ grad_hispanic_white        r2 tested_weighted unbalanced  0 -0.0310201478
+ grad_hispanic_white        r2 tested_weighted unbalanced  1 -0.1638599375
+ grad_hispanic_white        r2 tested_weighted unbalanced  2 -0.0659255646
+ grad_hispanic_white        r2      unweighted   balanced -5  0.0580961743
+ grad_hispanic_white        r2      unweighted   balanced -4  0.0988655973
+ grad_hispanic_white        r2      unweighted   balanced -3  0.0418725970
+ grad_hispanic_white        r2      unweighted   balanced -2 -0.0414634483
+ grad_hispanic_white        r2      unweighted   balanced  0 -0.0462473147
+ grad_hispanic_white        r2      unweighted   balanced  1 -0.0651805996
+ grad_hispanic_white        r2      unweighted   balanced  2  0.0907387171
+ grad_hispanic_white        r2      unweighted   balanced  3 -0.0803234871
+ grad_hispanic_white        r2      unweighted   balanced  4  0.0277307204
+ grad_hispanic_white        r2 tested_weighted   balanced -5  0.0898567326
+ grad_hispanic_white        r2 tested_weighted   balanced -4  0.1345963552
+ grad_hispanic_white        r2 tested_weighted   balanced -3  0.0670946421
+ grad_hispanic_white        r2 tested_weighted   balanced -2  0.0161923653
+ grad_hispanic_white        r2 tested_weighted   balanced  0 -0.0199800820
+ grad_hispanic_white        r2 tested_weighted   balanced  1 -0.1062763949
+ grad_hispanic_white        r2 tested_weighted   balanced  2  0.0574415646
+ grad_hispanic_white        r2 tested_weighted   balanced  3 -0.0658232293
+ grad_hispanic_white        r2 tested_weighted   balanced  4  0.0335740004
+          se     boot_se             t crit_val         ci_lo         ci_hi
+ 0.026636915 0.026595769   2.465681536 1.886101  0.0154382371  1.159181e-01
+ 0.091801597 0.092020230  26.622143598 1.750017  2.2833009074  2.604610e+00
+ 0.133693043 0.133955013  -1.008535432 1.675768 -0.3588726656  8.920432e-02
+ 0.024249587 0.024276251   0.693682063 1.747906 -0.0255644901  5.920750e-02
+ 0.142942466 0.142621054  -0.146494571 1.681521 -0.2613010999  2.194205e-01
+ 0.008903256 0.008957841 -20.730475990 1.894302 -0.2014341892 -1.677033e-01
+ 0.017093923 0.017143231  -4.169768586 1.961234 -0.1048028857 -3.775252e-02
+ 0.018532279 0.018398513  -6.399246861 1.946284 -0.1546617001 -8.252355e-02
+ 0.018337646 0.018279462  -5.284467245 1.919503 -0.1321038634 -6.170552e-02
+ 0.017689946 0.017557825  -4.816715650 1.918184 -0.1191400021 -5.127487e-02
+ 0.018269166 0.018329017  -8.032088211 1.912839 -0.1816855353 -1.117936e-01
+ 0.020461848 0.020379972  -1.206144384 1.951881 -0.0646190289  1.525914e-02
+ 0.021347816 0.021360530  -0.823839668 1.960706 -0.0594439636  2.426961e-02
+ 0.083243496 0.083621405   2.157997012 1.676156  0.0401101603  3.191683e-01
+ 0.175338582 0.175317642   6.445614180 1.753609  0.8226895938  1.437640e+00
+ 0.192786619 0.192980495  -0.504350975 1.822450 -0.4485761583  2.541119e-01
+ 0.112474420 0.112919234   2.859572586 1.766645  0.1229263623  5.203312e-01
+ 0.046097261 0.046154612  -2.865288576 1.851948 -0.2174516739 -4.671224e-02
+ 0.005612789 0.005567324 -23.696163420 1.921712 -0.1437877358 -1.222154e-01
+ 0.027396579 0.027391605  -3.533450378 1.896771 -0.1487694908 -4.483942e-02
+ 0.017423983 0.017345107  -5.542940142 1.941430 -0.1304075294 -6.275266e-02
+ 0.016907610 0.016821671  -5.646280018 1.901077 -0.1276077741 -6.332242e-02
+ 0.017337372 0.017181516  -2.750743842 1.908611 -0.0807809624 -1.460038e-02
+ 0.017366394 0.017470310  -5.841969086 1.914748 -0.1347062039 -6.820167e-02
+ 0.018543938 0.018458055  -4.372005514 1.918344 -0.1166478418 -4.550055e-02
+ 0.025685853 0.025768943  -0.507460660 1.956710 -0.0632943353  3.722522e-02
+ 0.010682241 0.010819607 -18.075367332 1.965667 -0.2140831643 -1.720877e-01
+ 0.009880498 0.009969793 -20.887629816 1.957389 -0.2257201566 -1.870402e-01
+ 0.020242391 0.020262641  -5.458648245 1.904691 -0.1490515986 -7.194059e-02
+ 0.021914465 0.021803515  -6.117298891 1.916334 -0.1760527799 -9.206189e-02
+ 0.019890074 0.019888753  -5.190907417 1.937602 -0.1417865813 -6.470849e-02
+ 0.021257953 0.021178803  -1.681126425 1.926793 -0.0766969869  5.222374e-03
+ 0.025047337 0.025104030  -4.916420407 1.913384 -0.1710684180 -7.521806e-02
+ 0.024081607 0.024124439  -1.916867998 1.936157 -0.0927870306  4.645064e-04
+ 0.014862814 0.014958596  -4.682214936 1.975631 -0.0989543267 -4.022745e-02
+ 0.010138420 0.010255501 -13.984159100 1.948671 -0.1615337203 -1.220208e-01
+ 0.011414139 0.011493833 -13.534451131 1.952440 -0.1767695311 -1.321987e-01
+ 0.021217326 0.021211606  -4.353304183 1.917981 -0.1330599130 -5.167104e-02
+ 0.024177736 0.024084960  -4.861741187 1.929385 -0.1641940573 -7.089773e-02
+ 0.020326916 0.020316354  -5.203449319 1.936532 -0.1451338011 -6.640635e-02
+ 0.022427695 0.022317304  -2.205344118 1.928412 -0.0927106128 -6.210956e-03
+ 0.024880211 0.024957192  -5.095391496 1.932766 -0.1748620521 -7.868678e-02
+ 0.026013849 0.026087288  -3.046330948 1.940437 -0.1297250374 -2.876855e-02
+ 0.014519260 0.014608615  -3.503094203 1.943379 -0.0790787568 -2.264591e-02
+ 0.041017216 0.041309620   0.692820145 1.894330 -0.0492825996  1.061177e-01
+ 0.043855608 0.044236443   1.480625856 1.953251 -0.0207272774  1.505948e-01
+ 0.052401368 0.051997896   0.813415738 1.799493 -0.0516718104  1.369200e-01
+ 0.041660300 0.041257167   1.065856680 1.877215 -0.0338014195  1.226092e-01
+ 0.027504100 0.027036656  -1.556300003 1.898722 -0.0950272814  9.418018e-03
+ 0.027934063 0.027936640  -0.019418177 1.928187 -0.0544045267  5.331967e-02
+ 0.042788654 0.042734960  -0.874314077 1.817005 -0.1151579064  4.033646e-02
+ 0.024255666 0.024259024  -0.405034796 1.839992 -0.0544546204  3.480584e-02
+ 0.015494445 0.015540524  -2.334055576 1.946935 -0.0663315713 -5.998219e-03
+ 0.021343071 0.021364166  -1.557315851 1.936421 -0.0745670779  8.091273e-03
+ 0.020272549 0.020398008  -1.782393883 1.944584 -0.0755553500  3.288017e-03
+ 0.023686404 0.023766955  -1.236621672 1.950754 -0.0754974726  1.691523e-02
+ 0.029582194 0.029712398   0.415081869 1.897592 -0.0438558921  6.841396e-02
+ 0.104391772 0.104244605   0.238956456 1.742954 -0.1570049776  2.068952e-01
+ 0.093063094 0.093111270   0.050499727 1.801244 -0.1629297208  1.723290e-01
+ 0.018629997 0.018551153   3.034633053 1.933299  0.0205178419  9.255257e-02
+ 0.037841632 0.037374455   2.440777421 1.902184  0.0203812531  1.643448e-01
+ 0.092837571 0.093094631  -1.289367729 1.868738 -0.2931908509  5.378731e-02
+ 0.069957500 0.069731532  -0.008235094 1.870064 -0.1314011067  1.302489e-01
+ 0.018246776 0.018344545  -3.562877642 1.939256 -0.1003962027 -2.962586e-02
+ 0.017691389 0.017672336  -3.445885466 1.936559 -0.0952229179 -2.670208e-02
+ 0.018067995 0.018245449   1.018857917 1.969335 -0.0171732072  5.399065e-02
+ 0.020679424 0.020696726  -1.315147435 1.953631 -0.0675964440  1.320346e-02
+ 0.016455705 0.016583450   0.703593937 1.969303 -0.0208281381  4.398441e-02
+ 0.023818662 0.023882235   6.497376062 1.937884  0.1086010065  2.009166e-01
+ 0.024533749 0.024545565   4.840140567 1.943644  0.0710619090  1.664317e-01
+ 0.050543211 0.050247085   0.216769922 1.874631 -0.0837936179  1.057061e-01
+ 0.050705400 0.050438424   1.136219456 1.858751 -0.0366362525  1.518612e-01
+ 0.048214192 0.048055025   0.933941654 1.785649 -0.0410644011  1.311229e-01
+ 0.053557163 0.053418152  -0.524677374 1.911219 -0.1304597147  7.425925e-02
+ 0.034168129 0.034090227  -1.855633025 1.855485 -0.1268019675 -5.048286e-06
+ 0.046130360 0.046139598  -0.375858554 1.836306 -0.1020479533  6.737097e-02
+ 0.041318108 0.041183826   0.004220137 1.828804 -0.0753883338  7.573707e-02
+ 0.017211007 0.017156959  -3.566603349 1.939198 -0.0947603924 -2.800928e-02
+ 0.021193587 0.021434492   0.927474536 1.939655 -0.0214517319  6.076476e-02
+ 0.022774277 0.022904249   0.606412344 1.929326 -0.0301284001  5.774961e-02
+ 0.023196312 0.023335205   0.066993576 1.936750 -0.0433714503  4.647946e-02
+ 0.026497267 0.026516336   3.383558136 1.934459  0.0383971584  1.409129e-01
+ 0.024345533 0.024406894   1.669504415 1.969596 -0.0073058813  8.859583e-02
+ 0.046841100 0.046552234   0.118823222 1.846978 -0.0809486611  9.208028e-02
+ 0.042589587 0.042381018   1.158128078 1.929493 -0.0328521013  1.315005e-01
+ 0.051763183 0.051465431   0.641935247 1.722512 -0.0559340947  1.223913e-01
+ 0.055763908 0.055562274   0.161346121 1.861869 -0.0948278121  1.128224e-01
+ 0.041048151 0.040962057  -1.033627658 1.826289 -0.1173942916  3.253728e-02
+ 0.085394720 0.085458354  -0.192944675 1.776904 -0.1682147076  1.352618e-01
+ 0.018271042 0.018239996  -1.695223257 1.942779 -0.0664700929  4.523102e-03
+ 0.019298201 0.019230199  -2.721463923 1.911916 -0.0894158913 -1.562282e-02
+ 0.019426057 0.019682744   3.050989364 1.941386  0.0215552150  9.698217e-02
+ 0.025771056 0.025792824   0.008531406 1.953239 -0.0501171773  5.055690e-02
+ 0.025831847 0.025894022   2.092663381 1.934880  0.0040758478  1.040389e-01
+ 0.026466245 0.026481283   5.720008898 1.965462  0.0993687471  2.034056e-01
+ 0.024155339 0.024230444   4.089382857 1.958846  0.0514638435  1.460970e-01
+ 0.009763745 0.009799814 -14.219194214 1.958126 -0.1579512278 -1.197139e-01
+ 0.008903256 0.008944062 -20.730475990 1.886964 -0.2013688536 -1.677686e-01
+ 0.014411570 0.014379832  -5.605512704 1.944178 -0.1088028928 -5.276559e-02
+ 0.018532279 0.018735192  -6.399246861 1.964815 -0.1550051198 -8.218013e-02
+ 0.018337646 0.018433862  -5.284467245 1.960260 -0.1328512490 -6.095813e-02
+ 0.017674903 0.017666707  -4.841851811 1.927758 -0.1196522009 -5.150633e-02
+ 0.018240270 0.018362817  -8.044758516 1.939633 -0.1821179959 -1.113591e-01
+ 0.020428305 0.020264752  -1.217888138 1.920470 -0.0641113399  1.435256e-02
+ 0.021064587 0.020980621  -0.936253552 1.966368 -0.0611425321  2.169894e-02
+ 0.007536305 0.007598512 -14.927880585 1.976583 -0.1273972046 -9.760493e-02
+ 0.005612789 0.005612089 -23.696163420 1.930391 -0.1438364474 -1.221667e-01
+ 0.013869639 0.013740932  -5.933207007 1.923163 -0.1089650153 -5.561786e-02
+ 0.017423983 0.017593886  -5.542940142 1.953553 -0.1306187630 -6.254143e-02
+ 0.016907610 0.017059865  -5.646280018 1.943103 -0.1283183188 -6.261188e-02
+ 0.017314178 0.017340304  -2.777581195 1.937826 -0.0816433930 -1.453968e-02
+ 0.017330910 0.017489637  -5.851233863 1.933953 -0.1349243729 -6.789004e-02
+ 0.018501649 0.018419429  -4.395380606 1.904804 -0.1165638081 -4.607977e-02
+ 0.025259818 0.025222898  -0.588154780 1.945239 -0.0639930572  3.427969e-02
+ 0.010682241 0.010829831 -18.075367332 1.950223 -0.2139181875 -1.722527e-01
+ 0.009880498 0.009912816 -20.887629816 1.974545 -0.2258896610 -1.868707e-01
+ 0.020242391 0.020091230  -5.458648245 1.917997 -0.1493209312 -7.167125e-02
+ 0.021914465 0.021995916  -6.117298891 1.953234 -0.1768614082 -9.125326e-02
+ 0.019890074 0.019974664  -5.190907417 1.917313 -0.1413830288 -6.511204e-02
+ 0.021257953 0.021386979  -1.681126425 1.933072 -0.0768304638  5.355851e-03
+ 0.025047337 0.025352693  -4.916420407 1.925053 -0.1713606787 -7.492580e-02
+ 0.024136455 0.024430459  -1.931857522 1.957494 -0.0938751523  6.187686e-04
+ 0.014723797 0.014812794  -4.732343648 1.961192 -0.0985542576 -4.080188e-02
+ 0.010138420 0.010286811 -13.984159100 1.958587 -0.1616342552 -1.219203e-01
+ 0.011414139 0.011407949 -13.534451131 1.957356 -0.1768256369 -1.321426e-01
+ 0.021217326 0.021031599  -4.353304183 1.919898 -0.1331005857 -5.163036e-02
+ 0.024177736 0.024211147  -4.861741187 1.935306 -0.1643372206 -7.075457e-02
+ 0.020326916 0.020406901  -5.203449319 1.933659 -0.1450753981 -6.646476e-02
+ 0.022427695 0.022608665  -2.205344118 1.932677 -0.0928062647 -6.115304e-03
+ 0.024880211 0.025180197  -5.095391496 1.939080 -0.1750191265 -7.852971e-02
+ 0.026042656 0.026349396  -3.047581873 1.954013 -0.1302548213 -2.847943e-02
+ 0.014450256 0.014579443  -3.522863434 1.958739 -0.0792105524 -2.260200e-02
+ 0.013148804 0.013126855  -5.261383767 1.917948 -0.0943996286 -4.396218e-02
+ 0.016060581 0.016065129   1.044239401 1.942848 -0.0144321684  4.797435e-02
+ 0.018852828 0.018904741  -4.238493567 1.889213 -0.1155246002 -4.429058e-02
+ 0.024255666 0.024237393  -0.405034796 1.828127 -0.0541668283  3.451805e-02
+ 0.015494445 0.015445775  -2.334055576 1.973320 -0.0667403898 -5.589401e-03
+ 0.021329874 0.021280259  -1.519836236 1.929309 -0.0735698357  8.734006e-03
+ 0.020307122 0.020247940  -1.702669567 1.945456 -0.0740829298  4.930293e-03
+ 0.023629353 0.023315269  -1.220211545 1.909635 -0.0739562441  1.629063e-02
+ 0.029028795 0.028891995   0.423095414 1.884628 -0.0424265341  6.699043e-02
+ 0.010955255 0.010932770  -2.011740648 1.919817 -0.0430712140 -1.007051e-03
+ 0.013737090 0.013621108   4.661224834 1.926487  0.0375673391  9.049599e-02
+ 0.014911277 0.014875816  -3.875276216 1.923356 -0.0864650169 -2.910562e-02
+ 0.017691389 0.017557375  -3.445885466 1.881447 -0.0942479102 -2.767709e-02
+ 0.018067995 0.018126053   1.018857917 1.952631 -0.0168714126  5.368885e-02
+ 0.020618738 0.020562800  -1.319844711 1.949400 -0.0674077019  1.298064e-02
+ 0.016409768 0.016335700   0.693067843 1.946784 -0.0205731911  4.331936e-02
+ 0.023798080 0.023678027   6.530752502 1.914412  0.1098600402  2.009787e-01
+ 0.024121812 0.023943392   4.866885215 1.934688  0.0707299029  1.640663e-01
+ 0.015285371 0.015591176  -4.836386715 1.955834 -0.1038216142 -4.403032e-02
+ 0.016232326 0.016208449   1.591500155 1.939864 -0.0056547593  5.732226e-02
+ 0.017252242 0.017219399  -2.852612286 1.942065 -0.0827189298 -1.570899e-02
+ 0.017211007 0.017080010  -3.566603349 1.932904 -0.0946520631 -2.811761e-02
+ 0.021193587 0.021304347   0.927474536 1.927737 -0.0211991552  6.051218e-02
+ 0.022774277 0.023025913   0.606412344 1.970509 -0.0310663201  5.868753e-02
+ 0.023196312 0.023232148   0.066993576 1.926903 -0.0431430400  4.625105e-02
+ 0.026176531 0.026192333   3.463811314 1.943703  0.0397911573  1.415500e-01
+ 0.023729989 0.023952622   1.622288360 1.947182 -0.0077097197  8.470349e-02
+ 0.014143988 0.014239272  -1.295571474 1.922450 -0.0455156547  8.866560e-03
+ 0.015203659 0.015071122   5.034219934 1.907532  0.0475371033  1.055400e-01
+ 0.016460405 0.016382177  -2.476228662 1.931117 -0.0725466908 -8.972761e-03
+ 0.019298201 0.019055029  -2.721463923 1.909317 -0.0893657386 -1.567297e-02
+ 0.019426057 0.019491999   3.050989364 1.916762  0.0220335724  9.650381e-02
+ 0.025771056 0.025916555   0.008531406 1.969569 -0.0505380051  5.097773e-02
+ 0.025831847 0.025813089   2.092663381 1.917014  0.0045373479  1.035774e-01
+ 0.026582630 0.026494954   5.771448078 1.930260  0.1021088800  2.047317e-01
+ 0.024308218 0.024364767   4.094666537 1.942356  0.0523188328  1.467493e-01
+ 0.029370382 0.029292538   0.972937461 1.746597 -0.0227226666  7.987376e-02
+ 0.057258260 0.056520223  43.100447007 1.896066  2.3592911615  2.576422e+00
+ 0.079791103 0.079902768  -1.439094078 1.765202 -0.2556743560  2.602055e-02
+ 0.031888117 0.031793834  -1.548730057 1.768033 -0.1057653156  6.993144e-03
+ 0.084524417 0.084468673  11.952423985 1.694221  0.8670686613  1.153475e+00
+ 0.042714997 0.042718437   1.520552063 1.642739 -0.0052191969  1.351200e-01
+ 0.027498961 0.027508223   3.314490494 1.708170  0.0441721385  1.381180e-01
+ 0.116175200 0.115090330   9.857695332 1.919195  0.9222568869  1.368183e+00
+ 0.065554586 0.065446028  -1.063553683 1.857362 -0.1914794235  5.203778e-02
+ 0.072443771 0.072094223   2.289628360 1.721553  0.0411535218  2.905851e-01
+ 0.142592835 0.142593505   1.989705872 1.710922  0.0397526521  5.276829e-01
+ 0.055015329 0.055116652  -0.379301717 1.767897 -0.1181288405  7.639402e-02
+ 0.027337698 0.027423606   2.905911478 1.923716  0.0268509747  1.320309e-01
+ 0.023177346 0.023050839  11.523117660 1.925557  0.2224459911  3.117046e-01
+ 0.038699704 0.038543653  12.524424953 1.890056  0.4115469301  5.578361e-01
+ 0.030504684 0.030562114  -3.327530143 1.940280 -0.1606928912 -4.231762e-02
+ 0.018240427 0.018233057  14.092536576 1.939461  0.2216772906  2.924305e-01
+ 0.021799493 0.021643364  17.266236848 1.923004  0.3344746801  4.183157e-01
+ 0.033281665 0.033044309  -4.925483825 1.872192 -0.2262379639 -1.016186e-01
+ 0.033552318 0.033294273   6.846748894 1.885152  0.1664730861  2.929755e-01
+ 0.037204937 0.036874193  -8.269534251 1.766179 -0.3733780801 -2.419569e-01
+ 0.029903040 0.030005167   2.690337692 1.933648  0.0226273126  1.382712e-01
+ 0.023829433 0.023721964  11.099617900 1.925206  0.2186210255  3.103742e-01
+ 0.039723155 0.039616828  12.400599049 1.890716  0.4174857190  5.676961e-01
+ 0.030587729 0.030620741  -3.110739091 1.946259 -0.1546820746 -3.561881e-02
+ 0.017595268 0.017593882  14.856628453 1.934878  0.2273616614  2.954511e-01
+ 0.021648538 0.021500564  17.426838101 1.916956  0.3357662744  4.187649e-01
+ 0.032435553 0.032196397  -4.917560384 1.893180 -0.2209101319 -9.809745e-02
+ 0.032627554 0.032382131   7.324900477 1.904867  0.1768424351  3.011447e-01
+ 0.035708940 0.035395768  -8.335034061 1.793127 -0.3616659053 -2.336046e-01
+ 0.024296891 0.024303326   1.827145149 1.800816  0.0006397154  8.814818e-02
+ 0.031784610 0.031774601   3.114560877 1.910668  0.0382652665  1.597249e-01
+ 0.017327036 0.017219959   0.333652825 1.923271 -0.0275433738  3.910580e-02
+ 0.046779727 0.046831626  -0.100183888 1.722822 -0.0852797398  7.590659e-02
+ 0.024443449 0.024330290  -0.487642596 1.846344 -0.0570506732  3.321134e-02
+ 0.033178670 0.033028380  -0.891849470 1.860761 -0.0913279430  3.214718e-02
+ 0.022773279 0.022623565   3.818834701 1.853413  0.0447591061  1.291757e-01
+ 0.038994972 0.038881254   1.220550423 1.713066 -0.0192056313  1.143963e-01
+ 0.028489390 0.028476692   4.058587633 1.903584  0.0613947506  1.698586e-01
+ 0.007790650 0.007762868   5.693686604 1.882773  0.0296894908  5.902555e-02
+ 0.043532176 0.043358383  -1.477864782 1.642945 -0.1358556609  7.186322e-03
+ 0.019999367 0.019931106  -1.551056446 1.773952 -0.0664980738  4.457778e-03
+ 0.029643494 0.029351292  -5.527686360 1.903153 -0.2202760531 -1.074438e-01
+ 0.012805144 0.012752273  -5.148365721 1.926887 -0.0905996256 -4.125150e-02
+ 0.048563354 0.048797454   1.196296574 1.862789 -0.0323670852  1.485594e-01
+ 0.048827209 0.049265139   2.024805429 1.838729  0.0090856092  1.886456e-01
+ 0.027264593 0.027175904   1.535786611 1.801781 -0.0072522397  9.099743e-02
+ 0.051936325 0.051860352  -0.798351601 1.813977 -0.1356747378  5.274784e-02
+ 0.046500754 0.046879205  -0.994549775 1.847167 -0.1321419531  3.964732e-02
+ 0.046666272 0.046868284  -1.396738941 1.933375 -0.1554040000  2.504280e-02
+ 0.048279553 0.048551080   1.879444008 1.872907  0.0003155870  1.811618e-01
+ 0.031047533 0.030874176  -2.587113311 1.943264 -0.1406570435 -1.998993e-02
+ 0.025321142 0.025649192   1.095160725 1.977530 -0.0223425959  7.780404e-02
+ 0.049825909 0.050358275   1.803413818 1.907373 -0.0051798459  1.848933e-01
+ 0.046766700 0.047448394   2.878038302 1.957713  0.0430405989  2.261521e-01
+ 0.056880177 0.056883225   1.179578637 1.718382 -0.0306472142  1.648365e-01
+ 0.065084581 0.065073309   0.248789576 1.822230 -0.1024067304  1.347915e-01
+ 0.073194131 0.073544980  -0.272973826 1.805898 -0.1521611881  1.122010e-01
+ 0.077964066 0.078429934  -1.363145868 1.937803 -0.2573554074  4.480262e-02
+ 0.072331857 0.072490290   0.794139217 1.840585 -0.0756913361  1.905745e-01
+ 0.030383206 0.030239464  -2.166434624 1.953891 -0.1251886888 -6.457770e-03
+ 0.025473602 0.025838157   1.317991875 1.983401 -0.0169503589  8.409836e-02
+ p_value reps clusters reference
+  0.0021 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.4714 9999       39     FALSE
+  0.6003 9999       39     FALSE
+  0.7707 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.2321 9999       39     FALSE
+  0.4165 9999       39     FALSE
+  0.0018 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.6718 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0031 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.6204 9999       36     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0938 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0521 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0209 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0005 9999       27     FALSE
+  0.0003 9999       27     FALSE
+  0.5375 9999       38     FALSE
+  0.1522 9999       38     FALSE
+  0.4570 9999       38     FALSE
+  0.3089 9999       38     FALSE
+  0.1226 9999       38     FALSE
+  0.9880 9999       38     FALSE
+  0.4304 9999       38     FALSE
+  0.7389 9999       38     FALSE
+  0.0178 9999       38     FALSE
+  0.1221 9999       38     FALSE
+  0.0765 9999       38     FALSE
+  0.2232 9999       38     FALSE
+  0.7054 9999       38     FALSE
+  0.7303 9999       35     FALSE
+  0.9510 9999       35     FALSE
+  0.0002 9999       35     FALSE
+  0.0062 9999       35     FALSE
+  0.2226 9999       35     FALSE
+  0.9941 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.3239 9999       35     FALSE
+  0.1935 9999       35     FALSE
+  0.4970 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.8367 9999       28     FALSE
+  0.2868 9999       28     FALSE
+  0.4266 9999       28     FALSE
+  0.6228 9999       28     FALSE
+  0.0501 9999       28     FALSE
+  0.7373 9999       28     FALSE
+  0.9966 9999       28     FALSE
+  0.0002 9999       28     FALSE
+  0.3798 9999       28     FALSE
+  0.5569 9999       28     FALSE
+  0.9497 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.1009 9999       28     FALSE
+  0.9030 9999       28     FALSE
+  0.2600 9999       28     FALSE
+  0.5152 9999       28     FALSE
+  0.8719 9999       28     FALSE
+  0.3441 9999       28     FALSE
+  0.8122 9999       28     FALSE
+  0.0910 9999       28     FALSE
+  0.0036 9999       28     FALSE
+  0.0007 9999       28     FALSE
+  0.9936 9999       28     FALSE
+  0.0342 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.2282 9999       39     FALSE
+  0.3517 9999       39     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0033 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.0001 9999       36     FALSE
+  0.5645 9999       36     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0938 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0529 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0232 9999       27     FALSE
+  0.0001 9999       27     FALSE
+  0.0005 9999       27     FALSE
+  0.0002 9999       27     FALSE
+  0.0001 9999       38     FALSE
+  0.3132 9999       38     FALSE
+  0.0001 9999       38     FALSE
+  0.7380 9999       38     FALSE
+  0.0181 9999       38     FALSE
+  0.1264 9999       38     FALSE
+  0.0859 9999       38     FALSE
+  0.2302 9999       38     FALSE
+  0.7031 9999       38     FALSE
+  0.0383 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.3211 9999       35     FALSE
+  0.1870 9999       35     FALSE
+  0.5010 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       35     FALSE
+  0.0001 9999       28     FALSE
+  0.1106 9999       28     FALSE
+  0.0029 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.3769 9999       28     FALSE
+  0.5621 9999       28     FALSE
+  0.9517 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.1097 9999       28     FALSE
+  0.2095 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.0096 9999       28     FALSE
+  0.0026 9999       28     FALSE
+  0.0004 9999       28     FALSE
+  0.9935 9999       28     FALSE
+  0.0329 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.0001 9999       28     FALSE
+  0.3996 9999       44     FALSE
+  0.0001 9999       44     FALSE
+  0.1713 9999       44     FALSE
+  0.1216 9999       44     FALSE
+  0.0001 9999       44     FALSE
+  0.0890 9999       44     FALSE
+  0.0001 9999       41     FALSE
+  0.0001 9999       41     FALSE
+  0.3220 9999       41     FALSE
+  0.0001 9999       41     FALSE
+  0.0045 9999       41     FALSE
+  0.7753 9999       41     FALSE
+  0.0017 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0041 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0003 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0001 9999       31     FALSE
+  0.0453 9999       43     FALSE
+  0.0005 9999       43     FALSE
+  0.7462 9999       43     FALSE
+  0.9475 9999       43     FALSE
+  0.6172 9999       43     FALSE
+  0.4151 9999       43     FALSE
+  0.0001 9999       43     FALSE
+  0.2641 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.1297 9999       39     FALSE
+  0.1171 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.0001 9999       39     FALSE
+  0.2665 9999       31     FALSE
+  0.0204 9999       31     FALSE
+  0.1154 9999       31     FALSE
+  0.4908 9999       31     FALSE
+  0.3817 9999       31     FALSE
+  0.1760 9999       31     FALSE
+  0.0483 9999       31     FALSE
+  0.0063 9999       31     FALSE
+  0.2876 9999       31     FALSE
+  0.0699 9999       31     FALSE
+  0.0006 9999       31     FALSE
+  0.3551 9999       31     FALSE
+  0.7825 9999       31     FALSE
+  0.8299 9999       31     FALSE
+  0.1848 9999       31     FALSE
+  0.4669 9999       31     FALSE
+  0.0286 9999       31     FALSE
+  0.1983 9999       31     FALSE
+
+== Romano-Wolf over the gaps
+ event_set      panel          family                 gap       weighting
+   primary unbalanced      unweighted    grad_black_white      unweighted
+   primary unbalanced      unweighted grad_hispanic_white      unweighted
+   primary unbalanced tested_weighted    grad_black_white tested_weighted
+   primary unbalanced tested_weighted grad_hispanic_white tested_weighted
+   primary   balanced      unweighted    grad_black_white      unweighted
+   primary   balanced      unweighted grad_hispanic_white      unweighted
+   primary   balanced tested_weighted    grad_black_white tested_weighted
+   primary   balanced tested_weighted grad_hispanic_white tested_weighted
+        r1 unbalanced      unweighted    grad_black_white      unweighted
+        r1 unbalanced      unweighted grad_hispanic_white      unweighted
+        r1 unbalanced tested_weighted    grad_black_white tested_weighted
+        r1 unbalanced tested_weighted grad_hispanic_white tested_weighted
+        r1   balanced      unweighted    grad_black_white      unweighted
+        r1   balanced      unweighted grad_hispanic_white      unweighted
+        r1   balanced tested_weighted    grad_black_white tested_weighted
+        r1   balanced tested_weighted grad_hispanic_white tested_weighted
+        r2 unbalanced      unweighted    grad_black_white      unweighted
+        r2 unbalanced      unweighted grad_hispanic_white      unweighted
+        r2 unbalanced tested_weighted    grad_black_white tested_weighted
+        r2 unbalanced tested_weighted grad_hispanic_white tested_weighted
+        r2   balanced      unweighted    grad_black_white      unweighted
+        r2   balanced      unweighted grad_hispanic_white      unweighted
+        r2   balanced tested_weighted    grad_black_white tested_weighted
+        r2   balanced tested_weighted grad_hispanic_white tested_weighted
+          t p_unadjusted p_romano_wolf rank hypotheses reps
+ -4.0651569       0.0001        0.0001    1          2 9999
+ -1.3808747       0.1783        0.1783    2          2 9999
+ -6.5755074       0.0001        0.0001    1          2 9999
+  0.2111563       0.8374        0.8374    2          2 9999
+ -7.8181760       0.0001        0.0001    1          2 9999
+  0.1748501       0.8634        0.8634    2          2 9999
+ -6.4716327       0.0001        0.0001    1          2 9999
+  1.3035278       0.2010        0.2010    2          2 9999
+ -8.4890672       0.0001        0.0001    1          2 9999
+ -1.7785160       0.0664        0.0664    2          2 9999
+ -7.8830640       0.0001        0.0001    1          2 9999
+  1.7529937       0.0760        0.0760    2          2 9999
+ -7.8240723       0.0001        0.0001    1          2 9999
+  0.0428691       0.9681        0.9681    2          2 9999
+ -6.4717021       0.0001        0.0001    1          2 9999
+  2.5194563       0.0082        0.0082    2          2 9999
+  8.4969376       0.0001        0.0001    1          2 9999
+  0.5910723       0.5716        0.5716    2          2 9999
+  1.3385108       0.2057        0.2057    2          2 9999
+ -7.9697487       0.0001        0.0001    1          2 9999
+  3.5880934       0.0001        0.0001    1          2 9999
+ -0.5434083       0.6198        0.6198    2          2 9999
+  4.0072192       0.0001        0.0001    1          2 9999
+ -0.5019932       0.6537        0.6537    2          2 9999
+
+== HonestDiD relative magnitudes
+                 gap event_set       weighting      panel mbar            lb
+    grad_black_white   primary      unweighted unbalanced   NA  -0.126228395
+    grad_black_white   primary      unweighted unbalanced  0.0  -0.125408504
+    grad_black_white   primary      unweighted unbalanced  0.5  -6.958703989
+    grad_black_white   primary      unweighted unbalanced  1.0 -13.822198177
+    grad_black_white   primary      unweighted unbalanced  1.5 -20.678142690
+    grad_black_white   primary      unweighted unbalanced  2.0 -27.528215232
+    grad_black_white   primary tested_weighted unbalanced   NA  -0.114978248
+    grad_black_white   primary tested_weighted unbalanced  0.0  -0.114615041
+    grad_black_white   primary tested_weighted unbalanced  0.5  -3.496432960
+    grad_black_white   primary tested_weighted unbalanced  1.0  -6.890656271
+    grad_black_white   primary tested_weighted unbalanced  1.5 -10.284340218
+    grad_black_white   primary tested_weighted unbalanced  2.0 -13.680181624
+    grad_black_white   primary      unweighted   balanced   NA            NA
+    grad_black_white   primary tested_weighted   balanced   NA            NA
+ grad_hispanic_white   primary      unweighted unbalanced   NA  -0.057293425
+ grad_hispanic_white   primary      unweighted unbalanced  0.0  -0.056649715
+ grad_hispanic_white   primary      unweighted unbalanced  0.5  -0.424014535
+ grad_hispanic_white   primary      unweighted unbalanced  1.0  -0.816099230
+ grad_hispanic_white   primary      unweighted unbalanced  1.5  -1.208183925
+ grad_hispanic_white   primary      unweighted unbalanced  2.0  -1.596835305
+ grad_hispanic_white   primary tested_weighted unbalanced   NA  -0.027647840
+ grad_hispanic_white   primary tested_weighted unbalanced  0.0  -0.027536131
+ grad_hispanic_white   primary tested_weighted unbalanced  0.5  -0.472545337
+ grad_hispanic_white   primary tested_weighted unbalanced  1.0  -0.937811006
+ grad_hispanic_white   primary tested_weighted unbalanced  1.5  -1.400544618
+ grad_hispanic_white   primary tested_weighted unbalanced  2.0  -1.858214113
+ grad_hispanic_white   primary      unweighted   balanced   NA  -0.026508893
+ grad_hispanic_white   primary      unweighted   balanced  0.0  -0.025864818
+ grad_hispanic_white   primary      unweighted   balanced  0.5  -0.383810113
+ grad_hispanic_white   primary      unweighted   balanced  1.0  -0.754836465
+ grad_hispanic_white   primary      unweighted   balanced  1.5  -1.122889849
+ grad_hispanic_white   primary      unweighted   balanced  2.0  -1.495105388
+ grad_hispanic_white   primary tested_weighted   balanced   NA  -0.012383458
+ grad_hispanic_white   primary tested_weighted   balanced  0.0  -0.011707808
+ grad_hispanic_white   primary tested_weighted   balanced  0.5  -0.372761506
+ grad_hispanic_white   primary tested_weighted   balanced  1.0  -0.747411369
+ grad_hispanic_white   primary tested_weighted   balanced  1.5  -1.117529177
+ grad_hispanic_white   primary tested_weighted   balanced  2.0  -1.488402327
+    grad_black_white        r1      unweighted unbalanced   NA            NA
+    grad_black_white        r1 tested_weighted unbalanced   NA            NA
+    grad_black_white        r1      unweighted   balanced   NA            NA
+    grad_black_white        r1 tested_weighted   balanced   NA            NA
+ grad_hispanic_white        r1      unweighted unbalanced   NA            NA
+ grad_hispanic_white        r1 tested_weighted unbalanced   NA            NA
+ grad_hispanic_white        r1      unweighted   balanced   NA            NA
+ grad_hispanic_white        r1 tested_weighted   balanced   NA            NA
+    grad_black_white        r2      unweighted unbalanced   NA   0.844606855
+    grad_black_white        r2      unweighted unbalanced  0.0   0.841013718
+    grad_black_white        r2      unweighted unbalanced  0.5  -0.441659115
+    grad_black_white        r2      unweighted unbalanced  1.0  -1.771713003
+    grad_black_white        r2      unweighted unbalanced  1.5  -3.111919973
+    grad_black_white        r2      unweighted unbalanced  2.0  -4.458895666
+    grad_black_white        r2 tested_weighted unbalanced   NA   0.004240980
+    grad_black_white        r2 tested_weighted unbalanced  0.0   0.002854711
+    grad_black_white        r2 tested_weighted unbalanced  0.5  -0.573796993
+    grad_black_white        r2 tested_weighted unbalanced  1.0  -1.207542925
+    grad_black_white        r2 tested_weighted unbalanced  1.5  -1.852707702
+    grad_black_white        r2 tested_weighted unbalanced  2.0  -2.509291325
+    grad_black_white        r2      unweighted   balanced   NA   0.035536365
+    grad_black_white        r2      unweighted   balanced  0.0   0.036268256
+    grad_black_white        r2      unweighted   balanced  0.5  -0.864757570
+    grad_black_white        r2      unweighted   balanced  1.0  -1.813849759
+    grad_black_white        r2      unweighted   balanced  1.5  -2.762941948
+    grad_black_white        r2      unweighted   balanced  2.0  -3.713782005
+    grad_black_white        r2 tested_weighted   balanced   NA   0.042968702
+    grad_black_white        r2 tested_weighted   balanced  0.0   0.043279475
+    grad_black_white        r2 tested_weighted   balanced  0.5  -0.859286671
+    grad_black_white        r2 tested_weighted   balanced  1.0  -1.807233238
+    grad_black_white        r2 tested_weighted   balanced  1.5  -2.756020183
+    grad_black_white        r2 tested_weighted   balanced  2.0  -3.705647507
+ grad_hispanic_white        r2      unweighted unbalanced   NA  -0.035092255
+ grad_hispanic_white        r2      unweighted unbalanced  0.0  -0.035412435
+ grad_hispanic_white        r2      unweighted unbalanced  0.5  -0.134977831
+ grad_hispanic_white        r2      unweighted unbalanced  1.0  -0.274574675
+ grad_hispanic_white        r2      unweighted unbalanced  1.5  -0.418277308
+ grad_hispanic_white        r2      unweighted unbalanced  2.0  -0.563006389
+ grad_hispanic_white        r2 tested_weighted unbalanced   NA  -0.108314798
+ grad_hispanic_white        r2 tested_weighted unbalanced  0.0  -0.108098786
+ grad_hispanic_white        r2 tested_weighted unbalanced  0.5  -0.266643672
+ grad_hispanic_white        r2 tested_weighted unbalanced  1.0  -0.437854679
+ grad_hispanic_white        r2 tested_weighted unbalanced  1.5  -0.608192160
+ grad_hispanic_white        r2 tested_weighted unbalanced  2.0  -0.778529642
+ grad_hispanic_white        r2      unweighted   balanced   NA  -0.067519038
+ grad_hispanic_white        r2      unweighted   balanced  0.0  -0.066415649
+ grad_hispanic_white        r2      unweighted   balanced  0.5  -0.268362418
+ grad_hispanic_white        r2      unweighted   balanced  1.0  -0.496227488
+ grad_hispanic_white        r2      unweighted   balanced  1.5  -0.726252418
+ grad_hispanic_white        r2      unweighted   balanced  2.0  -0.954117489
+ grad_hispanic_white        r2 tested_weighted   balanced   NA  -0.099131065
+ grad_hispanic_white        r2 tested_weighted   balanced  0.0  -0.097539193
+ grad_hispanic_white        r2 tested_weighted   balanced  0.5  -0.266822090
+ grad_hispanic_white        r2 tested_weighted   balanced  1.0  -0.473186003
+ grad_hispanic_white        r2 tested_weighted   balanced  1.5  -0.682774352
+ grad_hispanic_white        r2 tested_weighted   balanced  2.0  -0.890750483
+           ub   method
+ -0.044104530 original
+ -0.044878629     C-LF
+  6.778350622     C-LF
+ 13.642683663     C-LF
+ 20.498628176     C-LF
+ 27.348700718     C-LF
+ -0.062174316 original
+ -0.062836011     C-LF
+  3.322218097     C-LF
+  6.716441409     C-LF
+ 10.110125356     C-LF
+ 13.505966762     C-LF
+           NA     <NA>
+           NA     <NA>
+  0.009931042 original
+  0.009269953     C-LF
+  0.383501405     C-LF
+  0.774899437     C-LF
+  1.167670796     C-LF
+  1.556322175     C-LF
+  0.034324408 original
+  0.034499291     C-LF
+  0.463050119     C-LF
+  0.927049759     C-LF
+  1.387884327     C-LF
+  1.846186837     C-LF
+  0.031701931 original
+  0.031216159     C-LF
+  0.382620926     C-LF
+  0.751863497     C-LF
+  1.121106069     C-LF
+  1.493916201     C-LF
+  0.061564722 original
+  0.061560411     C-LF
+  0.398443150     C-LF
+  0.770826985     C-LF
+  1.142455478     C-LF
+  1.514083971     C-LF
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+           NA     <NA>
+  1.175936481 original
+  1.179449821     C-LF
+  2.451969571     C-LF
+  3.778639098     C-LF
+  5.115461707     C-LF
+  6.462437400     C-LF
+  0.563194621 original
+  0.568087570     C-LF
+  1.139029851     C-LF
+  1.778485206     C-LF
+  2.429359406     C-LF
+  3.085943029     C-LF
+  0.121094667 original
+  0.120165908     C-LF
+  1.052653353     C-LF
+  2.005241278     C-LF
+  2.955207401     C-LF
+  3.906047458     C-LF
+  0.125241893 original
+  0.124796157     C-LF
+  1.055935161     C-LF
+  2.007243241     C-LF
+  2.956030186     C-LF
+  3.905657509     C-LF
+  0.065397150 original
+  0.065179409     C-LF
+  0.186300200     C-LF
+  0.330002833     C-LF
+  0.474731914     C-LF
+  0.620487443     C-LF
+ -0.065555635 original
+ -0.065732797     C-LF
+  0.084513596     C-LF
+  0.253977552     C-LF
+  0.425188559     C-LF
+  0.595962803     C-LF
+  0.038206252 original
+  0.037257559     C-LF
+  0.234884611     C-LF
+  0.459509894     C-LF
+  0.684135177     C-LF
+  0.908760460     C-LF
+  0.058705408 original
+  0.057233741     C-LF
+  0.226516639     C-LF
+  0.410309499     C-LF
+  0.607000103     C-LF
+  0.814976234     C-LF
+                                                           status num_pre
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+ no estimated pre-reform event time: relative magnitudes need one      NA
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+                                                               ok       4
+ num_post     grid_lb    grid_ub grid_points event_block
+        9          NA         NA          NA        <NA>
+        9  -0.4190070  0.4190070        1000        <NA>
+        9 -11.3131892 11.3131892       26974        <NA>
+        9 -33.9395677 33.9395677       80920        <NA>
+        9 -33.9395677 33.9395677       80920        <NA>
+        9 -33.9395677 33.9395677       80920        <NA>
+        9          NA         NA          NA        <NA>
+        9  -0.2694128  0.2694128        1000        <NA>
+        9  -7.2741447  7.2741447       26974        <NA>
+        9  -7.2741447  7.2741447       26974        <NA>
+        9 -21.8224341 21.8224341       80920        <NA>
+        9 -21.8224341 21.8224341       80920        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+        9          NA         NA          NA        <NA>
+        9  -0.3429883  0.3429883        1000        <NA>
+        9  -1.0289648  1.0289648        2998        <NA>
+        9  -1.0289648  1.0289648        2998        <NA>
+        9  -3.0868945  3.0868945        8992        <NA>
+        9  -3.0868945  3.0868945        8992        <NA>
+        9          NA         NA          NA        <NA>
+        9  -0.3161908  0.3161908        1000        <NA>
+        9  -0.9485723  0.9485723        2998        <NA>
+        9  -0.9485723  0.9485723        2998        <NA>
+        9  -2.8457168  2.8457168        8992        <NA>
+        9  -2.8457168  2.8457168        8992        <NA>
+        9          NA         NA          NA        <NA>
+        9  -0.2969995  0.2969995        1000        <NA>
+        9  -0.8909984  0.8909984        2998        <NA>
+        9  -0.8909984  0.8909984        2998        <NA>
+        9  -2.6729951  2.6729951        8992        <NA>
+        9  -2.6729951  2.6729951        8992        <NA>
+        9          NA         NA          NA        <NA>
+        9  -0.3772936  0.3772936        1000        <NA>
+        9  -0.3772936  1.1318807        1999        <NA>
+        9  -1.1318807  1.1318807        2998        <NA>
+        9  -1.1318807  3.3956421        5995        <NA>
+        9  -3.3956421  3.3956421        8992        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+       NA          NA         NA          NA        <NA>
+        1          NA         NA          NA      -5..+0
+        1  -1.6904883  1.6904883        1000      -5..+0
+        1  -1.6904883  5.0714650        1999      -5..+0
+        1  -5.0714650  5.0714650        2998      -5..+0
+        1  -5.0714650 15.2143950        5995      -5..+0
+        1  -5.0714650 15.2143950        5995      -5..+0
+        1          NA         NA          NA      -5..+0
+        1  -2.8518567  2.8518567        1000      -5..+0
+        1  -2.8518567  2.8518567        1000      -5..+0
+        1  -2.8518567  2.8518567        1000      -5..+0
+        1  -2.8518567  2.8518567        1000      -5..+0
+        1  -2.8518567  8.5555701        1999      -5..+0
+        5          NA         NA          NA        <NA>
+        5  -0.4365300  0.4365300        1000        <NA>
+        5  -1.3095899  1.3095899        2998        <NA>
+        5  -3.9287697  3.9287697        8992        <NA>
+        5  -3.9287697  3.9287697        8992        <NA>
+        5  -3.9287697  3.9287697        8992        <NA>
+        5          NA         NA          NA        <NA>
+        5  -0.4197689  0.4197689        1000        <NA>
+        5  -1.2593067  1.2593067        2998        <NA>
+        5  -3.7779200  3.7779200        8992        <NA>
+        5  -3.7779200  3.7779200        8992        <NA>
+        5  -3.7779200 11.3337601       17983        <NA>
+        3          NA         NA          NA        <NA>
+        3  -0.5127105  0.5127105        1000        <NA>
+        3  -0.5127105  0.5127105        1000        <NA>
+        3  -0.5127105  0.5127105        1000        <NA>
+        3  -0.5127105  0.5127105        1000        <NA>
+        3  -1.5381314  1.5381314        2998        <NA>
+        3          NA         NA          NA        <NA>
+        3  -0.2181630  0.2181630        1000        <NA>
+        3  -0.6544890  0.2181630        1999        <NA>
+        3  -0.6544890  0.6544890        2998        <NA>
+        3  -0.6544890  0.6544890        2998        <NA>
+        3  -1.9634670  0.6544890        5995        <NA>
+        5          NA         NA          NA        <NA>
+        5  -0.5394247  0.5394247        1000        <NA>
+        5  -0.5394247  0.5394247        1000        <NA>
+        5  -0.5394247  0.5394247        1000        <NA>
+        5  -1.6182740  1.6182740        2998        <NA>
+        5  -1.6182740  1.6182740        2998        <NA>
+        5          NA         NA          NA        <NA>
+        5  -0.8053029  0.8053029        1000        <NA>
+        5  -0.8053029  0.8053029        1000        <NA>
+        5  -0.8053029  0.8053029        1000        <NA>
+        5  -0.8053029  0.8053029        1000        <NA>
+        5  -2.4159088  2.4159088        2998        <NA>
+                                                        event_block_note
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+ bound on event times -5..+0; post-reform average over event times 0..+0
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+                                                                    <NA>
+
+== randomization inference
+                 gap event_set       weighting      panel           att
+    grad_black_white   primary      unweighted unbalanced -0.0851664624
+    grad_black_white   primary tested_weighted unbalanced -0.0885762819
+    grad_black_white   primary      unweighted   balanced -0.1135443632
+    grad_black_white   primary tested_weighted   balanced -0.1020319072
+ grad_hispanic_white   primary      unweighted unbalanced -0.0236811915
+ grad_hispanic_white   primary tested_weighted unbalanced  0.0033382840
+ grad_hispanic_white   primary      unweighted   balanced  0.0025965190
+ grad_hispanic_white   primary tested_weighted   balanced  0.0245906320
+    grad_black_white        r1      unweighted unbalanced -0.0996224320
+    grad_black_white        r1 tested_weighted unbalanced -0.0850573868
+    grad_black_white        r1      unweighted   balanced -0.1136059306
+    grad_black_white        r1 tested_weighted   balanced -0.1020501599
+ grad_hispanic_white        r1      unweighted unbalanced -0.0290946419
+ grad_hispanic_white        r1 tested_weighted unbalanced  0.0220700493
+ grad_hispanic_white        r1      unweighted   balanced  0.0006108395
+ grad_hispanic_white        r1 tested_weighted   balanced  0.0368261293
+    grad_black_white        r2      unweighted unbalanced  0.5376110223
+    grad_black_white        r2 tested_weighted unbalanced  0.1314251959
+    grad_black_white        r2      unweighted   balanced  0.0783155163
+    grad_black_white        r2 tested_weighted   balanced  0.0841052971
+ grad_hispanic_white        r2      unweighted unbalanced  0.0151524473
+ grad_hispanic_white        r2 tested_weighted unbalanced -0.0869352166
+ grad_hispanic_white        r2      unweighted   balanced -0.0146563928
+ grad_hispanic_white        r2 tested_weighted   balanced -0.0202128282
+    p_value  reps requested                              method
+ 0.19579158 10000     10000 drawn without duplicate assignments
+ 0.17635271  1000      1000 drawn without duplicate assignments
+ 0.12108262   702      1000                          enumerated
+ 0.18660969   702      1000                          enumerated
+ 0.69328530 10000     10000 drawn without duplicate assignments
+ 0.96003996  1000      1000 drawn without duplicate assignments
+ 0.98101898  1000      1000 drawn without duplicate assignments
+ 0.79120879  1000      1000 drawn without duplicate assignments
+ 0.24137931    39      1000                          enumerated
+ 0.31034483    36      1000                          enumerated
+ 0.19230769    27      1000                          enumerated
+ 0.23076923    27      1000                          enumerated
+ 0.62068966    38      1000                          enumerated
+ 0.72413793    35      1000                          enumerated
+ 1.00000000    28      1000                          enumerated
+ 0.78571429    28      1000                          enumerated
+ 0.03514377  1000      1000 drawn without duplicate assignments
+ 0.11205074  1000      1000 drawn without duplicate assignments
+ 0.19354839   930      1000                          enumerated
+ 0.16451613   930      1000                          enumerated
+ 0.80125523  1000      1000 drawn without duplicate assignments
+ 0.30952381  1000      1000 drawn without duplicate assignments
+ 0.78602151   930      1000                          enumerated
+ 0.77634409   930      1000                          enumerated
+ assignments_possible draws_ok treated_states eligible_states  placebo_mean
+              1974024     9979              4              39 -0.0191141878
+              1413720      997              4              36  0.0035615219
+                  702      702              2              27 -0.0147355540
+                  702      702              2              27 -0.0088505117
+              1771560     9992              4              38  0.0156442364
+              1256640     1000              4              35 -0.0003708439
+                19656     1000              3              28  0.0122930900
+                19656     1000              3              28  0.0224745787
+                   39       29              1              39 -0.0055838202
+                   36       29              1              36  0.0147423445
+                   27       26              1              27 -0.0193855309
+                   27       26              1              27 -0.0113922145
+                   38       29              1              38  0.0152687109
+                   35       29              1              35  0.0066020417
+                   28       28              1              28  0.0208450912
+                   28       28              1              28  0.0244057498
+                 1892      938              2              44 -0.0199642409
+                 1640      945              2              41 -0.0069776667
+                  930      930              2              31 -0.0096989102
+                  930      930              2              31 -0.0060274100
+                 1806      955              2              43  0.0089540260
+                 1482      965              2              39 -0.0164967093
+                  930      930              2              31 -0.0161853409
+                  930      930              2              31 -0.0102779358
+ placebo_sd placebo_abs_q95      seconds
+ 0.14366501       0.2191397 1037.3353100
+ 0.07265543       0.1329647   97.7380710
+ 0.07973501       0.1473674   11.8377969
+ 0.07505625       0.1333620   12.3416231
+ 0.07219945       0.1527245 1076.3609471
+ 0.09289844       0.2036357   87.2991030
+ 0.09360949       0.1937248   17.5663910
+ 0.09860669       0.1948340   18.8289530
+ 0.17319757       0.3644821    2.5795889
+ 0.10544195       0.1337190    2.4170260
+ 0.09013876       0.1348269    1.7614429
+ 0.08329318       0.1429037    1.0418909
+ 0.09210726       0.1862798    2.4513340
+ 0.08644729       0.1659124    1.7858360
+ 0.11209069       0.1854463    0.6958110
+ 0.11736277       0.1825417    0.4498911
+ 0.15320629       0.2492823   87.3075049
+ 0.07449986       0.1681669   79.8980319
+ 0.07522786       0.1415656   16.4397340
+ 0.07820026       0.1453360   17.2836390
+ 0.07106651       0.1434954  101.7144630
+ 0.10621103       0.2328403   79.0096810
+ 0.07947860       0.1510374   13.6762011
+ 0.08326168       0.1698570   14.4325540
+
+== model status
+                 gap event_set       weighting      panel status
+    grad_black_white   primary      unweighted unbalanced     ok
+    grad_black_white   primary tested_weighted unbalanced     ok
+    grad_black_white   primary      unweighted   balanced     ok
+    grad_black_white   primary tested_weighted   balanced     ok
+ grad_hispanic_white   primary      unweighted unbalanced     ok
+ grad_hispanic_white   primary tested_weighted unbalanced     ok
+ grad_hispanic_white   primary      unweighted   balanced     ok
+ grad_hispanic_white   primary tested_weighted   balanced     ok
+    grad_black_white        r1      unweighted unbalanced     ok
+    grad_black_white        r1 tested_weighted unbalanced     ok
+    grad_black_white        r1      unweighted   balanced     ok
+    grad_black_white        r1 tested_weighted   balanced     ok
+ grad_hispanic_white        r1      unweighted unbalanced     ok
+ grad_hispanic_white        r1 tested_weighted unbalanced     ok
+ grad_hispanic_white        r1      unweighted   balanced     ok
+ grad_hispanic_white        r1 tested_weighted   balanced     ok
+    grad_black_white        r2      unweighted unbalanced     ok
+    grad_black_white        r2 tested_weighted unbalanced     ok
+    grad_black_white        r2      unweighted   balanced     ok
+    grad_black_white        r2 tested_weighted   balanced     ok
+ grad_hispanic_white        r2      unweighted unbalanced     ok
+ grad_hispanic_white        r2 tested_weighted unbalanced     ok
+ grad_hispanic_white        r2      unweighted   balanced     ok
+ grad_hispanic_white        r2 tested_weighted   balanced     ok
+                                                                                                                                     notes
+                                                                            randomization: 21 of 10000 reassignments had no estimable cell
+                                                                              randomization: 3 of 1000 reassignments had no estimable cell
+                                                               HonestDiD: no estimated pre-reform event time: relative magnitudes need one
+                                                               HonestDiD: no estimated pre-reform event time: relative magnitudes need one
+                                                                             randomization: 8 of 10000 reassignments had no estimable cell
+                                                                                                                                          
+                                                                                                                                          
+                                                                                                                                          
+ HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 10 of 39 reassignments had no estimable cell
+  HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 7 of 36 reassignments had no estimable cell
+  HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 1 of 27 reassignments had no estimable cell
+  HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 1 of 27 reassignments had no estimable cell
+  HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 9 of 38 reassignments had no estimable cell
+  HonestDiD: no estimated pre-reform event time: relative magnitudes need one | randomization: 6 of 35 reassignments had no estimable cell
+                                                               HonestDiD: no estimated pre-reform event time: relative magnitudes need one
+                                                               HonestDiD: no estimated pre-reform event time: relative magnitudes need one
+                                                                             randomization: 62 of 1000 reassignments had no estimable cell
+                                                                             randomization: 55 of 1000 reassignments had no estimable cell
+                                                                                                                                          
+                                                                                                                                          
+                                                                             randomization: 45 of 1000 reassignments had no estimable cell
+                                                                             randomization: 35 of 1000 reassignments had no estimable cell
+                                                                                                                                          
+                                                                                                                                          
+
+Wrote outputs/07_inference/graduation/bootstrap_overall.csv, outputs/07_inference/graduation/bootstrap_event_time.csv, outputs/07_inference/graduation/randomization_overall.csv, outputs/07_inference/graduation/randomization_draws.csv, outputs/07_inference/graduation/romano_wolf.csv, outputs/07_inference/graduation/honestdid_overall.csv, outputs/07_inference/graduation/model_status.csv, outputs/07_inference/graduation/inference_settings.csv, outputs/07_inference/graduation/growth_contrast.csv, outputs/07_inference/graduation/growth_romano_wolf.csv, outputs/07_inference/graduation/growth_honestdid.csv, outputs/07_inference/graduation/event_time_gaps.csv
+24 of 24 models carried through all four procedures. Status per model: outputs/07_inference/graduation/model_status.csv
+Log: outputs/logs/07_inference_graduation_20261121T104011Z.log
